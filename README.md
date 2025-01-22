@@ -1,75 +1,62 @@
-# Turborepo Design System starter with Changesets
+<div align="center">
+  <img src="https://em-content.zobj.net/source/apple/354/brain_1f9e0.png" width="150" height="150" />
+  
+  # Brain Framework
+  
+  A powerful monorepo built on top of Eliza framework for creating sophisticated AI agents with ease.
+</div>
 
-This is an official React design system starter powered by Turborepo. Versioning and package publishing is handled by [Changesets](https://github.com/changesets/changesets) and fully automated with GitHub Actions.
+## Overview
 
-## Using this example
+IQ AI Framework provides a comprehensive suite of tools and packages for developers to create, customize, and deploy AI agents. Built on the robust Eliza framework, it simplifies the complex process of AI agent development.
 
-Run the following command:
+## Packages
 
-```sh
-npx create-turbo@latest -e with-changesets
+| Package | Description |
+|---------|------------|
+| [@iqai/agent](./packages/agent) | Core agent setup and configuration package |
+| [@iqai/plugin-agentkit](./packages/plugin-agentkit) | CDP Agent Kit integration plugin |
+| [@iqai/adapter-sqlite](./packages/adapter-sqlite) | SQLite database adapter for agent storage |
+| [@iqai/tsconfig](./packages/tsconfig) | Shared TypeScript configurations |
+
+## Quick Start
+
+``` bash
+# Clone the repository
+git clone https://github.com/IQAIcom/iq-ai-framework
+
+# Install dependencies
+pnpm install
+
+# Build all packages
+pnpm build
 ```
 
-## What's inside?
+## Development
 
-This Turborepo includes the following:
+This monorepo uses:
+- 🏗️ PNPM Workspaces for package management
+- 🔧 Turborepo for build system
+- 📦 Changesets for versioning and publishing
+- 🔍 TypeScript for type safety
 
-### Apps and Packages
+### Common Commands
 
-- `docs`: A placeholder documentation site powered by [Next.js](https://nextjs.org/)
-- `@iqai/core`: core React components
-- `@iqai/utils`: shared React utilities
-- `@iqai/tsconfig`: shared `tsconfig.json`s used throughout the monorepo
-- `@iqai/eslint-config`: ESLint preset
+``` bash
+# Development mode
+pnpm dev
 
-Each package and app is 100% [TypeScript](https://www.typescriptlang.org/).
+# Build all packages
+pnpm build
 
-### Utilities
+# Run tests
+pnpm test
 
-This Turborepo has some additional tools already setup for you:
+# Create a new version
+pnpm changeset
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Useful commands
-
-- `yarn build` - Build all packages and the docs site
-- `yarn dev` - Develop all packages and the docs site
-- `yarn lint` - Lint all packages
-- `yarn changeset` - Generate a changeset
-- `yarn clean` - Clean up all `node_modules` and `dist` folders (runs each package's clean script)
-
-### Changing the npm organization scope
-
-The npm organization scope for this design system starter is `@iqai`. To change this, it's a bit manual at the moment, but you'll need to do the following:
-
-- Rename folders in `packages/*` to replace `iqai` with your desired scope
-- Search and replace `iqai` with your desired scope
-- Re-run `yarn install`
-
-## Versioning and Publishing packages
-
-Package publishing has been configured using [Changesets](https://github.com/changesets/changesets). Please review their [documentation](https://github.com/changesets/changesets#documentation) to familiarize yourself with the workflow.
-
-This example comes with automated npm releases setup in a [GitHub Action](https://github.com/changesets/action). To get this working, you will need to create an `NPM_TOKEN` and `GITHUB_TOKEN` in your repository settings. You should also install the [Changesets bot](https://github.com/apps/changeset-bot) on your GitHub repository as well.
-
-For more information about this automation, refer to the official [changesets documentation](https://github.com/changesets/changesets/blob/main/docs/automating-changesets.md)
-
-### npm
-
-If you want to publish package to the public npm registry and make them publicly available, this is already setup.
-
-To publish packages to a private npm organization scope, **remove** the following from each of the `package.json`'s
-
-```diff
-- "publishConfig": {
--  "access": "public"
-- },
+# Publish packages
+pnpm publish-packages
 ```
 
-### GitHub Package Registry
 
-See [Working with the npm registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#publishing-a-package-using-publishconfig-in-the-packagejson-file)
-# iq-ai-plugins
-# brain
