@@ -14,9 +14,7 @@ export default defineConfig({
         "@elizaos/client-telegram",
         "@elizaos/client-twitter",
         "@elizaos/core",
-        "better-sqlite3",
-        "@iqai/adapter-sqlite",
-        "@iqai/plugin-agentkit"
+        "better-sqlite3"
     ],
     dts: true
 });
