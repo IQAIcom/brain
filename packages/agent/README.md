@@ -70,13 +70,6 @@ const agent = await setupAgent({
     }
   },
 
-  // CDP Integration
-  cdpConfig: {
-    networkId: 'your-network-id',
-    apiKeyName: 'your-api-key-name',
-    apiKeyPrivateKey: 'your-private-key'
-  },
-
   // Storage Configuration
   databasePath: './custom/path/to/data',
   cacheStore: CacheStore.DATABASE // or CacheStore.FILESYSTEM

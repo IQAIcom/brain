@@ -15,18 +15,9 @@ export async function createAgentRuntime(
 ) {
 	const plugins = [...(config.plugins || [])];
 
-	if (config.cdpConfig) {
-		const agentKitPlugin = await createAgentKitPlugin({
-			networkId: config.cdpConfig.networkId,
-			cdpApiKeyName: config.cdpConfig.apiKeyName,
-			cdpApiKeyPrivateKey: config.cdpConfig.apiKeyPrivateKey,
-		});
-		plugins.push(agentKitPlugin);
-	}
-
 	return new AgentRuntime({
 		databaseAdapter: database,
-		token: config.openAiKey || process.env.OPENAI_API_KEY || "test",
+		token: config.modelKey,
 		modelProvider: config.modelProvider || ModelProviderName.OPENAI,
 		plugins,
 		character: {

@@ -22,14 +22,9 @@ export interface ClientConfig {
 export interface AgentConfig {
 	plugins?: Plugin[];
 	modelProvider?: ModelProviderName;
+	modelKey?: string;
 	character?: Partial<Character>;
 	cacheStore?: CacheStore;
 	databasePath?: string;
-	openAiKey?: string;
-	cdpConfig?: {
-		networkId?: string;
-		apiKeyName?: string;
-		apiKeyPrivateKey?: string;
-	};
 	clients?: ClientConfig;
 }
