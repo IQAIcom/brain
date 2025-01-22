@@ -1,7 +1,7 @@
 import { DirectClient } from "@elizaos/client-direct";
 import { TelegramClientInterface } from "@elizaos/client-telegram";
 import { TwitterClientInterface } from "@elizaos/client-twitter";
-import type { IAgentRuntime } from "@elizaos/core";
+import type { AgentRuntime, IAgentRuntime } from "@elizaos/core";
 import type { ClientConfig } from "../types";
 
 export async function setupClientInterfaces(
@@ -14,7 +14,7 @@ export async function setupClientInterfaces(
     const directClient = new DirectClient();
     const serverPort = config.direct.port || 3000;
     directClient.start(serverPort);
-    directClient.registerAgent(runtime);
+    directClient.registerAgent(runtime as AgentRuntime);
     clients.direct = directClient;
   }
 
