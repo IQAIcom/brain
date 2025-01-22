@@ -6,6 +6,5 @@
 	"fixed": [],
 	"linked": [],
 	"access": "public",
-	"updateInternalDependencies": "patch",
-	"ignore": ["@iqai/docs"]
+	"updateInternalDependencies": "patch"
 }

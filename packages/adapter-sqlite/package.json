@@ -1,6 +1,6 @@
 {
-	"name": "@iq-ai/adapter-sqlite",
-	"version": "0.1.8",
+	"name": "@iqai/adapter-sqlite",
+	"version": "0.1.7",
 	"type": "module",
 	"main": "dist/index.js",
 	"module": "dist/index.js",
