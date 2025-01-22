@@ -10,7 +10,7 @@
 		"lint:fix": "biome check . --apply",
 		"changeset": "changeset",
 		"version-packages": "changeset version",
-		"release": "turbo build --filter=docs^... && changeset publish"
+		"release": "turbo build && changeset publish"
 	},
 	"devDependencies": {
 		"@changesets/cli": "^2.27.1",

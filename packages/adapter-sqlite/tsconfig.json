@@ -1,0 +1,11 @@
+{
+    "extends": "@iqai/tsconfig/module.json",
+    "compilerOptions": {
+        "outDir": "dist",
+        "rootDir": "src",
+        "strict": true
+    },
+    "include": [
+        "src/**/*.ts"
+    ]
+}
