@@ -1,4 +1,9 @@
-import type { ModelProviderName, CacheStore, Character } from "@elizaos/core";
+import type {
+	ModelProviderName,
+	CacheStore,
+	Character,
+	Plugin,
+} from "@elizaos/core";
 
 export interface ClientConfig {
 	direct?: {
@@ -15,7 +20,7 @@ export interface ClientConfig {
 }
 
 export interface AgentConfig {
-	plugins?: any[];
+	plugins?: Plugin[];
 	modelProvider?: ModelProviderName;
 	character?: Partial<Character>;
 	cacheStore?: CacheStore;
