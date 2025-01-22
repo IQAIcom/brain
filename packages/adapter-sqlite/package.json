@@ -1,11 +1,13 @@
 {
 	"name": "@iqai/adapter-sqlite",
-	"version": "0.1.7",
+	"version": "0.1.8",
 	"type": "module",
 	"main": "dist/index.js",
 	"module": "dist/index.js",
 	"types": "dist/index.d.ts",
-	"files": ["dist"],
+	"files": [
+		"dist"
+	],
 	"dependencies": {
 		"@elizaos/core": "0.1.7",
 		"@types/better-sqlite3": "7.6.12",
