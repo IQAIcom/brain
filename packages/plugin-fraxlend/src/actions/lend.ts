@@ -1,23 +1,28 @@
-import type { PublicClient, WalletClient } from "viem";
-import { FRAXLEND_ABI, ERC20_ABI } from "../constants/abi";
+import {
+	erc20Abi,
+	type PublicClient,
+	type WalletClient,
+	type Address,
+} from "viem";
+import { FRAXLEND_ABI } from "../constants/abi";
 
 export async function lend(
-	pairAddress: string,
+	pairAddress: Address,
 	amount: bigint,
 	publicClient: PublicClient,
 	walletClient: WalletClient,
 ) {
 	// Get asset token address
-	const assetAddress = await publicClient.readContract({
+	const assetAddress = (await publicClient.readContract({
 		address: pairAddress,
 		abi: FRAXLEND_ABI,
 		functionName: "assetContract",
-	});
+	})) as Address;
 
 	// Approve token spend
 	const { request: approveRequest } = await publicClient.simulateContract({
 		address: assetAddress,
-		abi: ERC20_ABI,
+		abi: erc20Abi,
 		functionName: "approve",
 		args: [pairAddress, amount],
 	});

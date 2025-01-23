@@ -10,9 +10,7 @@ export interface FraxlendConfig {
 	graphqlEndpoint: string;
 }
 
-export async function createFraxlendPlugin(
-	config: FraxlendConfig,
-): Promise<Plugin> {
+export async function createFraxlendPlugin() {
 	const actions = {
 		getLendingStats,
 		getUserPositions,

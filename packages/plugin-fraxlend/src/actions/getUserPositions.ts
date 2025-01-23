@@ -1,4 +1,4 @@
-import { gql } from "graphql-request";
+import { gql, GraphQLClient } from "graphql-request";
 
 const USER_POSITIONS_QUERY = gql`
   query GetUserPositions($userAddress: String!) {
@@ -26,7 +26,9 @@ export async function getUserPositions(userAddress: string) {
 	);
 
 	try {
-		const data = await client.request(USER_POSITIONS_QUERY, { userAddress });
+		const data = await client.request<any>(USER_POSITIONS_QUERY, {
+			userAddress,
+		});
 		return {
 			success: true,
 			data: data.positions.map((position) => ({

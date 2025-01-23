@@ -1,8 +1,8 @@
-import type { PublicClient, WalletClient } from "viem";
+import type { Address, PublicClient, WalletClient } from "viem";
 import { FRAXLEND_ABI } from "../constants/abi";
 
 export async function withdraw(
-	pairAddress: string,
+	pairAddress: Address,
 	shares: bigint,
 	publicClient: PublicClient,
 	walletClient: WalletClient,
