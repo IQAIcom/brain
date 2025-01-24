@@ -1,6 +1,7 @@
-import { gql, GraphQLClient } from "graphql-request";
+import { graphql } from "gql.tada";
+import { client } from "../lib/graphql";
 
-const LENDING_PAIRS_QUERY = gql`
+const LENDING_PAIRS_QUERY = graphql(`
   query GetLendingPairs {
     pairs(first: 100) {
       id
@@ -19,21 +20,17 @@ const LENDING_PAIRS_QUERY = gql`
       }
     }
   }
-`;
+`);
 
 export async function getLendingStats() {
-	const client = new GraphQLClient(
-		"https://api.frax.finance/graphql/fraxtal/fraxlend",
-	);
-
 	try {
-		const data = await client.request<any>(LENDING_PAIRS_QUERY);
+		const data = await client.request(LENDING_PAIRS_QUERY);
 		return {
 			success: true,
 			data: data.pairs.map((pair) => ({
 				symbol: pair.symbol,
 				assetSymbol: pair.asset.symbol,
-				apr: calculateApr(pair.dailyHistory[0].interestPerSecond),
+				apr: calculateApr(pair.dailyHistory[0].interestPerSecond as string),
 				utilization: pair.dailyHistory[0].utilization,
 				totalSupply: pair.dailyHistory[0].totalAssetAmount,
 			})),

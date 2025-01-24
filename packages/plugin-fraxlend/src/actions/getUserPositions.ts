@@ -1,6 +1,7 @@
-import { gql, GraphQLClient } from "graphql-request";
+import { graphql } from "gql.tada";
+import { client } from "../lib/graphql";
 
-const USER_POSITIONS_QUERY = gql`
+const USER_POSITIONS_QUERY = graphql(`
   query GetUserPositions($userAddress: String!) {
     positions(where: {user: $userAddress}) {
       pair {
@@ -18,15 +19,11 @@ const USER_POSITIONS_QUERY = gql`
       }
     }
   }
-`;
+`);
 
 export async function getUserPositions(userAddress: string) {
-	const client = new GraphQLClient(
-		"https://api.frax.finance/graphql/fraxtal/fraxlend",
-	);
-
 	try {
-		const data = await client.request<any>(USER_POSITIONS_QUERY, {
+		const data = await client.request(USER_POSITIONS_QUERY, {
 			userAddress,
 		});
 		return {
