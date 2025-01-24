@@ -1,4 +1,3 @@
-import type { Plugin } from "@elizaos/core";
 import { getLendingStats } from "./actions/getLendingStats";
 import { getUserPositions } from "./actions/getUserPositions";
 import { deposit } from "./actions/deposit";
