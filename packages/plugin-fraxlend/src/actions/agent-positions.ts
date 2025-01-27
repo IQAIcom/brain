@@ -29,11 +29,11 @@ const handler: (opts: FraxLendActionParams) => Handler =
 				opts.walletPrivateKey,
 				opts.chain,
 			);
-			const userPositionsService = new AgentPositionsService(walletService);
-			const positions = await userPositionsService.getPositions();
+			const agentPositionsService = new AgentPositionsService(walletService);
+			const positions = await agentPositionsService.getPositions();
 
 			callback?.({
-				text: `Your current positions: ${JSON.stringify(positions)}`,
+				text: agentPositionsService.formatPositions(positions),
 			});
 			return true;
 		} catch (error) {
