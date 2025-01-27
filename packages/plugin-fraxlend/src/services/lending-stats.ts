@@ -1,6 +1,7 @@
 import { graphql } from "gql.tada";
 import { client } from "../lib/graphql";
 import dedent from "dedent";
+import { formatUnits, formatEther } from "viem";
 
 const LENDING_PAIRS_QUERY = graphql(`
   query GetLendingPairs {
@@ -35,6 +36,7 @@ export class LendingStatsService {
 				),
 				utilization: pair.dailyHistory[0].utilization,
 				totalSupply: pair.dailyHistory[0].totalAssetAmount,
+				decimals: pair.asset.decimals,
 			}));
 		} catch (error) {
 			throw new Error(`Failed to fetch lending stats: ${error.message}`);
@@ -42,33 +44,34 @@ export class LendingStatsService {
 	}
 
 	private calculateApr(interestPerSecond: string): number {
-		const interestRate = Number(interestPerSecond);
+		const interestRate = Number(formatEther(BigInt(interestPerSecond)));
 		const SECONDS_PER_YEAR = 365 * 24 * 60 * 60;
 		const apr = interestRate * SECONDS_PER_YEAR * 100;
 		return Number(apr.toFixed(2));
 	}
 
-	formatStats(
-		stats: Array<{
-			symbol: string;
-			assetSymbol: string;
-			apr: number;
-			utilization: unknown;
-			totalSupply: unknown;
-		}>,
-	) {
+	formatStats(stats: Awaited<ReturnType<LendingStatsService["getStats"]>>) {
 		const formattedStats = stats
-			.map(
-				(pool) =>
-					dedent`
-						🏦 ${pool.symbol} (${pool.assetSymbol})
-						- APR: ${pool.apr}%
-						- Utilization: ${Number(pool.utilization).toFixed(2)}%
-						- Total Supply: ${Number(pool.totalSupply).toFixed(2)} ${pool.assetSymbol}
-					`,
-			)
-			.join("\n");
+			.map((pool) => {
+				const formattedSupply = Number(
+					formatUnits(
+						BigInt(pool.totalSupply as number),
+						pool.decimals as number,
+					),
+				).toFixed(3);
+				const formattedUtilization = (Number(pool.utilization) / 100).toFixed(
+					2,
+				);
 
-		return `📊 *Current Lending Statistics*\n\n${formattedStats}`;
+				return dedent`
+								🏦 ${pool.symbol} (${pool.assetSymbol})
+								- APR: ${pool.apr}%
+								- Utilization: ${formattedUtilization}%
+								- Total Supply: ${formattedSupply} ${pool.assetSymbol}
+						`;
+			})
+			.join("\n\n");
+
+		return `📊 Current Lending Statistics \n\n${formattedStats}`;
 	}
 }
