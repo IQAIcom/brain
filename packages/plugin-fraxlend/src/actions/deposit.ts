@@ -9,6 +9,8 @@ import { DEPOSIT_TEMPLATE } from "../lib/templates";
 import { DepositService } from "../services/deposit";
 import { WalletService } from "../services/wallet";
 import type { FraxLendActionParams } from "../types";
+import { InputParserService } from "../services/input-parser";
+import { Address } from "viem";
 export const getDepositAction = (opts: FraxLendActionParams): Action => {
 	return {
 		name: "FRAXLEND_DEPOSIT",
@@ -34,22 +36,13 @@ export const getDepositAction = (opts: FraxLendActionParams): Action => {
 const handler: (opts: FraxLendActionParams) => Handler =
 	({ walletPrivateKey }) =>
 	async (runtime, message, state, _options, callback) => {
-		const currentState = state
-			? await runtime.updateRecentMessageState(state)
-			: await runtime.composeState(message);
-
-		const depositContext = composeContext({
-			state: currentState,
+		const inputParser = new InputParserService();
+		const { pairAddress, amount } = await inputParser.parseInputs({
+			runtime,
+			message,
+			state,
 			template: DEPOSIT_TEMPLATE,
 		});
-
-		const content = await generateMessageResponse({
-			runtime,
-			context: depositContext,
-			modelClass: ModelClass.SMALL,
-		});
-
-		const { pairAddress, amount } = JSON.parse(content.text) || {};
 
 		if (!pairAddress || !amount) {
 			callback?.({

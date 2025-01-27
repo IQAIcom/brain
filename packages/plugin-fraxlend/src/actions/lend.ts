@@ -5,10 +5,11 @@ import {
 	composeContext,
 	generateMessageResponse,
 } from "@elizaos/core";
-import { LEND_TEMPLATE } from "../lib/templates";
+import { LEND_TEMPLATE, WITHDRAW_TEMPLATE } from "../lib/templates";
 import { LendService } from "../services/lend";
 import { WalletService } from "../services/wallet";
 import type { FraxLendActionParams } from "../types";
+import { InputParserService } from "../services/input-parser";
 
 export const getLendAction = (opts: FraxLendActionParams): Action => {
 	return {
@@ -31,22 +32,13 @@ export const getLendAction = (opts: FraxLendActionParams): Action => {
 const handler: (opts: FraxLendActionParams) => Handler =
 	({ walletPrivateKey }) =>
 	async (runtime, message, state, _options, callback) => {
-		const currentState = state
-			? await runtime.updateRecentMessageState(state)
-			: await runtime.composeState(message);
-
-		const depositContext = composeContext({
-			state: currentState,
-			template: LEND_TEMPLATE,
-		});
-
-		const content = await generateMessageResponse({
+		const inputParser = new InputParserService();
+		const { pairAddress, amount } = await inputParser.parseInputs({
 			runtime,
-			context: depositContext,
-			modelClass: ModelClass.SMALL,
+			message,
+			state,
+			template: WITHDRAW_TEMPLATE,
 		});
-
-		const { pairAddress, amount } = JSON.parse(content.text) || {};
 
 		try {
 			const walletService = new WalletService(walletPrivateKey);

@@ -1,5 +1,5 @@
 import type { Address } from "viem";
-import { FRAXLEND_ABI } from "../constants/abi";
+import { FRAXLEND_ABI } from "../lib/fraxlend.abi";
 import type { WalletService } from "./wallet";
 
 export class WithdrawService {
