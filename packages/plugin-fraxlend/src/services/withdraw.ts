@@ -11,8 +11,8 @@ export class WithdrawService {
 
 	async execute({
 		pairAddress,
-		shares,
-	}: { pairAddress: Address; shares: bigint }) {
+		amount,
+	}: { pairAddress: Address; amount: bigint }) {
 		const publicClient = this.walletService.getPublicClient();
 		const walletClient = this.walletService.getWalletClient();
 
@@ -20,18 +20,15 @@ export class WithdrawService {
 			address: pairAddress,
 			abi: FRAXLEND_ABI,
 			functionName: "removeAsset",
-			args: [shares, await walletClient.getAddresses()],
+			args: [amount, await walletClient.getAddresses()],
 		});
 
 		const hash = await walletClient.writeContract(request);
 		const receipt = await publicClient.waitForTransactionReceipt({ hash });
 
 		return {
-			success: true,
-			data: {
-				txHash: receipt.transactionHash,
-				shares,
-			},
+			txHash: receipt.transactionHash,
+			amount,
 		};
 	}
 }

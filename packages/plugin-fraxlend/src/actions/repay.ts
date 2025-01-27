@@ -44,14 +44,13 @@ const handler: (opts: FraxLendActionParams) => Handler =
 			});
 
 			callback?.({
-				text: `Successfully repaid ${amount} tokens. Transaction hash: ${result.data.txHash}`,
+				text: `Successfully repaid ${amount} tokens. Transaction hash: ${result.txHash}`,
 				content: result,
 			});
 			return true;
 		} catch (error) {
 			callback?.({
 				text: `Error during repayment: ${error.message}`,
-				content: { error: error.message },
 			});
 			return false;
 		}

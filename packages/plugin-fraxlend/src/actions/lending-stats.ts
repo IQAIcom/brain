@@ -29,14 +29,12 @@ const handler: (opts: FraxLendActionParams) => Handler =
 			const stats = await lendingStatsService.getStats();
 
 			callback?.({
-				text: "Current lending statistics:",
-				content: stats,
+				text: `Current lending statistics:${JSON.stringify(stats)}`,
 			});
 			return true;
 		} catch (error) {
 			callback?.({
 				text: `Error fetching lending stats: ${error.message}`,
-				content: { error: error.message },
 			});
 			return false;
 		}

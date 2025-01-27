@@ -50,7 +50,6 @@ const handler: (opts: FraxLendActionParams) => Handler =
 		} catch (error) {
 			callback?.({
 				text: `Error during borrowing: ${error.message}`,
-				content: { error: error.message },
 			});
 			return false;
 		}

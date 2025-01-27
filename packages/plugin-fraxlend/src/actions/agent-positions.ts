@@ -31,8 +31,7 @@ const handler: (opts: FraxLendActionParams) => Handler =
 			const positions = await userPositionsService.getPositions();
 
 			callback?.({
-				text: "Your current positions:",
-				content: positions,
+				text: `Your current positions: ${JSON.stringify(positions)}`,
 			});
 			return true;
 		} catch (error) {

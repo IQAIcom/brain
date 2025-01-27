@@ -27,11 +27,8 @@ export class RemoveCollateralService {
 		const receipt = await publicClient.waitForTransactionReceipt({ hash });
 
 		return {
-			success: true,
-			data: {
-				txHash: receipt.transactionHash,
-				amount,
-			},
+			txHash: receipt.transactionHash,
+			amount,
 		};
 	}
 }

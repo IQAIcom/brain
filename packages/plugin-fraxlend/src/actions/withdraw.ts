@@ -41,18 +41,16 @@ const handler: (opts: FraxLendActionParams) => Handler =
 
 			const result = await withdrawService.execute({
 				pairAddress,
-				shares: BigInt(amount),
+				amount: BigInt(amount),
 			});
 
 			callback?.({
-				text: `Successfully withdrew ${amount} shares. Transaction hash: ${result.data.txHash}`,
-				content: result,
+				text: `Successfully withdrew ${amount}. Transaction hash: ${result.txHash}`,
 			});
 			return true;
 		} catch (error) {
 			callback?.({
 				text: `Error during withdrawal: ${error.message}`,
-				content: { error: error.message },
 			});
 			return false;
 		}

@@ -43,14 +43,12 @@ const handler: (opts: FraxLendActionParams) => Handler =
 			});
 
 			callback?.({
-				text: `Successfully added ${amount} collateral. Transaction hash: ${result.data.txHash}`,
-				content: result,
+				text: `Successfully added ${amount} collateral. Transaction hash: ${result.txHash}`,
 			});
 			return true;
 		} catch (error) {
 			callback?.({
 				text: `Error adding collateral: ${error.message}`,
-				content: { error: error.message },
 			});
 			return false;
 		}

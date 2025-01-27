@@ -15,12 +15,26 @@ export class AddCollateralService {
 	}: { pairAddress: Address; amount: bigint }) {
 		const publicClient = this.walletService.getPublicClient();
 		const walletClient = this.walletService.getWalletClient();
+		const userAddress = await walletClient.getAddresses();
 
 		const collateralAddress = (await publicClient.readContract({
 			address: pairAddress,
 			abi: FRAXLEND_ABI,
 			functionName: "collateralContract",
 		})) as Address;
+
+		const balance = await publicClient.readContract({
+			address: collateralAddress,
+			abi: erc20Abi,
+			functionName: "balanceOf",
+			args: [userAddress[0]],
+		});
+
+		if (balance < amount) {
+			throw new Error(
+				`Insufficient collateral balance. Available: ${balance}, Requested: ${amount}`,
+			);
+		}
 
 		const { request: approveRequest } = await publicClient.simulateContract({
 			address: collateralAddress,
@@ -41,11 +55,8 @@ export class AddCollateralService {
 		const receipt = await publicClient.waitForTransactionReceipt({ hash });
 
 		return {
-			success: true,
-			data: {
-				txHash: receipt.transactionHash,
-				amount,
-			},
+			txHash: receipt.transactionHash,
+			amount,
 		};
 	}
 }

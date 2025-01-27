@@ -47,14 +47,12 @@ const handler: (opts: FraxLendActionParams) => Handler =
 			});
 
 			callback?.({
-				text: `Successfully removed ${amount} collateral. Transaction hash: ${result.data.txHash}`,
-				content: result,
+				text: `Successfully removed ${amount} collateral. Transaction hash: ${result.txHash}`,
 			});
 			return true;
 		} catch (error) {
 			callback?.({
 				text: `Error removing collateral: ${error.message}`,
-				content: { error: error.message },
 			});
 			return false;
 		}

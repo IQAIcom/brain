@@ -44,14 +44,12 @@ const handler: (opts: FraxLendActionParams) => Handler =
 			});
 
 			callback?.({
-				text: `Successfully lent ${amount} tokens. Transaction hash: ${result.data.txHash}`,
-				content: result,
+				text: `Successfully lent ${amount} tokens. Transaction hash: ${result.txHash}`,
 			});
 			return true;
 		} catch (error) {
 			callback?.({
 				text: `Error during lending: ${error.message}`,
-				content: { error: error.message },
 			});
 			return false;
 		}

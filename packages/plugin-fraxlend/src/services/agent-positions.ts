@@ -67,10 +67,7 @@ export class AgentPositionsService {
 				})),
 			};
 		} catch (error) {
-			return {
-				success: false,
-				error: `Failed to fetch user positions: ${error.message}`,
-			};
+			throw new Error(`Failed to fetch agent positions: ${error.message}`);
 		}
 	}
 }

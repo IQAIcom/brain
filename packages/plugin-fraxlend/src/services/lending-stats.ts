@@ -39,10 +39,7 @@ export class LendingStatsService {
 				})),
 			};
 		} catch (error) {
-			return {
-				success: false,
-				error: `Failed to fetch lending stats: ${error.message}`,
-			};
+			throw new Error(`Failed to fetch lending stats: ${error.message}`);
 		}
 	}
 
