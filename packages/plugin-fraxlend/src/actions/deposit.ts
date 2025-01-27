@@ -1,16 +1,9 @@
-import {
-	type Action,
-	type Handler,
-	ModelClass,
-	composeContext,
-	generateMessageResponse,
-} from "@elizaos/core";
+import type { Action, Handler } from "@elizaos/core";
 import { DEPOSIT_TEMPLATE } from "../lib/templates";
 import { DepositService } from "../services/deposit";
+import { InputParserService } from "../services/input-parser";
 import { WalletService } from "../services/wallet";
 import type { FraxLendActionParams } from "../types";
-import { InputParserService } from "../services/input-parser";
-import { Address } from "viem";
 export const getDepositAction = (opts: FraxLendActionParams): Action => {
 	return {
 		name: "FRAXLEND_DEPOSIT",

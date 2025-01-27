@@ -1,15 +1,9 @@
-import {
-	type Action,
-	type Handler,
-	ModelClass,
-	composeContext,
-	generateMessageResponse,
-} from "@elizaos/core";
-import { LEND_TEMPLATE, WITHDRAW_TEMPLATE } from "../lib/templates";
+import type { Action, Handler } from "@elizaos/core";
+import { WITHDRAW_TEMPLATE } from "../lib/templates";
+import { InputParserService } from "../services/input-parser";
 import { LendService } from "../services/lend";
 import { WalletService } from "../services/wallet";
 import type { FraxLendActionParams } from "../types";
-import { InputParserService } from "../services/input-parser";
 
 export const getLendAction = (opts: FraxLendActionParams): Action => {
 	return {
