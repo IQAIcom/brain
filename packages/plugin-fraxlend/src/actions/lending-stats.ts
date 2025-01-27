@@ -29,7 +29,7 @@ const handler: (opts: FraxLendActionParams) => Handler =
 			const stats = await lendingStatsService.getStats();
 
 			callback?.({
-				text: `Current lending statistics:${JSON.stringify(stats)}`,
+				text: lendingStatsService.formatStats(stats),
 			});
 			return true;
 		} catch (error) {

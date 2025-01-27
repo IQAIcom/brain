@@ -10,7 +10,8 @@
 		"graphql": "^16.8.1",
 		"graphql-request": "^6.1.0",
 		"tsup": "8.3.5",
-		"viem": "^2.22.15"
+		"viem": "^2.22.15",
+		"dedent": "^1.5.3"
 	},
 	"scripts": {
 		"build": "tsup --format esm",

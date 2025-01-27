@@ -1,6 +1,7 @@
 import { graphql } from "gql.tada";
 import { client } from "../lib/graphql";
 import type { WalletService } from "./wallet";
+import dedent from "dedent";
 
 const AGENT_POSITIONS_QUERY = graphql(`
   query fraxlendUsers($user: User_filter) {
@@ -50,24 +51,43 @@ export class AgentPositionsService {
 				},
 			});
 
-			return {
-				success: true,
-				data: data.users[0]?.positions.map((position) => ({
-					symbol: position.pair.symbol,
-					assetSymbol: position.pair.asset.symbol,
-					collateralSymbol: position.pair.collateral.symbol,
-					lentAmount: position.lentAssetShare,
-					borrowedAmount: position.borrowedAssetShare,
-					collateralAmount: position.depositedCollateralAmount,
-					value: position.dailyHistory[0]?.lentAssetValue || "0",
-					borrowValue: position.dailyHistory[0]?.borrowedAssetValue || "0",
-					collateralValue:
-						position.dailyHistory[0]?.depositedCollateralValue || "0",
-					profit: position.dailyHistory[0]?.lendProfitTaken || "0",
-				})),
-			};
+			return data.users[0]?.positions.map((position) => ({
+				symbol: position.pair.symbol,
+				assetSymbol: position.pair.asset.symbol,
+				collateralSymbol: position.pair.collateral.symbol,
+				lentAmount: position.lentAssetShare,
+				borrowedAmount: position.borrowedAssetShare,
+				collateralAmount: position.depositedCollateralAmount,
+				value: position.dailyHistory[0]?.lentAssetValue || "0",
+				borrowValue: position.dailyHistory[0]?.borrowedAssetValue || "0",
+				collateralValue:
+					position.dailyHistory[0]?.depositedCollateralValue || "0",
+				profit: position.dailyHistory[0]?.lendProfitTaken || "0",
+			}));
 		} catch (error) {
 			throw new Error(`Failed to fetch agent positions: ${error.message}`);
 		}
+	}
+
+	formatPositions(
+		positions: Awaited<ReturnType<AgentPositionsService["getPositions"]>>,
+	) {
+		if (positions.length === 0) {
+			return "📊 *No Active Positions Found*";
+		}
+
+		const formattedPositions = positions
+			.map(
+				(pos) => dedent`
+			🔹 ${pos.symbol}
+			• Lent: ${Number(pos.lentAmount).toFixed(2)} ${pos.assetSymbol} (Value: $${Number(pos.value).toFixed(2)})
+			• Borrowed: ${Number(pos.borrowedAmount).toFixed(2)} ${pos.assetSymbol} (Value: $${Number(pos.borrowValue).toFixed(2)})
+			• Collateral: ${Number(pos.collateralAmount).toFixed(2)} ${pos.collateralSymbol} (Value: $${Number(pos.collateralValue).toFixed(2)})
+			• Profit: $${Number(pos.profit).toFixed(2)}
+		`,
+			)
+			.join("\n\n");
+
+		return `📊 *Your Active Positions*\n\n${formattedPositions}`;
 	}
 }
