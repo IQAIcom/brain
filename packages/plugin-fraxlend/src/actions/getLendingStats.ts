@@ -1,58 +1,43 @@
-import { graphql } from "gql.tada";
-import { client } from "../lib/graphql";
+import type { Action, Handler } from "@elizaos/core";
+import { LendingStatsService } from "../services/lendingStats";
+import type { FraxLendActionParams } from "../types";
 
-const LENDING_PAIRS_QUERY = graphql(`
-  query GetLendingPairs {
-    pairs(first: 100) {
-      id
-      name
-      symbol
-      asset {
-        symbol
-        decimals
-      }
-      dailyHistory(first: 1, orderBy: timestamp, orderDirection: desc) {
-        interestPerSecond
-        utilization
-        totalAssetAmount
-        totalBorrowAmount
-        timestamp
-      }
-    }
-  }
-`);
+export const getLendingStatsAction = (opts: FraxLendActionParams): Action => {
+	return {
+		name: "FRAXLEND_GET_STATS",
+		description: "Get lending statistics from FraxLend pools",
+		similes: [
+			"GET_STATS",
+			"VIEW_LENDING_STATS",
+			"SHOW_POOL_INFO",
+			"CHECK_APR",
+			"VIEW_RATES",
+			"GET_POOL_DATA",
+			"CHECK_UTILIZATION",
+			"VIEW_SUPPLY",
+		],
+		validate: async () => true,
+		handler: handler(opts),
+		examples: [],
+	};
+};
 
-export async function getLendingStats() {
-	try {
-		const data = await client.request(LENDING_PAIRS_QUERY);
-		return {
-			success: true,
-			data: data.pairs.map((pair) => ({
-				symbol: pair.symbol,
-				assetSymbol: pair.asset.symbol,
-				apr: calculateApr(pair.dailyHistory[0].interestPerSecond as string),
-				utilization: pair.dailyHistory[0].utilization,
-				totalSupply: pair.dailyHistory[0].totalAssetAmount,
-			})),
-		};
-	} catch (error) {
-		return {
-			success: false,
-			error: `Failed to fetch lending stats: ${error.message}`,
-		};
-	}
-}
+const handler: (opts: FraxLendActionParams) => Handler =
+	() => async (_runtime, _message, _state, _options, callback) => {
+		try {
+			const lendingStatsService = new LendingStatsService();
+			const stats = await lendingStatsService.getStats();
 
-function calculateApr(interestPerSecond: string): number {
-	// Convert interest per second to a number
-	const interestRate = Number(interestPerSecond);
-
-	// Calculate seconds in a year
-	const SECONDS_PER_YEAR = 365 * 24 * 60 * 60;
-
-	// Convert to APR percentage
-	const apr = interestRate * SECONDS_PER_YEAR * 100;
-
-	// Return with 2 decimal places
-	return Number(apr.toFixed(2));
-}
+			callback?.({
+				text: "Current lending statistics:",
+				content: stats,
+			});
+			return true;
+		} catch (error) {
+			callback?.({
+				text: `Error fetching lending stats: ${error.message}`,
+				content: { error: error.message },
+			});
+			return false;
+		}
+	};

@@ -1,21 +1,22 @@
-import { getLendingStats } from "./actions/getLendingStats";
-import { getUserPositions } from "./actions/getUserPositions";
-import { deposit } from "./actions/deposit";
-import { withdraw } from "./actions/withdraw";
-import { lend } from "./actions/lend";
+import { getDepositAction } from "./actions/deposit";
+import { getLendingStatsAction } from "./actions/getLendingStats";
+import { getAgentPositionsAction } from "./actions/getAgentPositions";
+import { getLendAction } from "./actions/lend";
+import { getWithdrawAction } from "./actions/withdraw";
+import type { FraxLendActionParams } from "./types";
 
 export interface FraxlendConfig {
 	networkId: string;
 	graphqlEndpoint: string;
 }
 
-export async function createFraxlendPlugin() {
+export async function createFraxlendPlugin(opts: FraxLendActionParams) {
 	const actions = {
-		getLendingStats,
-		getUserPositions,
-		deposit,
-		withdraw,
-		lend,
+		getDepositAction: getDepositAction(opts),
+		getLendingStatsAction: getLendingStatsAction(opts),
+		getAgentPositionsAction: getAgentPositionsAction(opts),
+		getLendAction: getLendAction(opts),
+		getWithdrawAction: getWithdrawAction(opts),
 	};
 
 	return {

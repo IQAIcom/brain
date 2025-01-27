@@ -1,18 +1,15 @@
-import type { Address, PublicClient, WalletClient } from "viem";
-import { FRAXLEND_ABI } from "../constants/abi";
 import {
+	type Action,
+	type Handler,
+	ModelClass,
 	composeContext,
 	generateMessageResponse,
-	type HandlerCallback,
-	ModelClass,
-	type Action,
-	type IAgentRuntime,
-	type Memory,
-	type State,
 } from "@elizaos/core";
-import { getDepositTemplate } from "../lib/templates";
-
-export const getDepositAction = (): Action => {
+import { DEPOSIT_TEMPLATE } from "../lib/templates";
+import { DepositService } from "../services/deposit";
+import { WalletService } from "../services/wallet";
+import type { FraxLendActionParams } from "../types";
+export const getDepositAction = (opts: FraxLendActionParams): Action => {
 	return {
 		name: "FRAXLEND_DEPOSIT",
 		description: "Deposit assets into a FraxLend pool",
@@ -29,93 +26,57 @@ export const getDepositAction = (): Action => {
 			"DEPOSIT_FUNDS",
 		],
 		validate: async () => true,
-		handler: depositHandler,
+		handler: handler(opts),
 		examples: [],
 	};
 };
 
-async function depositHandler(
-	runtime: IAgentRuntime,
-	message: Memory,
-	state: State | undefined,
-	_options: { [key: string]: unknown },
-	callback: HandlerCallback,
-) {
-	let currentState = state;
-	if (!state) {
-		currentState = (await runtime.composeState(message)) as State;
-	}
-	currentState = await runtime.updateRecentMessageState(state);
+const handler: (opts: FraxLendActionParams) => Handler =
+	({ walletPrivateKey }) =>
+	async (runtime, message, state, _options, callback) => {
+		const currentState = state
+			? await runtime.updateRecentMessageState(state)
+			: await runtime.composeState(message);
 
-	const depositContext = composeContext({
-		state: currentState,
-		template: getDepositTemplate,
-	});
+		const depositContext = composeContext({
+			state: currentState,
+			template: DEPOSIT_TEMPLATE,
+		});
 
-	const content = await generateMessageResponse({
-		runtime,
-		context: depositContext,
-		modelClass: ModelClass.SMALL,
-	});
+		const content = await generateMessageResponse({
+			runtime,
+			context: depositContext,
+			modelClass: ModelClass.SMALL,
+		});
 
-	const { pairAddress, amount } = JSON.parse(content.text) || {};
-	if (!pairAddress || !amount) {
-		if (callback) {
-			callback({
+		const { pairAddress, amount } = JSON.parse(content.text) || {};
+
+		if (!pairAddress || !amount) {
+			callback?.({
 				text: "Invalid deposit information provided",
 				content: { error: "Missing pair address or amount" },
 			});
+			return false;
 		}
-		return false;
-	}
 
-	try {
-		const result = await deposit(
-			pairAddress,
-			BigInt(amount),
-			runtime.publicClient,
-			runtime.walletClient,
-		);
+		try {
+			const walletService = new WalletService(walletPrivateKey);
+			const depositService = new DepositService(walletService);
 
-		if (callback) {
-			callback({
-				text: `Successfully deposited ${amount} tokens into pool ${pairAddress}. Transaction hash: ${result.data.txHash}`,
-				content: result.data,
+			const result = await depositService.execute({
+				pairAddress,
+				amount: BigInt(amount),
 			});
-		}
-		return true;
-	} catch (error) {
-		if (callback) {
-			callback({
+
+			callback?.({
+				text: `Successfully deposited ${amount} tokens into pool ${pairAddress}. Transaction hash: ${result.txHash}`,
+			});
+			return true;
+		} catch (error) {
+			callback?.({
 				text: `Error during deposit: ${error.message}`,
 				content: { error: error.message },
 			});
+			return false;
 		}
-		return false;
-	}
-}
-
-async function deposit(
-	pairAddress: Address,
-	amount: bigint,
-	publicClient: PublicClient,
-	walletClient: WalletClient,
-) {
-	const { request } = await publicClient.simulateContract({
-		address: pairAddress,
-		abi: FRAXLEND_ABI,
-		functionName: "addAsset",
-		args: [amount, await walletClient.getAddresses()],
-	});
-
-	const hash = await walletClient.writeContract(request);
-	const receipt = await publicClient.waitForTransactionReceipt({ hash });
-
-	return {
-		success: true,
-		data: {
-			txHash: receipt.transactionHash,
-			amount,
-		},
 	};
-}
