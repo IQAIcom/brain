@@ -15,12 +15,26 @@ export class LendService {
 	}: { pairAddress: Address; amount: bigint }) {
 		const publicClient = this.walletService.getPublicClient();
 		const walletClient = this.walletService.getWalletClient();
+		const userAddress = await walletClient.getAddresses();
 
 		const assetAddress = (await publicClient.readContract({
 			address: pairAddress,
 			abi: FRAXLEND_ABI,
 			functionName: "assetContract",
 		})) as Address;
+
+		const balance = await publicClient.readContract({
+			address: assetAddress,
+			abi: erc20Abi,
+			functionName: "balanceOf",
+			args: [userAddress[0]],
+		});
+
+		if (balance < amount) {
+			throw new Error(
+				`Insufficient balance. Available: ${balance}, Requested: ${amount}`,
+			);
+		}
 
 		const { request: approveRequest } = await publicClient.simulateContract({
 			address: assetAddress,

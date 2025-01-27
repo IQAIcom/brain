@@ -44,8 +44,7 @@ const handler: (opts: FraxLendActionParams) => Handler =
 			});
 
 			callback?.({
-				text: `Successfully borrowed ${amount} tokens. Transaction hash: ${result.data.txHash}`,
-				content: result,
+				text: `Successfully borrowed ${amount} tokens. Transaction hash: ${result.txHash}`,
 			});
 			return true;
 		} catch (error) {

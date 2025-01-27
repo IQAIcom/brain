@@ -15,6 +15,18 @@ export class BorrowService {
 	}: { pairAddress: Address; amount: bigint }) {
 		const publicClient = this.walletService.getPublicClient();
 		const walletClient = this.walletService.getWalletClient();
+		const userAddress = await walletClient.getAddresses();
+
+		const collateralBalance = (await publicClient.readContract({
+			address: pairAddress,
+			abi: FRAXLEND_ABI,
+			functionName: "userCollateralBalance",
+			args: [userAddress[0]],
+		})) as bigint;
+
+		if (collateralBalance <= 0n) {
+			throw new Error("You don't have any collateral to borrow with");
+		}
 
 		const { request } = await publicClient.simulateContract({
 			address: pairAddress,
@@ -27,11 +39,8 @@ export class BorrowService {
 		const receipt = await publicClient.waitForTransactionReceipt({ hash });
 
 		return {
-			success: true,
-			data: {
-				txHash: receipt.transactionHash,
-				amount,
-			},
+			txHash: receipt.transactionHash,
+			amount,
 		};
 	}
 }
