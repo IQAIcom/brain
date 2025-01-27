@@ -15,7 +15,7 @@ export class WalletService {
 
 	constructor(privateKey?: string, chain: Chain = mainnet) {
 		this.publicClient = createPublicClient({
-			chain,
+			chain: chain,
 			transport: http(),
 		});
 
