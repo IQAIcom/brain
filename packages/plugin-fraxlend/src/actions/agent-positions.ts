@@ -23,10 +23,12 @@ export const getAgentPositionsAction = (opts: FraxLendActionParams): Action => {
 };
 
 const handler: (opts: FraxLendActionParams) => Handler =
-	({ walletPrivateKey, chain }) =>
-	async (_runtime, _message, _state, _options, callback) => {
+	(opts) => async (_runtime, _message, _state, _options, callback) => {
 		try {
-			const walletService = new WalletService(walletPrivateKey, chain);
+			const walletService = new WalletService(
+				opts.walletPrivateKey,
+				opts.chain,
+			);
 			const userPositionsService = new AgentPositionsService(walletService);
 			const positions = await userPositionsService.getPositions();
 

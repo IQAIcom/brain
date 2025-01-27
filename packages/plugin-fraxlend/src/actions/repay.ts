@@ -24,8 +24,7 @@ export const getRepayAction = (opts: FraxLendActionParams): Action => {
 };
 
 const handler: (opts: FraxLendActionParams) => Handler =
-	({ walletPrivateKey, chain }) =>
-	async (runtime, message, state, _options, callback) => {
+	(opts) => async (runtime, message, state, _options, callback) => {
 		const inputParser = new InputParserService();
 		const { pairAddress, amount } = await inputParser.parseInputs({
 			runtime,
@@ -35,7 +34,10 @@ const handler: (opts: FraxLendActionParams) => Handler =
 		});
 
 		try {
-			const walletService = new WalletService(walletPrivateKey, chain);
+			const walletService = new WalletService(
+				opts.walletPrivateKey,
+				opts.chain,
+			);
 			const repayService = new RepayService(walletService);
 
 			const result = await repayService.execute({
