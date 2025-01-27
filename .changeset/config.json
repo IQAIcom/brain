@@ -6,5 +6,6 @@
 	"fixed": [],
 	"linked": [],
 	"access": "public",
-	"updateInternalDependencies": "patch"
+	"updateInternalDependencies": "patch",
+	"ignore": ["@iqai/brain-test"]
 }

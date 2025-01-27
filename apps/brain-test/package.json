@@ -1,5 +1,5 @@
 {
-	"name": "@iqai/brain",
+	"name": "@iqai/brain-test",
 	"version": "0.1",
 	"main": "src/index.ts",
 	"type": "module",
