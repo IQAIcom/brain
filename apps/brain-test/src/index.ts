@@ -21,6 +21,7 @@ async function main() {
 				chat: ["friendly"],
 				post: ["formal"],
 			},
+			modelProvider: ModelProviderName.OPENAI,
 		},
 		clients: {
 			direct: {
