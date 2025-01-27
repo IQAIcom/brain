@@ -2,7 +2,7 @@ import { graphql } from "gql.tada";
 import { client } from "../lib/graphql";
 import type { WalletService } from "./wallet";
 
-const USER_POSITIONS_QUERY = graphql(`
+const AGENT_POSITIONS_QUERY = graphql(`
   query fraxlendUsers($user: User_filter) {
     users(first: 1000, where: $user) {
       id
@@ -33,7 +33,7 @@ const USER_POSITIONS_QUERY = graphql(`
   }
 `);
 
-export class UserPositionsService {
+export class AgentPositionsService {
 	private walletService: WalletService;
 
 	constructor(walletService: WalletService) {
@@ -44,7 +44,7 @@ export class UserPositionsService {
 		const walletClient = this.walletService.getWalletClient();
 		const userAddress = walletClient.account.address;
 		try {
-			const data = await client.request(USER_POSITIONS_QUERY, {
+			const data = await client.request(AGENT_POSITIONS_QUERY, {
 				user: {
 					id: userAddress.toLowerCase(),
 				},

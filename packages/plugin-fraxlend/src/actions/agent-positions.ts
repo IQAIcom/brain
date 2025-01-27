@@ -1,5 +1,5 @@
 import type { Action, Handler } from "@elizaos/core";
-import { UserPositionsService } from "../services/userPositions";
+import { AgentPositionsService } from "../services/agent-positions";
 import { WalletService } from "../services/wallet";
 import type { FraxLendActionParams } from "../types";
 
@@ -27,7 +27,7 @@ const handler: (opts: FraxLendActionParams) => Handler =
 	async (_runtime, _message, _state, _options, callback) => {
 		try {
 			const walletService = new WalletService(walletPrivateKey);
-			const userPositionsService = new UserPositionsService(walletService);
+			const userPositionsService = new AgentPositionsService(walletService);
 			const positions = await userPositionsService.getPositions();
 
 			callback?.({

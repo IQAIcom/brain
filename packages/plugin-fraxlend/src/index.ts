@@ -1,6 +1,6 @@
 import { getDepositAction } from "./actions/deposit";
-import { getLendingStatsAction } from "./actions/getLendingStats";
-import { getAgentPositionsAction } from "./actions/getAgentPositions";
+import { getLendingStatsAction } from "./actions/lending-stats";
+import { getAgentPositionsAction } from "./actions/agent-positions";
 import { getLendAction } from "./actions/lend";
 import { getWithdrawAction } from "./actions/withdraw";
 import type { FraxLendActionParams } from "./types";
