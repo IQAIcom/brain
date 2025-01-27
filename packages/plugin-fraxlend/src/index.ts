@@ -9,11 +9,6 @@ import { getRemoveCollateralAction } from "./actions/remove-collateral";
 import type { FraxLendActionParams } from "./types";
 import type { Plugin } from "@elizaos/core";
 
-export interface FraxlendConfig {
-	networkId: string;
-	graphqlEndpoint: string;
-}
-
 export async function createFraxlendPlugin(
 	opts: FraxLendActionParams,
 ): Promise<Plugin> {
