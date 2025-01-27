@@ -4,6 +4,7 @@ import {
 	http,
 	type PublicClient,
 	type WalletClient,
+	type Chain,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { mainnet } from "viem/chains";
@@ -12,11 +13,11 @@ export class WalletService {
 	private publicClient: PublicClient;
 	private walletClient?: WalletClient;
 
-	constructor(privateKey?: string) {
+	constructor(privateKey?: string, chain: Chain = mainnet) {
 		this.publicClient = createPublicClient({
-			chain: mainnet,
+			chain,
 			transport: http(),
-		}) as PublicClient;
+		});
 
 		if (privateKey) {
 			const account = privateKeyToAccount(`0x${privateKey}`);

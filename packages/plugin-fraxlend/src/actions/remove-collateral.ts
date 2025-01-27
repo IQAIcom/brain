@@ -1,22 +1,22 @@
 import type { Action, Handler } from "@elizaos/core";
 import { WITHDRAW_TEMPLATE } from "../lib/templates";
 import { InputParserService } from "../services/input-parser";
+import { RemoveCollateralService } from "../services/remove-collateral";
 import { WalletService } from "../services/wallet";
-import { WithdrawService } from "../services/withdraw";
 import type { FraxLendActionParams } from "../types";
 
-export const getWithdrawAction = (opts: FraxLendActionParams): Action => {
+export const getRemoveCollateralAction = (
+	opts: FraxLendActionParams,
+): Action => {
 	return {
-		name: "FRAXLEND_WITHDRAW",
-		description: "Withdraw assets from a FraxLend pool",
+		name: "FRAXLEND_REMOVE_COLLATERAL",
+		description: "Remove collateral from a FraxLend position",
 		similes: [
-			"WITHDRAW",
-			"REMOVE_LIQUIDITY",
-			"PULL_ASSETS",
-			"TAKE_OUT",
-			"RETRIEVE_FUNDS",
-			"EXIT_POOL",
-			"UNSTAKE",
+			"REMOVE_COLLATERAL",
+			"WITHDRAW_COLLATERAL",
+			"DECREASE_COLLATERAL",
+			"PULL_COLLATERAL",
+			"REDUCE_COLLATERAL",
 		],
 		validate: async () => true,
 		handler: handler(opts),
@@ -37,21 +37,23 @@ const handler: (opts: FraxLendActionParams) => Handler =
 
 		try {
 			const walletService = new WalletService(walletPrivateKey, chain);
-			const withdrawService = new WithdrawService(walletService);
+			const removeCollateralService = new RemoveCollateralService(
+				walletService,
+			);
 
-			const result = await withdrawService.execute({
+			const result = await removeCollateralService.execute({
 				pairAddress,
-				shares: BigInt(amount),
+				amount: BigInt(amount),
 			});
 
 			callback?.({
-				text: `Successfully withdrew ${amount} shares. Transaction hash: ${result.data.txHash}`,
+				text: `Successfully removed ${amount} collateral. Transaction hash: ${result.data.txHash}`,
 				content: result,
 			});
 			return true;
 		} catch (error) {
 			callback?.({
-				text: `Error during withdrawal: ${error.message}`,
+				text: `Error removing collateral: ${error.message}`,
 				content: { error: error.message },
 			});
 			return false;

@@ -1,22 +1,25 @@
-import type { Address, PublicClient, WalletClient } from "viem";
+import { type Address, erc20Abi } from "viem";
 import { FRAXLEND_ABI } from "../lib/fraxlend.abi";
 import type { WalletService } from "./wallet";
 
-export class DepositService {
+export class BorrowService {
 	private walletService: WalletService;
 
 	constructor(walletService: WalletService) {
 		this.walletService = walletService;
 	}
 
-	async execute({ pairAddress, amount }: DepositParams) {
+	async execute({
+		pairAddress,
+		amount,
+	}: { pairAddress: Address; amount: bigint }) {
 		const publicClient = this.walletService.getPublicClient();
 		const walletClient = this.walletService.getWalletClient();
 
 		const { request } = await publicClient.simulateContract({
 			address: pairAddress,
 			abi: FRAXLEND_ABI,
-			functionName: "addAsset",
+			functionName: "borrowAsset",
 			args: [amount, await walletClient.getAddresses()],
 		});
 
@@ -24,13 +27,11 @@ export class DepositService {
 		const receipt = await publicClient.waitForTransactionReceipt({ hash });
 
 		return {
-			txHash: receipt.transactionHash,
-			amount,
+			success: true,
+			data: {
+				txHash: receipt.transactionHash,
+				amount,
+			},
 		};
 	}
-}
-
-export interface DepositParams {
-	pairAddress: Address;
-	amount: bigint;
 }

@@ -1,22 +1,21 @@
 import type { Action, Handler } from "@elizaos/core";
 import { WITHDRAW_TEMPLATE } from "../lib/templates";
 import { InputParserService } from "../services/input-parser";
+import { RepayService } from "../services/repay";
 import { WalletService } from "../services/wallet";
-import { WithdrawService } from "../services/withdraw";
 import type { FraxLendActionParams } from "../types";
 
-export const getWithdrawAction = (opts: FraxLendActionParams): Action => {
+export const getRepayAction = (opts: FraxLendActionParams): Action => {
 	return {
-		name: "FRAXLEND_WITHDRAW",
-		description: "Withdraw assets from a FraxLend pool",
+		name: "FRAXLEND_REPAY",
+		description: "Repay borrowed assets to a FraxLend pool",
 		similes: [
-			"WITHDRAW",
-			"REMOVE_LIQUIDITY",
-			"PULL_ASSETS",
-			"TAKE_OUT",
-			"RETRIEVE_FUNDS",
-			"EXIT_POOL",
-			"UNSTAKE",
+			"REPAY",
+			"PAY_BACK",
+			"RETURN_LOAN",
+			"SETTLE_DEBT",
+			"CLEAR_LOAN",
+			"REPAY_DEBT",
 		],
 		validate: async () => true,
 		handler: handler(opts),
@@ -37,21 +36,21 @@ const handler: (opts: FraxLendActionParams) => Handler =
 
 		try {
 			const walletService = new WalletService(walletPrivateKey, chain);
-			const withdrawService = new WithdrawService(walletService);
+			const repayService = new RepayService(walletService);
 
-			const result = await withdrawService.execute({
+			const result = await repayService.execute({
 				pairAddress,
-				shares: BigInt(amount),
+				amount: BigInt(amount),
 			});
 
 			callback?.({
-				text: `Successfully withdrew ${amount} shares. Transaction hash: ${result.data.txHash}`,
+				text: `Successfully repaid ${amount} tokens. Transaction hash: ${result.data.txHash}`,
 				content: result,
 			});
 			return true;
 		} catch (error) {
 			callback?.({
-				text: `Error during withdrawal: ${error.message}`,
+				text: `Error during repayment: ${error.message}`,
 				content: { error: error.message },
 			});
 			return false;

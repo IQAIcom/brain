@@ -24,7 +24,7 @@ export const getLendAction = (opts: FraxLendActionParams): Action => {
 };
 
 const handler: (opts: FraxLendActionParams) => Handler =
-	({ walletPrivateKey }) =>
+	({ walletPrivateKey, chain }) =>
 	async (runtime, message, state, _options, callback) => {
 		const inputParser = new InputParserService();
 		const { pairAddress, amount } = await inputParser.parseInputs({
@@ -35,7 +35,7 @@ const handler: (opts: FraxLendActionParams) => Handler =
 		});
 
 		try {
-			const walletService = new WalletService(walletPrivateKey);
+			const walletService = new WalletService(walletPrivateKey, chain);
 			const lendService = new LendService(walletService);
 
 			const result = await lendService.execute({
