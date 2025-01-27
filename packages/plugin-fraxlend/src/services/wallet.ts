@@ -14,10 +14,11 @@ export class WalletService {
 	private walletClient?: WalletClient;
 
 	constructor(privateKey?: string, chain: Chain = mainnet) {
+		//@ts-ignore - type instantiation too deep and possibly infinite: This is from viem not in our control
 		this.publicClient = createPublicClient({
 			chain: chain,
 			transport: http(),
-		});
+		}) as PublicClient;
 
 		if (privateKey) {
 			const account = privateKeyToAccount(`0x${privateKey}`);
