@@ -1,0 +1,58 @@
+import type { Action, Handler } from "@elizaos/core";
+import { WITHDRAW_TEMPLATE } from "../lib/templates";
+import { InputParserService } from "../services/input-parser";
+import { LendService } from "../services/lend";
+import { WalletService } from "../services/wallet";
+import type { FraxLendActionParams } from "../types";
+
+export const getLendAction = (opts: FraxLendActionParams): Action => {
+	return {
+		name: "FRAXLEND_LEND",
+		description: "Lend assets to a FraxLend pool",
+		similes: [
+			"LEND",
+			"SUPPLY",
+			"PROVIDE_ASSETS",
+			"LOAN_ASSETS",
+			"SUPPLY_TOKENS",
+			"LEND_TOKENS",
+		],
+		validate: async () => true,
+		handler: handler(opts),
+		examples: [],
+	};
+};
+
+const handler: (opts: FraxLendActionParams) => Handler =
+	(opts) => async (runtime, message, state, _options, callback) => {
+		const inputParser = new InputParserService();
+		const { pairAddress, amount } = await inputParser.parseInputs({
+			runtime,
+			message,
+			state,
+			template: WITHDRAW_TEMPLATE,
+		});
+
+		try {
+			const walletService = new WalletService(
+				opts.walletPrivateKey,
+				opts.chain,
+			);
+			const lendService = new LendService(walletService);
+
+			const result = await lendService.execute({
+				pairAddress,
+				amount: BigInt(amount),
+			});
+
+			callback?.({
+				text: `Successfully lent ${amount} tokens. Transaction hash: ${result.txHash}`,
+			});
+			return true;
+		} catch (error) {
+			callback?.({
+				text: `Error during lending: ${error.message}`,
+			});
+			return false;
+		}
+	};

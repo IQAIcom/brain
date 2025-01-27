@@ -3,34 +3,36 @@ import { createWalletProvider, createClient } from "./provider.ts";
 import { getAgentKitActions } from "./actions.ts";
 import type { AgentKitConfig } from "./types.ts";
 
-export async function createAgentKitPlugin(config: AgentKitConfig): Promise<Plugin> {
-    const getClient = createClient(config);
-    const walletProvider = createWalletProvider(config);
+export async function createAgentKitPlugin(
+	config: AgentKitConfig,
+): Promise<Plugin> {
+	const getClient = createClient(config);
+	const walletProvider = createWalletProvider(config);
 
-    const initializeActions = async () => {
-        try {
-            const actions = await getAgentKitActions({
-                getClient,
-                config: {
-                    networkId: config.networkId
-                }
-            });
-            console.log("✅ AgentKit actions initialized successfully.");
-            return actions;
-        } catch (error) {
-            console.error("❌ Failed to initialize AgentKit actions:", error);
-            return null;
-        }
-    };
+	const initializeActions = async () => {
+		try {
+			const actions = await getAgentKitActions({
+				getClient,
+				config: {
+					networkId: config.networkId,
+				},
+			});
+			console.log("✅ AgentKit actions initialized successfully.");
+			return actions;
+		} catch (error) {
+			console.error("❌ Failed to initialize AgentKit actions:", error);
+			return null;
+		}
+	};
 
-    return {
-        name: "AgentKit Integration",
-        description: "AgentKit integration plugin",
-        providers: [walletProvider],
-        evaluators: [],
-        services: [],
-        actions: (await initializeActions()) ?? undefined,
-    };
+	return {
+		name: "AgentKit Integration",
+		description: "AgentKit integration plugin",
+		providers: [walletProvider],
+		evaluators: [],
+		services: [],
+		actions: (await initializeActions()) ?? undefined,
+	};
 }
 
 export default createAgentKitPlugin;
