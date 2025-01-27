@@ -1,23 +1,23 @@
 {
-  "name": "@iqai/plugin-fraxlend",
-  "version": "0.1.8",
-  "main": "dist/index.js",
-  "type": "module",
-  "types": "dist/index.d.ts",
-  "dependencies": {
-    "@elizaos/core": "0.1.7",
-    "graphql": "^16.8.1",
-    "graphql-request": "^6.1.0",
-    "tsup": "8.3.5",
-    "viem": "^2.22.12",
-    "gql.tada": "^1.4.3"
-  },
-  "scripts": {
-    "build": "tsup --format esm --dts",
-    "dev": "tsup --format esm --dts --watch"
-  },
-  "devDependencies": {
-    "@iqai/tsconfig": "workspace:*",
-    "@0no-co/graphqlsp": "^1.8.0"
-  }
+	"name": "@iqai/plugin-fraxlend",
+	"version": "0.1.8",
+	"main": "dist/index.js",
+	"type": "module",
+	"types": "dist/index.d.ts",
+	"dependencies": {
+		"@elizaos/core": "0.1.7",
+		"graphql": "^16.8.1",
+		"graphql-request": "^6.1.0",
+		"tsup": "8.3.5",
+		"viem": "^2.22.12",
+		"gql.tada": "^1.4.3"
+	},
+	"scripts": {
+		"build": "tsup --format esm --dts",
+		"dev": "tsup --format esm --dts --watch"
+	},
+	"devDependencies": {
+		"@iqai/tsconfig": "workspace:*",
+		"@0no-co/graphqlsp": "^1.8.0"
+	}
 }
