@@ -21,6 +21,6 @@ export class InputParserService {
 			modelClass: ModelClass.SMALL,
 		});
 
-		return JSON.parse(content.text);
+		return content as any;
 	}
 }

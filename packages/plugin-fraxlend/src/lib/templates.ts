@@ -38,13 +38,13 @@ Extract the withdrawal details from the most recent message. If required informa
 
 The response must include:
 - pairAddress: The FraxLend pool address
-- shares: The number of shares to withdraw
+- amount: The number of shares to withdraw
 
 Example response:
 \`\`\`json
 {
     "pairAddress": "0x1234567890123456789012345678901234567890",
-    "shares": "1000000000000000000"
+    "amount": "1000000000000000000"
 }
 \`\`\`
 {{recentMessages}}
