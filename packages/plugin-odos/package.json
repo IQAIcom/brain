@@ -1,0 +1,21 @@
+{
+	"name": "@iqai/plugin-odos",
+	"version": "0.1.8",
+	"main": "dist/index.js",
+	"type": "module",
+	"types": "dist/index.d.ts",
+	"dependencies": {
+		"@elizaos/core": "0.1.7",
+		"tsup": "8.3.5",
+		"viem": "^2.22.15",
+		"dedent": "^1.5.3"
+	},
+	"scripts": {
+		"build": "tsup --format esm",
+		"dev": "tsup --format esm --watch"
+	},
+	"devDependencies": {
+		"@0no-co/graphqlsp": "^1.8.0",
+		"@iqai/tsconfig": "workspace:*"
+	}
+}
