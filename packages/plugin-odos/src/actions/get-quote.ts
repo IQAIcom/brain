@@ -1,8 +1,8 @@
 import type { Action, Handler } from "@elizaos/core";
 import { GetQuoteActionService } from "../services/get-quote";
-import type { FraxLendActionParams } from "../types";
+import type { OdosActionParams } from "../types";
 
-export const getQuoteAction = (opts: FraxLendActionParams): Action => {
+export const getQuoteAction = (opts: OdosActionParams): Action => {
 	return {
 		name: "ODOS_GET_QUOTE",
 		description: "Get a quote for a swap or exchange operation",
@@ -23,19 +23,19 @@ export const getQuoteAction = (opts: FraxLendActionParams): Action => {
 	};
 };
 
-const handler: (opts: FraxLendActionParams) => Handler =
+const handler: (opts: OdosActionParams) => Handler =
 	() => async (_runtime, _message, _state, _options, callback) => {
 		try {
 			const service = new GetQuoteActionService();
-			const stats = await service.getQuote();
+			const quote = await service.getQuote();
 
 			callback?.({
-				text: service.format(stats),
+				text: service.format(quote),
 			});
 			return true;
 		} catch (error) {
 			callback?.({
-				text: `Error fetching quotes: ${error.message}`,
+				text: `Error fetching quote: ${error.message}`,
 			});
 			return false;
 		}
