@@ -5,6 +5,8 @@
 		"build": "turbo build",
 		"dev": "turbo dev",
 		"clean": "turbo clean && rm -rf node_modules",
+		"clean-modules": "echo '🧹 Cleaning all node_modules directories...' && find . -name 'node_modules' -type d -exec rm -rf {} + && echo '✨ All node_modules directories have been removed!'",
+		"clean-dist": "echo '🧹 Cleaning all dist directories...' && find . -name 'dist' -type d -exec rm -rf {} + && echo '✨ All dist directories have been removed!'",
 		"format": "biome format . --write",
 		"lint": "biome check .",
 		"lint:fix": "biome check . --apply",
