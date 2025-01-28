@@ -1369,4 +1369,4 @@ export const FRAXLEND_ABI = [
 		stateMutability: "nonpayable",
 		type: "function",
 	},
-];
+] as const;

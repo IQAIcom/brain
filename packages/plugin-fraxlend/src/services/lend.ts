@@ -20,7 +20,7 @@ export class LendService {
 		const assetAddress = (await publicClient.readContract({
 			address: pairAddress,
 			abi: FRAXLEND_ABI,
-			functionName: "assetContract",
+			functionName: "asset",
 		})) as Address;
 
 		const balance = await publicClient.readContract({
@@ -47,8 +47,8 @@ export class LendService {
 		const { request: lendRequest } = await publicClient.simulateContract({
 			address: pairAddress,
 			abi: FRAXLEND_ABI,
-			functionName: "addAsset",
-			args: [amount, await walletClient.getAddresses()],
+			functionName: "deposit",
+			args: [amount, await walletClient.getAddresses()[0]],
 		});
 
 		const hash = await walletClient.writeContract(lendRequest);
