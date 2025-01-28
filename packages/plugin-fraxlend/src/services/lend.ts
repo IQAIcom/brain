@@ -15,7 +15,6 @@ export class LendService {
 	}: { pairAddress: Address; amount: bigint }) {
 		const publicClient = this.walletService.getPublicClient();
 		const walletClient = this.walletService.getWalletClient();
-		const userAddress = await walletClient.getAddresses();
 
 		const assetAddress = (await publicClient.readContract({
 			address: pairAddress,
@@ -27,7 +26,7 @@ export class LendService {
 			address: assetAddress,
 			abi: erc20Abi,
 			functionName: "balanceOf",
-			args: [userAddress[0]],
+			args: [walletClient.account.address],
 		});
 
 		if (balance < amount) {
@@ -36,19 +35,14 @@ export class LendService {
 			);
 		}
 
-		const { request: approveRequest } = await publicClient.simulateContract({
-			address: assetAddress,
-			abi: erc20Abi,
-			functionName: "approve",
-			args: [pairAddress, amount],
-		});
-		await walletClient.writeContract(approveRequest);
+		await this.ensureTokenApproval(assetAddress, pairAddress, amount);
 
 		const { request: lendRequest } = await publicClient.simulateContract({
 			address: pairAddress,
 			abi: FRAXLEND_ABI,
 			functionName: "deposit",
-			args: [amount, await walletClient.getAddresses()[0]],
+			args: [amount, await walletClient.account.address],
+			account: walletClient.account,
 		});
 
 		const hash = await walletClient.writeContract(lendRequest);
@@ -58,5 +52,33 @@ export class LendService {
 			txHash: receipt.transactionHash,
 			amount,
 		};
+	}
+
+	private async ensureTokenApproval(
+		assetAddress: Address,
+		spenderAddress: Address,
+		amount: bigint,
+	) {
+		const publicClient = this.walletService.getPublicClient();
+		const walletClient = this.walletService.getWalletClient();
+		const userAddress = walletClient.account.address;
+
+		const currentAllowance = await publicClient.readContract({
+			address: assetAddress,
+			abi: erc20Abi,
+			functionName: "allowance",
+			args: [userAddress, spenderAddress],
+		});
+
+		if (currentAllowance < amount) {
+			const { request: approveRequest } = await publicClient.simulateContract({
+				address: assetAddress,
+				abi: erc20Abi,
+				functionName: "approve",
+				args: [spenderAddress, amount],
+				account: walletClient.account,
+			});
+			await walletClient.writeContract(approveRequest);
+		}
 	}
 }

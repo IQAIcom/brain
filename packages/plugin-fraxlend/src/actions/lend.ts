@@ -1,5 +1,5 @@
 import type { Action, Handler } from "@elizaos/core";
-import { WITHDRAW_TEMPLATE } from "../lib/templates";
+import { LEND_TEMPLATE } from "../lib/templates";
 import { InputParserService } from "../services/input-parser";
 import { LendService } from "../services/lend";
 import { WalletService } from "../services/wallet";
@@ -30,7 +30,7 @@ const handler: (opts: FraxLendActionParams) => Handler =
 			runtime,
 			message,
 			state,
-			template: WITHDRAW_TEMPLATE,
+			template: LEND_TEMPLATE,
 		});
 
 		try {

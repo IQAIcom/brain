@@ -1,22 +1,22 @@
 import {
-	createWalletClient,
 	createPublicClient,
+	createWalletClient,
 	http,
+	type Chain,
 	type PublicClient,
 	type WalletClient,
-	type Chain,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { mainnet } from "viem/chains";
+import { fraxtal } from "viem/chains";
 
 export class WalletService {
 	private publicClient: PublicClient;
 	private walletClient?: WalletClient;
 
-	constructor(privateKey?: string, chain: Chain = mainnet) {
+	constructor(privateKey?: string, chain: Chain = fraxtal) {
 		//@ts-ignore - type instantiation too deep and possibly infinite: This is from viem not in our control
 		this.publicClient = createPublicClient({
-			chain: chain,
+			chain,
 			transport: http(),
 		}) as PublicClient;
 
@@ -24,7 +24,7 @@ export class WalletService {
 			const account = privateKeyToAccount(`0x${privateKey}`);
 			this.walletClient = createWalletClient({
 				account,
-				chain: mainnet,
+				chain,
 				transport: http(),
 			});
 		}
