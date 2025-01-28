@@ -11,17 +11,25 @@ export class BorrowService {
 
 	async execute({
 		pairAddress,
-		amount,
-	}: { pairAddress: Address; amount: bigint }) {
+		borrowAmount,
+		collateralAmount,
+		receiver,
+	}: {
+		pairAddress: Address;
+		borrowAmount: bigint;
+		collateralAmount: bigint;
+		receiver: Address;
+	}) {
 		const publicClient = this.walletService.getPublicClient();
 		const walletClient = this.walletService.getWalletClient();
-		const userAddress = await walletClient.getAddresses();
+		const userAddress = walletClient.account.address;
 
 		const collateralBalance = (await publicClient.readContract({
 			address: pairAddress,
 			abi: FRAXLEND_ABI,
 			functionName: "userCollateralBalance",
-			args: [userAddress[0]],
+			args: [userAddress],
+			account: walletClient.account,
 		})) as bigint;
 
 		if (collateralBalance <= 0n) {
@@ -32,7 +40,8 @@ export class BorrowService {
 			address: pairAddress,
 			abi: FRAXLEND_ABI,
 			functionName: "borrowAsset",
-			args: [amount, await walletClient.getAddresses()],
+			args: [borrowAmount, collateralAmount, receiver],
+			account: walletClient.account,
 		});
 
 		const hash = await walletClient.writeContract(request);
@@ -40,7 +49,9 @@ export class BorrowService {
 
 		return {
 			txHash: receipt.transactionHash,
-			amount,
+			borrowAmount,
+			collateralAmount,
+			receiver,
 		};
 	}
 }

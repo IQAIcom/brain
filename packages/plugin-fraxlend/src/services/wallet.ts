@@ -14,7 +14,6 @@ export class WalletService {
 	private walletClient?: WalletClient;
 
 	constructor(privateKey?: string, chain: Chain = fraxtal) {
-		//@ts-ignore - type instantiation too deep and possibly infinite: This is from viem not in our control
 		this.publicClient = createPublicClient({
 			chain,
 			transport: http(),

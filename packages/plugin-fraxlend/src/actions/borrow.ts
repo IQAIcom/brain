@@ -1,5 +1,5 @@
 import type { Action, Handler } from "@elizaos/core";
-import { WITHDRAW_TEMPLATE } from "../lib/templates";
+import { BORROW_TEMPLATE } from "../lib/templates";
 import { InputParserService } from "../services/input-parser";
 import { BorrowService } from "../services/borrow";
 import { WalletService } from "../services/wallet";
@@ -28,12 +28,13 @@ export const getBorrowAction = (opts: FraxLendActionParams): Action => {
 const handler: (opts: FraxLendActionParams) => Handler =
 	(opts) => async (runtime, message, state, _options, callback) => {
 		const inputParser = new InputParserService();
-		const { pairAddress, amount } = await inputParser.parseInputs({
-			runtime,
-			message,
-			state,
-			template: WITHDRAW_TEMPLATE,
-		});
+		const { pairAddress, borrowAmount, collateralAmount, receiver } =
+			await inputParser.parseInputs({
+				runtime,
+				message,
+				state,
+				template: BORROW_TEMPLATE,
+			});
 
 		try {
 			const walletService = new WalletService(
@@ -44,29 +45,33 @@ const handler: (opts: FraxLendActionParams) => Handler =
 
 			const result = await borrowService.execute({
 				pairAddress,
-				amount: BigInt(amount),
+				borrowAmount: BigInt(borrowAmount),
+				collateralAmount: BigInt(collateralAmount),
+				receiver,
 			});
 
 			callback?.({
 				text: dedent`
-					✅ Borrowing Transaction Successful
+                    ✅ Borrowing Transaction Successful
 
-					💸 Amount: ${formatWeiToNumber(amount)} tokens
-					🔗 Transaction: ${result.txHash}
+                    💸 Borrow Amount: ${formatWeiToNumber(borrowAmount)} tokens
+                    🔒 Collateral Amount: ${formatWeiToNumber(collateralAmount)} tokens
+                    📬 Receiver: ${receiver}
+                    🔗 Transaction: ${result.txHash}
 
-					Funds have been borrowed from the FraxLend pool.
-				`,
+                    Funds have been borrowed from the FraxLend pool.
+                `,
 			});
 			return true;
 		} catch (error) {
 			callback?.({
 				text: dedent`
-					❌ Borrowing Transaction Failed
+                    ❌ Borrowing Transaction Failed
 
-					Error: ${error.message}
+                    Error: ${error.message}
 
-					Please verify your inputs and try again.
-				`,
+                    Please verify your inputs and try again.
+                `,
 			});
 			return false;
 		}
