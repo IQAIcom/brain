@@ -4,6 +4,8 @@ import { InputParserService } from "../services/input-parser";
 import { WalletService } from "../services/wallet";
 import { WithdrawService } from "../services/withdraw";
 import type { FraxLendActionParams } from "../types";
+import dedent from "dedent";
+import { formatWeiToNumber } from "../lib/format-number";
 
 export const getWithdrawAction = (opts: FraxLendActionParams): Action => {
 	return {
@@ -47,12 +49,25 @@ const handler: (opts: FraxLendActionParams) => Handler =
 			});
 
 			callback?.({
-				text: `Successfully withdrew ${amount}. Transaction hash: ${result.txHash}`,
+				text: dedent`
+					✅ Withdrawal Transaction Successful
+
+					💰 Amount: ${formatWeiToNumber(amount)} tokens
+					🔗 Transaction: ${result.txHash}
+
+					Your assets have been withdrawn from the FraxLend pool.
+				`,
 			});
 			return true;
 		} catch (error) {
 			callback?.({
-				text: `Error during withdrawal: ${error.message}`,
+				text: dedent`
+					❌ Withdrawal Transaction Failed
+
+					Error: ${error.message}
+
+					Please verify your inputs and try again.
+				`,
 			});
 			return false;
 		}

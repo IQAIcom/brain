@@ -4,6 +4,8 @@ import { InputParserService } from "../services/input-parser";
 import { AddCollateralService } from "../services/add-collateral";
 import { WalletService } from "../services/wallet";
 import type { FraxLendActionParams } from "../types";
+import { formatWeiToNumber } from "../lib/format-number";
+import dedent from "dedent";
 
 export const getAddCollateralAction = (opts: FraxLendActionParams): Action => {
 	return {
@@ -45,12 +47,25 @@ const handler: (opts: FraxLendActionParams) => Handler =
 			});
 
 			callback?.({
-				text: `Successfully added ${amount} collateral. Transaction hash: ${result.txHash}`,
+				text: dedent`
+					✅ Collateral Addition Successful
+
+					🔒 Amount: ${formatWeiToNumber(amount)} tokens
+					🔗 Transaction: ${result.txHash}
+
+					Collateral has been added to your FraxLend position.
+				`,
 			});
 			return true;
 		} catch (error) {
 			callback?.({
-				text: `Error adding collateral: ${error.message}`,
+				text: dedent`
+					❌ Collateral Addition Failed
+
+					Error: ${error.message}
+
+					Please verify your inputs and try again.
+				`,
 			});
 			return false;
 		}

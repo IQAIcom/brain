@@ -4,6 +4,8 @@ import { InputParserService } from "../services/input-parser";
 import { RemoveCollateralService } from "../services/remove-collateral";
 import { WalletService } from "../services/wallet";
 import type { FraxLendActionParams } from "../types";
+import dedent from "dedent";
+import { formatWeiToNumber } from "../lib/format-number";
 
 export const getRemoveCollateralAction = (
 	opts: FraxLendActionParams,
@@ -49,12 +51,25 @@ const handler: (opts: FraxLendActionParams) => Handler =
 			});
 
 			callback?.({
-				text: `Successfully removed ${amount} collateral. Transaction hash: ${result.txHash}`,
+				text: dedent`
+					✅ Collateral Removal Successful
+
+					🔓 Amount: ${formatWeiToNumber(amount)} tokens
+					🔗 Transaction: ${result.txHash}
+
+					Collateral has been removed from your FraxLend position.
+				`,
 			});
 			return true;
 		} catch (error) {
 			callback?.({
-				text: `Error removing collateral: ${error.message}`,
+				text: dedent`
+					❌ Collateral Removal Failed
+
+					Error: ${error.message}
+
+					Please verify your inputs and try again.
+				`,
 			});
 			return false;
 		}

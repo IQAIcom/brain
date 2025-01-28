@@ -1,6 +1,7 @@
 import type { Action, Handler } from "@elizaos/core";
 import { LendingStatsService } from "../services/lending-stats";
 import type { FraxLendActionParams } from "../types";
+import dedent from "dedent";
 
 export const getLendingStatsAction = (opts: FraxLendActionParams): Action => {
 	return {
@@ -34,7 +35,13 @@ const handler: (opts: FraxLendActionParams) => Handler =
 			return true;
 		} catch (error) {
 			callback?.({
-				text: `Error fetching lending stats: ${error.message}`,
+				text: dedent`
+					❌ Failed to Fetch Lending Statistics
+
+					Error: ${error.message}
+
+					Please try again later.
+				`,
 			});
 			return false;
 		}

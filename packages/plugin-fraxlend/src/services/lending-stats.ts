@@ -51,6 +51,14 @@ export class LendingStatsService {
 	}
 
 	formatStats(stats: Awaited<ReturnType<LendingStatsService["getStats"]>>) {
+		if (stats.length === 0) {
+			return dedent`
+				📊 FraxLend Statistics
+
+				No active lending pools found.
+			`;
+		}
+
 		const formattedStats = stats
 			.map((pool) => {
 				const formattedSupply = Number(
@@ -64,14 +72,21 @@ export class LendingStatsService {
 				);
 
 				return dedent`
-								🏦 ${pool.symbol} (${pool.assetSymbol})
-								- APR: ${pool.apr}%
-								- Utilization: ${formattedUtilization}%
-								- Total Supply: ${formattedSupply} ${pool.assetSymbol}
-						`;
+					🏦 ${pool.symbol} (${pool.assetSymbol})
+					├ 📈 APR: ${pool.apr}%
+					├ 📊 Utilization: ${formattedUtilization}%
+					└ 💰 Total Supply: ${formattedSupply} ${pool.assetSymbol}
+				`;
 			})
 			.join("\n\n");
 
-		return `📊 Current Lending Statistics \n\n${formattedStats}`;
+		return dedent`
+			📊 FraxLend Pool Statistics
+			═══════════════════════════
+
+			${formattedStats}
+
+			Last Updated: ${new Date().toLocaleString()}
+		`;
 	}
 }

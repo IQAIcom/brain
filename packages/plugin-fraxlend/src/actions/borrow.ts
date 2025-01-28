@@ -4,6 +4,8 @@ import { InputParserService } from "../services/input-parser";
 import { BorrowService } from "../services/borrow";
 import { WalletService } from "../services/wallet";
 import type { FraxLendActionParams } from "../types";
+import { formatWeiToNumber } from "../lib/format-number";
+import dedent from "dedent";
 
 export const getBorrowAction = (opts: FraxLendActionParams): Action => {
 	return {
@@ -46,12 +48,25 @@ const handler: (opts: FraxLendActionParams) => Handler =
 			});
 
 			callback?.({
-				text: `Successfully borrowed ${amount} tokens. Transaction hash: ${result.txHash}`,
+				text: dedent`
+					✅ Borrowing Transaction Successful
+
+					💸 Amount: ${formatWeiToNumber(amount)} tokens
+					🔗 Transaction: ${result.txHash}
+
+					Funds have been borrowed from the FraxLend pool.
+				`,
 			});
 			return true;
 		} catch (error) {
 			callback?.({
-				text: `Error during borrowing: ${error.message}`,
+				text: dedent`
+					❌ Borrowing Transaction Failed
+
+					Error: ${error.message}
+
+					Please verify your inputs and try again.
+				`,
 			});
 			return false;
 		}

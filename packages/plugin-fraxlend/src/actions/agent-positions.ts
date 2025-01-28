@@ -2,6 +2,7 @@ import type { Action, Handler } from "@elizaos/core";
 import { AgentPositionsService } from "../services/agent-positions";
 import { WalletService } from "../services/wallet";
 import type { FraxLendActionParams } from "../types";
+import dedent from "dedent";
 
 export const getAgentPositionsAction = (opts: FraxLendActionParams): Action => {
 	return {
@@ -38,8 +39,13 @@ const handler: (opts: FraxLendActionParams) => Handler =
 			return true;
 		} catch (error) {
 			callback?.({
-				text: `Error fetching positions: ${error.message}`,
-				content: { error: error.message },
+				text: dedent`
+					❌ Failed to Fetch Positions
+
+					Error: ${error.message}
+
+					Please try again later.
+				`,
 			});
 			return false;
 		}
