@@ -14,6 +14,7 @@
 		"@elizaos/plugin-bootstrap": "0.1.7",
 		"@iqai/agent": "workspace:*",
 		"@iqai/plugin-fraxlend": "workspace:*",
+		"@iqai/plugin-odos": "workspace:*",
 		"@tavily/core": "^0.0.2",
 		"dotenv": "^16.4.7",
 		"sharp": "^0.33.5",
