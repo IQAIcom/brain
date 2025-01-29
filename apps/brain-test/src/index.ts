@@ -21,9 +21,9 @@ async function main() {
 		modelKey: process.env.OPENAI_API_KEY,
 		plugins: [bootstrapPlugin, agentKitPlugin, odosPlugin],
 		character: {
-			name: "Sophia",
-			username: "sophia",
-			bio: "You are Sophia, a helpful assistant.",
+			name: "BrainBot",
+			bio: "You are BrainBot, a helpful assistant.",
+			username: "brainbot",
 			messageExamples: [],
 			lore: [],
 			style: {
