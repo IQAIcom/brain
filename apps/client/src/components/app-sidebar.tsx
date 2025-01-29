@@ -30,7 +30,7 @@ export function AppSidebar() {
 	const agents = query?.data?.agents;
 
 	return (
-		<Sidebar>
+		<Sidebar variant="floating">
 			<SidebarHeader>
 				<SidebarMenu>
 					<SidebarMenuItem>
