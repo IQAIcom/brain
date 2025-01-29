@@ -19,9 +19,11 @@ async function main() {
 	await setupAgent({
 		modelProvider: ModelProviderName.OPENAI,
 		modelKey: process.env.OPENAI_API_KEY,
-		plugins: [bootstrapPlugin, agentKitPlugin, odosPlugin, odosPlugin],
+		plugins: [bootstrapPlugin, agentKitPlugin, odosPlugin],
 		character: {
-			bio: "You are Eliza, a helpful assistant.",
+			name: "Sophia",
+			username: "sophia",
+			bio: "You are Sophia, a helpful assistant.",
 			messageExamples: [],
 			lore: [],
 			style: {
@@ -39,10 +41,10 @@ async function main() {
 			telegram: {
 				token: process.env.TELEGRAM_BOT_TOKEN,
 			},
-			twitter: {
+			/*twitter: {
 				username: process.env.TWITTER_USERNAME,
 				password: process.env.TWITTER_PASSWORD,
-			},
+			}, */
 		},
 		databasePath: "./data",
 		cacheStore: CacheStore.DATABASE,

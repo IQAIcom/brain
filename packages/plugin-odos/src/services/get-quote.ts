@@ -1,4 +1,4 @@
-import { formatUnits } from "viem";
+import { Address, formatUnits } from "viem";
 import dedent from "dedent";
 
 interface QuoteResponse {
@@ -22,7 +22,7 @@ interface QuoteResponse {
 export class GetQuoteActionService {
 	private readonly API_URL = "https://api.odos.xyz";
 
-	async getQuote() {
+	async execute(fromToken: Address, toToken: Address, chain: number, amount: bigint) {
 		try {
 			const response = await fetch(`${this.API_URL}/sor/quote/v2`, {
 				method: "POST",
@@ -30,16 +30,16 @@ export class GetQuoteActionService {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({
-					chainId: 1, // Ethereum mainnet
+					chainId: chain,
 					inputTokens: [
 						{
-							tokenAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", // WETH
-							amount: "1000000000000000000", // 1 WETH
+							tokenAddress: fromToken,
+							amount: amount,
 						},
 					],
 					outputTokens: [
 						{
-							tokenAddress: "0x6B175474E89094C44Da98b954EedeAC495271d0F", // DAI
+							tokenAddress: toToken,
 							proportion: 1,
 						},
 					],
