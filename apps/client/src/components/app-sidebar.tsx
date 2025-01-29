@@ -18,6 +18,7 @@ import { NavLink, useLocation } from "react-router";
 import type { UUID } from "@elizaos/core";
 import { Book, Cog, User } from "lucide-react";
 import ConnectionStatus from "./connection-status";
+import { range } from "@/lib/range";
 
 export function AppSidebar() {
 	const location = useLocation();
@@ -59,7 +60,7 @@ export function AppSidebar() {
 						<SidebarMenu>
 							{query?.isPending ? (
 								<div>
-									{Array.from({ length: 5 }).map((_, index) => (
+									{range(5).map((index) => (
 										<SidebarMenuItem key={index}>
 											<SidebarMenuSkeleton />
 										</SidebarMenuItem>

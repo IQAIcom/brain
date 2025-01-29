@@ -204,8 +204,11 @@ export default function Page({ agentId }: { agentId: UUID }) {
 											)}
 											{/* Attachments */}
 											<div>
-												{message?.attachments?.map((attachment, idx) => (
-													<div className="flex flex-col gap-1 mt-2" key={idx}>
+												{message?.attachments?.map((attachment) => (
+													<div
+														className="flex flex-col gap-1 mt-2"
+														key={attachment.id}
+													>
 														<img
 															src={attachment.url}
 															width="100%"
