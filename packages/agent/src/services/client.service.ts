@@ -4,29 +4,33 @@ import { TwitterClientInterface } from "@elizaos/client-twitter";
 import type { AgentRuntime, IAgentRuntime } from "@elizaos/core";
 import type { ClientConfig } from "../types";
 
-export async function setupClientInterfaces(
-	runtime: IAgentRuntime,
-	config?: ClientConfig,
-) {
-	const clients: Record<string, any> = {};
+export class ClientService {
+	private clients: Record<string, any> = {};
 
-	if (config?.direct?.enabled) {
-		const directClient = new DirectClient();
-		const serverPort = config.direct.port || 3000;
-		directClient.start(serverPort);
-		directClient.registerAgent(runtime as AgentRuntime);
-		clients.direct = directClient;
+	constructor(
+		private runtime: IAgentRuntime,
+		private config?: ClientConfig,
+	) {}
+
+	public async init() {
+		if (this.config?.direct?.enabled) {
+			const directClient = new DirectClient();
+			const serverPort = this.config.direct.port || 3000;
+			directClient.start(serverPort);
+			directClient.registerAgent(this.runtime as AgentRuntime);
+			this.clients.direct = directClient;
+		}
+
+		if (this.config?.telegram?.token) {
+			const telegramClient = await TelegramClientInterface.start(this.runtime);
+			if (telegramClient) this.clients.telegram = telegramClient;
+		}
+
+		if (this.config?.twitter?.username && this.config?.twitter?.password) {
+			const twitterClient = await TwitterClientInterface.start(this.runtime);
+			if (twitterClient) this.clients.twitter = twitterClient;
+		}
+
+		return this.clients;
 	}
-
-	if (config?.telegram?.token) {
-		const telegramClient = await TelegramClientInterface.start(runtime);
-		if (telegramClient) clients.telegram = telegramClient;
-	}
-
-	if (config?.twitter?.username && config?.twitter?.password) {
-		const twitterClient = await TwitterClientInterface.start(runtime);
-		if (twitterClient) clients.twitter = twitterClient;
-	}
-
-	return clients;
 }

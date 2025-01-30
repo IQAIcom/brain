@@ -1,4 +1,4 @@
-import { setupAgent } from "@iqai/agent";
+import { Agent } from "@iqai/agent";
 import { createFraxlendPlugin } from "@iqai/plugin-fraxlend";
 import { createOdosPlugin } from "@iqai/plugin-odos";
 import { bootstrapPlugin } from "@elizaos/plugin-bootstrap";
@@ -16,7 +16,7 @@ async function main() {
 		walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
 	});
 
-	await setupAgent({
+	const agent = new Agent({
 		modelProvider: ModelProviderName.OPENAI,
 		modelKey: process.env.OPENAI_API_KEY,
 		plugins: [bootstrapPlugin, agentKitPlugin, odosPlugin],
@@ -41,14 +41,16 @@ async function main() {
 			telegram: {
 				token: process.env.TELEGRAM_BOT_TOKEN,
 			},
-			/*twitter: {
+			twitter: {
 				username: process.env.TWITTER_USERNAME,
 				password: process.env.TWITTER_PASSWORD,
-			}, */
+			},
 		},
 		databasePath: "./data",
 		cacheStore: CacheStore.DATABASE,
 	});
+
+	await agent.start();
 }
 
 main().catch(console.error);

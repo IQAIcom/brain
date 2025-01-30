@@ -1,34 +1,42 @@
-export type { AgentConfig, ClientConfig } from "./types";
+import { CacheService } from "./services/cache.service";
+import { ClientService } from "./services/client.service";
+import { DatabaseService } from "./services/database.service";
+import { RuntimeService } from "./services/runtime.service";
 import type { AgentConfig } from "./types";
-import { setupDatabase } from "./services/database.service";
-import { setupCacheSystem } from "./services/cache.service";
-import { createAgentRuntime } from "./services/runtime.service";
-import { setupClientInterfaces } from "./services/client.service";
-import { AgentDTO } from "./dto/agent.dto";
 
-export async function setupAgent(config: AgentConfig = {}) {
-	let database = null;
+export class Agent {
+	private databaseService: DatabaseService;
+	private cacheService: CacheService;
+	private runtimeService: RuntimeService;
+	private clientService: ClientService;
 
-	try {
-		database = setupDatabase(config.databasePath);
-		const cacheManager = setupCacheSystem(database, config.cacheStore);
-		const runtime = await createAgentRuntime(database, cacheManager, config);
+	constructor(private config: AgentConfig = {}) {
+		this.databaseService = new DatabaseService(config.databasePath);
+	}
 
-		await runtime.initialize();
+	public async start() {
+		try {
+			const database = this.databaseService.init();
+			this.cacheService = new CacheService(database, this.config.cacheStore);
 
-		if (config.clients) {
-			runtime.clients = await setupClientInterfaces(runtime, config.clients);
+			this.runtimeService = new RuntimeService(
+				database,
+				this.cacheService.getManager(),
+				this.config,
+			);
+			const runtime = await this.runtimeService.init();
+
+			if (this.config.clients) {
+				this.clientService = new ClientService(runtime, this.config.clients);
+				runtime.clients = await this.clientService.init();
+			}
+		} catch (error) {
+			await this.stop();
+			throw error;
 		}
+	}
 
-		return new AgentDTO(runtime);
-	} catch (error) {
-		if (database) await database.close();
-		throw error;
+	public async stop() {
+		await this.databaseService?.close();
 	}
 }
-
-export * from "./dto/agent.dto";
-export * from "./services/database.service";
-export * from "./services/cache.service";
-export * from "./services/client.service";
-export * from "./services/runtime.service";

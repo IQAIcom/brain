@@ -7,22 +7,34 @@ import {
 	type IDatabaseCacheAdapter,
 	stringToUuid,
 } from "@elizaos/core";
-import * as path from "node:path";
+import path from "node:path";
 
-export function setupCacheSystem(
-	database: IDatabaseCacheAdapter,
-	cacheStore: CacheStore = CacheStore.DATABASE,
-): ICacheManager {
-	const cacheId = stringToUuid("default");
+export class CacheService {
+	private cacheManager: ICacheManager;
 
-	switch (cacheStore) {
-		case CacheStore.DATABASE:
-			return new CacheManager(new DbCacheAdapter(database, cacheId));
-		case CacheStore.FILESYSTEM: {
-			const cacheDir = path.resolve(process.cwd(), "cache");
-			return new CacheManager(new FsCacheAdapter(cacheDir));
+	constructor(
+		database: IDatabaseCacheAdapter,
+		cacheStore: CacheStore = CacheStore.DATABASE,
+	) {
+		const cacheId = stringToUuid("default");
+
+		switch (cacheStore) {
+			case CacheStore.DATABASE:
+				this.cacheManager = new CacheManager(
+					new DbCacheAdapter(database, cacheId),
+				);
+				break;
+			case CacheStore.FILESYSTEM: {
+				const cacheDir = path.resolve(process.cwd(), "cache");
+				this.cacheManager = new CacheManager(new FsCacheAdapter(cacheDir));
+				break;
+			}
+			default:
+				throw new Error(`Unsupported cache store: ${cacheStore}`);
 		}
-		default:
-			throw new Error(`Unsupported cache store: ${cacheStore}`);
+	}
+
+	public getManager() {
+		return this.cacheManager;
 	}
 }
