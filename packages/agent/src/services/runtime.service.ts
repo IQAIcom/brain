@@ -1,37 +1,45 @@
 import {
 	AgentRuntime,
-	type IDatabaseAdapter,
 	type ICacheManager,
+	type IDatabaseAdapter,
 	ModelProviderName,
 	defaultCharacter,
 } from "@elizaos/core";
-import { createAgentKitPlugin } from "@iqai/plugin-agentkit";
 import type { AgentConfig } from "../types";
 
-export async function createAgentRuntime(
-	database: IDatabaseAdapter,
-	cache: ICacheManager,
-	config: AgentConfig = {},
-) {
-	const plugins = [...(config.plugins || [])];
+export class RuntimeService {
+	private runtime: AgentRuntime;
 
-	return new AgentRuntime({
-		databaseAdapter: database,
-		token: config.modelKey,
-		modelProvider: config.modelProvider || ModelProviderName.OPENAI,
-		plugins,
-		character: {
-			...defaultCharacter,
-			...config.character,
-		},
-		cacheManager: cache,
-		fetch: async (url: string, options: RequestInit) => {
-			return fetch(url, options);
-		},
-		evaluators: [],
-		providers: [],
-		actions: [],
-		services: [],
-		managers: [],
-	});
+	constructor(
+		private database: IDatabaseAdapter,
+		private cache: ICacheManager,
+		private config: AgentConfig = {},
+	) {}
+
+	public async init() {
+		const plugins = [...(this.config.plugins || [])];
+
+		this.runtime = new AgentRuntime({
+			databaseAdapter: this.database,
+			token: this.config.modelKey,
+			modelProvider: this.config.modelProvider || ModelProviderName.OPENAI,
+			plugins,
+			character: {
+				...defaultCharacter,
+				...this.config.character,
+			},
+			cacheManager: this.cache,
+			fetch: async (url: string, options: RequestInit) => {
+				return fetch(url, options);
+			},
+			evaluators: [],
+			providers: [],
+			actions: [],
+			services: [],
+			managers: [],
+		});
+
+		await this.runtime.initialize();
+		return this.runtime;
+	}
 }
