@@ -31,7 +31,6 @@ async function main() {
 				chat: [],
 				post: [],
 			},
-			modelProvider: ModelProviderName.OPENAI,
 		},
 		clients: {
 			direct: {

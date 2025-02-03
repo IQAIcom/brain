@@ -18,15 +18,20 @@ export class RuntimeService {
 
 	public async init() {
 		const plugins = [...(this.config.plugins || [])];
+		const modelProvider =
+			this.config.modelProvider ||
+			this.config.character.modelProvider ||
+			ModelProviderName.OPENAI;
 
 		this.runtime = new AgentRuntime({
 			databaseAdapter: this.database,
 			token: this.config.modelKey,
-			modelProvider: this.config.modelProvider || ModelProviderName.OPENAI,
+			modelProvider,
 			plugins,
 			character: {
 				...defaultCharacter,
 				...this.config.character,
+				modelProvider,
 			},
 			cacheManager: this.cache,
 			fetch: async (url: string, options: RequestInit) => {
