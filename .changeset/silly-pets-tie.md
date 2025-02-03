@@ -1,5 +1,5 @@
 ---
-"@iqai/brain-test": patch
+"@iqai/playground": patch
 "@iqai/agent": patch
 ---
 
