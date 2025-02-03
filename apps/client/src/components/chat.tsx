@@ -55,10 +55,13 @@ export default function Page({ agentId }: { agentId: UUID }) {
 				messagesContainerRef.current.scrollHeight;
 		}
 	};
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		scrollToBottom();
 	}, [queryClient.getQueryData(["messages", agentId])]);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		scrollToBottom();
 	}, []);
@@ -153,7 +156,7 @@ export default function Page({ agentId }: { agentId: UUID }) {
 
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
-		if (file && file.type.startsWith("image/")) {
+		if (file?.type.startsWith("image/")) {
 			setSelectedFile(file);
 		}
 	};
@@ -210,14 +213,15 @@ export default function Page({ agentId }: { agentId: UUID }) {
 														key={attachment.id}
 													>
 														<img
+															alt={attachment.title}
 															src={attachment.url}
 															width="100%"
 															height="100%"
 															className="w-64 rounded-md"
 														/>
 														<div className="flex items-center justify-between gap-4">
-															<span></span>
-															<span></span>
+															<span />
+															<span />
 														</div>
 													</div>
 												))}
@@ -277,6 +281,7 @@ export default function Page({ agentId }: { agentId: UUID }) {
 									<X />
 								</Button>
 								<img
+									alt={selectedFile.name}
 									src={URL.createObjectURL(selectedFile)}
 									height="100%"
 									width="100%"
