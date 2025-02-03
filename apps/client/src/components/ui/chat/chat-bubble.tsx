@@ -10,7 +10,7 @@ const chatBubbleVariant = cva(
 	"flex gap-2 max-w-[60%] items-end relative group",
 	{
 		variants: {
-			variant: {
+			variant: { 
 				received: "self-start",
 				sent: "self-end flex-row-reverse",
 			},
