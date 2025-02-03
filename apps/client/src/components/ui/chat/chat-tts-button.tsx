@@ -62,9 +62,8 @@ export default function ChatTtsButton({
 		if (audioBlob) {
 			play();
 			return;
-		} else {
-			mutation.mutate();
 		}
+		mutation.mutate();
 	};
 
 	const iconClass = "text-muted-foreground size-4";
