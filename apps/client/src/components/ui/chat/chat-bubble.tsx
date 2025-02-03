@@ -1,16 +1,16 @@
-import * as React from "react";
-import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import MessageLoading from "./message-loading";
+import { cn } from "@/lib/utils";
+import { type VariantProps, cva } from "class-variance-authority";
+import * as React from "react";
 import { Button, type ButtonProps } from "../button";
+import MessageLoading from "./message-loading";
 
 // ChatBubble
 const chatBubbleVariant = cva(
 	"flex gap-2 max-w-[60%] items-end relative group",
 	{
 		variants: {
-			variant: { 
+			variant: {
 				received: "self-start",
 				sent: "self-end flex-row-reverse",
 			},
