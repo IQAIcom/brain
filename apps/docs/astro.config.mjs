@@ -6,7 +6,13 @@ import starlight from '@astrojs/starlight';
 export default defineConfig({
 	integrations: [
 		starlight({
-			title: 'My Docs',
+			title: 'Brain Framework',
+			logo: {
+        dark: './src/assets/brain-logo-dark.svg',
+				light: './src/assets/brain-logo-light.svg',
+				replacesTitle: true,
+      },
+
 			social: {
 				github: 'https://github.com/withastro/starlight',
 			},
