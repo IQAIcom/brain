@@ -2,7 +2,7 @@
 export default function MessageLoading() {
 	return (
 		<svg
-		  role="img"
+			role="img"
 			aria-label="Loading"
 			width="24"
 			height="24"

@@ -45,7 +45,7 @@ export const AudioRecorder = ({
 	const [isRecording, setIsRecording] = useState<boolean>(false);
 	// @ts-expect-error - isRecordingFinished is unused, but would break the 2D array if removed
 	// biome-ignore lint/correctness/noUnusedVariables: isRecordingFinished is unused, but would break the 2D array if removed
-		const [isRecordingFinished, setIsRecordingFinished] =
+	const [isRecordingFinished, setIsRecordingFinished] =
 		useState<boolean>(false);
 	const [timer, setTimer] = useState<number>(0);
 	const [currentRecord, setCurrentRecord] = useState<Record>({
@@ -194,7 +194,8 @@ export const AudioRecorder = ({
 		setIsRecordingFinished(true);
 		setTimer(0);
 		clearTimeout(timerTimeout);
-	}	const handleSubmit = () => {
+	}
+	const handleSubmit = () => {
 		stopRecording();
 	};
 
