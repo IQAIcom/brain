@@ -72,3 +72,36 @@ Example response:
 {{recentMessages}}
 Extract the borrowing information from the most recent message.
 Respond with a JSON markdown block containing pairAddress, borrowAmount, collateralAmount and receiver.`;
+
+export const GET_PAIR_ADDRESS_TEMPLATE = `Respond with a JSON object containing pair information for FraxLend.
+Extract the pair details from the most recent message. If no symbols are provided, respond with an error.
+
+The response must include at least one of:
+- assetSymbol: The asset token symbol (e.g. FRAX)
+- collateralSymbol: The collateral token symbol (e.g. ETH)
+- sortByApr: "highest" or "lowest" for APR sorting (optional)
+
+Example responses:
+\`\`\`json
+{
+    "assetSymbol": "FRAX",
+    "sortByApr": "highest"
+}
+\`\`\`
+
+\`\`\`json
+{
+    "collateralSymbol": "ETH",
+    "sortByApr": "lowest"
+}
+\`\`\`
+
+\`\`\`json
+{
+    "assetSymbol": "FRAX",
+    "collateralSymbol": "ETH"
+}
+\`\`\`
+{{recentMessages}}
+Extract the pair information from the most recent message.
+Respond with a JSON markdown block containing the available fields.`;

@@ -1,9 +1,8 @@
+import dedent from "dedent";
 import { graphql } from "gql.tada";
+import { formatWeiToNumber } from "../lib/format-number";
 import { client } from "../lib/graphql";
 import type { WalletService } from "./wallet";
-import dedent from "dedent";
-import { formatEther } from "viem";
-import { formatWeiToNumber } from "../lib/format-number";
 
 const AGENT_POSITIONS_QUERY = graphql(`
   query fraxlendUsers($user: User_filter) {
@@ -52,9 +51,10 @@ export class AgentPositionsService {
 					id: userAddress.toLowerCase(),
 				},
 			});
+			const positions = data.users[0].positions;
 
 			return (
-				data.users[0]?.positions.map((position) => ({
+				positions.map((position) => ({
 					symbol: position.pair.symbol,
 					assetSymbol: position.pair.asset.symbol,
 					collateralSymbol: position.pair.collateral.symbol,
