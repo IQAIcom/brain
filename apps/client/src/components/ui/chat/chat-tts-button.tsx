@@ -71,6 +71,7 @@ export default function ChatTtsButton({
 	return (
 		<div>
 			{audioBlob ? (
+				// biome-ignore lint/a11y/useMediaCaption: <explanation>
 				<audio
 					ref={audioRef}
 					onEnded={() => {
