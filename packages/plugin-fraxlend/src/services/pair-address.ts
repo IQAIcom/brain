@@ -2,38 +2,37 @@ import { graphql } from "gql.tada";
 import { client } from "../lib/graphql";
 import type { WalletService } from "./wallet";
 import dedent from "dedent";
+import { formatEther } from "viem";
 
 const PAIR_ADDRESS_QUERY = graphql(`
-  query fraxlendPairs($where: Pair_filter) {
-    pairs(where: $where) {
-      id
-      symbol
-      asset {
-        symbol
-        decimals
-      }
-      collateral {
-        symbol
-        decimals
-      }
-      maxLTV
-      liquidationFee
-      cleanLiquidationFee
-      dirtyLiquidationFee
-      protocolLiquidationFee
-      currentRateInfo {
-        ratePerSec
-        utilizationRate
-        apr
-      }
-      maturity
-      pauseStatus
-      pauseInterestStatus
-      pauseLiquidateStatus
-      pauseRepayStatus
-      pauseWithdrawStatus
-    }
-  }
+	query fraxlendPairs($where: Pair_filter) {
+		pairs(where: $where) {
+			id
+			symbol
+			asset {
+				symbol
+				decimals
+			}
+			collateral {
+				symbol
+				decimals
+			}
+			dailyHistory(first: 1, orderBy: timestamp, orderDirection: desc) {
+				interestPerSecond
+			}
+			maxLTV
+			liquidationFee
+			cleanLiquidationFee
+			dirtyLiquidationFee
+			protocolLiquidationFee
+			maturity
+			pauseStatus
+			pauseInterestStatus
+			pauseLiquidateStatus
+			pauseRepayStatus
+			pauseWithdrawStatus
+		}
+	}
 `);
 
 export class PairAddressService {
@@ -68,7 +67,9 @@ export class PairAddressService {
 				symbol: pair.symbol,
 				assetSymbol: pair.asset.symbol,
 				collateralSymbol: pair.collateral.symbol,
-				apr: Number((pair.currentRateInfo as { apr: string })?.apr || "0"),
+				apr: this.calculateApr(
+					pair.dailyHistory[0].interestPerSecond as string,
+				),
 				maxLTV: pair.maxLTV,
 				liquidationFee: pair.liquidationFee,
 				status: {
@@ -90,6 +91,13 @@ export class PairAddressService {
 		} catch (error) {
 			throw new Error(`Failed to fetch pair address: ${error.message}`);
 		}
+	}
+
+	private calculateApr(interestPerSecond: string): number {
+		const interestRate = Number(formatEther(BigInt(interestPerSecond)));
+		const SECONDS_PER_YEAR = 365 * 24 * 60 * 60;
+		const apr = interestRate * SECONDS_PER_YEAR * 100;
+		return Number(apr.toFixed(2));
 	}
 
 	formatPairAddresses(
