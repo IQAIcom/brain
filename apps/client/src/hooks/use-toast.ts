@@ -93,7 +93,7 @@ export const reducer = (state: State, action: Action): State => {
 				addToRemoveQueue(toastId);
 			} else {
 				for (const toast of state.toasts) {
-					addToRemoveQueue(toast.id);;
+					addToRemoveQueue(toast.id);
 				}
 			}
 
@@ -121,15 +121,16 @@ export const reducer = (state: State, action: Action): State => {
 				toasts: state.toasts.filter((t) => t.id !== action.toastId),
 			};
 	}
-};const listeners: Array<(state: State) => void> = [];
+};
+const listeners: Array<(state: State) => void> = [];
 
 let memoryState: State = { toasts: [] };
 
 function dispatch(action: Action) {
 	memoryState = reducer(memoryState, action);
-	for(const listener of listeners) {
+	for (const listener of listeners) {
 		listener(memoryState);
-	};
+	}
 }
 
 type Toast = Omit<ToasterToast, "id">;
