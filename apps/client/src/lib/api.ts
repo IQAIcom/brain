@@ -26,7 +26,7 @@ const fetcher = async ({
 	if (method === "POST") {
 		if (body instanceof FormData) {
 			// @ts-expect-error - Suppressing potentially undefined options header
-			delete options.headers["Content-Type"];
+			options.headers["Content-Type"] = undefined;
 			options.body = body;
 		} else {
 			options.body = JSON.stringify(body);
