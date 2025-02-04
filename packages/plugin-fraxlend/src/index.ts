@@ -8,6 +8,7 @@ import { getAddCollateralAction } from "./actions/add-collateral";
 import { getRemoveCollateralAction } from "./actions/remove-collateral";
 import type { FraxLendActionParams } from "./types";
 import type { Plugin } from "@elizaos/core";
+import { getPairAddressAction } from "./actions/get-pair-address";
 
 export async function createFraxlendPlugin(
 	opts: FraxLendActionParams,
@@ -21,6 +22,7 @@ export async function createFraxlendPlugin(
 		getRepayAction(opts),
 		getAddCollateralAction(opts),
 		getRemoveCollateralAction(opts),
+		getPairAddressAction(opts),
 	];
 
 	return {
