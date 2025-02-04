@@ -62,6 +62,7 @@ export default function useVersion() {
 		}
 	};
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		compareVersion();
 	}, []);

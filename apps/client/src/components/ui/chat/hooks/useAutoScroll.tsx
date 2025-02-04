@@ -79,6 +79,7 @@ export function useAutoScroll(options: UseAutoScrollOptions = {}) {
 		return () => element.removeEventListener("scroll", handleScroll);
 	}, [handleScroll]);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		const scrollElement = scrollRef.current;
 		if (!scrollElement) return;

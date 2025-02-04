@@ -3,7 +3,7 @@ import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
-const CopyButton = ({ text }: { text: any }) => {
+const CopyButton = ({ text }: { text: string }) => {
 	const [copied, setCopied] = useState(false);
 
 	const handleCopy = () => {
