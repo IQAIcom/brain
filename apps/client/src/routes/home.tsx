@@ -1,5 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
-import { Cog } from "lucide-react";
 import PageTitle from "@/components/page-title";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,9 +8,11 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { apiClient } from "@/lib/api";
-import { NavLink } from "react-router";
-import type { UUID } from "@elizaos/core";
 import { formatAgentName } from "@/lib/utils";
+import type { UUID } from "@elizaos/core";
+import { useQuery } from "@tanstack/react-query";
+import { Cog } from "lucide-react";
+import { NavLink } from "react-router";
 
 export default function Home() {
 	const query = useQuery({

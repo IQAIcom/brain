@@ -1,10 +1,10 @@
-import { cn } from "@/lib/utils";
-import { SidebarMenuButton, SidebarMenuItem } from "./ui/sidebar";
-import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api";
-import { useState } from "react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
 import { Activity } from "lucide-react";
+import { useState } from "react";
+import { SidebarMenuButton, SidebarMenuItem } from "./ui/sidebar";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 export default function ConnectionStatus() {
 	const [queryTime, setQueryTime] = useState<number | null>(null);

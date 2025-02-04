@@ -1,6 +1,6 @@
-import type { Character } from "@elizaos/core";
 import ArrayInput from "@/components/array-input";
 import InputCopy from "@/components/input-copy";
+import type { Character } from "@elizaos/core";
 import PageTitle from "./page-title";
 
 export default function Overview({ character }: { character: Character }) {
