@@ -6,22 +6,22 @@ import {
 } from "@/components/ui/chat/chat-bubble";
 import { ChatInput } from "@/components/ui/chat/chat-input";
 import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
-import { useTransition, animated, type AnimatedProps } from "@react-spring/web";
-import { Paperclip, Send, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import type { Content, UUID } from "@elizaos/core";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useToast } from "@/hooks/use-toast";
 import { apiClient } from "@/lib/api";
 import { cn, moment } from "@/lib/utils";
-import { Avatar, AvatarImage } from "./ui/avatar";
+import type { IAttachment } from "@/types";
+import type { Content, UUID } from "@elizaos/core";
+import { type AnimatedProps, animated, useTransition } from "@react-spring/web";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Paperclip, Send, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import AIWriter from "react-aiwriter";
+import { AudioRecorder } from "./audio-recorder";
 import CopyButton from "./copy-button";
+import { Avatar, AvatarImage } from "./ui/avatar";
+import { Badge } from "./ui/badge";
 import ChatTtsButton from "./ui/chat/chat-tts-button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
-import { useToast } from "@/hooks/use-toast";
-import AIWriter from "react-aiwriter";
-import type { IAttachment } from "@/types";
-import { AudioRecorder } from "./audio-recorder";
-import { Badge } from "./ui/badge";
 
 type ExtraContentFields = {
 	user: string;
@@ -55,10 +55,13 @@ export default function Page({ agentId }: { agentId: UUID }) {
 				messagesContainerRef.current.scrollHeight;
 		}
 	};
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		scrollToBottom();
 	}, [queryClient.getQueryData(["messages", agentId])]);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		scrollToBottom();
 	}, []);
@@ -153,7 +156,7 @@ export default function Page({ agentId }: { agentId: UUID }) {
 
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
-		if (file && file.type.startsWith("image/")) {
+		if (file?.type.startsWith("image/")) {
 			setSelectedFile(file);
 		}
 	};
@@ -210,14 +213,15 @@ export default function Page({ agentId }: { agentId: UUID }) {
 														key={attachment.id}
 													>
 														<img
+															alt={attachment.title}
 															src={attachment.url}
 															width="100%"
 															height="100%"
 															className="w-64 rounded-md"
 														/>
 														<div className="flex items-center justify-between gap-4">
-															<span></span>
-															<span></span>
+															<span />
+															<span />
 														</div>
 													</div>
 												))}
@@ -277,6 +281,7 @@ export default function Page({ agentId }: { agentId: UUID }) {
 									<X />
 								</Button>
 								<img
+									alt={selectedFile.name}
 									src={URL.createObjectURL(selectedFile)}
 									height="100%"
 									width="100%"
