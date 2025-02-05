@@ -26,7 +26,7 @@ export default defineConfig({
           label: 'Plugins',
           items: [
             { label: 'Plugins Overview', link: '/plugins/overview' },
-            { label: 'Available Plugins', link: '/plugins/overview' },
+            { label: 'Official Plugins', link: '/plugins/official' },
           ],
         },
       ],

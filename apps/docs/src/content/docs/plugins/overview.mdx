@@ -1,178 +1,204 @@
 ---
-title: Using Plugins
-description: Learn how to use and manage plugins in Brain Framework
+title: Understanding Plugins
+description: Learn how plugins work in Brain Framework
 ---
+import { Steps } from '@astrojs/starlight/components';
+import { FileTree } from '@astrojs/starlight/components';
 
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+## Plugin Structure
 
-# Using Plugins
+A typical Brain Framework plugin follows this structure:
 
-Learn how to effectively use plugins in your Brain Framework applications.
+<FileTree>
+- plugin-name/
+  - src/
+    - actions/
+      - action-name.ts // Plugin actions
+    - lib/
+      - templates.ts // Response templates
+    - services/
+      - service-name.ts // Business logic
+      - input-parser.ts // Input handling
+      - index.ts // Service exports
+      - types.ts // Type definitions
+    - index.ts // Plugin entry point
+  - package.json
+  - tsconfig.json
+</FileTree>
 
-## Installing Plugins
+## Creating a Plugin
 
-<Tabs>
-  <TabItem label="Official Plugins">
-    ```bash
-    npm install brain-plugin-normalizer brain-plugin-analyzer
-    ```
-  </TabItem>
-  <TabItem label="Community Plugins">
-    ```bash
-    npm install brain-community-plugin-name
-    ```
-  </TabItem>
-</Tabs>
+### 1. Plugin Entry Point
 
-## Basic Usage
+The main plugin file exports a creation function:
 
-```javascript
-import { Brain } from 'brain-framework';
-import { DataNormalizer, FeatureAnalyzer } from 'brain-plugins';
+```typescript
+import type { Plugin } from "@elizaos/core";
 
-const brain = new Brain();
+export async function createPlugin(
+  opts: PluginParams
+): Promise<Plugin> {
+  const actions = [
+    // Your plugin actions
+  ];
 
-// Add plugins
-brain.use([
-  new DataNormalizer({
-    scale: [0, 1]
-  }),
-  new FeatureAnalyzer({
-    features: ['mean', 'variance']
-  })
-]);
-```
-
-## Plugin Configuration
-
-```javascript
-// Configure plugin with options
-const plugin = new DataNormalizer({
-  scale: [0, 1],
-  mode: 'minmax',
-  precision: 2
-});
-
-// Add configured plugin
-brain.use(plugin);
-
-// Update configuration
-plugin.configure({
-  scale: [-1, 1]
-});
-```
-
-## Plugin Management
-
-```javascript
-// Check if plugin exists
-if (brain.hasPlugin('DataNormalizer')) {
-  // Get plugin instance
-  const plugin = brain.getPlugin('DataNormalizer');
-  
-  // Disable plugin temporarily
-  plugin.disable();
-  
-  // Re-enable plugin
-  plugin.enable();
-  
-  // Remove plugin
-  brain.removePlugin('DataNormalizer');
+  return {
+    name: "Plugin Name",
+    description: "Plugin description",
+    providers: [],
+    evaluators: [],
+    services: [],
+    actions,
+  };
 }
 ```
 
-## Using Multiple Plugins
+### 2. Defining Actions
 
-```javascript
-import { 
-  DataNormalizer, 
-  FeatureExtractor,
-  PatternAnalyzer 
-} from 'brain-plugins';
+Actions define the capabilities of your plugin:
 
-// Add multiple plugins with specific order
-brain.use([
-  new DataNormalizer(),  // Runs first
-  new FeatureExtractor(), // Runs second
-  new PatternAnalyzer()  // Runs last
-]);
+```typescript
+import type { Action, Handler } from "@elizaos/core";
 
-// Process data through all plugins
-const result = await brain.process(data, {
-  usePlugins: ['DataNormalizer', 'FeatureExtractor', 'PatternAnalyzer']
-});
+export const myAction = (opts: ActionParams): Action => {
+  return {
+    name: "ACTION_NAME",
+    description: "What this action does",
+    similes: [
+      "SIMILAR_COMMAND_1",
+      "SIMILAR_COMMAND_2",
+    ],
+    validate: async () => true,
+    handler: actionHandler(opts),
+    examples: [],
+  };
+};
+
+const actionHandler: (opts: ActionParams) => Handler =
+  () => async (runtime, message, state, options, callback) => {
+    try {
+      // Implementation
+      callback?.({
+        text: "Success message",
+      });
+      return true;
+    } catch (error) {
+      callback?.({
+        text: `Error: ${error.message}`,
+      });
+      return false;
+    }
+  };
 ```
 
-## Plugin Events
+### 3. Services
 
-```javascript
-// Listen to plugin events
-plugin.on('processing', (data) => {
-  console.log('Processing data:', data);
-});
+Services handle the business logic:
 
-plugin.on('error', (error) => {
-  console.error('Plugin error:', error);
-});
+```typescript
+export class ActionService {
+  async execute(params: ServiceParams) {
+    try {
+      // Service implementation
+      const result = await this.performOperation(params);
+      return result;
+    } catch (error) {
+      throw new Error(`Operation failed: ${error.message}`);
+    }
+  }
 
-// Global plugin events
-brain.on('pluginAdded', (plugin) => {
-  console.log('New plugin added:', plugin.name);
-});
-```
-
-## Best Practices
-
-1. **Order Matters**
-```javascript
-// Correct order: Normalize before analyzing
-brain.use([
-  new DataNormalizer(),
-  new DataAnalyzer()
-]);
-```
-
-2. **Error Handling**
-```javascript
-try {
-  await brain.process(data);
-} catch (error) {
-  if (error.pluginName) {
-    console.error(`Plugin ${error.pluginName} failed:`, error);
+  format(response: ServiceResponse) {
+    return `Formatted response: ${response.data}`;
   }
 }
 ```
 
-3. **Resource Management**
-```javascript
-// Cleanup when done
-await brain.cleanup(); // This will cleanup all plugins too
+### 4. Input Parsing
+
+Use templates to parse user input consistently:
+
+```typescript
+export const ACTION_TEMPLATE = `
+Respond with a JSON object containing the required information.
+Extract the details from the most recent message.
+
+The response must include:
+- param1: Description of param1
+- param2: Description of param2
+
+Example response:
+\`\`\`json
+{
+    "param1": "value1",
+    "param2": "value2"
+}
+\`\`\`
+
+{{recentMessages}}
+Extract the information from the most recent message.
+Respond with a JSON markdown block containing all required parameters.`;
 ```
 
-## Common Patterns
+## Using Templates
 
-### Sequential Processing
-```javascript
-const result = await brain.process(data, {
-  sequence: [
-    ['DataNormalizer', { scale: [0, 1] }],
-    ['FeatureExtractor', { features: ['mean'] }],
-    ['DataAnalyzer']
-  ]
+Templates help standardize input parsing:
+
+```typescript
+const inputParser = new InputParserService();
+const parsedInput = await inputParser.parseInputs({
+  runtime,
+  message,
+  state,
+  template: ACTION_TEMPLATE,
 });
 ```
 
-### Conditional Plugin Usage
-```javascript
-const result = await brain.process(data, {
-  usePlugins: data.type === 'numeric' 
-    ? ['DataNormalizer', 'StatisticalAnalyzer']
-    : ['TextProcessor', 'NLPAnalyzer']
-});
+## Plugin Integration
+
+Integrate plugins with your agent:
+
+```typescript
+import { Agent } from "@iqai/agent";
+import { createPlugin } from "my-plugin";
+
+async function setupAgent() {
+  const plugin = await createPlugin({
+    // Plugin configuration
+  });
+
+  const agent = new Agent({
+    modelProvider: ModelProviderName.OPENAI,
+    modelKey: process.env.OPENAI_API_KEY,
+    plugins: [plugin],
+    // Other agent configuration
+  });
+
+  await agent.start();
+}
 ```
+
+## Best Practices 
+
+- ##### Design your actions
+    - Use clear, descriptive names for all actions
+    - Include relevant similar commands for better matching
+    - Add comprehensive usage examples
+    <br/> 
+
+- ##### Implement services
+
+  - Separate business logic from handlers
+  - Format responses consistently across services
+  - Handle errors appropriately with clear messages
+  <br/>
+
+
+- ##### Create templates
+
+  - Be specific about template requirements
+  - Include clear example responses
+  - Add proper edge case handling
 
 ## Next Steps
 
-- Learn about [Creating Plugins](/plugins/creating-plugins)
-- Explore the [Plugin API](/plugins/api)
-- See [Plugin Examples](/examples/plugins)
+- Check the [official Plugins](./official)
