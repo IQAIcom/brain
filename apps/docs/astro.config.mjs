@@ -25,8 +25,9 @@ export default defineConfig({
         {
           label: 'Plugins',
           items: [
-            { label: 'Plugins Overview', link: '/plugins/overview' },
-            { label: 'Official Plugins', link: '/plugins/official' },
+            { label: 'Overview', link: '/plugins/overview' },
+            { label: 'Fraxlend', link: '/plugins/fraxlend' },
+            { label: 'Odos', link: '/plugins/odos' },
           ],
         },
       ],
