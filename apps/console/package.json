@@ -1,5 +1,5 @@
 {
-	"name": "client",
+	"name": "@iqai/console",
 	"private": true,
 	"sideEffects": false,
 	"type": "module",

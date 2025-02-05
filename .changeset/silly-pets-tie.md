@@ -1,5 +1,4 @@
 ---
-"@iqai/playground": patch
 "@iqai/agent": patch
 ---
 
