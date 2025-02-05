@@ -1,0 +1,88 @@
+---
+title: Quick Start
+description: Get started quickly with Brain Framework
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+# Quick Start Guide
+
+Get up and running with Brain Framework in minutes.
+
+## Basic Setup
+
+1. Install the framework:
+```bash
+npm install brain-framework
+```
+
+2. Create your first brain instance:
+```javascript
+import { Brain } from 'brain-framework';
+
+const brain = new Brain({
+  // Basic configuration
+  memory: { maxSize: '512MB' },
+  threading: { maxThreads: 2 }
+});
+```
+
+## Simple Data Processing
+
+```javascript
+// Process some data
+const data = {
+  values: [1, 2, 3, 4, 5],
+  type: 'numeric'
+};
+
+const result = await brain.process(data, {
+  normalize: true,
+  analyze: true
+});
+
+console.log('Processed result:', result);
+```
+
+## Adding Plugins
+
+```javascript
+import { DataNormalizer } from 'brain-framework-plugins';
+
+// Add a plugin
+brain.use(new DataNormalizer({
+  scale: [0, 1]
+}));
+
+// Use the plugin in processing
+const result = await brain.process(data, {
+  usePlugins: ['DataNormalizer']
+});
+```
+
+## Error Handling
+
+```javascript
+try {
+  const result = await brain.process(data);
+} catch (error) {
+  if (error.code === 'MEMORY_EXCEEDED') {
+    console.error('Increase memory limit:', error);
+  } else {
+    console.error('Processing error:', error);
+  }
+}
+```
+
+## Cleanup
+
+```javascript
+// Clean up resources when done
+await brain.cleanup();
+```
+
+## Next Steps
+
+- Learn about [Core Concepts](/core-concepts/overview)
+- Explore the [Plugin System](/plugins/overview)
+- See [Example Projects](/examples/basic)
