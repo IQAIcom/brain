@@ -47,4 +47,8 @@ export class RuntimeService {
 		await this.runtime.initialize();
 		return this.runtime;
 	}
+
+	public async stop() {
+		await this.runtime.stop();
+	}
 }
