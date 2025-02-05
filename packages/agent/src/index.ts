@@ -37,6 +37,6 @@ export class Agent {
 	}
 
 	public async stop() {
-		await this.databaseService?.close();
+		await this.runtimeService.stop();
 	}
 }
