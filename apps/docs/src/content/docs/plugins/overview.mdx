@@ -1,0 +1,204 @@
+---
+title: Understanding Plugins
+description: Learn how plugins work in Brain Framework
+---
+import { Steps } from '@astrojs/starlight/components';
+import { FileTree } from '@astrojs/starlight/components';
+
+## Plugin Structure
+
+A typical Brain Framework plugin follows this structure:
+
+<FileTree>
+- plugin-name/
+  - src/
+    - actions/
+      - action-name.ts // Plugin actions
+    - lib/
+      - templates.ts // Response templates
+    - services/
+      - service-name.ts // Business logic
+      - input-parser.ts // Input handling
+      - index.ts // Service exports
+      - types.ts // Type definitions
+    - index.ts // Plugin entry point
+  - package.json
+  - tsconfig.json
+</FileTree>
+
+## Creating a Plugin
+
+### 1. Plugin Entry Point
+
+The main plugin file exports a creation function:
+
+```typescript
+import type { Plugin } from "@elizaos/core";
+
+export async function createPlugin(
+  opts: PluginParams
+): Promise<Plugin> {
+  const actions = [
+    // Your plugin actions
+  ];
+
+  return {
+    name: "Plugin Name",
+    description: "Plugin description",
+    providers: [],
+    evaluators: [],
+    services: [],
+    actions,
+  };
+}
+```
+
+### 2. Defining Actions
+
+Actions define the capabilities of your plugin:
+
+```typescript
+import type { Action, Handler } from "@elizaos/core";
+
+export const myAction = (opts: ActionParams): Action => {
+  return {
+    name: "ACTION_NAME",
+    description: "What this action does",
+    similes: [
+      "SIMILAR_COMMAND_1",
+      "SIMILAR_COMMAND_2",
+    ],
+    validate: async () => true,
+    handler: actionHandler(opts),
+    examples: [],
+  };
+};
+
+const actionHandler: (opts: ActionParams) => Handler =
+  () => async (runtime, message, state, options, callback) => {
+    try {
+      // Implementation
+      callback?.({
+        text: "Success message",
+      });
+      return true;
+    } catch (error) {
+      callback?.({
+        text: `Error: ${error.message}`,
+      });
+      return false;
+    }
+  };
+```
+
+### 3. Services
+
+Services handle the business logic:
+
+```typescript
+export class ActionService {
+  async execute(params: ServiceParams) {
+    try {
+      // Service implementation
+      const result = await this.performOperation(params);
+      return result;
+    } catch (error) {
+      throw new Error(`Operation failed: ${error.message}`);
+    }
+  }
+
+  format(response: ServiceResponse) {
+    return `Formatted response: ${response.data}`;
+  }
+}
+```
+
+### 4. Input Parsing
+
+Use templates to parse user input consistently:
+
+```typescript
+export const ACTION_TEMPLATE = `
+Respond with a JSON object containing the required information.
+Extract the details from the most recent message.
+
+The response must include:
+- param1: Description of param1
+- param2: Description of param2
+
+Example response:
+\`\`\`json
+{
+    "param1": "value1",
+    "param2": "value2"
+}
+\`\`\`
+
+{{recentMessages}}
+Extract the information from the most recent message.
+Respond with a JSON markdown block containing all required parameters.`;
+```
+
+## Using Templates
+
+Templates help standardize input parsing:
+
+```typescript
+const inputParser = new InputParserService();
+const parsedInput = await inputParser.parseInputs({
+  runtime,
+  message,
+  state,
+  template: ACTION_TEMPLATE,
+});
+```
+
+## Plugin Integration
+
+Integrate plugins with your agent:
+
+```typescript
+import { Agent } from "@iqai/agent";
+import { createPlugin } from "my-plugin";
+
+async function setupAgent() {
+  const plugin = await createPlugin({
+    // Plugin configuration
+  });
+
+  const agent = new Agent({
+    modelProvider: ModelProviderName.OPENAI,
+    modelKey: process.env.OPENAI_API_KEY,
+    plugins: [plugin],
+    // Other agent configuration
+  });
+
+  await agent.start();
+}
+```
+
+## Best Practices 
+
+- ##### Design your actions
+    - Use clear, descriptive names for all actions
+    - Include relevant similar commands for better matching
+    - Add comprehensive usage examples
+    <br/> 
+
+- ##### Implement services
+
+  - Separate business logic from handlers
+  - Format responses consistently across services
+  - Handle errors appropriately with clear messages
+  <br/>
+
+
+- ##### Create templates
+
+  - Be specific about template requirements
+  - Include clear example responses
+  - Add proper edge case handling
+
+## Next Steps
+
+- Check the [official Plugins](./official)

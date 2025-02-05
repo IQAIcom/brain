@@ -1,0 +1,118 @@
+---
+title: Quick Start
+description: Get started quickly with Brain Framework
+---
+
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+
+This guide will help you get started with Brain Framework and have your first conversation with the chatbot.
+
+## Prerequisites
+
+Ensure you have:
+- Completed the [Installation Guide](./installation)
+- Set up your environment variables
+- Started the development server
+
+## Accessing the Interface
+
+After starting the development server with `pnpm dev`, navigate to:
+```
+http://localhost:5173
+```
+
+You'll see the Brain Framework client interface where you can interact with BrainBot.
+
+## Understanding the Agent
+
+The Brain Framework uses an agent system with various plugins. Here's a basic example of how an agent is configured:
+
+export const quickstartCode = `
+import { Agent } from "@iqai/agent";
+import { ModelProviderName, CacheStore } from "@elizaos/core";
+
+const agent = new Agent({
+  modelProvider: ModelProviderName.OPENAI,
+  modelKey: process.env.OPENAI_API_KEY,
+  character: {
+    name: "BrainBot",
+    bio: "You are BrainBot, a helpful assistant.",
+    username: "brainbot",
+  },
+  clients: {
+    direct: {
+      enabled: true,
+      port: 3000,
+    }
+  },
+  databasePath: "./data",
+  cacheStore: CacheStore.DATABASE,
+});
+
+await agent.start();
+`
+
+<Code code={quickstartCode} lang="typescript" title={"index.ts"} />
+
+## Available Plugins
+
+Brain Framework comes with several plugins:
+- Bootstrap Plugin: Core functionality
+- Fraxlend Plugin: For Fraxlend interactions
+- Odos Plugin: For Odos protocol integration
+
+To add plugins to your agent:
+
+<Code code={`
+import { YourPlugin } from "@iqai/plugin-yourPlugin";
+import { fraxtal } from "viem/chains";
+
+// Initialize plugins
+const yourPlugin = await createYourPlugin({
+  chain: fraxtal,
+  walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
+});
+
+// Add to agent configuration
+const agent = new Agent({
+  // ... other config
+  plugins: [...otherPlugins, yourPlugin],
+});
+`} lang="typescript" title={"index.ts"} />
+
+## Client Options
+
+Brain Framework supports multiple client interfaces:
+
+1. Direct Interface (Web):
+```typescript
+clients: {
+  direct: {
+    enabled: true,
+    port: 3000,
+  }
+}
+```
+
+2. Telegram Bot:
+```typescript
+clients: {
+  telegram: {
+    token: process.env.TELEGRAM_BOT_TOKEN,
+  }
+}
+```
+
+3. Twitter Bot:
+```typescript
+clients: {
+  twitter: {
+    username: process.env.TWITTER_USERNAME,
+    password: process.env.TWITTER_PASSWORD,
+  }
+}
+```
+
+## Next Steps
+
+- Learn about [Plugins](/plugins/overview)

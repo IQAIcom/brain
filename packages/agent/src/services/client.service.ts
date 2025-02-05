@@ -5,7 +5,7 @@ import type { AgentRuntime, IAgentRuntime } from "@elizaos/core";
 import type { ClientConfig } from "../types";
 
 export class ClientService {
-	private clients: Record<string, any> = {};
+	private clients: Record<string, unknown> = {};
 
 	constructor(
 		private runtime: IAgentRuntime,

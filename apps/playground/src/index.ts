@@ -6,7 +6,7 @@ import { CacheStore, ModelProviderName } from "@elizaos/core";
 import { fraxtal } from "viem/chains";
 
 async function main() {
-	const agentKitPlugin = await createFraxlendPlugin({
+	const fraxlendPlugin = await createFraxlendPlugin({
 		chain: fraxtal,
 		walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
 	});
@@ -19,7 +19,7 @@ async function main() {
 	const agent = new Agent({
 		modelProvider: ModelProviderName.OPENAI,
 		modelKey: process.env.OPENAI_API_KEY,
-		plugins: [bootstrapPlugin, agentKitPlugin, odosPlugin],
+		plugins: [bootstrapPlugin, fraxlendPlugin, odosPlugin],
 		character: {
 			name: "BrainBot",
 			bio: "You are BrainBot, a helpful assistant.",

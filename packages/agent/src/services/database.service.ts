@@ -1,5 +1,5 @@
 import type { IDatabaseAdapter, IDatabaseCacheAdapter } from "@elizaos/core";
-import { SqliteDatabaseAdapter } from "@iqai/adapter-sqlite";
+import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
 import Database from "better-sqlite3";
 import * as path from "node:path";
 import * as fs from "node:fs";
@@ -12,7 +12,9 @@ export class DatabaseService {
 		fs.mkdirSync(dataDir, { recursive: true });
 		const dbPath = path.join(dataDir, "db.sqlite");
 
-		this.database = new SqliteDatabaseAdapter(new Database(dbPath));
+		this.database = new SqliteDatabaseAdapter(
+			new Database(dbPath),
+		) as unknown as IDatabaseAdapter & IDatabaseCacheAdapter;
 	}
 
 	public init() {

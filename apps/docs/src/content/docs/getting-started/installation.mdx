@@ -1,0 +1,85 @@
+---
+title: Installation
+description: Learn how to install Brain Framework
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import {Steps} from '@astrojs/starlight/components';
+
+## Requirements
+
+Before installing Brain Framework, ensure your system meets the following requirements:
+
+- Node.js version 23.x or later
+- pnpm 9.x (recommended package manager)
+
+## Installation Steps
+
+<Steps>
+1. Clone the repository:
+   ```bash
+   git clone git@github.com:IQAIcom/brain.git
+   ```
+
+2. Set up environment variables:
+   Create a `.env` file in the `apps/playground` directory using the provided `sample.env` as a template:
+
+   ```bash
+   USE_OPENAI_EMBEDDING="TRUE"
+   OPENAI_API_KEY="sk-x"
+   SERVER_PORT="3000"
+   TELEGRAM_BOT_TOKEN="x:x"
+   WALLET_PRIVATE_KEY="x"
+   ```
+
+3. Install dependencies and build:
+   ```bash
+   # At the root of the turbo repo
+   pnpm install
+   pnpm build
+   ```
+</Steps>
+
+## Verifying Installation
+
+To verify that everything is working correctly:
+
+1. Start the development server:
+```bash
+pnpm dev
+```
+
+2. Open your browser and navigate to:
+```
+http://localhost:5173
+```
+
+You should see the Brain Framework client interface.
+
+## Troubleshooting
+
+If you encounter any issues:
+
+1. Make sure all environment variables are properly set
+2. Verify that you're using the correct Node.js version
+3. Clear dependencies and rebuild if you experience dependency issues:
+```bash
+# At root
+pnpm clean-modules && pnpm clean-dist
+# At package level
+pnpm rebuild
+```
+
+## Next Steps
+
+- Configure your environment variables for production use
+- Explore the documentation to learn about available features
+- Join our community for support and discussions
+
+## Need Help?
+
+If you run into any problems during installation, please:
+
+1. Check our troubleshooting guide
+2. Search existing github [issues](https://github.com/IQAIcom/brain/issues)
+3. Create a new issue if your problem hasn't been reported
