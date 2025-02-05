@@ -3,7 +3,7 @@ title: Quick Start
 description: Get started quickly with Brain Framework
 ---
 
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
 
 This guide will help you get started with Brain Framework and have your first conversation with the chatbot.
 
@@ -27,7 +27,7 @@ You'll see the Brain Framework client interface where you can interact with Brai
 
 The Brain Framework uses an agent system with various plugins. Here's a basic example of how an agent is configured:
 
-```typescript
+export const quickstartCode = `
 import { Agent } from "@iqai/agent";
 import { ModelProviderName, CacheStore } from "@elizaos/core";
 
@@ -50,7 +50,9 @@ const agent = new Agent({
 });
 
 await agent.start();
-```
+`
+
+<Code code={quickstartCode} lang="typescript" title={"index.ts"} />
 
 ## Available Plugins
 
@@ -61,7 +63,7 @@ Brain Framework comes with several plugins:
 
 To add plugins to your agent:
 
-```typescript
+<Code code={`
 import { YourPlugin } from "@iqai/plugin-yourPlugin";
 import { fraxtal } from "viem/chains";
 
@@ -76,7 +78,7 @@ const agent = new Agent({
   // ... other config
   plugins: [...otherPlugins, yourPlugin],
 });
-```
+`} lang="typescript" title={"index.ts"} />
 
 ## Client Options
 
