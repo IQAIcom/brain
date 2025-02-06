@@ -2,8 +2,8 @@ import type { Action, Handler } from "@elizaos/core";
 import { GetQuoteActionService } from "../services/get-quote";
 import type { OdosActionParams } from "../types";
 import { AssembleService } from "../services/assemble";
-import { RouterService } from "../services/get-router";
 import { WalletService } from "../../../plugin-fraxlend/src/services/wallet";
+import { ExecuteSwapService } from "../services/execute-swap";
 
 export const swapAction = (opts: OdosActionParams): Action => {
 	return {
@@ -32,9 +32,9 @@ const handler: (opts: OdosActionParams) => Handler =
 			const getQuoteService = new GetQuoteActionService();
 			const quote = await getQuoteService.execute(runtime, message, state, callback);
 
-			if (quote instanceof Error) {
+			if (quote instanceof Error || !quote.pathId) {
 				callback?.({
-					text: `Error fetching quote: ${quote.message}`,
+					text: `Error fetching quote: ${quote instanceof Error ? quote.message : String(quote)}`,
 				});
 				return false
 			}
@@ -42,15 +42,24 @@ const handler: (opts: OdosActionParams) => Handler =
 				opts.walletPrivateKey,
 				opts.chain,
 			);
-			const {data: txnCalldata} = await new AssembleService(walletService).execute(quote);
-			const routerAddr = await new RouterService(opts.chain).execute();
-			// TODO: execute transaction
+			const txn = await new AssembleService(walletService).execute(quote.pathId);
+			if (!txn) {
+				callback?.({
+					text: `Error assembling transaction: ${txn}`,
+				});
+				return false;
+			}
+			const hash = await new ExecuteSwapService(walletService).execute(txn);
+
+			callback?.({
+                text: `Swap executed successfully. Transaction hash: ${hash}`,
+            });
 
 
 			return true;
 		} catch (error) {
 			callback?.({
-				text: `Error fetching quote: ${error.message}`,
+				text: `Error fetching quote: ${error instanceof Error ? error.message : String(error)}`,
 			});
 			return false;
 		}

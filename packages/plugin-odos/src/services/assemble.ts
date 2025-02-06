@@ -22,9 +22,12 @@ export class AssembleService {
         this.walletService = walletService;
 
     }
-    async execute(quote: QuoteResponse) {
-        const {address: userAddr}  = this.walletService.getWalletClient().account;
-            const { pathId } = quote;
+    async execute(pathId: string) {
+        const walletClient  = this.walletService.getWalletClient()
+        const userAddr = walletClient?.account?.address
+        if (!userAddr) {
+            throw new Error("User address is not defined");
+            }
             try {
                 const response = await fetch(`${this.API_URL}/sor/assemble`, {
                     method: "POST",
