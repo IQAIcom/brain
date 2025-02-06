@@ -10,11 +10,9 @@ import dedent from "dedent";
 
 export const getSwapAction = (opts: ATPActionParams): Action => {
   return {
-    name: "ATP_SWAP",
-    description: "swap ai tokens on IQ ATP",
+    name: "ATP_BUY_SELL",
+    description: "swap (Buy or Sell) ai tokens on IQ ATP",
     similes: [
-      "SWAP_AI_TOKENS",
-      "SWAP_ATP_AI_TOKENS",
       "BUY_ATP_AI_TOKENS",
       "SELL_ATP_AI_TOKENS",
       "BUY_AGENT",
