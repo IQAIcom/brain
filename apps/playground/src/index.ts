@@ -28,7 +28,6 @@ async function main() {
 	]);
 
 	const atpPlugin = await createATPPlugin({
-		chain: fraxtal,
 		walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
 	});
 
