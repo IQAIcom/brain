@@ -29,6 +29,8 @@ export class Heartbeat extends Service {
 	}
 
 	private async handleCron(trigger: string, runtime: IAgentRuntime) {
+		elizaLogger.info(`🫀 Heartbeat triggered with: ${trigger}`);
+
 		const userId = stringToUuid("system");
 		const roomId = stringToUuid("heartbeat-room");
 
@@ -48,6 +50,8 @@ export class Heartbeat extends Service {
 			source: "heartbeat",
 			inReplyTo: undefined,
 		};
+
+		elizaLogger.info("📥 Processing heartbeat message:", content);
 
 		const userMessage = {
 			content,
@@ -85,6 +89,8 @@ export class Heartbeat extends Service {
 		});
 
 		if (response) {
+			elizaLogger.info("📤 Heartbeat response generated:", response);
+
 			const responseMessage: Memory = {
 				id: stringToUuid(`${messageId}-${runtime.agentId}`),
 				...userMessage,
@@ -96,6 +102,8 @@ export class Heartbeat extends Service {
 
 			await runtime.messageManager.createMemory(responseMessage);
 			state = await runtime.updateRecentMessageState(state);
+
+			elizaLogger.info(`✅ Heartbeat cycle completed for trigger: ${trigger}`);
 
 			await runtime.processActions(
 				memory,
