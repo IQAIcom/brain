@@ -18,10 +18,10 @@ async function main() {
 	});
 
 	const heartbeatPlugin = await createHeartbeatPlugin([
-		{
-			period: "*/3 * * * * *",
-			trigger: "Say hello world",
-		},
+		// {
+		// 	period: "*/3 * * * * *",
+		// 	trigger: "Say hello world",
+		// },
 	]);
 
 	const agent = new Agent({
