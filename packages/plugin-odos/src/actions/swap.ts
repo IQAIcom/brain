@@ -1,6 +1,9 @@
 import type { Action, Handler } from "@elizaos/core";
 import { GetQuoteActionService } from "../services/get-quote";
 import type { OdosActionParams } from "../types";
+import { AssembleService } from "../services/assemble";
+import { RouterService } from "../services/get-router";
+import { WalletService } from "../../../plugin-fraxlend/src/services/wallet";
 
 export const swapAction = (opts: OdosActionParams): Action => {
 	return {
@@ -24,7 +27,7 @@ export const swapAction = (opts: OdosActionParams): Action => {
 };
 
 const handler: (opts: OdosActionParams) => Handler =
-	() => async (runtime, message, state, _options, callback) => {
+	(opts) => async (runtime, message, state, _options, callback) => {
 		try {
 			const getQuoteService = new GetQuoteActionService();
 			const quote = await getQuoteService.execute(runtime, message, state, callback);
@@ -35,6 +38,14 @@ const handler: (opts: OdosActionParams) => Handler =
 				});
 				return false
 			}
+			const walletService = new WalletService(
+				opts.walletPrivateKey,
+				opts.chain,
+			);
+			const {data: txnCalldata} = await new AssembleService(walletService).execute(quote);
+			const routerAddr = await new RouterService(opts.chain).execute();
+			// TODO: execute transaction
+
 
 			return true;
 		} catch (error) {
