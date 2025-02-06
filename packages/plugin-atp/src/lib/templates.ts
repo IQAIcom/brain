@@ -30,38 +30,22 @@ Example response:
 Extract the wallet address from the most recent message.
 Respond with a JSON markdown block containing the walletAddress.`;
 
-export const BUY_AGENT_TEMPLATE = `Respond with a JSON object containing agent purchase information.
-Extract the purchase details from the most recent message. If required information is missing, respond with an error.
+export const SWAP_TEMPLATE = `Respond with a JSON object containing swap information for ATP agents.
+Extract the swap details from the most recent message. If required information is missing, respond with an error.
 
 The response must include:
 - agentAddress: The agent's contract address
-- amount: The amount to buy in base units
+- amount: The amount to swap in base units
+- action: The swap action type ("buy" or "sell")
 
 Example response:
 \`\`\`json
 {
     "agentAddress": "0x1234567890123456789012345678901234567890",
-    "amount": "1000000000000000000"
+    "amount": "1000000000000000000",
+    "action": "buy"
 }
 \`\`\`
 {{recentMessages}}
-Extract the purchase information from the most recent message.
-Respond with a JSON markdown block containing both agentAddress and amount.`;
-
-export const SELL_AGENT_TEMPLATE = `Respond with a JSON object containing agent sell information.
-Extract the sell details from the most recent message. If required information is missing, respond with an error.
-
-The response must include:
-- agentAddress: The agent's contract address
-- amount: The amount to sell in base units
-
-Example response:
-\`\`\`json
-{
-    "agentAddress": "0x1234567890123456789012345678901234567890",
-    "amount": "1000000000000000000"
-}
-\`\`\`
-{{recentMessages}}
-Extract the sell information from the most recent message.
-Respond with a JSON markdown block containing both agentAddress and amount.`;
+Extract the swap information from the most recent message.
+Respond with a JSON markdown block containing agentAddress, amount and action.`;
