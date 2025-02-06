@@ -25,24 +25,10 @@ export const getAgentsStatsAction = (opts: ATPActionParams): Action => {
 
 const handler: (opts: ATPActionParams) => Handler =
 	() => async (_runtime, _message, _state, _options, callback) => {
-		try {
-			const service = new AgentsStatsService();
-			const stats = await service.getStats();
-
-			callback?.({
-				text: service.formatStats(stats),
-			});
-			return true;
-		} catch (error) {
-			callback?.({
-				text: dedent`
-					❌ Failed to Fetch Agents Statistics
-
-					Error: ${error.message}
-
-					Please try again later.
-				`,
-			});
-			return false;
-		}
+		callback?.({
+			text: dedent`
+				❌ not implemented
+			`,
+		});
+		return false;
 	};

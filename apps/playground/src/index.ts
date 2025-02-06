@@ -1,18 +1,12 @@
 import { Agent } from "@iqai/agent";
 import { createFraxlendPlugin } from "@iqai/plugin-fraxlend";
 import { createOdosPlugin } from "@iqai/plugin-odos";
-import { createATPPlugin } from "@iqai/plugin-atp";
 import { bootstrapPlugin } from "@elizaos/plugin-bootstrap";
 import { CacheStore, ModelProviderName } from "@elizaos/core";
 import { fraxtal } from "viem/chains";
 
 async function main() {
 	const fraxlendPlugin = await createFraxlendPlugin({
-		chain: fraxtal,
-		walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
-	});
-
-	const atpPlugin = await createATPPlugin({
 		chain: fraxtal,
 		walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
 	});
@@ -25,7 +19,7 @@ async function main() {
 	const agent = new Agent({
 		modelProvider: ModelProviderName.OPENAI,
 		modelKey: process.env.OPENAI_API_KEY,
-		plugins: [bootstrapPlugin, fraxlendPlugin, odosPlugin, atpPlugin],
+		plugins: [bootstrapPlugin, fraxlendPlugin, odosPlugin],
 		character: {
 			name: "BrainBot",
 			bio: "You are BrainBot, a helpful assistant.",
