@@ -97,12 +97,7 @@ export class Heartbeat extends Service {
 
 		if (response) {
 			elizaLogger.info("📤 Heartbeat response generated:", response);
-			await this.handleSocialPost(
-				runtime,
-				heartbeatTask,
-				response.text,
-				roomId,
-			);
+			await this.handleSocialPost(runtime, heartbeatTask, response.text);
 
 			const responseMessage: Memory = {
 				id: stringToUuid(`${messageId}-${runtime.agentId}`),
@@ -135,17 +130,13 @@ export class Heartbeat extends Service {
 		runtime: IAgentRuntime,
 		task: HeartbeatTask,
 		responseContent: string,
-		roomId: UUID,
 	) {
 		switch (task.client) {
 			case "twitter":
 				if (runtime.clients?.twitter) {
-					await runtime.clients.twitter.postTweet(
+					await runtime.clients.twitter.post.postTweet(
 						runtime,
-						task.input,
-						roomId,
 						responseContent,
-						runtime.character.name,
 					);
 				}
 				break;
