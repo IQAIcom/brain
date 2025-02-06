@@ -4,6 +4,7 @@ import {
 	type Memory,
 	ModelClass,
 	Service,
+	ServiceType,
 	composeContext,
 	elizaLogger,
 	generateMessageResponse,
@@ -15,6 +16,8 @@ import type { HeartbeatPluginParams } from "../types";
 import { messageHandlerTemplate } from "../lib/template";
 
 export class Heartbeat extends Service {
+	static serviceType: ServiceType = ServiceType.TRANSCRIPTION;
+
 	constructor(private readonly opts: HeartbeatPluginParams) {
 		super();
 	}

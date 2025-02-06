@@ -201,6 +201,9 @@ importers:
       '@iqai/plugin-fraxlend':
         specifier: workspace:*
         version: link:../../packages/plugin-fraxlend
+      '@iqai/plugin-heartbeat':
+        specifier: workspace:*
+        version: link:../../packages/plugin-heartbeat
       '@iqai/plugin-odos':
         specifier: workspace:*
         version: link:../../packages/plugin-odos
