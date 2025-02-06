@@ -1,4 +1,4 @@
-import type { Character, UUID } from "@elizaos/core";
+import type { UUID, Character } from "@elizaos/core";
 
 const BASE_URL = `http://localhost:${import.meta.env.VITE_SERVER_PORT}`;
 
@@ -25,8 +25,14 @@ const fetcher = async ({
 
 	if (method === "POST") {
 		if (body instanceof FormData) {
-			// @ts-expect-error - Suppressing potentially undefined options header
-			options.headers["Content-Type"] = undefined;
+			if (options.headers && typeof options.headers === "object") {
+				// Create new headers object without Content-Type
+				options.headers = Object.fromEntries(
+					Object.entries(options.headers as Record<string, string>).filter(
+						([key]) => key !== "Content-Type",
+					),
+				);
+			}
 			options.body = body;
 		} else {
 			options.body = JSON.stringify(body);
@@ -34,27 +40,27 @@ const fetcher = async ({
 	}
 
 	return fetch(`${BASE_URL}${url}`, options).then(async (resp) => {
-		if (resp.ok) {
-			const contentType = resp.headers.get("Content-Type");
+		const contentType = resp.headers.get("Content-Type");
+		if (contentType === "audio/mpeg") {
+			return await resp.blob();
+		}
 
-			if (contentType === "audio/mpeg") {
-				return await resp.blob();
+		if (!resp.ok) {
+			const errorText = await resp.text();
+			console.error("Error: ", errorText);
+
+			let errorMessage = "An error occurred.";
+			try {
+				const errorObj = JSON.parse(errorText);
+				errorMessage = errorObj.message || errorMessage;
+			} catch {
+				errorMessage = errorText || errorMessage;
 			}
-			return resp.json();
+
+			throw new Error(errorMessage);
 		}
 
-		const errorText = await resp.text();
-		console.error("Error: ", errorText);
-
-		let errorMessage = "An error occurred.";
-		try {
-			const errorObj = JSON.parse(errorText);
-			errorMessage = errorObj.message || errorMessage;
-		} catch {
-			errorMessage = errorText || errorMessage;
-		}
-
-		throw new Error(errorMessage);
+		return resp.json();
 	});
 };
 

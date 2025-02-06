@@ -19,12 +19,12 @@ async function main() {
 	});
 
 	const heartbeatPlugin = await createHeartbeatPlugin([
-		{
-			period: "*/30 * * * * *",
-			input:
-				"Post a intreating joke about crypto on twitter. it should be positive to crypto community",
-			client: "twitter",
-		},
+		// {
+		// 	period: "*/30 * * * * *",
+		// 	input:
+		// 		"Post a intreating joke about crypto on twitter. it should be positive to crypto community",
+		// 	client: "twitter",
+		// },
 	]);
 
 	const atpPlugin = await createATPPlugin({

@@ -15,7 +15,7 @@
 		"@elizaos/client-telegram": "0.1.9",
 		"@elizaos/client-twitter": "0.1.9",
 		"@elizaos/core": "0.1.9",
-		"@elizaos/adapter-sqlite": "0.1.8",
+		"@elizaos/adapter-sqlite": "0.1.9",
 		"better-sqlite3": "11.8.1"
 	},
 	"devDependencies": {
