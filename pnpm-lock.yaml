@@ -245,11 +245,11 @@ importers:
   packages/agent:
     dependencies:
       '@elizaos/adapter-sqlite':
-        specifier: 0.1.8
-        version: 0.1.8(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(react@19.0.0)(svelte@5.19.8)(vue@3.5.13)(whatwg-url@7.1.0)(ws@7.5.10)
+        specifier: 0.1.9
+        version: 0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(react@19.0.0)(svelte@5.19.8)(vue@3.5.13)(whatwg-url@7.1.0)(ws@7.5.10)
       '@elizaos/client-direct':
         specifier: 0.1.9
-        version: 0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.0.0)(svelte@5.19.8)(typescript@5.7.3)(vue@3.5.13)(whatwg-url@7.1.0)(ws@7.5.10)(zod@3.24.1)
+        version: 0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.0.0)(svelte@5.19.8)(typescript@5.7.3)(vue@3.5.13)(whatwg-url@7.1.0)(ws@7.5.10)(zod@3.23.8)
       '@elizaos/client-telegram':
         specifier: 0.1.9
         version: 0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(react@19.0.0)(svelte@5.19.8)(vue@3.5.13)(ws@7.5.10)
@@ -311,7 +311,7 @@ importers:
         version: 8.3.6(typescript@5.7.3)
       viem:
         specifier: ^2.22.15
-        version: 2.22.22(typescript@5.7.3)(zod@3.23.8)
+        version: 2.22.22(zod@3.23.8)
     devDependencies:
       '@iqai/tsconfig':
         specifier: workspace:*
@@ -498,17 +498,6 @@ packages:
       zod: 3.23.8
     dev: false
 
-  /@ai-sdk/mistral@1.1.6(zod@3.23.8):
-    resolution: {integrity: sha512-HrZGZuf1BLcYurpysYepYp4ntmzRMAoWcazXtv+Gv/2cNlqj1yKj9Mso4LSgGp7+99gDB8l5qTcvjzpcNc0Xbg==}
-    engines: {node: '>=18'}
-    peerDependencies:
-      zod: ^3.0.0
-    dependencies:
-      '@ai-sdk/provider': 1.0.7
-      '@ai-sdk/provider-utils': 2.1.6(zod@3.23.8)
-      zod: 3.23.8
-    dev: false
-
   /@ai-sdk/openai@1.0.5(zod@3.23.8):
     resolution: {integrity: sha512-JDCPBJQx9o3LgboBPaA55v+9EZ7Vm/ozy0+J5DIr2jJF8WETjeCnigdxixyzEy/Od4wX871jOTSuGffwNIi0kA==}
     engines: {node: '>=18'}
@@ -600,22 +589,6 @@ packages:
       zod: 3.23.8
     dev: false
 
-  /@ai-sdk/provider-utils@2.1.6(zod@3.23.8):
-    resolution: {integrity: sha512-Pfyaj0QZS22qyVn5Iz7IXcJ8nKIKlu2MeSAdKJzTwkAks7zdLaKVB+396Rqcp1bfQnxl7vaduQVMQiXUrgK8Gw==}
-    engines: {node: '>=18'}
-    peerDependencies:
-      zod: ^3.0.0
-    peerDependenciesMeta:
-      zod:
-        optional: true
-    dependencies:
-      '@ai-sdk/provider': 1.0.7
-      eventsource-parser: 3.0.0
-      nanoid: 3.3.8
-      secure-json-parse: 2.7.0
-      zod: 3.23.8
-    dev: false
-
   /@ai-sdk/provider@0.0.24:
     resolution: {integrity: sha512-XMsNGJdGO+L0cxhhegtqZ8+T6nn4EoShS819OvCgI2kLbYTIvk0GWFGD0AXJmxkxs3DrpsJxKAFukFR7bvTkgQ==}
     engines: {node: '>=18'}
@@ -639,13 +612,6 @@ packages:
 
   /@ai-sdk/provider@1.0.4:
     resolution: {integrity: sha512-lJi5zwDosvvZER3e/pB8lj1MN3o3S7zJliQq56BRr4e9V3fcRyFtwP0JRxaRS5vHYX3OJ154VezVoQNrk0eaKw==}
-    engines: {node: '>=18'}
-    dependencies:
-      json-schema: 0.4.0
-    dev: false
-
-  /@ai-sdk/provider@1.0.7:
-    resolution: {integrity: sha512-q1PJEZ0qD9rVR+8JFEd01/QM++csMT5UVwYXSN2u54BrVw/D8TZLTeg2FEfKK00DgAx0UtWd8XOhhwITP9BT5g==}
     engines: {node: '>=18'}
     dependencies:
       json-schema: 0.4.0
@@ -747,20 +713,6 @@ packages:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.8
       '@jridgewell/trace-mapping': 0.3.25
-
-  /@anthropic-ai/sdk@0.30.1:
-    resolution: {integrity: sha512-nuKvp7wOIz6BFei8WrTdhmSsx5mwnArYyJgh4+vYu3V4J0Ltb8Xm3odPm51n1aSI0XxNCrDl7O88cxCtUdAkaw==}
-    dependencies:
-      '@types/node': 18.19.75
-      '@types/node-fetch': 2.6.12
-      abort-controller: 3.0.0
-      agentkeepalive: 4.6.0
-      form-data-encoder: 1.7.2
-      formdata-node: 4.4.1
-      node-fetch: 2.7.0
-    transitivePeerDependencies:
-      - encoding
-    dev: false
 
   /@anush008/tokenizers-darwin-universal@0.0.0:
     resolution: {integrity: sha512-SACpWEooTjFX89dFKRVUhivMxxcZRtA3nJGVepdLyrwTkQ1TZQ8581B5JoXp0TcTMHfgnDaagifvVoBiFEdNCQ==}
@@ -1858,7 +1810,7 @@ packages:
     dependencies:
       '@coinbase/coinbase-sdk': 0.13.0(zod@3.24.1)
       twitter-api-v2: 1.19.1
-      viem: 2.22.22(typescript@5.7.3)(zod@3.24.1)
+      viem: 2.22.22(zod@3.24.1)
       zod: 3.24.1
     transitivePeerDependencies:
       - bufferutil
@@ -1888,7 +1840,7 @@ packages:
     resolution: {integrity: sha512-qYOcFwTANhiJvSTF2sn53Hkycj2UebOIzieNOkg42qWD606gCudCBuzV3PDrOQYVJBS/g10hyX10u5yPkIZ89w==}
     dependencies:
       '@scure/bip32': 1.6.2
-      abitype: 1.0.8(typescript@5.7.3)(zod@3.24.1)
+      abitype: 1.0.8(zod@3.24.1)
       axios: 1.7.9
       axios-mock-adapter: 1.22.0(axios@1.7.9)
       axios-retry: 4.5.0(axios@1.7.9)
@@ -1899,7 +1851,7 @@ packages:
       ethers: 6.13.5
       node-jose: 2.2.0
       secp256k1: 5.0.1
-      viem: 2.22.22(typescript@5.7.3)(zod@3.24.1)
+      viem: 2.22.22(zod@3.24.1)
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -2036,12 +1988,12 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@elizaos/adapter-sqlite@0.1.8(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(react@19.0.0)(svelte@5.19.8)(vue@3.5.13)(whatwg-url@7.1.0)(ws@7.5.10):
-    resolution: {integrity: sha512-/79rQfzq/fmnuupMkWFAGPWb58fYCyNK140ChFCOBjK7Gommq2pXTWrPgvxr/xPcQx0cTb911H5KfTn578KjkQ==}
+  /@elizaos/adapter-sqlite@0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(react@19.0.0)(svelte@5.19.8)(vue@3.5.13)(whatwg-url@7.1.0)(ws@7.5.10):
+    resolution: {integrity: sha512-r76heXuu3fcDYXyqxsSmAQ/X2KOeoZEY4BM/SPLI9aBd6xJewPC0ig6nRvAvoHBDaKgpBf3cwUvvz/MADCirCg==}
     peerDependencies:
       whatwg-url: 7.1.0
     dependencies:
-      '@elizaos/core': 0.1.8(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(react@19.0.0)(svelte@5.19.8)(vue@3.5.13)(ws@7.5.10)
+      '@elizaos/core': 0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(react@19.0.0)(svelte@5.19.8)(vue@3.5.13)(ws@7.5.10)
       '@types/better-sqlite3': 7.6.12
       better-sqlite3: 11.6.0
       sqlite-vec: 0.1.6
@@ -2057,8 +2009,10 @@ packages:
       - '@langchain/groq'
       - '@langchain/mistralai'
       - '@langchain/ollama'
+      - aws-crt
       - axios
       - cheerio
+      - debug
       - encoding
       - peggy
       - react
@@ -2071,15 +2025,15 @@ packages:
       - ws
     dev: false
 
-  /@elizaos/client-direct@0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.0.0)(svelte@5.19.8)(typescript@5.7.3)(vue@3.5.13)(whatwg-url@7.1.0)(ws@7.5.10)(zod@3.24.1):
+  /@elizaos/client-direct@0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.0.0)(svelte@5.19.8)(typescript@5.7.3)(vue@3.5.13)(whatwg-url@7.1.0)(ws@7.5.10)(zod@3.23.8):
     resolution: {integrity: sha512-OiWfuQjqL5+VncfpKQWCqlVGk+wYTyzh3aUz5+C5t3ZhKmrHZv88bkMzHD1yI28/czmP49v8y2vqvZyMLjB0rA==}
     peerDependencies:
       whatwg-url: 7.1.0
     dependencies:
       '@elizaos/core': 0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(react@19.0.0)(svelte@5.19.8)(vue@3.5.13)(ws@7.5.10)
       '@elizaos/plugin-image-generation': 0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(react@19.0.0)(svelte@5.19.8)(typescript@5.7.3)(vue@3.5.13)(whatwg-url@7.1.0)(ws@7.5.10)
-      '@elizaos/plugin-tee-log': 0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.0.0)(svelte@5.19.8)(typescript@5.7.3)(vue@3.5.13)(whatwg-url@7.1.0)(ws@7.5.10)(zod@3.24.1)
-      '@elizaos/plugin-tee-verifiable-log': 0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.0.0)(svelte@5.19.8)(typescript@5.7.3)(vue@3.5.13)(whatwg-url@7.1.0)(ws@7.5.10)(zod@3.24.1)
+      '@elizaos/plugin-tee-log': 0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.0.0)(svelte@5.19.8)(typescript@5.7.3)(vue@3.5.13)(whatwg-url@7.1.0)(ws@7.5.10)(zod@3.23.8)
+      '@elizaos/plugin-tee-verifiable-log': 0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.0.0)(svelte@5.19.8)(typescript@5.7.3)(vue@3.5.13)(whatwg-url@7.1.0)(ws@7.5.10)(zod@3.23.8)
       '@types/body-parser': 1.19.5
       '@types/cors': 2.8.17
       '@types/express': 5.0.0
@@ -2088,7 +2042,7 @@ packages:
       discord.js: 14.16.3
       express: 4.21.1
       multer: 1.4.5-lts.1
-      openai: 4.73.0(zod@3.24.1)
+      openai: 4.73.0(zod@3.23.8)
       whatwg-url: 7.1.0
     transitivePeerDependencies:
       - '@edge-runtime/vm'
@@ -2213,60 +2167,6 @@ packages:
       - svelte
       - typeorm
       - utf-8-validate
-      - vue
-      - ws
-    dev: false
-
-  /@elizaos/core@0.1.8(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(react@19.0.0)(svelte@5.19.8)(vue@3.5.13)(ws@7.5.10):
-    resolution: {integrity: sha512-nQT5uQTQVTZJ3CrhVkK4dRdP/RuBMiOv/u3JZvMJGhY45z0Gy0gY27NEn/BBlJ4Ymt/SmqtXOul/x2hOeQen4Q==}
-    dependencies:
-      '@ai-sdk/anthropic': 0.0.56(zod@3.23.8)
-      '@ai-sdk/google': 0.0.55(zod@3.23.8)
-      '@ai-sdk/google-vertex': 0.0.43(@google-cloud/vertexai@1.9.3)(zod@3.23.8)
-      '@ai-sdk/groq': 0.0.3(zod@3.23.8)
-      '@ai-sdk/mistral': 1.1.6(zod@3.23.8)
-      '@ai-sdk/openai': 1.0.5(zod@3.23.8)
-      '@anthropic-ai/sdk': 0.30.1
-      '@fal-ai/client': 1.2.0
-      '@types/uuid': 10.0.0
-      ai: 3.4.33(openai@4.73.0)(react@19.0.0)(svelte@5.19.8)(vue@3.5.13)(zod@3.23.8)
-      anthropic-vertex-ai: 1.0.2(zod@3.23.8)
-      fastembed: 1.14.1
-      fastestsmallesttextencoderdecoder: 1.0.22
-      gaxios: 6.7.1
-      glob: 11.0.0
-      handlebars: 4.7.8
-      js-sha1: 0.7.0
-      js-tiktoken: 1.0.15
-      langchain: 0.3.6(@langchain/core@0.3.38)(handlebars@4.7.8)(openai@4.73.0)(ws@7.5.10)
-      ollama-ai-provider: 0.16.1(zod@3.23.8)
-      openai: 4.73.0(zod@3.23.8)
-      tinyld: 1.3.4
-      together-ai: 0.7.0
-      unique-names-generator: 4.7.1
-      uuid: 11.0.3
-      zod: 3.23.8
-    transitivePeerDependencies:
-      - '@google-cloud/vertexai'
-      - '@langchain/anthropic'
-      - '@langchain/aws'
-      - '@langchain/cohere'
-      - '@langchain/core'
-      - '@langchain/google-genai'
-      - '@langchain/google-vertexai'
-      - '@langchain/groq'
-      - '@langchain/mistralai'
-      - '@langchain/ollama'
-      - axios
-      - cheerio
-      - encoding
-      - peggy
-      - react
-      - solid-js
-      - sswr
-      - supports-color
-      - svelte
-      - typeorm
       - vue
       - ws
     dev: false
@@ -2451,12 +2351,72 @@ packages:
       - ws
     dev: false
 
+  /@elizaos/core@0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(react@19.0.0)(svelte@5.19.8)(vue@3.5.13)(ws@8.18.0):
+    resolution: {integrity: sha512-rsAAyiPfc0HWWNVrROdQfR0BonVCgb1D1EHi7gLCrag8ZZqGd3UI/xjSiAUmU73e0dPcEo/JQzteAoehZ/ouXQ==}
+    dependencies:
+      '@ai-sdk/amazon-bedrock': 1.1.0(zod@3.23.8)
+      '@ai-sdk/anthropic': 0.0.56(zod@3.23.8)
+      '@ai-sdk/google': 0.0.55(zod@3.23.8)
+      '@ai-sdk/google-vertex': 0.0.43(@google-cloud/vertexai@1.9.3)(zod@3.23.8)
+      '@ai-sdk/groq': 0.0.3(zod@3.23.8)
+      '@ai-sdk/mistral': 1.0.9(zod@3.23.8)
+      '@ai-sdk/openai': 1.0.5(zod@3.23.8)
+      '@fal-ai/client': 1.2.0
+      '@tavily/core': 0.0.2
+      '@types/uuid': 10.0.0
+      ai: 3.4.33(openai@4.73.0)(react@19.0.0)(svelte@5.19.8)(vue@3.5.13)(zod@3.23.8)
+      anthropic-vertex-ai: 1.0.2(zod@3.23.8)
+      dotenv: 16.4.5
+      fastembed: 1.14.1
+      fastestsmallesttextencoderdecoder: 1.0.22
+      gaxios: 6.7.1
+      glob: 11.0.0
+      handlebars: 4.7.8
+      js-sha1: 0.7.0
+      js-tiktoken: 1.0.15
+      langchain: 0.3.6(@langchain/core@0.3.38)(axios@1.7.9)(handlebars@4.7.8)(openai@4.73.0)(ws@8.18.0)
+      ollama-ai-provider: 0.16.1(zod@3.23.8)
+      openai: 4.73.0(zod@3.23.8)
+      pino: 9.6.0
+      pino-pretty: 13.0.0
+      tinyld: 1.3.4
+      together-ai: 0.7.0
+      unique-names-generator: 4.7.1
+      uuid: 11.0.3
+      zod: 3.23.8
+    transitivePeerDependencies:
+      - '@google-cloud/vertexai'
+      - '@langchain/anthropic'
+      - '@langchain/aws'
+      - '@langchain/cohere'
+      - '@langchain/core'
+      - '@langchain/google-genai'
+      - '@langchain/google-vertexai'
+      - '@langchain/groq'
+      - '@langchain/mistralai'
+      - '@langchain/ollama'
+      - aws-crt
+      - axios
+      - cheerio
+      - debug
+      - encoding
+      - peggy
+      - react
+      - solid-js
+      - sswr
+      - supports-color
+      - svelte
+      - typeorm
+      - vue
+      - ws
+    dev: false
+
   /@elizaos/plugin-bootstrap@0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(react@19.0.0)(svelte@5.19.8)(tsx@4.19.2)(typescript@5.7.3)(vue@3.5.13)(whatwg-url@7.1.0)(ws@8.18.0):
     resolution: {integrity: sha512-TDTw8xVpen/fpRgVJXGUEfMj4S5DGEtXZNTWvb4NSlA7HFL+ytg3cfcvEdp/DFiQh5kznTWd17QEyiGI0jdejw==}
     peerDependencies:
       whatwg-url: 7.1.0
     dependencies:
-      '@elizaos/core': 0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(axios@1.7.9)(react@19.0.0)(svelte@5.19.8)(vue@3.5.13)(ws@8.18.0)
+      '@elizaos/core': 0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(react@19.0.0)(svelte@5.19.8)(vue@3.5.13)(ws@8.18.0)
       tsup: 8.3.5(tsx@4.19.2)(typescript@5.7.3)
       whatwg-url: 7.1.0
     transitivePeerDependencies:
@@ -2566,12 +2526,12 @@ packages:
       - ws
     dev: false
 
-  /@elizaos/plugin-tee-log@0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.0.0)(svelte@5.19.8)(typescript@5.7.3)(vue@3.5.13)(whatwg-url@7.1.0)(ws@7.5.10)(zod@3.24.1):
+  /@elizaos/plugin-tee-log@0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.0.0)(svelte@5.19.8)(typescript@5.7.3)(vue@3.5.13)(whatwg-url@7.1.0)(ws@7.5.10)(zod@3.23.8):
     resolution: {integrity: sha512-bt/zkOl5ucfRTI7sswFbRbF8e5mYf8bpZjExONZqumytEs5JZ2moJ8mxdFQexmv3pUM7M+Mkm1CqADhH0Jc/aw==}
     dependencies:
       '@elizaos/core': 0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(react@19.0.0)(svelte@5.19.8)(vue@3.5.13)(ws@7.5.10)
       '@elizaos/plugin-sgx': 0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(react@19.0.0)(svelte@5.19.8)(vue@3.5.13)(ws@7.5.10)
-      '@elizaos/plugin-tee': 0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.0.0)(svelte@5.19.8)(typescript@5.7.3)(vue@3.5.13)(whatwg-url@7.1.0)(ws@7.5.10)(zod@3.24.1)
+      '@elizaos/plugin-tee': 0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.0.0)(svelte@5.19.8)(typescript@5.7.3)(vue@3.5.13)(whatwg-url@7.1.0)(ws@7.5.10)(zod@3.23.8)
       better-sqlite3: 11.6.0
       elliptic: 6.6.1
     transitivePeerDependencies:
@@ -2614,13 +2574,13 @@ packages:
       - zod
     dev: false
 
-  /@elizaos/plugin-tee-verifiable-log@0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.0.0)(svelte@5.19.8)(typescript@5.7.3)(vue@3.5.13)(whatwg-url@7.1.0)(ws@7.5.10)(zod@3.24.1):
+  /@elizaos/plugin-tee-verifiable-log@0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.0.0)(svelte@5.19.8)(typescript@5.7.3)(vue@3.5.13)(whatwg-url@7.1.0)(ws@7.5.10)(zod@3.23.8):
     resolution: {integrity: sha512-mOGA+RgcHBjNIkS6Sc3g+0xmUhK7/p0NlaF95tq7wS30avCllREmrI7K5+cUY2p8eRxtxvhpeX05oaDh/2cpAg==}
     peerDependencies:
       whatwg-url: 7.1.0
     dependencies:
       '@elizaos/core': 0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(react@19.0.0)(svelte@5.19.8)(vue@3.5.13)(ws@7.5.10)
-      '@elizaos/plugin-tee': 0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.0.0)(svelte@5.19.8)(typescript@5.7.3)(vue@3.5.13)(whatwg-url@7.1.0)(ws@7.5.10)(zod@3.24.1)
+      '@elizaos/plugin-tee': 0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.0.0)(svelte@5.19.8)(typescript@5.7.3)(vue@3.5.13)(whatwg-url@7.1.0)(ws@7.5.10)(zod@3.23.8)
       dompurify: 3.2.2
       elliptic: 6.6.1
       ethereum-cryptography: 3.1.0
@@ -2681,13 +2641,13 @@ packages:
       - zod
     dev: false
 
-  /@elizaos/plugin-tee@0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.0.0)(svelte@5.19.8)(typescript@5.7.3)(vue@3.5.13)(whatwg-url@7.1.0)(ws@7.5.10)(zod@3.24.1):
+  /@elizaos/plugin-tee@0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(fastestsmallesttextencoderdecoder@1.0.22)(react@19.0.0)(svelte@5.19.8)(typescript@5.7.3)(vue@3.5.13)(whatwg-url@7.1.0)(ws@7.5.10)(zod@3.23.8):
     resolution: {integrity: sha512-RjmLSATLqXIKG0XWADskNBkYpMCCsbS5+GwmAdJcGR6CiagdJkOHdERJXW3b4i3C1Dq+Qos/mzzAiHF3Szhxww==}
     peerDependencies:
       whatwg-url: 7.1.0
     dependencies:
       '@elizaos/core': 0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(react@19.0.0)(svelte@5.19.8)(vue@3.5.13)(ws@7.5.10)
-      '@phala/dstack-sdk': 0.1.7(typescript@5.7.3)(zod@3.24.1)
+      '@phala/dstack-sdk': 0.1.7(typescript@5.7.3)(zod@3.23.8)
       '@solana/spl-token': 0.4.9(@solana/web3.js@1.95.8)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.7.3)
       '@solana/web3.js': 1.95.8
       bignumber.js: 9.1.2
@@ -4029,6 +3989,22 @@ packages:
       - openai
     dev: false
 
+  /@langchain/openai@0.3.17(@langchain/core@0.3.38):
+    resolution: {integrity: sha512-uw4po32OKptVjq+CYHrumgbfh4NuD7LqyE+ZgqY9I/LrLc6bHLMc+sisHmI17vgek0K/yqtarI0alPJbzrwyag==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@langchain/core': '>=0.3.29 <0.4.0'
+    dependencies:
+      '@langchain/core': 0.3.38
+      js-tiktoken: 1.0.15
+      openai: 4.83.0(ws@7.5.10)(zod@3.23.8)
+      zod: 3.23.8
+      zod-to-json-schema: 3.24.1(zod@3.23.8)
+    transitivePeerDependencies:
+      - encoding
+      - ws
+    dev: false
+
   /@langchain/openai@0.3.17(@langchain/core@0.3.38)(ws@7.5.10):
     resolution: {integrity: sha512-uw4po32OKptVjq+CYHrumgbfh4NuD7LqyE+ZgqY9I/LrLc6bHLMc+sisHmI17vgek0K/yqtarI0alPJbzrwyag==}
     engines: {node: '>=18'}
@@ -4237,11 +4213,11 @@ packages:
     dev: false
     optional: true
 
-  /@phala/dstack-sdk@0.1.7(typescript@5.7.3)(zod@3.24.1):
+  /@phala/dstack-sdk@0.1.7(typescript@5.7.3)(zod@3.23.8):
     resolution: {integrity: sha512-/+8S6XpAnN9X6pCiA7eBD+QtEWOtYhlN7Osrf9K59G6E8q6SdXUbJzuNpNBHtlZV+Pm7zm4zOhnwnpvShLD0Xg==}
     engines: {node: '>=18.0.0'}
     optionalDependencies:
-      viem: 2.22.22(typescript@5.7.3)(zod@3.24.1)
+      viem: 2.22.22(typescript@5.7.3)(zod@3.23.8)
     transitivePeerDependencies:
       - bufferutil
       - typescript
@@ -6745,7 +6721,7 @@ packages:
       zod: 3.23.8
     dev: false
 
-  /abitype@1.0.8(typescript@5.7.3)(zod@3.24.1):
+  /abitype@1.0.8(zod@3.24.1):
     resolution: {integrity: sha512-ZeiI6h3GnW06uYDLx0etQtX/p8E24UaHHBj57RSjK7YBFe7iuVn07EDpOeP451D06sF27VOz9JJPlIKJmXgkEg==}
     peerDependencies:
       typescript: '>=5.0.4'
@@ -6756,7 +6732,6 @@ packages:
       zod:
         optional: true
     dependencies:
-      typescript: 5.7.3
       zod: 3.24.1
     dev: false
 
@@ -11811,7 +11786,7 @@ packages:
         optional: true
     dependencies:
       '@langchain/core': 0.3.38
-      '@langchain/openai': 0.3.17(@langchain/core@0.3.38)(ws@7.5.10)
+      '@langchain/openai': 0.3.17(@langchain/core@0.3.38)
       '@langchain/textsplitters': 0.1.0(@langchain/core@0.3.38)
       handlebars: 4.7.8
       js-tiktoken: 1.0.15
@@ -13211,27 +13186,6 @@ packages:
       - encoding
     dev: false
 
-  /openai@4.73.0(zod@3.24.1):
-    resolution: {integrity: sha512-NZstV77w3CEol9KQTRBRQ15+Sw6nxVTicAULSjYO4wn9E5gw72Mtp3fAVaBFXyyVPws4241YmFG6ya4L8v03tA==}
-    hasBin: true
-    peerDependencies:
-      zod: ^3.23.8
-    peerDependenciesMeta:
-      zod:
-        optional: true
-    dependencies:
-      '@types/node': 18.19.75
-      '@types/node-fetch': 2.6.12
-      abort-controller: 3.0.0
-      agentkeepalive: 4.6.0
-      form-data-encoder: 1.7.2
-      formdata-node: 4.4.1
-      node-fetch: 2.7.0
-      zod: 3.24.1
-    transitivePeerDependencies:
-      - encoding
-    dev: false
-
   /openai@4.83.0(ws@7.5.10)(zod@3.23.8):
     resolution: {integrity: sha512-fmTsqud0uTtRKsPC7L8Lu55dkaTwYucqncDHzVvO64DKOpNTuiYwjbR/nVgpapXuYy8xSnhQQPUm+3jQaxICgw==}
     hasBin: true
@@ -13347,7 +13301,7 @@ packages:
       - zod
     dev: false
 
-  /ox@0.6.7(typescript@5.7.3)(zod@3.24.1):
+  /ox@0.6.7(zod@3.23.8):
     resolution: {integrity: sha512-17Gk/eFsFRAZ80p5eKqv89a57uXjd3NgIf1CaXojATPBuujVc/fQSVhBeAU9JCRB+k7J50WQAyWTxK19T9GgbA==}
     peerDependencies:
       typescript: '>=5.4.0'
@@ -13360,9 +13314,27 @@ packages:
       '@noble/hashes': 1.7.1
       '@scure/bip32': 1.6.2
       '@scure/bip39': 1.5.4
-      abitype: 1.0.8(typescript@5.7.3)(zod@3.24.1)
+      abitype: 1.0.8(typescript@5.7.3)(zod@3.23.8)
       eventemitter3: 5.0.1
-      typescript: 5.7.3
+    transitivePeerDependencies:
+      - zod
+    dev: false
+
+  /ox@0.6.7(zod@3.24.1):
+    resolution: {integrity: sha512-17Gk/eFsFRAZ80p5eKqv89a57uXjd3NgIf1CaXojATPBuujVc/fQSVhBeAU9JCRB+k7J50WQAyWTxK19T9GgbA==}
+    peerDependencies:
+      typescript: '>=5.4.0'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@adraffy/ens-normalize': 1.11.0
+      '@noble/curves': 1.8.1
+      '@noble/hashes': 1.7.1
+      '@scure/bip32': 1.6.2
+      '@scure/bip39': 1.5.4
+      abitype: 1.0.8(zod@3.24.1)
+      eventemitter3: 5.0.1
     transitivePeerDependencies:
       - zod
     dev: false
@@ -16500,7 +16472,7 @@ packages:
       - zod
     dev: false
 
-  /viem@2.22.22(typescript@5.7.3)(zod@3.24.1):
+  /viem@2.22.22(zod@3.23.8):
     resolution: {integrity: sha512-0z7EFheP+paC/KRlVpu7zXYiqkTX6GR86G0p84LnYr5NgaVxGz0mGsiERy41ThERX1ahkTdEWGGiNgfi6wVqBQ==}
     peerDependencies:
       typescript: '>=5.0.4'
@@ -16512,10 +16484,31 @@ packages:
       '@noble/hashes': 1.7.1
       '@scure/bip32': 1.6.2
       '@scure/bip39': 1.5.4
-      abitype: 1.0.8(typescript@5.7.3)(zod@3.24.1)
+      abitype: 1.0.8(typescript@5.7.3)(zod@3.23.8)
       isows: 1.0.6(ws@8.18.0)
-      ox: 0.6.7(typescript@5.7.3)(zod@3.24.1)
-      typescript: 5.7.3
+      ox: 0.6.7(zod@3.23.8)
+      ws: 8.18.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+      - zod
+    dev: false
+
+  /viem@2.22.22(zod@3.24.1):
+    resolution: {integrity: sha512-0z7EFheP+paC/KRlVpu7zXYiqkTX6GR86G0p84LnYr5NgaVxGz0mGsiERy41ThERX1ahkTdEWGGiNgfi6wVqBQ==}
+    peerDependencies:
+      typescript: '>=5.0.4'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@noble/curves': 1.8.1
+      '@noble/hashes': 1.7.1
+      '@scure/bip32': 1.6.2
+      '@scure/bip39': 1.5.4
+      abitype: 1.0.8(zod@3.24.1)
+      isows: 1.0.6(ws@8.18.0)
+      ox: 0.6.7(zod@3.24.1)
       ws: 8.18.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
