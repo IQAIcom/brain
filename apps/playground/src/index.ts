@@ -5,6 +5,7 @@ import { bootstrapPlugin } from "@elizaos/plugin-bootstrap";
 import { CacheStore, ModelProviderName } from "@elizaos/core";
 import { fraxtal } from "viem/chains";
 import createHeartbeatPlugin from "@iqai/plugin-heartbeat";
+import { createATPPlugin } from "@iqai/plugin-atp";
 
 async function main() {
 	const fraxlendPlugin = await createFraxlendPlugin({
@@ -26,10 +27,15 @@ async function main() {
 		},
 	]);
 
+	const atpPlugin = await createATPPlugin({
+		chain: fraxtal,
+		walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
+	});
+
 	const agent = new Agent({
 		modelProvider: ModelProviderName.OPENAI,
 		modelKey: process.env.OPENAI_API_KEY,
-		plugins: [bootstrapPlugin, fraxlendPlugin, odosPlugin, heartbeatPlugin],
+		plugins: [bootstrapPlugin, fraxlendPlugin, odosPlugin, heartbeatPlugin,atpPlugin],
 		character: {
 			name: "BrainBot",
 			bio: "You are BrainBot, a helpful assistant.",
