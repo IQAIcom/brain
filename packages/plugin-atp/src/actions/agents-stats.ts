@@ -3,6 +3,7 @@ import { AgentsStatsService } from "../services/agents-stats";
 import { InputParserService } from "../services/input-parser";
 import type { ATPActionParams } from "../types";
 import { GET_AGENT_STATS_TEMPLATE } from "../lib/templates";
+import { elizaLogger } from "@elizaos/core";
 
 export const getAgentsStatsAction = (opts: ATPActionParams): Action => {
   return {
@@ -26,6 +27,7 @@ export const getAgentsStatsAction = (opts: ATPActionParams): Action => {
 
 const handler: (opts: ATPActionParams) => Handler =
   (_opts) => async (runtime, message, state, _options, callback) => {
+    elizaLogger.info('🔍 Fetching agent stats');
     try {
       const inputParser = new InputParserService();
       const { agentAddress } = await inputParser.parseInputs({
@@ -37,13 +39,16 @@ const handler: (opts: ATPActionParams) => Handler =
 
       const statsService = new AgentsStatsService();
       const stats = await statsService.getStats(agentAddress);
-      const formattedStats = statsService.formatStats(stats);
+      elizaLogger.debug('📊 Agent stats data', { stats });
 
+      const formattedStats = statsService.formatStats(stats);
       callback?.({
         text: formattedStats,
       });
+      elizaLogger.info('✅ Stats fetched successfully');
       return true;
     } catch (error) {
+      elizaLogger.error('❌ Stats fetch failed', { error });
       callback?.({
         text: `❌ Error: ${error.message}`,
       });
