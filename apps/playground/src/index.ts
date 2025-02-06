@@ -18,10 +18,11 @@ async function main() {
 	});
 
 	const heartbeatPlugin = await createHeartbeatPlugin([
-		// {
-		// 	period: "*/3 * * * * *",
-		// 	trigger: "Say hello world",
-		// },
+		{
+			period: "*/30 * * * * *",
+			trigger:
+				"Post a intreating joke about crypto on twitter. it should be positive to crypto community",
+		},
 	]);
 
 	const agent = new Agent({

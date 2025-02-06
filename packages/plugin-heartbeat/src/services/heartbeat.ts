@@ -5,6 +5,7 @@ import {
 	ModelClass,
 	Service,
 	ServiceType,
+	type UUID,
 	composeContext,
 	elizaLogger,
 	generateMessageResponse,
@@ -12,7 +13,7 @@ import {
 	stringToUuid,
 } from "@elizaos/core";
 import * as cron from "node-cron";
-import type { HeartbeatPluginParams } from "../types";
+import type { HeartbeatPluginParams, HeartbeatTask } from "../types";
 import { messageHandlerTemplate } from "../lib/template";
 
 export class Heartbeat extends Service {
@@ -23,16 +24,19 @@ export class Heartbeat extends Service {
 	}
 
 	async initialize(runtime: IAgentRuntime) {
-		for (const heartbeat of this.opts) {
-			cron.schedule(heartbeat.period, () =>
-				this.handleCron(heartbeat.trigger, runtime),
+		for (const heartbeatTask of this.opts) {
+			cron.schedule(heartbeatTask.period, () =>
+				this.handleCron(heartbeatTask, runtime),
 			);
 		}
 		elizaLogger.info("ℹ️ Heartbeat service initialized with scheduled tasks");
 	}
 
-	private async handleCron(trigger: string, runtime: IAgentRuntime) {
-		elizaLogger.info(`🫀 Heartbeat triggered with: ${trigger}`);
+	private async handleCron(
+		heartbeatTask: HeartbeatTask,
+		runtime: IAgentRuntime,
+	) {
+		elizaLogger.info(`🫀 Heartbeat triggered with: ${heartbeatTask.input}`);
 
 		const userId = stringToUuid("system");
 		const roomId = stringToUuid("heartbeat-room");
@@ -48,7 +52,7 @@ export class Heartbeat extends Service {
 		const messageId = stringToUuid(Date.now().toString());
 
 		const content: Content = {
-			text: trigger,
+			text: heartbeatTask.input,
 			attachments: [],
 			source: "heartbeat",
 			inReplyTo: undefined,
@@ -93,6 +97,12 @@ export class Heartbeat extends Service {
 
 		if (response) {
 			elizaLogger.info("📤 Heartbeat response generated:", response);
+			await this.handleSocialPost(
+				runtime,
+				heartbeatTask,
+				response.text,
+				roomId,
+			);
 
 			const responseMessage: Memory = {
 				id: stringToUuid(`${messageId}-${runtime.agentId}`),
@@ -106,7 +116,9 @@ export class Heartbeat extends Service {
 			await runtime.messageManager.createMemory(responseMessage);
 			state = await runtime.updateRecentMessageState(state);
 
-			elizaLogger.info(`✅ Heartbeat cycle completed for trigger: ${trigger}`);
+			elizaLogger.info(
+				`✅ Heartbeat cycle completed for trigger: ${heartbeatTask.input}`,
+			);
 
 			await runtime.processActions(
 				memory,
@@ -116,6 +128,32 @@ export class Heartbeat extends Service {
 			);
 
 			await runtime.evaluate(memory, state);
+		}
+	}
+
+	private async handleSocialPost(
+		runtime: IAgentRuntime,
+		task: HeartbeatTask,
+		responseContent: string,
+		roomId: UUID,
+	) {
+		switch (task.client) {
+			case "twitter":
+				if (runtime.clients?.twitter) {
+					await runtime.clients.twitter.postTweet(
+						runtime,
+						task.input,
+						roomId,
+						responseContent,
+						runtime.character.name,
+					);
+				}
+				break;
+			case "telegram":
+				if (runtime.clients?.telegram) {
+					//TODO: Telegram implementation when ready
+				}
+				break;
 		}
 	}
 }
