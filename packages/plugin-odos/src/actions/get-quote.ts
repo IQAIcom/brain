@@ -43,7 +43,6 @@ const handler: (opts: OdosActionParams) => Handler =
 			return false;	
 		}
 
-		console.log("PARSED OUTPUT: ", parsedOutput)
 		const { fromToken, toToken, chainId, amount } = parsedOutput
 
 		try {

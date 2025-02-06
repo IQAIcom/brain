@@ -22,8 +22,6 @@ export class InputParserService {
 			modelClass: ModelClass.SMALL,
 		});
 
-		console.log("llm outptu: ", response)
-
 		if(response?.error){
 			const result =  { error: response!.error as string }
 			return result
