@@ -1,7 +1,10 @@
 import { Address, formatUnits } from "viem";
 import dedent from "dedent";
+import { EXCHANGE_TEMPLATE } from "../lib/templates";
+import { HandlerCallback, IAgentRuntime, Memory, State } from "@elizaos/core";
+import { InputParserService } from "./input-parser";
 
-interface QuoteResponse {
+export interface QuoteResponse {
 	inTokens: string[];
 	outTokens: string[];
 	inAmounts: string[];
@@ -22,7 +25,22 @@ interface QuoteResponse {
 export class GetQuoteActionService {
 	private readonly API_URL = "https://api.odos.xyz";
 
-	async execute(fromToken: Address, toToken: Address, chain: number, amount: string) {
+	async execute(runtime: IAgentRuntime, message: Memory, state: State, callback: HandlerCallback) {
+
+		const inputParser = new InputParserService();
+		const parsedOutput = await inputParser.parseInputs({
+			runtime,
+			message,
+			state,
+			template: EXCHANGE_TEMPLATE,
+		});
+
+		if('error' in parsedOutput){
+			return new Error(parsedOutput.error);	
+		}
+
+		const { fromToken, toToken, chainId, amount } = parsedOutput
+
 		try {
 			const response = await fetch(`${this.API_URL}/sor/quote/v2`, {
 				method: "POST",
@@ -30,7 +48,7 @@ export class GetQuoteActionService {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({
-					chainId: chain,
+					chainId,
 					inputTokens: [
 						{
 							tokenAddress: fromToken,

@@ -1,9 +1,6 @@
 import type { Action, Handler } from "@elizaos/core";
-import { GetQuoteActionService } from "../services/get-quote";
+import { GetQuoteActionService, QuoteResponse } from "../services/get-quote";
 import type { OdosActionParams } from "../types";
-import { InputParserService } from "../services/input-parser";
-import { EXCHANGE_TEMPLATE } from "../lib/templates";
-import { Address } from "viem";
 
 export const getQuoteAction = (opts: OdosActionParams): Action => {
 	return {
@@ -28,30 +25,22 @@ export const getQuoteAction = (opts: OdosActionParams): Action => {
 
 const handler: (opts: OdosActionParams) => Handler =
 	() => async (runtime, message, state, _options, callback) => {
-		const inputParser = new InputParserService();
-		const parsedOutput = await inputParser.parseInputs({
-			runtime,
-			message,
-			state,
-			template: EXCHANGE_TEMPLATE,
-		});
-
-		if('error' in parsedOutput){
-			callback?.({
-				text: `Error fetching quote: ${parsedOutput.error}`,
-			});
-			return false;	
-		}
-
-		const { fromToken, toToken, chainId, amount } = parsedOutput
 
 		try {
 			const service = new GetQuoteActionService();
-			const quote = await service.execute(fromToken as Address, toToken as Address, chainId, amount);
+			const quote = await service.execute(runtime, message, state, callback);
+
+			if (quote instanceof Error) {
+				callback?.({
+					text: `Error fetching quote: ${quote.message}`,
+				});
+				return false
+			}
 
 			callback?.({
 				text: service.format(quote),
 			});
+
 			return true;
 		} catch (error) {
 			callback?.({
