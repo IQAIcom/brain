@@ -48,6 +48,7 @@ const handler: (opts: OdosActionParams) => Handler =
 				});
 				return false;
 			}
+			//TODO: Approve router allowance
 			const hash = await new ExecuteSwapService(walletService).execute(txn);
 
 			callback?.({
