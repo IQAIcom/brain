@@ -30,10 +30,10 @@ export class InputParserService {
 		}
 
 		const result =  { 
-			fromToken: response!.inputToken as Address, 
-			toToken: response!.outputToken as Address, 
+			fromToken: response!.fromToken as Address, 
+			toToken: response!.toToken as Address, 
 			amount: response!.amount as string,
-			chainId: Number(response!.chainId)
+			chainId: Number(response!.chain)
 		}
 
 		return result
