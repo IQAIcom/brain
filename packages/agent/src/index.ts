@@ -26,8 +26,11 @@ export class Agent {
 			);
 			const runtime = await this.runtimeService.init();
 
-			if (this.config.clients) {
-				this.clientService = new ClientService(runtime, this.config.clients);
+			if (this.config.clientConfig) {
+				this.clientService = new ClientService(
+					runtime,
+					this.config.clientConfig,
+				);
 				runtime.clients = await this.clientService.init();
 			}
 		} catch (error) {

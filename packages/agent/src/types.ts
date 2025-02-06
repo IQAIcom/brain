@@ -26,5 +26,5 @@ export interface AgentConfig {
 	character?: Partial<Character>;
 	cacheStore?: CacheStore;
 	databasePath?: string;
-	clients?: ClientConfig;
+	clientConfig?: ClientConfig;
 }
