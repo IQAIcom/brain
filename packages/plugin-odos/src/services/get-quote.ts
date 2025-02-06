@@ -22,7 +22,7 @@ interface QuoteResponse {
 export class GetQuoteActionService {
 	private readonly API_URL = "https://api.odos.xyz";
 
-	async execute(fromToken: Address, toToken: Address, chain: number, amount: bigint) {
+	async execute(fromToken: Address, toToken: Address, chain: number, amount: string) {
 		try {
 			const response = await fetch(`${this.API_URL}/sor/quote/v2`, {
 				method: "POST",

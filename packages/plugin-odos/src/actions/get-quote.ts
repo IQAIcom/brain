@@ -3,6 +3,7 @@ import { GetQuoteActionService } from "../services/get-quote";
 import type { OdosActionParams } from "../types";
 import { InputParserService } from "../services/input-parser";
 import { EXCHANGE_TEMPLATE } from "../lib/templates";
+import { Address } from "viem";
 
 export const getQuoteAction = (opts: OdosActionParams): Action => {
 	return {
@@ -28,15 +29,25 @@ export const getQuoteAction = (opts: OdosActionParams): Action => {
 const handler: (opts: OdosActionParams) => Handler =
 	() => async (runtime, message, state, _options, callback) => {
 		const inputParser = new InputParserService();
-		const { fromToken, toToken, chain, amount } = await inputParser.parseInputs({
+		const parsedOutput = await inputParser.parseInputs({
 			runtime,
 			message,
 			state,
 			template: EXCHANGE_TEMPLATE,
 		});
+
+		if('error' in parsedOutput){
+			callback?.({
+				text: `Error fetching quote: ${parsedOutput.error}`,
+			});
+			return false;	
+		}
+
+		const { fromToken, toToken, chainId, amount } = parsedOutput
+
 		try {
 			const service = new GetQuoteActionService();
-			const quote = await service.execute(fromToken, toToken, chain, amount);
+			const quote = await service.execute(fromToken as Address, toToken as Address, chainId, amount);
 
 			callback?.({
 				text: service.format(quote),
