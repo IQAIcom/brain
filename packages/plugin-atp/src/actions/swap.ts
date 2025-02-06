@@ -1,7 +1,6 @@
 import type { Action, Handler } from "@elizaos/core";
 import { SWAP_TEMPLATE } from "../lib/templates";
 import { InputParserService } from "../services/input-parser";
-import { LendService } from "../services/swap";
 import { WalletService } from "../services/wallet";
 import type { ATPActionParams } from "../types";
 import { formatWeiToNumber } from "../lib/format-number";
@@ -25,48 +24,12 @@ export const getSwapAction = (opts: ATPActionParams): Action => {
 };
 
 const handler: (opts: ATPActionParams) => Handler =
-	(opts) => async (runtime, message, state, _options, callback) => {
-		const inputParser = new InputParserService();
-		const { pairAddress, amount } = await inputParser.parseInputs({
-			runtime,
-			message,
-			state,
-			template: SWAP_TEMPLATE,
+	(opts) => async (_runtime, _message, _state, _options, callback) => {
+		callback?.({
+			text: dedent`
+				❌ not implemented
+				${opts}
+			`,
 		});
-
-		try {
-			const walletService = new WalletService(
-				opts.walletPrivateKey,
-				opts.chain,
-			);
-			const lendService = new LendService(walletService);
-
-			const result = await lendService.execute({
-				pairAddress,
-				amount: BigInt(amount),
-			});
-
-			callback?.({
-				text: dedent`
-					✅ Swap Transaction Successful
-
-					💰 Amount: ${formatWeiToNumber(amount)} tokens
-					🔗 Transaction: ${result.txHash}
-
-					Your assets have been successfully supplied to IQ ATP.
-				`,
-			});
-			return true;
-		} catch (error) {
-			callback?.({
-				text: dedent`
-					❌ Swap Transaction Failed
-
-					Error: ${error.message}
-
-					Please verify your inputs and try again.
-				`,
-			});
-			return false;
-		}
+		return false;
 	};
