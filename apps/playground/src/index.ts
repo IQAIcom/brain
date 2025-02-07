@@ -61,18 +61,6 @@ async function main() {
 		.withPlugin(fraxlendPlugin)
 		.withPlugin(odosPlugin)
 		.withPlugin(heartbeatPlugin)
-		.withCharacter({
-			name: "BrainBot",
-			bio: "You are BrainBot, a helpful assistant.",
-			username: "brainbot",
-			messageExamples: [],
-			lore: [],
-			style: {
-				all: [],
-				chat: [],
-				post: [],
-			},
-		})
 		.build();
 
 	await agent.start();
