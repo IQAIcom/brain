@@ -44,11 +44,16 @@ export class Agent {
 			await this.options.databaseAdapter?.init();
 			this.cacheManager = this.initializeCache();
 			const runtime = await this.initializeRuntime();
-
 			for (const { name, client } of this.options.clients || []) {
 				const clientInstance = await client.start(runtime);
 				if (clientInstance) {
 					this.clients[name] = clientInstance as Client;
+				}
+				if (name === "direct") {
+					const instance = clientInstance as {
+						registerAgent: (runtime: AgentRuntime) => void;
+					};
+					instance.registerAgent(this.runtime as AgentRuntime);
 				}
 			}
 

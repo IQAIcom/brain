@@ -1,4 +1,5 @@
 import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
+import DirectClientInterface from "@elizaos/client-direct";
 import { TelegramClientInterface } from "@elizaos/client-telegram";
 import { TwitterClientInterface } from "@elizaos/client-twitter";
 import { ModelProviderName } from "@elizaos/core";
@@ -25,21 +26,21 @@ async function main() {
 	});
 
 	const heartbeatPlugin = await createHeartbeatPlugin([
-		{
-			period: "*/30 * * * * *",
-			input:
-				"Post a intreating joke about crypto. it should be positive to crypto community. Start with Hello Telegram 👋",
-			client: "telegram",
-			config: {
-				chatId: "-2361588545",
-			},
-		},
-		{
-			period: "*/30 * * * * *",
-			input:
-				"Post a intreating joke about crypto. it should be positive to crypto community. Start with Hey Twitter 👋",
-			client: "twitter",
-		},
+		// {
+		// 	period: "*/30 * * * * *",
+		// 	input:
+		// 		"Post a intreating joke about crypto. it should be positive to crypto community. Start with Hello Telegram 👋",
+		// 	client: "telegram",
+		// 	config: {
+		// 		chatId: "-2361588545",
+		// 	},
+		// },
+		// {
+		// 	period: "*/30 * * * * *",
+		// 	input:
+		// 		"Post a intreating joke about crypto. it should be positive to crypto community. Start with Hey Twitter 👋",
+		// 	client: "twitter",
+		// },
 	]);
 
 	// Setup database
@@ -53,6 +54,7 @@ async function main() {
 		.withDatabase(databaseAdapter)
 		.withClient("telegram", TelegramClientInterface)
 		.withClient("twitter", TwitterClientInterface)
+		.withClient("direct", DirectClientInterface)
 		.withModelProvider(
 			ModelProviderName.OPENAI,
 			process.env.OPENAI_API_KEY as string,
