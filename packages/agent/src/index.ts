@@ -1,2 +1,2 @@
-export { Agent, AgentOptions } from "./agent";
-export { AgentBuilder } from "./builder";
+export * from "./agent";
+export * from "./builder";
