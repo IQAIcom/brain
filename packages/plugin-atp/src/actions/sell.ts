@@ -3,68 +3,77 @@ import { InputParserService } from "../services/input-parser";
 import { SwapService } from "../services/swap";
 import { WalletService } from "../services/wallet";
 import type { ATPActionParams } from "../types";
-import { SWAP_TEMPLATE } from "../lib/templates";
+import { SELL_AGENT_TEMPLATE } from "../lib/templates";
 import { formatWeiToNumber } from "../lib/format-number";
 import { elizaLogger } from "@elizaos/core";
 import dedent from "dedent";
 
-export const getSwapAction = (opts: ATPActionParams): Action => {
+export const getSellAction = (opts: ATPActionParams): Action => {
   return {
-    name: "ATP_BUY_SELL",
-    description: "swap (Buy or Sell) ai tokens on IQ ATP",
+    name: "ATP_SELL_AGENT",
+    description: "Sell AI agent tokens",
     similes: [
-      "BUY_ATP_AI_TOKENS",
-      "SELL_ATP_AI_TOKENS",
-      "BUY_AGENT",
       "SELL_AGENT",
-      "PURCHASE_AGENT",
       "DISPOSE_AGENT",
+      "EXIT_AGENT_POSITION",
+      "LIQUIDATE_AGENT",
     ],
     validate: async () => true,
     handler: handler(opts),
-    examples: [],
+    examples: [
+      [
+        {
+          user: "user",
+          content: { text: "Sell 50 tokens of agent 0x1234...5678" },
+        },
+      ],
+      [
+        {
+          user: "user",
+          content: { text: "Dispose 100 tokens of Big Chungus" },
+        },
+      ],
+    ],
   };
 };
 
 const handler: (opts: ATPActionParams) => Handler =
   (opts) => async (runtime, message, state, _options, callback) => {
-    elizaLogger.info('💱 Starting token swap');
+    elizaLogger.info('💱 Starting token sale');
     try {
       const inputParser = new InputParserService();
-      const { agentAddress, amount, action } = await inputParser.parseInputs({
+      const { tokenContract, amount } = await inputParser.parseInputs({
         runtime,
         message,
         state,
-        template: SWAP_TEMPLATE,
+        template: SELL_AGENT_TEMPLATE,
       });
-      elizaLogger.debug('🎯 Swap parameters', { agentAddress, amount, action });
+      elizaLogger.debug('🎯 Sell parameters', { tokenContract, amount });
 
       const walletService = new WalletService(opts.walletPrivateKey);
       const swapService = new SwapService(walletService);
 
-      const result = action === 'buy'
-        ? await swapService.buy({ agentAddress, amount: BigInt(amount) })
-        : await swapService.sell({ agentAddress, amount: BigInt(amount) });
+      const result = await swapService.sell({ tokenContract, amount: BigInt(amount) });
       elizaLogger.debug('📝 Transaction result', { result });
 
       callback?.({
         text: dedent`
-          ✅ ${action.toUpperCase()} Transaction Successful
+          ✅ Sell Transaction Successful
 
           💰 Amount: ${formatWeiToNumber(amount)} tokens
-          🤖 Agent: ${agentAddress}
+          🤖 Agent: ${tokenContract}
           🔗 Transaction: ${result.txHash}
 
-          Tokens have been ${action === 'buy' ? 'purchased' : 'sold'} successfully.
+          Tokens have been sold successfully.
         `,
       });
-      elizaLogger.info('✅ Swap completed successfully');
+      elizaLogger.info('✅ Sale completed successfully');
       return true;
     } catch (error) {
-      elizaLogger.error('❌ Swap failed', { error });
+      elizaLogger.error('❌ Sale failed', { error });
       callback?.({
         text: dedent`
-          ❌ Swap Transaction Failed
+          ❌ Sell Transaction Failed
 
           Error: ${error.message}
 

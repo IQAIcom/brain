@@ -15,7 +15,7 @@ export class SwapService {
     this.baseTokenAddress = BASE_TOKEN_ADDRESS as Address;
   }
 
-  async buy({ agentAddress, amount }: { agentAddress: Address; amount: bigint }) {
+  async buy({ tokenContract, amount }: { tokenContract: Address; amount: bigint }) {
     const walletClient = this.walletService.getWalletClient();
     const publicClient = this.walletService.getPublicClient();
 
@@ -35,7 +35,7 @@ export class SwapService {
       address: this.routerAddress,
       abi: ROUTER_ABI,
       functionName: 'buy',
-      args: [agentAddress, amount, 0n],
+      args: [tokenContract, amount, 0n],
 			chain: fraxtal,
 			account: walletClient.account,
     });
@@ -44,13 +44,13 @@ export class SwapService {
     return { txHash: buyTx };
   }
 
-  async sell({ agentAddress, amount }: { agentAddress: Address; amount: bigint }) {
+  async sell({ tokenContract, amount }: { tokenContract: Address; amount: bigint }) {
     const walletClient = this.walletService.getWalletClient();
     const publicClient = this.walletService.getPublicClient();
 
     // Approve agent token
     const approveTx = await walletClient.writeContract({
-      address: agentAddress,
+      address: tokenContract,
       abi: erc20Abi,
       functionName: 'approve',
       args: [this.routerAddress, amount],
@@ -64,7 +64,7 @@ export class SwapService {
       address: this.routerAddress,
       abi: ROUTER_ABI,
       functionName: 'sell',
-      args: [agentAddress, amount,0n],
+      args: [tokenContract, amount,0n],
 			chain: fraxtal,
 			account: walletClient.account,
     });
