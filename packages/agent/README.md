@@ -22,14 +22,15 @@ npm install @iqai/agent
 Basic usage with builder pattern:
 
 ```typescript
-import { AgentBuilder } from '@iqai/agent';
-import { SqliteDatabaseAdapter } from '@elizaos/adapter-sqlite';
-import { ModelProviderName } from '@elizaos/core';
+import Database from "better-sqlite3";
+import { AgentBuilder } from "@iqai/agent";
+import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
+import { ModelProviderName } from "@elizaos/core";
 
 const agent = new AgentBuilder()
-    .withDatabase(new SqliteDatabaseAdapter())
-    .withModelProvider(ModelProviderName.OPENAI, 'your-openai-key')
-    .build();
+	.withDatabase(new SqliteDatabaseAdapter(new Database()))
+	.withModelProvider(ModelProviderName.OPENAI, "your-openai-key")
+	.build();
 
 await agent.start();
 ```
@@ -39,12 +40,13 @@ await agent.start();
 Full configuration example showcasing all builder capabilities:
 
 ```typescript
+import Database from "better-sqlite3";
 import { AgentBuilder } from '@iqai/agent';
 import { CacheStore, ModelProviderName } from '@elizaos/core';
 
 const agent = new AgentBuilder()
     // Database Configuration
-    .withDatabase(new SqliteDatabaseAdapter())
+    .withDatabase(new SqliteDatabaseAdapter(new Database()))
     
     // Client Interfaces
     .withClient('telegram', new TelegramClientInterface())
