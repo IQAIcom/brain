@@ -17,7 +17,7 @@ import {
 import path from "node:path";
 
 export interface AgentOptions {
-	databaseAdapter: IDatabaseAdapter & IDatabaseCacheAdapter;
+	databaseAdapter?: IDatabaseAdapter & IDatabaseCacheAdapter;
 	clients?: { name: string; client: Client }[];
 	plugins?: Plugin[];
 	modelProvider?: ModelProviderName;
@@ -41,7 +41,7 @@ export class Agent {
 
 	public async start() {
 		try {
-			await this.options.databaseAdapter.init();
+			await this.options.databaseAdapter?.init();
 			this.cacheManager = this.initializeCache();
 			const runtime = await this.initializeRuntime();
 
