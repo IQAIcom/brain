@@ -2,8 +2,9 @@ import type { Action, Handler } from "@elizaos/core";
 import { GetQuoteActionService } from "../services/get-quote";
 import type { OdosActionParams } from "../types";
 import { AssembleService } from "../services/assemble";
-import { WalletService } from "../../../plugin-fraxlend/src/services/wallet";
+import { WalletService } from "../services/wallet";
 import { ExecuteSwapService } from "../services/execute-swap";
+import { ApprovalService } from "../services/allowance";
 
 export const swapAction = (opts: OdosActionParams): Action => {
 	return {
@@ -29,7 +30,7 @@ const handler: (opts: OdosActionParams) => Handler =
 	(opts) => async (runtime, message, state, _options, callback) => {
 		try {
 			const getQuoteService = new GetQuoteActionService();
-			const quote = await getQuoteService.execute(runtime, message, state, callback);
+			const quote = await getQuoteService.execute(runtime, message, state);
 
 			if (quote instanceof Error || !quote.pathId) {
 				callback?.({
@@ -49,6 +50,7 @@ const handler: (opts: OdosActionParams) => Handler =
 				return false;
 			}
 			//TODO: Approve router allowance
+			await new ApprovalService(walletService).execute(txn.from as `0x${string}`, txn.to as `0x${string}`, BigInt(quote.inAmounts[0]));
 			const hash = await new ExecuteSwapService(walletService).execute(txn);
 
 			callback?.({

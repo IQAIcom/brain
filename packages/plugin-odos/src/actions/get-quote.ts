@@ -1,5 +1,5 @@
 import type { Action, Handler } from "@elizaos/core";
-import { GetQuoteActionService, QuoteResponse } from "../services/get-quote";
+import { GetQuoteActionService } from "../services/get-quote";
 import type { OdosActionParams } from "../types";
 
 export const getQuoteAction = (opts: OdosActionParams): Action => {
@@ -28,7 +28,7 @@ const handler: (opts: OdosActionParams) => Handler =
 
 		try {
 			const service = new GetQuoteActionService();
-			const quote = await service.execute(runtime, message, state, callback);
+			const quote = await service.execute(runtime, message, state);
 
 			if (quote instanceof Error) {
 				callback?.({

@@ -1,7 +1,7 @@
-import { Address, formatUnits } from "viem";
+import { formatUnits } from "viem";
 import dedent from "dedent";
 import { EXCHANGE_TEMPLATE } from "../lib/templates";
-import { HandlerCallback, IAgentRuntime, Memory, State } from "@elizaos/core";
+import type { IAgentRuntime, Memory, State } from "@elizaos/core";
 import { InputParserService } from "./input-parser";
 
 export interface QuoteResponse {
@@ -25,7 +25,7 @@ export interface QuoteResponse {
 export class GetQuoteActionService {
 	private readonly API_URL = "https://api.odos.xyz";
 
-	async execute(runtime: IAgentRuntime, message: Memory, state: State, callback: HandlerCallback) {
+	async execute(runtime: IAgentRuntime, message: Memory, state: State) {
 
 		const inputParser = new InputParserService();
 		const parsedOutput = await inputParser.parseInputs({

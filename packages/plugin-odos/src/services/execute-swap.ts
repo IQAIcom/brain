@@ -1,4 +1,4 @@
-import type { WalletService } from "../../../plugin-fraxlend/src/services/wallet";
+import type { WalletService } from "./wallet";
 import type { AssembleResponseTxn } from "./assemble";
 import type { Hash } from 'viem';
 

@@ -1,7 +1,4 @@
-import type { QuoteResponse } from "./get-quote";
-import { privateKeyToAccount } from "viem/accounts";
-import type { OdosActionParams } from "../types";
-import type {WalletService} from "../../../plugin-fraxlend/src/services/wallet";
+import type {WalletService} from './wallet';
 
 export interface AssembleResponseTxn {
     chainId: number;    // Chain ID for path execution
