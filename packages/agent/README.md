@@ -4,93 +4,122 @@ A powerful and flexible AI agent setup package that allows you to quickly create
 
 ## Features
 
-- 🤖 Easy agent setup and configuration
+- 🤖 Easy agent setup with builder pattern
 - 🔌 Multiple client interface support (Direct, Telegram, Twitter)
-- 💾 Built-in caching system
+- 💾 Built-in caching system with database and filesystem support
 - 🔧 Customizable character settings
 - 🧩 Plugin system support
-- 🗄️ SQLite database integration
+- 🗄️ Database adapter flexibility
 
 ## Installation
 
-``` bash
+```bash
 npm install @iqai/agent
 ```
 
 ## Quick Start
 
-Basic usage with minimal configuration:
+Basic usage with builder pattern:
 
 ```typescript
-import { Agent } from '@iqai/agent';
+import { AgentBuilder } from '@iqai/agent';
+import { SqliteDatabaseAdapter } from '@elizaos/adapter-sqlite';
+import { ModelProviderName } from '@elizaos/core';
 
-const agent = new Agent({
-  openAiKey: 'your-openai-key'
-});
+const agent = new AgentBuilder()
+    .withDatabase(new SqliteDatabaseAdapter())
+    .withModelProvider(ModelProviderName.OPENAI, 'your-openai-key')
+    .build();
 
 await agent.start();
 ```
 
 ## Advanced Configuration
 
-Full configuration example with all available options:
+Full configuration example showcasing all builder capabilities:
 
 ```typescript
-import { Agent } from '@iqai/agent';
+import { AgentBuilder } from '@iqai/agent';
+import { CacheStore, ModelProviderName } from '@elizaos/core';
 
-const agent = new Agent({
-  // Model Configuration
-  modelProvider: ModelProviderName.OPENAI,
-  openAiKey: 'your-openai-key',
+const agent = new AgentBuilder()
+    // Database Configuration
+    .withDatabase(new SqliteDatabaseAdapter())
+    
+    // Client Interfaces
+    .withClient('telegram', new TelegramClientInterface())
+    .withClient('twitter', new TwitterClientInterface())
+    
+    // Model Configuration
+    .withModelProvider(ModelProviderName.OPENAI, 'your-openai-key')
+    
+    // Plugins
+    .withPlugin(bootstrapPlugin)
+    .withPlugin(customPlugin)
+    
+    // Character Configuration
+    .withCharacter({
+        name: "BrainBot",
+        bio: "A helpful AI assistant",
+        username: "brainbot"
+    })
+    
+    // Cache Configuration
+    .withCacheStore(CacheStore.DATABASE)
+    
+    .build();
 
-  // Client Interfaces
-  clients: {
-    direct: {
-      enabled: true,
-      port: 3000
-    },
-    telegram: {
-      token: 'your-telegram-bot-token'
-    },
-    twitter: {
-      username: 'your-twitter-username',
-      password: 'your-twitter-password'
-    }
-  },
+await agent.start();
+```
 
-  // Storage Configuration
-  databasePath: './custom/path/to/data',
-  cacheStore: CacheStore.DATABASE
+## Error Handling
+
+Proper error handling with async/await:
+
+```typescript
+try {
+    const agent = new AgentBuilder()
+        .withDatabase(databaseAdapter)
+        .withModelProvider(ModelProviderName.OPENAI, process.env.OPENAI_API_KEY!)
+        .build();
+        
+    await agent.start();
+} catch (error) {
+    console.error('Agent setup failed:', error);
+}
+```
+
+## Graceful Shutdown
+
+Handling application shutdown properly:
+
+```typescript
+const agent = new AgentBuilder()
+    // ... configuration ...
+    .build();
+
+process.on('SIGTERM', async () => {
+    await agent.stop();
+    process.exit(0);
 });
 
 await agent.start();
 ```
 
-## Best Practices
+## API Reference
 
-1. Always handle errors when setting up the agent:
-```typescript
-try {
-  const agent = new Agent(config);
-  await agent.start();
-} catch (error) {
-  console.error('Failed to setup agent:', error);
-}
-```
+### AgentBuilder Methods
 
-2. Close the agent properly when shutting down:
-```typescript
-process.on('SIGTERM', async () => {
-  await agent.stop();
-  process.exit(0);
-});
-```
+- `withDatabase(adapter)`: Configure database adapter
+- `withClient(name, client)`: Add a client interface
+- `withPlugin(plugin)`: Add a plugin
+- `withModelProvider(provider, key)`: Configure AI model
+- `withCharacter(character)`: Set agent character
+- `withCacheStore(store)`: Configure cache storage
+- `build()`: Create the Agent instance
 
+### Agent Methods
 
-## Contributing
-
-Contributions are welcome! Please check our contributing guidelines for details.
-
-## License
-
-MIT
+- `start()`: Initialize and start the agent
+- `stop()`: Gracefully shutdown the agent
+- `getClients()`: Get configured client interfaces
