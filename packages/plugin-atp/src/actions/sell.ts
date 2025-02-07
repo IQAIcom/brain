@@ -48,13 +48,13 @@ const handler: (opts: ATPActionParams) => Handler =
         state,
         template: SELL_AGENT_TEMPLATE,
       });
-      elizaLogger.debug('🎯 Sell parameters', { tokenContract, amount });
+      elizaLogger.info('🎯 Sell parameters', { tokenContract, amount });
 
       const walletService = new WalletService(opts.walletPrivateKey);
       const swapService = new SwapService(walletService);
 
       const result = await swapService.sell({ tokenContract, amount: BigInt(amount) });
-      elizaLogger.debug('📝 Transaction result', { result });
+      elizaLogger.info('📝 Transaction result', { result });
 
       callback?.({
         text: dedent`
