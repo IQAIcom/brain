@@ -5,7 +5,6 @@ import {
 	ModelClass,
 	Service,
 	ServiceType,
-	type UUID,
 	composeContext,
 	elizaLogger,
 	generateMessageResponse,
@@ -13,8 +12,8 @@ import {
 	stringToUuid,
 } from "@elizaos/core";
 import * as cron from "node-cron";
-import type { HeartbeatPluginParams, HeartbeatTask } from "../types";
 import { messageHandlerTemplate } from "../lib/template";
+import type { HeartbeatPluginParams, HeartbeatTask } from "../types";
 
 export class Heartbeat extends Service {
 	static serviceType: ServiceType = ServiceType.TRANSCRIPTION;
