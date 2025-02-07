@@ -11,28 +11,61 @@ import {
 	defaultCharacter,
 	stringToUuid,
 	type Client,
+	type Plugin,
+	type Character,
 } from "@elizaos/core";
 import path from "node:path";
-import type { AgentConfig } from "./index";
+
+export interface AgentOptions {
+	databaseAdapter: IDatabaseAdapter & IDatabaseCacheAdapter;
+	clients?: { name: string; client: Client }[];
+	plugins?: Plugin[];
+	modelProvider?: ModelProviderName;
+	modelKey?: string;
+	character?: Partial<Character>;
+	cacheStore?: CacheStore;
+}
 
 export class Agent {
 	private cacheManager: ICacheManager;
 	private runtime: AgentRuntime;
 	private clients: Record<string, Client> = {};
+	private readonly options: AgentOptions;
 
-	constructor(
-		private databaseAdapter: IDatabaseAdapter & IDatabaseCacheAdapter,
-		private clientInterfaces: { name: string; client: Client }[] = [],
-		private config: AgentConfig = {},
-	) {}
+	constructor(options: AgentOptions) {
+		this.options = {
+			clients: [],
+			...options,
+		};
+	}
+
+	public async start() {
+		try {
+			await this.options.databaseAdapter.init();
+			this.cacheManager = this.initializeCache();
+			const runtime = await this.initializeRuntime();
+
+			for (const { name, client } of this.options.clients || []) {
+				const clientInstance = await client.start(runtime);
+				if (clientInstance) {
+					this.clients[name] = clientInstance as Client;
+				}
+			}
+
+			runtime.clients = this.clients;
+		} catch (error) {
+			await this.stop();
+			throw error;
+		}
+	}
 
 	private initializeCache() {
 		const cacheId = stringToUuid("default");
 
-		switch (this.config.cacheStore) {
+		switch (this.options.cacheStore) {
 			case CacheStore.DATABASE:
 				return new CacheManager(
-					new DbCacheAdapter(this.databaseAdapter, cacheId),
+					new DbCacheAdapter(this.options.databaseAdapter, cacheId),
 				);
 			case CacheStore.FILESYSTEM: {
 				const cacheDir = path.resolve(process.cwd(), "cache");
@@ -40,26 +73,26 @@ export class Agent {
 			}
 			default:
 				return new CacheManager(
-					new DbCacheAdapter(this.databaseAdapter, cacheId),
+					new DbCacheAdapter(this.options.databaseAdapter, cacheId),
 				);
 		}
 	}
 
 	private async initializeRuntime() {
-		const plugins = [...(this.config.plugins || [])];
+		const plugins = [...(this.options.plugins || [])];
 		const modelProvider =
-			this.config.modelProvider ||
-			this.config.character?.modelProvider ||
+			this.options.modelProvider ||
+			this.options.character?.modelProvider ||
 			ModelProviderName.OPENAI;
 
 		this.runtime = new AgentRuntime({
-			databaseAdapter: this.databaseAdapter,
-			token: this.config.modelKey,
+			databaseAdapter: this.options.databaseAdapter,
+			token: this.options.modelKey,
 			modelProvider,
 			plugins,
 			character: {
 				...defaultCharacter,
-				...this.config.character,
+				...this.options.character,
 				modelProvider,
 			},
 			cacheManager: this.cacheManager,
@@ -77,29 +110,9 @@ export class Agent {
 		return this.runtime;
 	}
 
-	public async start() {
-		try {
-			await this.databaseAdapter.init();
-			this.cacheManager = this.initializeCache();
-			const runtime = await this.initializeRuntime();
-
-			for (const { name, client } of this.clientInterfaces) {
-				const clientInstance = await client.start(runtime);
-				if (clientInstance) {
-					this.clients[name] = clientInstance as Client;
-				}
-			}
-
-			runtime.clients = this.clients;
-		} catch (error) {
-			await this.stop();
-			throw error;
-		}
-	}
-
 	public async stop() {
 		await this.runtime?.stop();
-		await this.databaseAdapter?.close();
+		await this.options.databaseAdapter?.close();
 	}
 
 	public getClients() {

@@ -5,42 +5,48 @@ import type {
 	IDatabaseCacheAdapter,
 	ModelProviderName,
 	Plugin,
+	CacheStore,
 } from "@elizaos/core";
-import { Agent } from "./agent";
-import type { AgentConfig } from "./index";
+import { Agent, type AgentOptions } from "./agent";
 
 export class AgentBuilder {
-	private config: AgentConfig = {};
-	private clientInterfaces: { name: string; client: Client }[] = [];
-	private databaseAdapter: IDatabaseAdapter & IDatabaseCacheAdapter;
+	private options: Partial<AgentOptions> = {};
 
 	public withDatabase(adapter: IDatabaseAdapter & IDatabaseCacheAdapter) {
-		this.databaseAdapter = adapter;
+		this.options.databaseAdapter = adapter;
 		return this;
 	}
 
 	public withClient(name: string, client: Client) {
-		this.clientInterfaces.push({ name, client });
+		this.options.clients = [...(this.options.clients || []), { name, client }];
 		return this;
 	}
 
 	public withPlugin(plugin: Plugin) {
-		this.config.plugins = [...(this.config.plugins || []), plugin];
+		this.options.plugins = [...(this.options.plugins || []), plugin];
 		return this;
 	}
 
 	public withModelProvider(provider: ModelProviderName, key: string) {
-		this.config.modelProvider = provider;
-		this.config.modelKey = key;
+		this.options.modelProvider = provider;
+		this.options.modelKey = key;
 		return this;
 	}
 
 	public withCharacter(character: Partial<Character>) {
-		this.config.character = character;
+		this.options.character = character;
+		return this;
+	}
+
+	public withCacheStore(cacheStore: CacheStore) {
+		this.options.cacheStore = cacheStore;
 		return this;
 	}
 
 	public build(): Agent {
-		return new Agent(this.databaseAdapter, this.clientInterfaces, this.config);
+		if (!this.options.databaseAdapter) {
+			throw new Error("Database adapter is required");
+		}
+		return new Agent(this.options as AgentOptions);
 	}
 }
