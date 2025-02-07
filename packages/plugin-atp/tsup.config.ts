@@ -7,17 +7,5 @@ export default defineConfig({
 	clean: true,
 	format: ["esm"],
 	dts: true,
-	external: [
-		"dotenv",
-		"fs",
-		"path",
-		"@reflink/reflink",
-		"@node-llama-cpp",
-		"https",
-		"http",
-		"agentkeepalive",
-		"viem",
-		"@lifi/sdk",
-		"@elizaos/core",
-	],
+	external: ["dotenv", "fs", "path", "https", "http", "@elizaos/core"],
 });
