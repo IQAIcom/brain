@@ -19,12 +19,21 @@ async function main() {
 	});
 
 	const heartbeatPlugin = await createHeartbeatPlugin([
-		// {
-		// 	period: "*/30 * * * * *",
-		// 	input:
-		// 		"Post a intreating joke about crypto on twitter. it should be positive to crypto community",
-		// 	client: "twitter",
-		// },
+		{
+			period: "*/30 * * * * *",
+			input:
+				"Post a intreating joke about crypto. it should be positive to crypto community. Start with Hello Telegram 👋",
+			client: "telegram",
+			config: {
+				chatId: "-2361588545",
+			},
+		},
+		{
+			period: "*/30 * * * * *",
+			input:
+				"Post a intreating joke about crypto. it should be positive to crypto community. Start with Hey Twitter 👋",
+			client: "twitter",
+		},
 	]);
 
 	const atpPlugin = await createATPPlugin({
@@ -47,7 +56,7 @@ async function main() {
 				post: [],
 			},
 		},
-		clients: {
+		clientConfig: {
 			direct: {
 				enabled: true,
 				port: 3000,

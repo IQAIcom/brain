@@ -1,4 +1,4 @@
-import type { Plugin } from "@elizaos/core";
+import { elizaLogger, type Plugin } from "@elizaos/core";
 import { createWalletProvider, createClient } from "./provider.ts";
 import { getAgentKitActions } from "./actions.ts";
 import type { AgentKitConfig } from "./types.ts";
@@ -17,10 +17,10 @@ export async function createAgentKitPlugin(
 					networkId: config.networkId,
 				},
 			});
-			console.log("✅ AgentKit actions initialized successfully.");
+			elizaLogger.info("✅ AgentKit actions initialized successfully.");
 			return actions;
 		} catch (error) {
-			console.error("❌ Failed to initialize AgentKit actions:", error);
+			elizaLogger.error("❌ Failed to initialize AgentKit actions:", error);
 			return null;
 		}
 	};

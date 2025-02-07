@@ -5,7 +5,6 @@ import {
 	ModelClass,
 	Service,
 	ServiceType,
-	type UUID,
 	composeContext,
 	elizaLogger,
 	generateMessageResponse,
@@ -13,8 +12,8 @@ import {
 	stringToUuid,
 } from "@elizaos/core";
 import * as cron from "node-cron";
-import type { HeartbeatPluginParams, HeartbeatTask } from "../types";
 import { messageHandlerTemplate } from "../lib/template";
+import type { HeartbeatPluginParams, HeartbeatTask } from "../types";
 
 export class Heartbeat extends Service {
 	static serviceType: ServiceType = ServiceType.TRANSCRIPTION;
@@ -39,7 +38,7 @@ export class Heartbeat extends Service {
 		elizaLogger.info(`🫀 Heartbeat triggered with: ${heartbeatTask.input}`);
 
 		const userId = stringToUuid("system");
-		const roomId = stringToUuid("heartbeat-room");
+		const roomId = stringToUuid(`heartbeat-room-${heartbeatTask.input}`);
 
 		await runtime.ensureConnection(
 			userId,
@@ -97,7 +96,12 @@ export class Heartbeat extends Service {
 
 		if (response) {
 			elizaLogger.info("📤 Heartbeat response generated:", response);
-			await this.handleSocialPost(runtime, heartbeatTask, response.text);
+			await this.handleSocialPost(
+				runtime,
+				heartbeatTask,
+				response.text,
+				roomId,
+			);
 
 			const responseMessage: Memory = {
 				id: stringToUuid(`${messageId}-${runtime.agentId}`),
@@ -130,21 +134,35 @@ export class Heartbeat extends Service {
 		runtime: IAgentRuntime,
 		task: HeartbeatTask,
 		responseContent: string,
+		roomId: string,
 	) {
+		const client = runtime.clients?.[task.client];
+		if (!client) {
+			elizaLogger.warn(
+				`❌ No client found for task: ${task.client}, skipping...`,
+			);
+			return;
+		}
+
 		switch (task.client) {
-			case "twitter":
-				if (runtime.clients?.twitter) {
-					await runtime.clients.twitter.post.postTweet(
-						runtime,
-						responseContent,
-					);
-				}
+			case "twitter": {
+				await client.post.postTweet(
+					runtime,
+					client.post.client,
+					responseContent,
+					roomId,
+					responseContent,
+					client.post.twitterUsername,
+				);
 				break;
-			case "telegram":
-				if (runtime.clients?.telegram) {
-					//TODO: Telegram implementation when ready
-				}
+			}
+			case "telegram": {
+				await client.messageManager.bot.telegram.sendMessage(
+					task.config.chatId,
+					responseContent,
+				);
 				break;
+			}
 		}
 	}
 }
