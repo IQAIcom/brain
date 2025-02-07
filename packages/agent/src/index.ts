@@ -1,45 +1,17 @@
-import { CacheService } from "./services/cache.service";
-import { ClientService } from "./services/client.service";
-import { DatabaseService } from "./services/database.service";
-import { RuntimeService } from "./services/runtime.service";
-import type { AgentConfig } from "./types";
+import type {
+	Character,
+	CacheStore,
+	ModelProviderName,
+	Plugin,
+} from "@elizaos/core";
 
-export class Agent {
-	private databaseService: DatabaseService;
-	private cacheService: CacheService;
-	private runtimeService: RuntimeService;
-	private clientService: ClientService;
-
-	constructor(private config: AgentConfig = {}) {
-		this.databaseService = new DatabaseService(config.databasePath);
-	}
-
-	public async start() {
-		try {
-			const database = this.databaseService.init();
-			this.cacheService = new CacheService(database, this.config.cacheStore);
-
-			this.runtimeService = new RuntimeService(
-				database,
-				this.cacheService.getManager(),
-				this.config,
-			);
-			const runtime = await this.runtimeService.init();
-
-			if (this.config.clientConfig) {
-				this.clientService = new ClientService(
-					runtime,
-					this.config.clientConfig,
-				);
-				runtime.clients = await this.clientService.init();
-			}
-		} catch (error) {
-			await this.stop();
-			throw error;
-		}
-	}
-
-	public async stop() {
-		await this.runtimeService.stop();
-	}
+export interface AgentConfig {
+	plugins?: Plugin[];
+	modelProvider?: ModelProviderName;
+	modelKey?: string;
+	character?: Partial<Character>;
+	cacheStore?: CacheStore;
 }
+
+export { Agent } from "./agent";
+export { AgentBuilder } from "./builder";
