@@ -141,7 +141,15 @@ export class Heartbeat extends Service {
 
 		switch (task.client) {
 			case "twitter": {
-				await client.post.postTweet(runtime, responseContent);
+				const roomId = stringToUuid("heartbeat-tweet-room");
+				await client.post.postTweet(
+					runtime,
+					client.post.client,
+					responseContent,
+					roomId,
+					responseContent,
+					client.post.twitterUsername,
+				);
 				break;
 			}
 			case "telegram": {
