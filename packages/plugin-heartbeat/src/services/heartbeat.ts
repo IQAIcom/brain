@@ -131,20 +131,26 @@ export class Heartbeat extends Service {
 		task: HeartbeatTask,
 		responseContent: string,
 	) {
+		const client = runtime.clients?.[task.client];
+		if (!client) {
+			elizaLogger.warn(
+				`❌ No client found for task: ${task.client}, skipping...`,
+			);
+			return;
+		}
+
 		switch (task.client) {
-			case "twitter":
-				if (runtime.clients?.twitter) {
-					await runtime.clients.twitter.post.postTweet(
-						runtime,
-						responseContent,
-					);
-				}
+			case "twitter": {
+				await client.post.postTweet(runtime, responseContent);
 				break;
-			case "telegram":
-				if (runtime.clients?.telegram) {
-					//TODO: Telegram implementation when ready
-				}
+			}
+			case "telegram": {
+				await client.messageManager.bot.telegram.sendMessage(
+					task.config.chatId,
+					responseContent,
+				);
 				break;
+			}
 		}
 	}
 }
