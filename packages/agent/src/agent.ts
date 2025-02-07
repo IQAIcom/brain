@@ -8,13 +8,13 @@ import {
 	type IDatabaseAdapter,
 	type IDatabaseCacheAdapter,
 	ModelProviderName,
-	defaultCharacter,
 	stringToUuid,
 	type Client,
 	type Plugin,
 	type Character,
 } from "@elizaos/core";
 import path from "node:path";
+import { defaultCharacter } from "./default-charecter";
 
 export interface AgentOptions {
 	databaseAdapter?: IDatabaseAdapter & IDatabaseCacheAdapter;
