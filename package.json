@@ -12,7 +12,7 @@
 		"lint:fix": "biome check . --apply",
 		"changeset": "changeset",
 		"version-packages": "changeset version",
-		"release": "turbo build && changeset publish"
+		"publish-packages": "turbo run build lint && changeset version && changeset publish"
 	},
 	"devDependencies": {
 		"@changesets/cli": "^2.27.1",
