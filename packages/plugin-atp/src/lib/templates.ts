@@ -23,17 +23,29 @@ For token contract: First try to find it in recent messages (holdings, stats), i
 The response must include:
 - tokenContract: The token contract address
 - amount: The amount to purchase in base tokens
+- error: An error message if a valid tokenContract or amount cannot be determined (optional)
 
 Example response:
 \`\`\`json
 {
     "tokenContract": "0x1234567890123456789012345678901234567890",
-    "amount": "1000000000000000000"
+    "amount": "1000000000000000000",
 }
 \`\`\`
-
-If token contract cannot be found in context, respond with:
-"Please provide the token contract address for the token you want to buy"
+\`\`\`json
+{
+    "tokenContract": "",
+    "amount": "1000000000000000000",
+    "error" : "No token contract found in context"
+}
+\`\`\`
+\`\`\`json
+{
+    "tokenContract": "0x1234567890123456789012345678901234567890",
+    "amount": "",
+    "error" : "No proper amount found in context"
+}
+\`\`\`
 
 {{recentMessages}}
 Extract the purchase information from all recent messages.
@@ -47,12 +59,27 @@ For token contract: First try to find it in recent messages (holdings, stats), i
 The response must include:
 - tokenContract: The agent's token contract address
 - amount: The amount of base tokens to sell
+- error: An error message if a valid tokenContract or amount cannot be determined (optional)
 
 Example response:
 \`\`\`json
 {
     "tokenContract": "0x1234567890123456789012345678901234567890",
-    "amount": "1000000000000000000"
+    "amount": "1000000000000000000",
+}
+\`\`\`
+\`\`\`json
+{
+    "tokenContract": "",
+    "amount": "1000000000000000000",
+    "error" : "No token contract found in context"
+}
+\`\`\`
+\`\`\`json
+{
+    "tokenContract": "0x1234567890123456789012345678901234567890",
+    "amount": "",
+    "error" : "No proper amount found in context"
 }
 \`\`\`
 
