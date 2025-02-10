@@ -1,0 +1,144 @@
+---
+title: Odos Plugin
+description: Plugin for integrating Odos token swap operations into your agent
+---
+import {Steps, Tabs, TabItem, Aside} from '@astrojs/starlight/components';
+
+## Overview
+
+The Odos plugin enables your agent to perform token swaps and exchanges using the Odos protocol. It provides optimized routing for token exchanges with competitive rates.
+
+## Installation
+
+<Steps>
+1. Install the required packages:
+   ```bash
+   pnpm add @iqai/agent @iqai/plugin-odos @elizaos/core
+   ```
+
+2. Create a `.env` file with required configuration:
+   ```env
+   WALLET_PRIVATE_KEY=your-wallet-private-key
+   OPENAI_API_KEY=your-openai-api-key
+   ```
+   <Aside type="danger" title="Security Warning">
+   Never commit your `.env` file or share your private key. Anyone with access to your private key can control your wallet and funds. Make sure to:
+   - Add `.env` to your `.gitignore` file
+   - Never share your private key in any form
+   - Use a dedicated development wallet with limited funds
+   </Aside>
+
+</Steps>
+
+## Basic Setup
+
+Here's how to set up an agent with the Odos plugin:
+
+```typescript
+import { Agent } from "@iqai/agent";
+import { createOdosPlugin } from "@iqai/plugin-odos";
+import { CacheStore, ModelProviderName } from "@elizaos/core";
+import { fraxtal } from "viem/chains";
+
+async function main() {
+  // Initialize Odos plugin
+  const odosPlugin = await createOdosPlugin({
+    chain: fraxtal,
+    walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
+  });
+
+  // Create agent with plugin
+  const agent = new Agent({
+    modelProvider: ModelProviderName.OPENAI,
+    modelKey: process.env.OPENAI_API_KEY,
+    plugins: [odosPlugin],
+  });
+
+  await agent.start();
+}
+
+main().catch(console.error);
+```
+
+## Available Operations
+
+The plugin provides the following operations:
+- Token swaps between any supported tokens
+- Quote retrieval for swap rates
+
+## Usage Examples
+
+Here's how to interact with your Odos-enabled agent:
+
+### Getting a Quote
+
+Query:
+```
+Get me a quote for swapping 1 wfrxEth to FRAX on Fraxtal
+```
+
+The agent will process this to:
+```json
+{
+    "fromToken": "0x...[wfrxEth address]",
+    "toToken": "0x...[FRAX address]",
+    "chain": "252",
+    "amount": "1000000000000000000"
+}
+```
+
+### Performing a Swap
+
+Query:
+```
+Swap 100 DAI to FXS
+```
+
+The agent will structure this as:
+```json
+{
+    "fromToken": "0x...[DAI address]",
+    "toToken": "0x...[FXS address]",
+    "chain": "252",
+    "amount": "100000000"
+}
+```
+
+## Configuration Options
+
+The Odos plugin accepts these configuration parameters:
+
+```typescript
+interface OdosActionParams {
+  chain: Chain;              // Blockchain network configuration
+  walletPrivateKey: string;  // Private key for transactions
+}
+```
+
+## Error Handling
+
+Implement proper error handling when using the plugin:
+
+```typescript
+try {
+  const odosPlugin = await createOdosPlugin({
+    chain: fraxtal,
+    walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
+  });
+} catch (error) {
+  console.error('Failed to initialize Odos plugin:', error);
+}
+```
+
+## Best Practices
+
+1. **Amount Verification**: Double-check token amounts and decimals
+2. **Token Approval**: Ensure proper token approvals before swaps
+
+## Common Issues and Troubleshooting
+
+- **Insufficient Balance**: Ensure you have enough tokens for the swap
+- **Token Approval**: Check if tokens are approved for swapping
+- **Network Congestion**: Consider retry mechanisms during high network activity
+
+<Aside>Token availability may vary based on network liquidity and market conditions</Aside>

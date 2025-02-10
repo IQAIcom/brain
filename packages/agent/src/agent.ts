@@ -12,6 +12,7 @@ import {
 	type Client,
 	type Plugin,
 	type Character,
+	elizaLogger,
 } from "@elizaos/core";
 import path from "node:path";
 import { defaultCharacter } from "./default-charecter";
@@ -40,16 +41,29 @@ export class Agent {
 	}
 
 	public async start() {
+		elizaLogger.info("🚀 Starting Agent initialization...");
 		try {
-			await this.options.databaseAdapter?.init();
+			if (this.options.databaseAdapter) {
+				elizaLogger.info("📦 Initializing database adapter...");
+				await this.options.databaseAdapter.init();
+			}
+
+			elizaLogger.info("💾 Setting up cache manager...");
 			this.cacheManager = this.initializeCache();
+
+			elizaLogger.info("⚙️ Initializing runtime...");
 			const runtime = await this.initializeRuntime();
+
+			elizaLogger.info("🔌 Starting client initialization...");
 			for (const { name, client } of this.options.clients || []) {
+				elizaLogger.info(`📱 Initializing client: ${name}`);
 				const clientInstance = await client.start(runtime);
 				if (clientInstance) {
 					this.clients[name] = clientInstance as Client;
+					elizaLogger.info(`✅ Client ${name} initialized successfully`);
 				}
 				if (name === "direct") {
+					elizaLogger.info("🎯 Registering direct agent...");
 					const instance = clientInstance as {
 						registerAgent: (runtime: AgentRuntime) => void;
 					};
@@ -58,25 +72,31 @@ export class Agent {
 			}
 
 			runtime.clients = this.clients;
+			elizaLogger.info("✨ Agent initialization completed successfully");
 		} catch (error) {
+			elizaLogger.info("❌ Error during agent initialization:", error);
 			await this.stop();
 			throw error;
 		}
 	}
 
 	private initializeCache() {
+		elizaLogger.info("🔧 Initializing cache system...");
 		const cacheId = stringToUuid("default");
 
 		switch (this.options.cacheStore) {
 			case CacheStore.DATABASE:
+				elizaLogger.info("💽 Using database cache store");
 				return new CacheManager(
 					new DbCacheAdapter(this.options.databaseAdapter, cacheId),
 				);
 			case CacheStore.FILESYSTEM: {
+				elizaLogger.info("📂 Using filesystem cache store");
 				const cacheDir = path.resolve(process.cwd(), "cache");
 				return new CacheManager(new FsCacheAdapter(cacheDir));
 			}
 			default:
+				elizaLogger.info("💽 Using default database cache store");
 				return new CacheManager(
 					new DbCacheAdapter(this.options.databaseAdapter, cacheId),
 				);
@@ -84,11 +104,14 @@ export class Agent {
 	}
 
 	private async initializeRuntime() {
+		elizaLogger.info("🔄 Setting up runtime configuration...");
 		const plugins = [...(this.options.plugins || [])];
 		const modelProvider =
 			this.options.modelProvider ||
 			this.options.character?.modelProvider ||
 			ModelProviderName.OPENAI;
+
+		elizaLogger.info(`🤖 Using model provider: ${modelProvider}`);
 
 		this.runtime = new AgentRuntime({
 			databaseAdapter: this.options.databaseAdapter,
@@ -111,13 +134,17 @@ export class Agent {
 			managers: [],
 		});
 
+		elizaLogger.info("🌟 Initializing runtime...");
 		await this.runtime.initialize();
+		elizaLogger.info("✅ Runtime initialization completed");
 		return this.runtime;
 	}
 
 	public async stop() {
+		elizaLogger.info("🛑 Stopping agent...");
 		await this.runtime?.stop();
 		await this.options.databaseAdapter?.close();
+		elizaLogger.info("👋 Agent stopped successfully");
 	}
 
 	public getClients() {

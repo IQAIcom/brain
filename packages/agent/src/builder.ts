@@ -22,9 +22,17 @@ export class AgentBuilder {
 		return this;
 	}
 
+	public withClients(clients: { name: string; client: Client }[]) {
+		this.options.clients = [...(this.options.clients || []), ...clients];
+	}
+
 	public withPlugin(plugin: Plugin) {
 		this.options.plugins = [...(this.options.plugins || []), plugin];
 		return this;
+	}
+
+	public withPlugins(plugins: Plugin[]) {
+		this.options.plugins = [...(this.options.plugins || []), ...plugins];
 	}
 
 	public withModelProvider(provider: ModelProviderName, key: string) {

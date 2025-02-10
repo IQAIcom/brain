@@ -1,0 +1,177 @@
+---
+title: FraxLend Plugin
+description: Plugin for integrating FraxLend lending operations into your agent
+---
+import {Steps, Tabs, TabItem, Aside} from '@astrojs/starlight/components';
+
+## Overview
+
+The FraxLend plugin enables your agent to interact with FraxLend protocol, providing comprehensive lending and borrowing capabilities. It supports various operations including lending, borrowing, withdrawing, and managing collateral on the Fraxtal network.
+
+## Installation
+
+<Steps>
+1. Install the required packages:
+   ```bash
+   pnpm add @iqai/agent @iqai/plugin-fraxlend @elizaos/core
+   ```
+
+2. Create a `.env` file with required configuration:
+   ```env
+   WALLET_PRIVATE_KEY=your-wallet-private-key
+   OPENAI_API_KEY=your-openai-api-key
+   ```
+   <Aside type="danger" title="Security Warning">
+   Never commit your `.env` file or share your private key. Anyone with access to your private key can control your wallet and funds. Make sure to:
+   - Add `.env` to your `.gitignore` file
+   - Never share your private key in any form
+   - Use a dedicated development wallet with limited funds
+   </Aside>
+
+</Steps>
+
+## Basic Setup
+
+Here's a complete example of setting up an agent with the FraxLend plugin:
+
+```typescript
+import { Agent } from "@iqai/agent";
+import { createFraxlendPlugin } from "@iqai/plugin-fraxlend";
+import { ModelProviderName } from "@elizaos/core";
+import { fraxtal } from "viem/chains";
+
+async function main() {
+  // Initialize FraxLend plugin
+  const fraxlendPlugin = await createFraxlendPlugin({
+    chain: fraxtal,
+    walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
+  });
+
+  // Create agent with plugin
+  const agent = new Agent({
+    modelProvider: ModelProviderName.OPENAI,
+    modelKey: process.env.OPENAI_API_KEY,
+    plugins: [fraxlendPlugin],
+  });
+
+  await agent.start();
+}
+
+main().catch(console.error);
+```
+
+## Available Operations
+
+The plugin provides the following operations:
+
+- **Lending Management**
+  - Deposit assets
+  - Withdraw assets
+- **Borrowing Operations**
+  - Borrow assets
+  - Repay borrowed amounts
+- **Collateral Management**
+  - Add collateral
+  - Remove collateral
+- **Information Retrieval**
+  - Get lending statistics
+  - View agent positions
+  - Find pair addresses
+
+## Usage Examples
+
+Here's how to interact with your FraxLend-enabled agent through natural language:
+
+### Finding Pair Addresses
+
+Query:
+```
+What's the pair address for FRAX-ETH pool with the highest APR?
+```
+
+The agent will process this to:
+```json
+{
+    "assetSymbol": "FRAX",
+    "collateralSymbol": "ETH",
+    "sortByApr": "highest"
+}
+```
+
+### Lending Assets
+
+Query:
+```
+I want to lend 100 FRAX to the FRAX-ETH pool at 0x123...abc
+```
+
+Agent processes this as:
+```json
+{
+    "pairAddress": "0x123...abc",
+    "amount": "100000000000000000000"
+}
+```
+
+### Borrowing
+
+Query:
+```
+Borrow 1000 FRAX using 2 ETH as collateral from the pool at 0x123...abc
+```
+
+Agent structures this as:
+```json
+{
+    "pairAddress": "0x123...abc",
+    "borrowAmount": "1000000000000000000000",
+    "collateralAmount": "2000000000000000000",
+    "receiver": "0x456...def"
+}
+```
+
+### Checking Positions
+
+Query:
+```
+Show my current FraxLend positions
+```
+
+## Configuration Options
+
+The FraxLend plugin accepts these configuration parameters:
+
+```typescript
+interface FraxLendPluginConfig {
+  chain: Chain;              // Blockchain network configuration
+  walletPrivateKey: string;  // Private key for transactions
+}
+```
+
+## Error Handling
+
+Always implement proper error handling when using the plugin:
+
+```typescript
+try {
+  const fraxlendPlugin = await createFraxlendPlugin({
+    chain: fraxtal,
+    walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
+  });
+} catch (error) {
+  console.error('Failed to initialize FraxLend plugin:', error);
+}
+```
+
+## Best Practices
+
+1. **Environment Variables**: Always use environment variables for sensitive information like private keys
+2. **Transaction Validation**: Double-check amounts and addresses before confirming transactions
+3. **Error Handling**: Implement proper error handling for all operations
+4. **Gas Management**: Consider gas costs for operations on the Fraxtal network
+
+## Common Issues and Troubleshooting
+
+- **Invalid Pair Address**: Ensure you're using the correct pair address for the pool
+- **Insufficient Balance**: Verify you have enough tokens for the operation
+- **Transaction Failures**: Check gas settings and network status

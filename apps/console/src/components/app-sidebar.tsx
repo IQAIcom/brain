@@ -45,7 +45,7 @@ export function AppSidebar() {
 									className="size-7"
 								/>
 								<div className="flex flex-col gap-0.5 leading-none">
-									<span className="font-semibold">Brain Framework</span>
+									<span className="font-semibold">Brain Console</span>
 									<span className="">v{info?.version}</span>
 								</div>
 							</NavLink>
