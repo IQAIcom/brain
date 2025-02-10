@@ -1,0 +1,61 @@
+---
+title: Plugins
+description: Overview of available Brain Framework plugins
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Introduction
+
+Brain Framework's plugin system allows you to extend your agent's capabilities with various integrations. Each plugin adds specific functionality, such as DeFi operations, token swaps, or other blockchain interactions.
+
+## Official Plugins
+
+<CardGrid>
+  <Card title="FraxLend Plugin" icon="document">
+    Enables lending and borrowing operations on Fraxtal network:
+    - Lending and borrowing assets
+    - Viewing positions and stats
+    
+    [Learn more about FraxLend →](/plugins/fraxlend)
+  </Card>
+
+  <Card title="Odos Plugin" icon="random">
+    Provides optimized token swap capabilities:
+    - Token swaps
+    - Quote retrieval
+    
+    [Learn more about Odos →](/plugins/odos)
+  </Card>
+</CardGrid>
+
+## Using Plugins
+
+```typescript
+import { Agent } from "@iqai/agent";
+import { createFraxlendPlugin } from "@iqai/plugin-fraxlend";
+import { createOdosPlugin } from "@iqai/plugin-odos";
+
+async function main() {
+  const fraxlendPlugin = await createFraxlendPlugin({
+    ...config
+  });
+
+  const odosPlugin = await createOdosPlugin({
+    ..config
+  });
+
+  const agent = new Agent({
+    modelProvider: ModelProviderName.OPENAI,
+    modelKey: process.env.OPENAI_API_KEY,
+    plugins: [fraxlendPlugin, odosPlugin],
+  });
+
+  await agent.start();
+}
+```
+
+<Aside type="note">
+On-chain plugins require chain configuration and wallet access. Store sensitive information with care.
+</Aside>

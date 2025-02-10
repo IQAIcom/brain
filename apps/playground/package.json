@@ -3,6 +3,7 @@
 	"version": "0.1",
 	"main": "src/index.ts",
 	"type": "module",
+	"private": true,
 	"scripts": {
 		"start": "tsx src/index.ts",
 		"dev": "tsx watch src/index.ts",
@@ -10,12 +11,20 @@
 		"test": "jest"
 	},
 	"dependencies": {
-		"@elizaos/core": "0.1.7",
-		"@elizaos/plugin-bootstrap": "0.1.7",
+		"@elizaos/adapter-sqlite": "0.1.9",
+		"@elizaos/client-direct": "0.1.9",
+		"@elizaos/client-telegram": "0.25.6-alpha.1",
+		"@elizaos/client-twitter": "0.1.9",
+		"@elizaos/core": "0.1.9",
+		"@elizaos/plugin-bootstrap": "0.1.9",
 		"@iqai/agent": "workspace:*",
+		"@iqai/plugin-atp": "workspace:*",
 		"@iqai/plugin-fraxlend": "workspace:*",
+		"@iqai/plugin-heartbeat": "workspace:*",
 		"@iqai/plugin-odos": "workspace:*",
 		"@tavily/core": "^0.0.2",
+		"@types/better-sqlite3": "^7.6.12",
+		"better-sqlite3": "11.8.1",
 		"dotenv": "^16.4.7",
 		"sharp": "^0.33.5",
 		"viem": "^2.22.15"

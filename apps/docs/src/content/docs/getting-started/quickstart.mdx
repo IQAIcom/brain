@@ -1,0 +1,98 @@
+---
+title: Quick Start
+description: Get up and running with Brain Framework
+---
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Card, CardGrid } from '@astrojs/starlight/components';
+import { Steps } from '@astrojs/starlight/components';
+
+## Basic Usage
+<Steps>
+1. Import the agent setup function:
+   ```javascript
+    import { setupAgent } from '@iqai/agent';
+    import { ModelProviderName } from "@elizaos/core";
+   ```
+2. Create a basic agent with your OpenAI key:
+   ```javascript
+   const agent = new Agent({
+     openAiKey: process.env.OPENAI_API_KEY
+   });
+   ```
+   
+</Steps>
+## Configuration Options
+<Tabs>
+  <TabItem label="Basic">
+    ```javascript
+    const agent = await setupAgent({
+      modelProvider: ModelProviderName.OPENAI,
+      openAiKey: process.env.OPENAI_API_KEY
+    });
+    ```
+  </TabItem>
+  <TabItem label="With Character">
+    ```javascript
+    const agent = await setupAgent({
+      modelProvider: ModelProviderName.OPENAI,
+      openAiKey: process.env.OPENAI_API_KEY,
+      character: {
+        name: "myAgent",
+        bio: "I am a specialized AI assistant",
+        messageExamples: [
+          "How can I help you today?",
+          "Let me assist you with that."
+        ]
+      }
+    });
+    ```
+  </TabItem>
+  <TabItem label="Advanced">
+    ```javascript
+    const agent = await setupAgent({
+      modelProvider: ModelProviderName.OPENAI,
+      openAiKey: process.env.OPENAI_API_KEY,
+      character: {
+        name: "myAgent",
+        bio: "I am a specialized AI assistant",
+        messageExamples: [
+          "How can I help you today?",
+          "Let me assist you with that."
+        ],
+        style: {
+          all: ["professional", "concise"],
+          chat: ["friendly"],
+          post: ["formal"]
+        }
+      },
+      clients: {
+        direct: {
+          enabled: true,
+          port: 3000
+        },
+        telegram: {
+          token: process.env.TELEGRAM_BOT_TOKEN
+        }
+      },
+      databasePath: './custom/path/to/data',
+      cacheStore: CacheStore.DATABASE
+    });
+    ```
+  </TabItem>
+</Tabs>
+## Best Practices
+### Error Handling
+```javascript
+try {
+  const agent = await setupAgent(config);
+} catch (error) {
+  console.error('Failed to setup agent:', error);
+}
+```
+### Graceful Shutdown
+```javascript
+process.on('SIGTERM', async () => {
+  await agent.close();
+  process.exit(0);
+});
+```

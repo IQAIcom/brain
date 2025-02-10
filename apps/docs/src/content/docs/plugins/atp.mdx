@@ -1,0 +1,152 @@
+---
+title: "ATP Plugin"
+description: "Plugin for interacting with IQ ATP (Agent Tokenization Platform) for managing AI agent tokens"
+---
+
+import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+
+## 📌 Overview
+
+The **ATP Plugin** enables your agent to interact with **IQ's Agent Tokenization Platform**. It provides functionality for:
+
+✅ **Buying, selling, and managing AI agent tokens** using IQ as the base currency 🔄
+✅ **Viewing agent performance metrics and token statistics** 📊
+✅ **Managing token holdings and checking position values** 💰
+
+---
+
+## 🛠 Installation
+
+<Steps>
+1. Install the required packages:
+
+   ```bash
+   pnpm add @iqai/agent @iqai/plugin-atp @elizaos/core
+   ```
+
+2. Create a **.env** file with the required configuration:
+
+   ```bash
+   WALLET_PRIVATE_KEY=your-wallet-private-key
+   ```
+</Steps>
+
+---
+
+## ⚙ Basic Setup
+
+Here's a complete example of setting up an agent with the ATP plugin:
+
+```typescript
+import { Agent } from "@iqai/agent";
+import { createATPPlugin } from "@iqai/plugin-atp";
+import { ModelProviderName } from "@elizaos/core";
+
+async function main() {
+  // Initialize ATP plugin
+  const atpPlugin = await createATPPlugin({
+    walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
+  });
+
+  // Create agent with plugin
+  const agent = new Agent({
+    modelProvider: ModelProviderName.OPENAI,
+    modelKey: process.env.OPENAI_API_KEY,
+    plugins: [atpPlugin],
+  });
+
+  await agent.start();
+}
+
+main().catch(console.error);
+```
+
+---
+
+## 🎯 Available Operations
+
+### 📊 Agent Statistics
+✅ View **agent performance metrics**
+✅ Check **token statistics**
+
+### 📈 Portfolio Management
+✅ View **current token holdings**
+✅ Check **position values**
+
+### 🛒 Trading Operations
+✅ Buy **agent tokens using IQ**
+✅ Sell **agent tokens back to protocol**
+
+---
+
+## 📝 Usage Examples
+
+### 📊 Checking Agent Statistics
+**Query:**
+```plaintext
+Show me stats for agent 0x1234...5678
+```
+
+### 📈 Viewing Portfolio
+**Query:**
+```plaintext
+Show my ATP holdings
+```
+
+### 🛒 Buying Tokens
+**Query:**
+```plaintext
+Buy 1000 IQ worth of agent 0x1234...5678
+```
+
+### 💰 Selling Tokens
+**Query:**
+```plaintext
+Sell 50 tokens of agent 0x1234...5678
+```
+
+---
+
+## ⚙ Configuration Options
+
+The ATP plugin accepts the following configuration parameters:
+
+```typescript
+interface ATPPluginConfig {
+  walletPrivateKey: string;  // Private key for transactions
+}
+```
+
+---
+
+## ❌ Error Handling
+
+Always implement proper error handling when using the plugin:
+
+```typescript
+try {
+  const atpPlugin = await createATPPlugin({
+    walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
+  });
+} catch (error) {
+  console.error('Failed to initialize ATP plugin:', error);
+}
+```
+
+---
+
+## 🔎 Best Practices
+
+✔ **Token Validation**: Verify agent addresses before transactions
+✔ **Amount Verification**: Double-check token amounts and IQ values
+✔ **Transaction Monitoring**: Track transaction status and confirmations
+✔ **Balance Management**: Ensure sufficient IQ balance for purchases
+
+---
+
+## 🛠 Common Issues and Troubleshooting
+
+🚨 **Invalid Agent Address**: Ensure you're using the correct agent token contract address
+💸 **Insufficient IQ Balance**: Verify you have enough IQ tokens for purchases
+🔄 **Transaction Failures**: Check transaction parameters and network status
+🔑 **Token Approval**: Ensure proper token approvals before selling

@@ -1,0 +1,33 @@
+---
+title: Installation
+description: Install and setup the Brain Framework
+---
+import {Steps, Tabs, TabItem} from '@astrojs/starlight/components';
+
+## Prerequisites
+Before installing Brain Framework, ensure you have the following requirements:
+- **Node.js**: version 23.x or higher
+- **pnpm**: version 9.x (recommended)
+## Installation Steps
+<Steps>
+1. Install the package using pnpm:
+   ```bash
+   pnpm add @iqai/agent @elizaos/core
+   ```
+2. Create a `.env` file in your project root with your configuration:
+   ```env
+   OPENAI_API_KEY=your-openai-key
+   TELEGRAM_BOT_TOKEN=your-telegram-token # optional
+   WALLET_PRIVATE_KEY=your-wallet-private-key # optional
+   ```
+3. Create a test file to verify your installation:
+   ```javascript
+   import { Agent } from '@iqai/agent';
+   import { ModelProviderName } from "@elizaos/core";
+   const agent = new Agent({
+      modelProvider: ModelProviderName.OPENAI,
+      modelKey: 'your-openai-key',
+   });
+   await agent.start();
+   ```
+</Steps>

@@ -1,0 +1,47 @@
+/* Dark mode colors. */
+:root {
+  --sl-color-accent-low: hsl(331.29 100% 20%);
+  --sl-color-accent: hsl(331.29 100% 55.1%);
+  --sl-color-accent-high: hsl(331.29 100% 85%);
+
+  --sl-color-white: #ffffff;
+
+  --sl-color-gray-1: hsl(213.75 13.15% 85%);
+  --sl-color-gray-2: hsl(213.75 13.15% 75%);
+  --sl-color-gray-3: hsl(213.75 13.15% 65%);
+  --sl-color-gray-4: hsl(213.75 13.15% 45%);
+  --sl-color-gray-5: hsl(213.75 13.15% 25%);
+  --sl-color-gray-6: hsl(214.29 28% 14.71%);
+  --sl-color-black: hsl(213 30.3% 12.94%);
+
+  --sl-color-bg: hsl(213 30.3% 12.94%);
+  --sl-color-bg-nav: hsl(213 30.3% 12.94%);
+  --sl-color-bg-sidebar: hsl(213 30.3% 12.94%);
+
+  --sl-color-hairline-shade: hsl(213.75 13.15% 25.83%);
+	--sl-color-hairline: hsl(213.75 13.15% 25.83%);
+}
+
+/* Light mode colors. */
+:root[data-theme='light'] {
+  --sl-color-accent-low: hsl(331.29 100% 90%);
+  --sl-color-accent: hsl(331.29 100% 68.04%);
+  --sl-color-accent-high: hsl(331.29 100% 40%);
+
+  --sl-color-white: hsl(222.22 47.37% 11.18%);
+
+  --sl-color-gray-1: hsl(220 15.56% 20%);
+  --sl-color-gray-2: hsl(220 15.56% 30%);
+  --sl-color-gray-3: hsl(220 15.56% 40%);
+  --sl-color-gray-4: hsl(220 15.56% 60%);
+  --sl-color-gray-5: hsl(220 15.56% 80%);
+  --sl-color-gray-6: hsl(220 15.56% 90%);
+  --sl-color-gray-7: hsl(220 15.56% 95%);
+  --sl-color-black: #ffffff;
+
+  --sl-color-bg: hsl(0 0% 100%);
+  --sl-color-bg-nav: hsl(0 0% 100%);
+  --sl-color-bg-sidebar: hsl(0 0% 100%);
+  --sl-color-hairline-shade: hsl(220 15.56% 90.89%);
+	--sl-color-hairline: hsl(220 15.56% 90.89%);
+}
