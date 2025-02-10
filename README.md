@@ -1,9 +1,5 @@
 <div align="center">
-  <img src="https://em-content.zobj.net/source/apple/354/brain_1f9e0.png" width="150" height="150" />
-  
-  # Brain Framework
-  
-  A powerful monorepo built on top of Eliza framework for creating sophisticated AI agents with ease.
+  <img src="./brain-framework-cover.png" />
 </div>
 
 ## Overview
@@ -58,5 +54,3 @@ pnpm changeset
 # Publish packages
 pnpm publish-packages
 ```
-
-
