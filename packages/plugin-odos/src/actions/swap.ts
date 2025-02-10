@@ -5,7 +5,7 @@ import { AssembleService } from "../services/assemble";
 import { WalletService } from "../services/wallet";
 import { ExecuteSwapService } from "../services/execute-swap";
 import { ApprovalService } from "../services/allowance";
-import { Address } from "viem";
+import type { Address } from "viem";
 
 export const swapAction = (opts: OdosActionParams): Action => {
 	return {
@@ -43,6 +43,8 @@ const handler: (opts: OdosActionParams) => Handler =
 				opts.walletPrivateKey,
 				opts.chain,
 			);
+			console.log('userAddr', walletService.getWalletClient()?.account?.address)
+			console.log('quote', quote)
 			const assembleService = new AssembleService(walletService);
 			const txn = await assembleService.execute(quote.pathId);
 			if (!txn) {
@@ -51,12 +53,11 @@ const handler: (opts: OdosActionParams) => Handler =
 				});
 				return false;
 			}
-			//TODO: Approve router allowance
 			const approvalService = new ApprovalService(walletService);
 			await approvalService.execute(txn.from as Address, txn.to as Address, BigInt(quote.inAmounts[0]));
 
-			const executeSwapService = await new ExecuteSwapService(walletService)
-			const hash = executeSwapService.execute(txn);
+			const executeSwapService = new ExecuteSwapService(walletService)
+			const hash = await executeSwapService.execute(txn);
 
 			callback?.({
                 text: `Swap executed successfully. Transaction hash: ${hash}`,

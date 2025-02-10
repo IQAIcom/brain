@@ -37,7 +37,7 @@ export class AssembleService {
                     }),
                 });
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`);
                 }
                 const data = await response.json();
                 return data.transaction as AssembleResponseTxn;

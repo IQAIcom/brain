@@ -3,7 +3,7 @@ import {
 	composeContext,
 	generateMessageResponse,
 } from "@elizaos/core";
-import { Address } from "viem";
+import type { Address } from "viem";
 
 export class InputParserService {
 	async parseInputs({ runtime, message, state, template }) {
