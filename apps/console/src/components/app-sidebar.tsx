@@ -89,10 +89,7 @@ export function AppSidebar() {
 			<SidebarFooter>
 				<SidebarMenu>
 					<SidebarMenuItem>
-						<NavLink
-							to="https://elizaos.github.io/eliza/docs/intro/"
-							target="_blank"
-						>
+						<NavLink to="https://brain.iqai.com" target="_blank">
 							<SidebarMenuButton>
 								<Book /> Documentation
 							</SidebarMenuButton>
