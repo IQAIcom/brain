@@ -17,6 +17,9 @@ export default defineConfig({
       social: {
         github: 'https://github.com/IQAIcom/brain',
       },
+      editLink: {
+        baseUrl: 'https://github.com/IQAIcom/brain/edit/main/apps/docs/',
+      },
       sidebar: [
         {
           label: 'Getting Started',
