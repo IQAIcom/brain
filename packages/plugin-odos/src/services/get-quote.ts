@@ -40,6 +40,7 @@ export class GetQuoteActionService {
 		}
 
 		const { fromToken, toToken, chainId, amount } = parsedOutput
+		console.log('parsedOutput', parsedOutput)
 
 		try {
 			const response = await fetch(`${this.API_URL}/sor/quote/v2`, {

@@ -29,13 +29,13 @@ const handler: (opts: OdosActionParams) => Handler =
 		try {
 			const service = new GetQuoteActionService();
 			const quote = await service.execute(runtime, message, state);
-
 			if (quote instanceof Error) {
 				callback?.({
 					text: `Error fetching quote: ${quote.message}`,
 				});
 				return false
 			}
+			console.log('quote', quote)
 
 			callback?.({
 				text: service.format(quote),
