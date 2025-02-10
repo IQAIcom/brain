@@ -1,204 +1,61 @@
 ---
-title: Understanding Plugins
-description: Learn how plugins work in Brain Framework
+title: Plugins
+description: Overview of available Brain Framework plugins
 ---
-import { Steps } from '@astrojs/starlight/components';
-import { FileTree } from '@astrojs/starlight/components';
 
-## Plugin Structure
+import { Aside } from '@astrojs/starlight/components';
+import { Card, CardGrid } from '@astrojs/starlight/components';
 
-A typical Brain Framework plugin follows this structure:
+## Introduction
 
-<FileTree>
-- plugin-name/
-  - src/
-    - actions/
-      - action-name.ts // Plugin actions
-    - lib/
-      - templates.ts // Response templates
-    - services/
-      - service-name.ts // Business logic
-      - input-parser.ts // Input handling
-      - index.ts // Service exports
-      - types.ts // Type definitions
-    - index.ts // Plugin entry point
-  - package.json
-  - tsconfig.json
-</FileTree>
+Brain Framework's plugin system allows you to extend your agent's capabilities with various integrations. Each plugin adds specific functionality, such as DeFi operations, token swaps, or other blockchain interactions.
 
-## Creating a Plugin
+## Official Plugins
 
-### 1. Plugin Entry Point
+<CardGrid>
+  <Card title="FraxLend Plugin" icon="document">
+    Enables lending and borrowing operations on Fraxtal network:
+    - Lending and borrowing assets
+    - Viewing positions and stats
+    
+    [Learn more about FraxLend →](/plugins/fraxlend)
+  </Card>
 
-The main plugin file exports a creation function:
+  <Card title="Odos Plugin" icon="random">
+    Provides optimized token swap capabilities:
+    - Token swaps
+    - Quote retrieval
+    
+    [Learn more about Odos →](/plugins/odos)
+  </Card>
+</CardGrid>
 
-```typescript
-import type { Plugin } from "@elizaos/core";
-
-export async function createPlugin(
-  opts: PluginParams
-): Promise<Plugin> {
-  const actions = [
-    // Your plugin actions
-  ];
-
-  return {
-    name: "Plugin Name",
-    description: "Plugin description",
-    providers: [],
-    evaluators: [],
-    services: [],
-    actions,
-  };
-}
-```
-
-### 2. Defining Actions
-
-Actions define the capabilities of your plugin:
-
-```typescript
-import type { Action, Handler } from "@elizaos/core";
-
-export const myAction = (opts: ActionParams): Action => {
-  return {
-    name: "ACTION_NAME",
-    description: "What this action does",
-    similes: [
-      "SIMILAR_COMMAND_1",
-      "SIMILAR_COMMAND_2",
-    ],
-    validate: async () => true,
-    handler: actionHandler(opts),
-    examples: [],
-  };
-};
-
-const actionHandler: (opts: ActionParams) => Handler =
-  () => async (runtime, message, state, options, callback) => {
-    try {
-      // Implementation
-      callback?.({
-        text: "Success message",
-      });
-      return true;
-    } catch (error) {
-      callback?.({
-        text: `Error: ${error.message}`,
-      });
-      return false;
-    }
-  };
-```
-
-### 3. Services
-
-Services handle the business logic:
-
-```typescript
-export class ActionService {
-  async execute(params: ServiceParams) {
-    try {
-      // Service implementation
-      const result = await this.performOperation(params);
-      return result;
-    } catch (error) {
-      throw new Error(`Operation failed: ${error.message}`);
-    }
-  }
-
-  format(response: ServiceResponse) {
-    return `Formatted response: ${response.data}`;
-  }
-}
-```
-
-### 4. Input Parsing
-
-Use templates to parse user input consistently:
-
-```typescript
-export const ACTION_TEMPLATE = `
-Respond with a JSON object containing the required information.
-Extract the details from the most recent message.
-
-The response must include:
-- param1: Description of param1
-- param2: Description of param2
-
-Example response:
-\`\`\`json
-{
-    "param1": "value1",
-    "param2": "value2"
-}
-\`\`\`
-
-{{recentMessages}}
-Extract the information from the most recent message.
-Respond with a JSON markdown block containing all required parameters.`;
-```
-
-## Using Templates
-
-Templates help standardize input parsing:
-
-```typescript
-const inputParser = new InputParserService();
-const parsedInput = await inputParser.parseInputs({
-  runtime,
-  message,
-  state,
-  template: ACTION_TEMPLATE,
-});
-```
-
-## Plugin Integration
-
-Integrate plugins with your agent:
+## Using Plugins
 
 ```typescript
 import { Agent } from "@iqai/agent";
-import { createPlugin } from "my-plugin";
+import { createFraxlendPlugin } from "@iqai/plugin-fraxlend";
+import { createOdosPlugin } from "@iqai/plugin-odos";
 
-async function setupAgent() {
-  const plugin = await createPlugin({
-    // Plugin configuration
+async function main() {
+  const fraxlendPlugin = await createFraxlendPlugin({
+    ...config
+  });
+
+  const odosPlugin = await createOdosPlugin({
+    ..config
   });
 
   const agent = new Agent({
     modelProvider: ModelProviderName.OPENAI,
     modelKey: process.env.OPENAI_API_KEY,
-    plugins: [plugin],
-    // Other agent configuration
+    plugins: [fraxlendPlugin, odosPlugin],
   });
 
   await agent.start();
 }
 ```
 
-## Best Practices 
-
-- ##### Design your actions
-    - Use clear, descriptive names for all actions
-    - Include relevant similar commands for better matching
-    - Add comprehensive usage examples
-    <br/> 
-
-- ##### Implement services
-
-  - Separate business logic from handlers
-  - Format responses consistently across services
-  - Handle errors appropriately with clear messages
-  <br/>
-
-
-- ##### Create templates
-
-  - Be specific about template requirements
-  - Include clear example responses
-  - Add proper edge case handling
-
-## Next Steps
-
-- Check the [official Plugins](./official)
+<Aside type="note">
+On-chain plugins require chain configuration and wallet access. Store sensitive information with care.
+</Aside>
