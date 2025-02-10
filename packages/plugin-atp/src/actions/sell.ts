@@ -42,12 +42,18 @@ const handler: (opts: ATPActionParams) => Handler =
     elizaLogger.info('💱 Starting token sale');
     try {
       const inputParser = new InputParserService();
-      const { tokenContract, amount } = await inputParser.parseInputs({
+      const { tokenContract, amount, error } = await inputParser.parseInputs({
         runtime,
         message,
         state,
         template: SELL_AGENT_TEMPLATE,
       });
+      if(error) {
+        callback?.({ text: dedent`
+          ❌ Error: ${error}
+        `});
+        return true;
+      }
       elizaLogger.info('🎯 Sell parameters', { tokenContract, amount });
 
       const walletService = new WalletService(opts.walletPrivateKey);
