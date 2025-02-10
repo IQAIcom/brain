@@ -11,6 +11,9 @@ export default defineConfig({
         light: './src/assets/brain-logo-light.svg',
         replacesTitle: true,
       },
+      customCss: [
+        './src/styles/custom.css',
+      ],
       social: {
         github: 'https://github.com/IQAIcom/brain',
       },
