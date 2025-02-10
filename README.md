@@ -1,23 +1,27 @@
-<div align="center">
-  <img src="./brain-framework-cover.png" />
-</div>
+<img src="./brain-framework-cover.png" />
 
-## Overview
+## 🌟 Overview
 
 IQ AI Framework provides a comprehensive suite of tools and packages for developers to create, customize, and deploy AI agents. Built on the robust Eliza framework, it simplifies the complex process of AI agent development.
 
-## Packages
+## 📚 Documentation
+
+For detailed information on using the IQ AI Framework, visit our [documentation](https://brain.iqai.com).
+
+## 📦 Packages
 
 | Package | Description |
 |---------|------------|
-| [@iqai/agent](./packages/agent) | Core agent setup and configuration package |
-| [@iqai/plugin-agentkit](./packages/plugin-agentkit) | CDP Agent Kit integration plugin |
-| [@iqai/adapter-sqlite](./packages/adapter-sqlite) | SQLite database adapter for agent storage |
-| [@iqai/tsconfig](./packages/tsconfig) | Shared TypeScript configurations |
+| [@iqai/agent](./packages/agent) | 🤖 Core agent setup and configuration package |
+| [@iqai/plugin-heartbeat](./packages/plugin-heartbeat) | ⏰ Enables cronjobs for agents |
+| [@iqai/plugin-atp](./packages/plugin-atp) | 🔌 ATP integration plugin |
+| [@iqai/plugin-fraxlend](./packages/plugin-fraxlend) | 💰 Fraxlend integration plugin |
+| [@iqai/plugin-odos](./packages/plugin-odos) | 🔄 Odos integration plugin |
+| [@iqai/plugin-agentkit](./packages/plugin-agentkit) | 🛠️ AgentKit integration plugin |
 
-## Quick Start
+## 🚀 Quick Start
 
-``` bash
+```
 # Clone the repository
 git clone https://github.com/IQAIcom/iq-ai-framework
 
@@ -28,17 +32,18 @@ pnpm install
 pnpm build
 ```
 
-## Development
+## 💻 Development
 
 This monorepo uses:
 - 🏗️ PNPM Workspaces for package management
 - 🔧 Turborepo for build system
 - 📦 Changesets for versioning and publishing
 - 🔍 TypeScript for type safety
+- 🌐 Documentation site at [brain.iqai.com](https://brain.iqai.com)
 
-### Common Commands
+### ⚡ Common Commands
 
-``` bash
+```
 # Development mode
 pnpm dev
 
