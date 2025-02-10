@@ -1,6 +1,7 @@
 import type { Action, Handler } from "@elizaos/core";
 import { GetQuoteActionService } from "../services/get-quote";
 import type { OdosActionParams } from "../types";
+import { WalletService } from "../services/wallet";
 
 export const getQuoteAction = (opts: OdosActionParams): Action => {
 	return {
@@ -24,10 +25,13 @@ export const getQuoteAction = (opts: OdosActionParams): Action => {
 };
 
 const handler: (opts: OdosActionParams) => Handler =
-	() => async (runtime, message, state, _options, callback) => {
-
+	(opts) => async (runtime, message, state, _options, callback) => {
 		try {
-			const service = new GetQuoteActionService();
+			const walletService = new WalletService(
+				opts.walletPrivateKey,
+				opts.chain,
+			);
+			const service = new GetQuoteActionService(walletService);
 			const quote = await service.execute(runtime, message, state);
 			if (quote instanceof Error) {
 				callback?.({
@@ -35,8 +39,6 @@ const handler: (opts: OdosActionParams) => Handler =
 				});
 				return false
 			}
-			console.log('quote', quote)
-
 			callback?.({
 				text: service.format(quote),
 			});

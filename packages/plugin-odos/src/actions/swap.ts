@@ -6,6 +6,7 @@ import { WalletService } from "../services/wallet";
 import { ExecuteSwapService } from "../services/execute-swap";
 import { ApprovalService } from "../services/allowance";
 import type { Address } from "viem";
+//TODO: Check why assebmle is reurning 400, make a simple script using odos guide to ceck it
 
 export const swapAction = (opts: OdosActionParams): Action => {
 	return {
@@ -30,7 +31,11 @@ export const swapAction = (opts: OdosActionParams): Action => {
 const handler: (opts: OdosActionParams) => Handler =
 	(opts) => async (runtime, message, state, _options, callback) => {
 		try {
-			const getQuoteService = new GetQuoteActionService();
+			const walletService = new WalletService(
+				opts.walletPrivateKey,
+				opts.chain,
+			);
+			const getQuoteService = new GetQuoteActionService(walletService);
 			const quote = await getQuoteService.execute(runtime, message, state);
 
 			if (quote instanceof Error || !quote.pathId) {
@@ -39,10 +44,6 @@ const handler: (opts: OdosActionParams) => Handler =
 				});
 				return false
 			}
-			const walletService = new WalletService(
-				opts.walletPrivateKey,
-				opts.chain,
-			);
 			console.log('userAddr', walletService.getWalletClient()?.account?.address)
 			console.log('quote', quote)
 			const assembleService = new AssembleService(walletService);
@@ -53,8 +54,8 @@ const handler: (opts: OdosActionParams) => Handler =
 				});
 				return false;
 			}
-			const approvalService = new ApprovalService(walletService);
-			await approvalService.execute(txn.from as Address, txn.to as Address, BigInt(quote.inAmounts[0]));
+			// const approvalService = new ApprovalService(walletService);
+			// await approvalService.execute(txn.from as Address, txn.to as Address, BigInt(quote.inAmounts[0]));
 
 			const executeSwapService = new ExecuteSwapService(walletService)
 			const hash = await executeSwapService.execute(txn);

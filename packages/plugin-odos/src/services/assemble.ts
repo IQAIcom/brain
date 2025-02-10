@@ -17,8 +17,8 @@ export class AssembleService {
 
     constructor(walletService: WalletService) {
         this.walletService = walletService;
-
     }
+    
     async execute(pathId: string) {
         const walletClient  = this.walletService.getWalletClient()
         const userAddr = walletClient?.account?.address

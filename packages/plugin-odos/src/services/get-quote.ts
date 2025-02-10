@@ -3,6 +3,7 @@ import dedent from "dedent";
 import { EXCHANGE_TEMPLATE } from "../lib/templates";
 import type { IAgentRuntime, Memory, State } from "@elizaos/core";
 import { InputParserService } from "./input-parser";
+import type { WalletService } from "./wallet";
 
 export interface QuoteResponse {
 	inTokens: string[];
@@ -24,6 +25,12 @@ export interface QuoteResponse {
 
 export class GetQuoteActionService {
 	private readonly API_URL = "https://api.odos.xyz";
+	private readonly walletService: WalletService;
+
+
+	 constructor(walletService: WalletService) {
+			this.walletService = walletService;
+		}
 
 	async execute(runtime: IAgentRuntime, message: Memory, state: State) {
 
@@ -40,6 +47,10 @@ export class GetQuoteActionService {
 		}
 
 		const { fromToken, toToken, chainId, amount } = parsedOutput
+		const userAddr = this.walletService.getWalletClient()?.account?.address
+		if (!userAddr) {
+            throw new Error("User address is not defined");
+            }
 		console.log('parsedOutput', parsedOutput)
 
 		try {
@@ -50,6 +61,7 @@ export class GetQuoteActionService {
 				},
 				body: JSON.stringify({
 					chainId,
+					userAddr,
 					inputTokens: [
 						{
 							tokenAddress: fromToken,
