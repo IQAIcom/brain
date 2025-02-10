@@ -31,6 +31,7 @@ export default defineConfig({
             { label: 'Overview', link: '/plugins/overview' },
             { label: 'Fraxlend', link: '/plugins/fraxlend' },
             { label: 'Odos', link: '/plugins/odos' },
+            {label: "ATP", link: "/plugins/atp"},
           ],
         },
       ],
