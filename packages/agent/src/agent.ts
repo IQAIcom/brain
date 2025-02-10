@@ -16,6 +16,7 @@ import {
 } from "@elizaos/core";
 import path from "node:path";
 import { defaultCharacter } from "./default-charecter";
+import dedent from "dedent";
 
 export interface AgentOptions {
 	databaseAdapter?: IDatabaseAdapter & IDatabaseCacheAdapter;
@@ -61,6 +62,14 @@ export class Agent {
 						registerAgent: (runtime: AgentRuntime) => void;
 					};
 					instance.registerAgent(this.runtime as AgentRuntime);
+					elizaLogger.info(dedent`\n
+						╔════════════════════════════════════════════╗
+						║       *~* Direct client initialized *~*    ║
+						║       you can test out your agents in:     ║
+						║           https://console.iqai.com         ║
+						╚════════════════════════════════════════════╝
+						\n
+				 `);
 				}
 			}
 
