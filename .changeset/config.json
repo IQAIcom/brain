@@ -7,5 +7,5 @@
 	"linked": [],
 	"access": "public",
 	"updateInternalDependencies": "patch",
-	"ignore": ["@iqai/playground"]
+	"ignore": ["@iqai/playground", "@iqai/docs", "@iqai/console"]
 }
