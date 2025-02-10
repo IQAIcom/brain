@@ -1,8 +1,9 @@
 import { getAgentsStatsAction } from "./actions/agents-stats";
 import { getAgentPositionsAction } from "./actions/agent-positions";
-import { getSwapAction } from "./actions/swap";
 import type { ATPActionParams } from "./types";
 import type { Plugin } from "@elizaos/core";
+import { getBuyAction } from "./actions/buy";
+import { getSellAction } from "./actions/sell";
 
 export async function createATPPlugin(
 	opts: ATPActionParams,
@@ -10,7 +11,8 @@ export async function createATPPlugin(
 	const actions = [
 		getAgentsStatsAction(opts),
 		getAgentPositionsAction(opts),
-		getSwapAction(opts),
+		getBuyAction(opts),
+		getSellAction(opts),
 	];
 
 	return {

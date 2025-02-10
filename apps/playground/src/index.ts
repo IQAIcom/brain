@@ -8,6 +8,7 @@ import { AgentBuilder } from "@iqai/agent";
 import { createFraxlendPlugin } from "@iqai/plugin-fraxlend";
 import createHeartbeatPlugin from "@iqai/plugin-heartbeat";
 import { createOdosPlugin } from "@iqai/plugin-odos";
+import { createATPPlugin } from "@iqai/plugin-atp";
 import Database from "better-sqlite3";
 import * as fs from "node:fs";
 import * as path from "node:path";
@@ -22,6 +23,10 @@ async function main() {
 
 	const odosPlugin = await createOdosPlugin({
 		chain: fraxtal,
+		walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
+	});
+
+	const atpPlugin = await createATPPlugin({
 		walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
 	});
 
@@ -43,6 +48,7 @@ async function main() {
 		// },
 	]);
 
+
 	// Setup database
 	const dataDir = path.join(process.cwd(), "./data");
 	fs.mkdirSync(dataDir, { recursive: true });
@@ -63,6 +69,7 @@ async function main() {
 		.withPlugin(fraxlendPlugin)
 		.withPlugin(odosPlugin)
 		.withPlugin(heartbeatPlugin)
+		.withPlugin(atpPlugin)
 		.withCharacter({
 			name: "BrainBot",
 			bio: "You are BrainBot, a helpful assistant.",
