@@ -5,17 +5,17 @@ description: "Plugin for interacting with IQ ATP (Agent Tokenization Platform) f
 
 import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
 
-## 📌 Overview
+## Overview
 
 The **ATP Plugin** enables your agent to interact with **IQ's Agent Tokenization Platform**. It provides functionality for:
 
-✅ **Buying, selling, and managing AI agent tokens** using IQ as the base currency 🔄
-✅ **Viewing agent performance metrics and token statistics** 📊
-✅ **Managing token holdings and checking position values** 💰
+**Buying, selling, and managing AI agent tokens** using IQ as the base currency
+**Viewing agent performance metrics and token statistics**
+**Managing token holdings and checking position values**
 
 ---
 
-## 🛠 Installation
+## Installation
 
 <Steps>
 1. Install the required packages:
@@ -33,7 +33,7 @@ The **ATP Plugin** enables your agent to interact with **IQ's Agent Tokenization
 
 ---
 
-## ⚙ Basic Setup
+## Basic Setup
 
 Here's a complete example of setting up an agent with the ATP plugin:
 
@@ -63,43 +63,43 @@ main().catch(console.error);
 
 ---
 
-## 🎯 Available Operations
+## Available Operations
 
-### 📊 Agent Statistics
-✅ View **agent performance metrics**
-✅ Check **token statistics**
+### Agent Statistics
+ View **agent performance metrics**
+ Check **token statistics**
 
-### 📈 Portfolio Management
-✅ View **current token holdings**
-✅ Check **position values**
+### Portfolio Management
+ View **current token holdings**
+ Check **position values**
 
-### 🛒 Trading Operations
-✅ Buy **agent tokens using IQ**
-✅ Sell **agent tokens back to protocol**
+### Trading Operations
+ Buy **agent tokens using IQ**
+ Sell **agent tokens back to protocol**
 
 ---
 
-## 📝 Usage Examples
+## Usage Examples
 
-### 📊 Checking Agent Statistics
+### Checking Agent Statistics
 **Query:**
 ```plaintext
 Show me stats for agent 0x1234...5678
 ```
 
-### 📈 Viewing Portfolio
+### Viewing Portfolio
 **Query:**
 ```plaintext
 Show my ATP holdings
 ```
 
-### 🛒 Buying Tokens
+### Buying Tokens
 **Query:**
 ```plaintext
 Buy 1000 IQ worth of agent 0x1234...5678
 ```
 
-### 💰 Selling Tokens
+### Selling Tokens
 **Query:**
 ```plaintext
 Sell 50 tokens of agent 0x1234...5678
@@ -107,7 +107,7 @@ Sell 50 tokens of agent 0x1234...5678
 
 ---
 
-## ⚙ Configuration Options
+## Configuration Options
 
 The ATP plugin accepts the following configuration parameters:
 
@@ -119,7 +119,7 @@ interface ATPPluginConfig {
 
 ---
 
-## ❌ Error Handling
+## Error Handling
 
 Always implement proper error handling when using the plugin:
 
@@ -135,7 +135,7 @@ try {
 
 ---
 
-## 🔎 Best Practices
+## Best Practices
 
 ✔ **Token Validation**: Verify agent addresses before transactions
 ✔ **Amount Verification**: Double-check token amounts and IQ values
@@ -144,9 +144,9 @@ try {
 
 ---
 
-## 🛠 Common Issues and Troubleshooting
+## Common Issues and Troubleshooting
 
-🚨 **Invalid Agent Address**: Ensure you're using the correct agent token contract address
-💸 **Insufficient IQ Balance**: Verify you have enough IQ tokens for purchases
-🔄 **Transaction Failures**: Check transaction parameters and network status
-🔑 **Token Approval**: Ensure proper token approvals before selling
+**Invalid Agent Address**: Ensure you're using the correct agent token contract address
+**Insufficient IQ Balance**: Verify you have enough IQ tokens for purchases
+**Transaction Failures**: Check transaction parameters and network status
+**Token Approval**: Ensure proper token approvals before selling
