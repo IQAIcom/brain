@@ -13,6 +13,7 @@ import Database from "better-sqlite3";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { fraxtal } from "viem/chains";
+import createSequencerPlugin from "@iqai/plugin-sequencer";
 
 async function main() {
 	// Initialize plugins
@@ -48,6 +49,7 @@ async function main() {
 		// },
 	]);
 
+	const sequencerPlugin = await createSequencerPlugin();
 
 	// Setup database
 	const dataDir = path.join(process.cwd(), "./data");
@@ -70,6 +72,7 @@ async function main() {
 		.withPlugin(odosPlugin)
 		.withPlugin(heartbeatPlugin)
 		.withPlugin(atpPlugin)
+		.withPlugin(sequencerPlugin)
 		.withCharacter({
 			name: "BrainBot",
 			bio: "You are BrainBot, a helpful assistant.",

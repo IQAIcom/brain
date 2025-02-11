@@ -219,6 +219,9 @@ importers:
       '@iqai/plugin-odos':
         specifier: workspace:*
         version: link:../../packages/plugin-odos
+      '@iqai/plugin-sequencer':
+        specifier: workspace:*
+        version: link:../../packages/plugin-sequencer
       '@tavily/core':
         specifier: ^0.0.2
         version: 0.0.2
