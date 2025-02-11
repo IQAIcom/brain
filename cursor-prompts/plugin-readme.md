@@ -25,8 +25,22 @@
 
 ### Example
 
+Install the plugin using **pnpm**:
+
 ```bash
-pnpm add @plugin-name/package
+pnpm add @iqai/package
+```
+
+after installation, you can use the plugin like this:
+
+```typescript
+import { createPlugin } from "@iqai/package";
+const pluginOpts = {}
+const plugin = await createPlugin(pluginOpts);
+
+ const agent = new AgentBuilder()
+  ...
+  .withPlugin(plugin)
 ```
 
 ---

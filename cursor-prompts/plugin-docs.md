@@ -35,7 +35,7 @@ List any required environment variables or configuration settings. Use a table f
 Describe how to initialize and use the plugin. Provide example code snippets.
 
 ```tsx
-import { createPlugin } from "@plugin-name/package";
+import { createPlugin } from "@iqai/package";
 
 const plugin = await createPlugin({
   apiKey: process.env.API_KEY,
@@ -57,20 +57,14 @@ const stats = await plugin.getStats("0x1234...5678");
 console.log(stats);
 ```
 
-## API Response Format
+#### Response Format
 
-Provide an example of the API response format.
+query: `"Show me stats for entity 0x1234...5678"`
+response:
 
-```json
-{
-  "status": "success",
-  "data": {
-    "id": "0x1234...5678",
-    "value": 1000,
-    "currency": "IQ"
-  }
-}
-```
+  ```json
+    
+  ```
 
 ## Error Handling
 
