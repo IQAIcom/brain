@@ -30,16 +30,23 @@ const handler: (opts: ATPActionParams) => Handler =
     elizaLogger.info('🔍 Fetching agent stats');
     try {
       const inputParser = new InputParserService();
-      const { tokenContract } = await inputParser.parseInputs({
+      const { tokenContract,error } = await inputParser.parseInputs({
         runtime,
         message,
         state,
         template: GET_AGENT_STATS_TEMPLATE,
       });
 
+      if(error) {
+        callback?.({
+          text: `❌ Error: ${error}`,
+        });
+        return false;
+      }
+
       const statsService = new AgentsStatsService();
       const stats = await statsService.getStats(tokenContract);
-      elizaLogger.debug('📊 Agent stats data', { stats });
+      elizaLogger.info('📊 Agent stats data', { stats });
 
       const formattedStats = statsService.formatStats(stats);
       callback?.({
