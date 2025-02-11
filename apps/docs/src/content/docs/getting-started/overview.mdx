@@ -1,0 +1,53 @@
+---
+title: Overview
+description: Understanding Brain Framework's core concepts and architecture
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Introduction
+
+Brain Framework is a powerful toolkit for building AI agents that can interact with blockchain protocols and social media platforms. It uses a builder pattern for flexible configuration and supports various plugins for extended functionality.
+
+## Core Concepts
+
+<CardGrid>
+  <Card title="Agent" icon="comment-alt">
+    The central entity that processes inputs and manages interactions. Built using AgentBuilder with various configurations.
+  </Card>
+
+  <Card title="Clients" icon="random">
+    Communication interfaces that enable interaction through different channels (Direct, Telegram, Twitter).
+  </Card>
+
+  <Card title="Plugins" icon="puzzle">
+    Extensions that add specific capabilities like DeFi operations, token swaps, or scheduled tasks.
+  </Card>
+
+  <Card title="Model Providers" icon="setting">
+    AI models that power the agent's understanding and responses (e.g., OpenAI).
+  </Card>
+</CardGrid>
+
+## Basic Architecture
+
+```typescript
+import { AgentBuilder } from '@iqai/agent';
+import DirectClientInterface from "@elizaos/client-direct";
+import { ModelProviderName } from "@elizaos/core";
+import { bootstrapPlugin } from "@elizaos/plugin-bootstrap";
+
+async function main() {
+  const agent = new AgentBuilder()
+    .withClient("direct", DirectClientInterface)     // Communication interface
+    .withModelProvider(                             // AI model configuration
+      ModelProviderName.OPENAI,
+      process.env.OPENAI_API_KEY
+    )
+    .withPlugin(bootstrapPlugin)                    // Core functionality
+    .build();
+
+  await agent.start();
+}
+
+main().catch(console.error);

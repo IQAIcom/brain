@@ -52,27 +52,39 @@ Brain Framework's plugin system allows you to extend your agent's capabilities w
 ## Using Plugins
 
 ```typescript
-import { Agent } from "@iqai/agent";
+import { AgentBuilder } from "@iqai/agent";
 import { createFraxlendPlugin } from "@iqai/plugin-fraxlend";
 import { createOdosPlugin } from "@iqai/plugin-odos";
+import { ModelProviderName } from "@elizaos/core";
+import { bootstrapPlugin } from "@elizaos/plugin-bootstrap";
+import { fraxtal } from "viem/chains";
 
 async function main() {
   const fraxlendPlugin = await createFraxlendPlugin({
-    ...config
+    chain: fraxtal,
+    walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
   });
 
   const odosPlugin = await createOdosPlugin({
-    ..config
+    chain: fraxtal,
+    walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
   });
 
-  const agent = new Agent({
-    modelProvider: ModelProviderName.OPENAI,
-    modelKey: process.env.OPENAI_API_KEY,
-    plugins: [fraxlendPlugin, odosPlugin],
-  });
+  const agent = new AgentBuilder()
+    .withClient("direct", DirectClientInterface)
+    .withModelProvider(
+      ModelProviderName.OPENAI,
+      process.env.OPENAI_API_KEY
+    )
+    .withPlugin(bootstrapPlugin)
+    .withPlugin(fraxlendPlugin)
+    .withPlugin(odosPlugin)
+    .build();
 
   await agent.start();
 }
+
+main().catch(console.error);
 ```
 
 <Aside type="note">
