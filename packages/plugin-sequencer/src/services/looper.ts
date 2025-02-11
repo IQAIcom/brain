@@ -9,6 +9,7 @@ export const getLoopEvaluator = (): Evaluator => {
 			"Evaluates the goal and determines if the query should be handled with multiple action calls",
 		validate: async () => true,
 		handler: handler(),
+		alwaysRun: true,
 	};
 };
 
