@@ -65,47 +65,22 @@ main().catch(console.error);
 
 ## Available Operations
 
-### Agent Statistics
- View **agent performance metrics**
- Check **token statistics**
+- **Agent Statistics**: View performance metrics and token statistics
+- **Portfolio Management**: Monitor holdings and position values
+- **Trading Operations**: Buy/sell agent tokens using IQ
 
-### Portfolio Management
- View **current token holdings**
- Check **position values**
-
-### Trading Operations
- Buy **agent tokens using IQ**
- Sell **agent tokens back to protocol**
 
 ---
 
 ## Usage Examples
 
-### Checking Agent Statistics
-**Query:**
-```plaintext
-Show me stats for agent 0x1234...5678
-```
+| Operation | Example Query |
+|-----------|--------------|
+| Check Stats | `Show me stats for agent 0x1234...5678` |
+| View Portfolio | `Show my ATP holdings` |
+| Buy Tokens | `Buy 1000 IQ worth of agent 0x1234...5678` |
+| Sell Tokens | `Sell 50 tokens of agent 0x1234...5678` |
 
-### Viewing Portfolio
-**Query:**
-```plaintext
-Show my ATP holdings
-```
-
-### Buying Tokens
-**Query:**
-```plaintext
-Buy 1000 IQ worth of agent 0x1234...5678
-```
-
-### Selling Tokens
-**Query:**
-```plaintext
-Sell 50 tokens of agent 0x1234...5678
-```
-
----
 
 ## Configuration Options
 
@@ -137,16 +112,16 @@ try {
 
 ## Best Practices
 
-✔ **Token Validation**: Verify agent addresses before transactions
-✔ **Amount Verification**: Double-check token amounts and IQ values
-✔ **Transaction Monitoring**: Track transaction status and confirmations
-✔ **Balance Management**: Ensure sufficient IQ balance for purchases
+- ✔ **Token Validation**: Verify agent addresses before transactions
+- ✔ **Amount Verification**: Double-check token amounts and IQ values
+- ✔ **Transaction Monitoring**: Track transaction status and confirmations
+- ✔ **Balance Management**: Ensure sufficient IQ balance for purchases
 
 ---
 
 ## Common Issues and Troubleshooting
 
-**Invalid Agent Address**: Ensure you're using the correct agent token contract address
-**Insufficient IQ Balance**: Verify you have enough IQ tokens for purchases
-**Transaction Failures**: Check transaction parameters and network status
-**Token Approval**: Ensure proper token approvals before selling
+- **Invalid Agent Address**: Ensure you're using the correct agent token contract address
+- **Insufficient IQ Balance**: Verify you have enough IQ tokens for purchases
+- **Transaction Failures**: Check transaction parameters and network status
+- **Token Approval**: Ensure proper token approvals before selling
