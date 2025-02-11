@@ -1,19 +1,28 @@
-import type { Evaluator, Handler } from "@elizaos/core";
+import type { Action, Handler } from "@elizaos/core";
+import { InputParserService } from "./input-parser";
+import { SEQUENCER_TEMPLATE } from "../lib/template";
 
-export const getSequencerEvaluator = (): Evaluator => {
+export const getSequencerAction = (): Action => {
 	return {
 		name: "Sequencer",
 		similes: ["SEQUENCER"],
 		examples: [],
 		description:
-			"Evaluates if a query should be handled by the Sequencer service",
+			"Evaluates the goal and determines if the query should be handled with multiple action calls",
 		validate: async () => true,
 		handler: handler(),
 	};
 };
 
 const handler: () => Handler =
-	() => async (_runtime, _message, _state, _options, _callback) => {
-		console.log("EVALUATOR TRIGGER");
-		return true;
+	() => async (runtime, message, state, _options, _callback) => {
+		const inputParser = new InputParserService();
+		const actions = await inputParser.parseInputs({
+			runtime,
+			message,
+			state,
+			template: SEQUENCER_TEMPLATE,
+		});
+
+		console.log("ACTIONS", actions);
 	};
