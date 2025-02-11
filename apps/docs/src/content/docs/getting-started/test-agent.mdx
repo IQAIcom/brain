@@ -1,0 +1,39 @@
+---
+title: Testing Your Agent
+description: Learn how to test and interact with your agent using the DirectClientInterface
+---
+import { Image } from 'astro:assets';
+
+When you build an agent using the DirectClientInterface, you can interact with it through a web client interface. This guide will walk you through the testing process.
+
+## Accessing the Web Interface
+
+When your agent is running with DirectClientInterface (as shown in the example configuration), it automatically exposes a web interface where you can interact with your agent.
+
+### Enable DirectClientInterface
+
+When defining an agent make sure to include the `direct` client in the client list.
+
+```typescript
+  const agent = new AgentBuilder()
+                    ...
+                    .withClient("direct", DirectClientInterface) // ensure this is present
+```
+Run the app and you will see this in the console,
+
+<Image src="/src/assets/test-agent/console.png" alt="console" height="500" width="800" />
+
+You can access the the web interface with the link from the console, which looks like this
+
+<Image src="/src/assets/test-agent/brain-console.png" alt="link" height="1000" width="1200" />
+
+You can access all your created agents from this client interface directly with ease
+
+<Image src="/src/assets/test-agent/brain-console-chat.png" alt="link" height="1000" width="1200" />
+
+## Common Testing Scenarios
+
+1. Basic Conversation Flow
+2. Plugin Command Testing
+3. Response Format Validation
+4. Character Consistency Check
