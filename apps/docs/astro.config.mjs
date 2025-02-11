@@ -4,10 +4,10 @@ import starlight from '@astrojs/starlight';
 import vercel from '@astrojs/vercel';
 
 export default defineConfig({
+  output: 'static',
   adapter: vercel({
-    imageService: true,
+    imageService:true
   }),
-
   integrations: [
     starlight({
       title: 'Brain Framework',
