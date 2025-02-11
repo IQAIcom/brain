@@ -78,6 +78,10 @@ List common errors the plugin may encounter and how they should be handled.
 
 ## Best Practices
 
+(list any best practices or recommendations for using the plugin)
+
+#### Examples
+
 - Store API keys securely.
 - Follow rate limits.
 - Implement structured error handling.
