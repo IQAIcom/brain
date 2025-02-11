@@ -58,8 +58,8 @@ async function main() {
 	// Build agent using builder pattern
 	const agent = new AgentBuilder()
 		.withDatabase(databaseAdapter)
-		// .withClient("telegram", TelegramClientInterface)
-		// .withClient("twitter", TwitterClientInterface)
+		.withClient("telegram", TelegramClientInterface)
+		.withClient("twitter", TwitterClientInterface)
 		.withClient("direct", DirectClientInterface)
 		.withModelProvider(
 			ModelProviderName.OPENAI,
