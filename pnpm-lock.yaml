@@ -404,6 +404,28 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
 
+  packages/plugin-sequencer:
+    dependencies:
+      '@elizaos/core':
+        specifier: 0.1.9
+        version: 0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38)(react@19.0.0)(svelte@5.19.8)(vue@3.5.13)
+      dedent:
+        specifier: ^1.5.3
+        version: 1.5.3
+      tsup:
+        specifier: 8.3.6
+        version: 8.3.6(typescript@5.7.3)
+    devDependencies:
+      '@0no-co/graphqlsp':
+        specifier: ^1.8.0
+        version: 1.12.16(graphql@16.10.0)(typescript@5.7.3)
+      '@iqai/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node-cron':
+        specifier: ^3.0.11
+        version: 3.0.11
+
   packages/tsconfig: {}
 
 packages:
