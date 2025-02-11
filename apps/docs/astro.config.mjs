@@ -1,8 +1,13 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import vercel from '@astrojs/vercel';
 
 export default defineConfig({
+  output: 'static',
+  adapter: vercel({
+    imageService:true
+  }),
   integrations: [
     starlight({
       title: 'Brain Framework',
@@ -26,6 +31,7 @@ export default defineConfig({
           items: [
             { label: 'Installation', link: '/getting-started/installation' },
             { label: 'Quick Start', link: '/getting-started/quickstart' },
+            { label: 'Test your agent', link: '/getting-started/test-agent' },
           ],
         },
         {
@@ -35,8 +41,9 @@ export default defineConfig({
             { label: 'Fraxlend', link: '/plugins/fraxlend' },
             { label: 'Odos', link: '/plugins/odos' },
             {label: "ATP", link: "/plugins/atp"},
+            {label: "Heartbeat", link: "/plugins/heartbeat"},
           ],
-        },
+        }
       ],
     }),
   ],

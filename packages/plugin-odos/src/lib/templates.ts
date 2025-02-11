@@ -1,3 +1,4 @@
+import { CHAIN_IDS } from "./constants";
 export const EXCHANGE_TEMPLATE = `Respond with a JSON object containing exchange information for odos swaps.
 Extract the exchange details from the most recent message. If required information is missing, respond with an error.
 
@@ -6,6 +7,11 @@ The response must include:
 - toToken: The token addressto exchange to
 - chain: The chain id of the chain to exchange on
 - amount: The number of tokens to exchange in bigint
+
+## Chain Ids
+    ${Object.entries(CHAIN_IDS)
+        .map(([chainName, chainId]) => `${chainName}: ${chainId}`)
+        .join("\n")}
 
 Example response:
 \`\`\`json

@@ -1,18 +1,27 @@
 export const GET_AGENT_STATS_TEMPLATE = `Respond with a JSON object containing agent address for stats lookup.
-Extract the agent address from the most recent message. If required information is missing, respond with an error.
+Extract the agent address from the most recent message. You can also search all given messages if necessary.
+If required information is missing, respond with an error.
 
 The response must include:
-- agentAddress: The agent's contract address
+- tokenContract: The token contract address
+- error: An error message if a valid tokenContract cannot be determined (optional)
 
 Example response:
 \`\`\`json
 {
-    "agentAddress": "0x1234567890123456789012345678901234567890"
+    "tokenContract": "0x1234567890123456789012345678901234567890"
+}
+\`\`\`
+\`\`\`json
+{
+    "tokenContract": "",
+    "error": "No token contract found in context"
 }
 \`\`\`
 {{recentMessages}}
 Extract the agent address from the most recent message.
-Respond with a JSON markdown block containing the agentAddress.`;
+Respond with a JSON markdown block containing the tokenContract.`;
+
 
 export const BUY_AGENT_TEMPLATE = `Respond with a JSON object containing purchase information.
 Extract the purchase details from all recent messages, including previously shown holdings or stats.

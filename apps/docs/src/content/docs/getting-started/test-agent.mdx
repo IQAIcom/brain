@@ -1,0 +1,56 @@
+---
+title: Testing Your Agent
+description: Learn how to test and interact with your agent using console.iqai.com
+---
+import { Image } from 'astro:assets';
+import brainConsole from '../../../assets/test-agent/brain-console.png';
+import { Aside } from '@astrojs/starlight/components';
+
+
+Brain provides a powerful web interface to test and interact with your agents. This guide shows you how to set it up and use it effectively.
+
+<Aside type="caution">
+  Your agent must have direct client enabled to use console.
+  To enable, add it to your agent's client list:
+
+  ```typescript
+  import { AgentBuilder } from "@iqai/agent"
+  import { DirectClientInterface } from "@elizaos/client-direct"
+
+  const agent = new AgentBuilder()
+                  .withClient("direct", DirectClientInterface)
+  ```
+</Aside>
+
+## Using console.iqai.com
+
+1. Start your agent with direct client enabled
+2. Wait until you find this message in your console:
+
+```bash
+╔════════════════════════════════════════════╗
+║       *~* Direct client initialized *~*    ║
+║       you can test out your agents in:     ║
+║           https://console.iqai.com         ║
+╚════════════════════════════════════════════╝
+```
+
+3. Visit console.iqai.com
+4. Your agent will appear automatically in the interface
+
+<Image src={brainConsole} alt="brain-console" height="1000" width="1200" />
+
+## What You Can Test
+
+Through console.iqai.com you can:
+- Chat with your agent in real-time
+- Test plugin commands and responses
+- Validate response formats
+- Check character consistency
+- Monitor agent behavior
+
+## Best Practices
+- Always keep the DirectClientInterface enabled during development
+- Use console.iqai.com for rapid testing and debugging
+- Test all plugin functionalities through the interface
+- Verify agent responses match your expected formats

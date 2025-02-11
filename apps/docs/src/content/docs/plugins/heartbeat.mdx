@@ -1,0 +1,142 @@
+---
+title: "Heartbeat Plugin"
+description: "Plugin for scheduling automated messages and social media posts using cron-based timing"
+---
+
+import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+
+## Overview
+
+The **Heartbeat Plugin** enables automated scheduling of tasks and social media interactions. It provides functionality for:
+
+- **Scheduling periodic messages** using cron-based timing
+- **Posting to social media platforms** like Twitter and Telegram
+- **Maintaining continuous agent interactions**
+- **Supporting multiple concurrent schedules**
+
+---
+
+## Installation
+
+<Steps>
+1. Install the required package:
+
+   ```bash
+   pnpm add @iqai/plugin-heartbeat
+   ```
+
+2. Create a **.env** file with platform-specific configurations as needed:
+
+   ```bash
+   TELEGRAM_CHAT_ID=your-chat-id
+   ```
+</Steps>
+
+---
+
+## Basic Setup
+
+Here's a complete example of setting up an agent with the Heartbeat plugin:
+
+```typescript
+import { Agent } from "@iqai/agent";
+import { createHeartbeatPlugin } from "@iqai/plugin-heartbeat";
+import { ModelProviderName } from "@elizaos/core";
+
+async function main() {
+  // Initialize Heartbeat plugin
+  const heartbeatPlugin = await createHeartbeatPlugin([
+    {
+      period: "*/30 * * * * *",  // Every 30 seconds
+      input: "Post a crypto market update",
+      client: "telegram",
+      config: {
+        chatId: process.env.TELEGRAM_CHAT_ID
+      }
+    }
+  ]);
+
+  // Create agent with plugin
+  const agent = new Agent({
+    modelProvider: ModelProviderName.OPENAI,
+    modelKey: process.env.OPENAI_API_KEY,
+    plugins: [heartbeatPlugin],
+  });
+
+  await agent.start();
+}
+
+main().catch(console.error);
+```
+
+---
+
+## Task Configuration
+
+Each heartbeat task requires the following parameters:
+
+```typescript
+interface HeartbeatTask {
+  period: string;     // Cron expression for scheduling
+  input: string;      // Message prompt for the agent
+  client: "telegram" | "twitter";  // Target platform
+  config?: {          // Platform-specific configuration
+    chatId?: string;  // Required for Telegram
+  };
+}
+```
+
+---
+
+## Usage Examples
+
+### Telegram Updates
+
+```json
+{
+  "period": "*/30 * * * * *",    // Every 30 seconds
+  "input": "Post a crypto joke",
+  "client": "telegram",
+  "config": { "chatId": "-1234567890" }
+}
+```
+
+### Hourly Twitter Posts
+
+```json
+{
+  "period": "0 */1 * * *",       // Every hour
+  "input": "Market update post",
+  "client": "twitter"
+}
+```
+
+### Daily News Summary
+
+```json
+{
+  "period": "0 0 * * *",         // Once per day at midnight
+  "input": "Create a daily crypto news summary",
+  "client": "telegram",
+  "config": { "chatId": "-1234567890" }
+}
+```
+
+---
+
+## Best Practices
+
+- ✔ **Cron Expressions**: Use appropriate intervals to avoid rate limiting
+- ✔ **Message Content**: Keep prompts clear and specific
+- ✔ **Platform Guidelines**: Follow social media posting guidelines
+- ✔ **Error Handling**: Implement proper error handling for failed posts
+
+---
+
+## Common Issues and Troubleshooting
+
+- **Invalid Cron Expression**: Verify your scheduling syntax
+- **Missing Configuration**: Ensure platform-specific configs are provided
+- **Rate Limiting**: Monitor and adjust posting frequencies
+- **Network Issues**: Implement retry logic for failed requests
+

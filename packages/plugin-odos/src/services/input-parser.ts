@@ -3,6 +3,7 @@ import {
 	composeContext,
 	generateMessageResponse,
 } from "@elizaos/core";
+import type { Address } from "viem";
 
 export class InputParserService {
 	async parseInputs({ runtime, message, state, template }) {
@@ -15,12 +16,24 @@ export class InputParserService {
 			template,
 		});
 
-		const content = await generateMessageResponse({
+		const response = await generateMessageResponse({
 			runtime,
 			context,
 			modelClass: ModelClass.SMALL,
 		});
 
-		return JSON.parse(content.text);
+		if(response?.error){
+			const result =  { error: response!.error as string }
+			return result
+		}
+
+		const result =  { 
+			fromToken: response!.fromToken as Address, 
+			toToken: response!.toToken as Address, 
+			amount: response!.amount as string,
+			chainId: Number(response!.chain)
+		}
+
+		return result
 	}
 }

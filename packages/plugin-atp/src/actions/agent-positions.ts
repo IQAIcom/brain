@@ -29,7 +29,7 @@ const handler: (opts: ATPActionParams) => Handler =
       const positionsService = new AgentPositionsService(walletService);
 
       const positions = await positionsService.getPositions();
-      elizaLogger.debug('📊 Total Positions', {positions});
+      elizaLogger.info('📊 Total Positions', {positions});
 
       const formattedPositions = positionsService.formatPositions(positions);
       callback?.({

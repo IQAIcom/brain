@@ -1,8 +1,7 @@
 import type { Action, Handler } from "@elizaos/core";
 import { GetQuoteActionService } from "../services/get-quote";
 import type { OdosActionParams } from "../types";
-import { InputParserService } from "../services/input-parser";
-import { EXCHANGE_TEMPLATE } from "../lib/templates";
+import { WalletService } from "../services/wallet";
 
 export const getQuoteAction = (opts: OdosActionParams): Action => {
 	return {
@@ -26,21 +25,24 @@ export const getQuoteAction = (opts: OdosActionParams): Action => {
 };
 
 const handler: (opts: OdosActionParams) => Handler =
-	() => async (runtime, message, state, _options, callback) => {
-		const inputParser = new InputParserService();
-		const { fromToken, toToken, chain, amount } = await inputParser.parseInputs({
-			runtime,
-			message,
-			state,
-			template: EXCHANGE_TEMPLATE,
-		});
+	(opts) => async (runtime, message, state, _options, callback) => {
 		try {
-			const service = new GetQuoteActionService();
-			const quote = await service.execute(fromToken, toToken, chain, amount);
-
+			const walletService = new WalletService(
+				opts.walletPrivateKey,
+				opts.chain,
+			);
+			const service = new GetQuoteActionService(walletService);
+			const quote = await service.execute(runtime, message, state);
+			if (quote instanceof Error) {
+				callback?.({
+					text: `Error fetching quote: ${quote.message}`,
+				});
+				return false
+			}
 			callback?.({
 				text: service.format(quote),
 			});
+
 			return true;
 		} catch (error) {
 			callback?.({

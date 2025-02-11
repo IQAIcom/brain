@@ -1,7 +1,11 @@
-import { Address, formatUnits } from "viem";
+import { formatUnits } from "viem";
 import dedent from "dedent";
+import { EXCHANGE_TEMPLATE } from "../lib/templates";
+import type { IAgentRuntime, Memory, State } from "@elizaos/core";
+import { InputParserService } from "./input-parser";
+import type { WalletService } from "./wallet";
 
-interface QuoteResponse {
+export interface QuoteResponse {
 	inTokens: string[];
 	outTokens: string[];
 	inAmounts: string[];
@@ -21,8 +25,34 @@ interface QuoteResponse {
 
 export class GetQuoteActionService {
 	private readonly API_URL = "https://api.odos.xyz";
+	private readonly walletService: WalletService;
 
-	async execute(fromToken: Address, toToken: Address, chain: number, amount: bigint) {
+
+	 constructor(walletService: WalletService) {
+			this.walletService = walletService;
+		}
+
+	async execute(runtime: IAgentRuntime, message: Memory, state: State) {
+
+		const inputParser = new InputParserService();
+		const parsedOutput = await inputParser.parseInputs({
+			runtime,
+			message,
+			state,
+			template: EXCHANGE_TEMPLATE,
+		});
+
+		if('error' in parsedOutput){
+			return new Error(parsedOutput.error);	
+		}
+
+		const { fromToken, toToken, chainId, amount } = parsedOutput
+		const userAddr = this.walletService.getWalletClient()?.account?.address
+		if (!userAddr) {
+            throw new Error("User address is not defined");
+            }
+		console.log('parsedOutput', parsedOutput)
+
 		try {
 			const response = await fetch(`${this.API_URL}/sor/quote/v2`, {
 				method: "POST",
@@ -30,32 +60,34 @@ export class GetQuoteActionService {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({
-					chainId: chain,
+					chainId,
+					userAddr,
 					inputTokens: [
 						{
 							tokenAddress: fromToken,
-							amount: amount,
+							amount,
 						},
 					],
 					outputTokens: [
 						{
-							tokenAddress: toToken,
 							proportion: 1,
-						},
+							tokenAddress: toToken
+						}
 					],
 					slippageLimitPercent: 0.3,
-					userAddr: "0x0000000000000000000000000000000000000000", // Replace with actual user address
 					referralCode: 0,
 					disableRFQs: true,
 					compact: true,
-				}),
-			});
+				})
+			})
+
+			const data = await response.json()
 
 			if (!response.ok) {
 				throw new Error(`Failed to fetch quote: ${response.statusText}`);
 			}
 
-			return (await response.json()) as QuoteResponse;
+			return data as QuoteResponse;
 		} catch (error) {
 			throw new Error(`Failed to fetch quote: ${error.message}`);
 		}
