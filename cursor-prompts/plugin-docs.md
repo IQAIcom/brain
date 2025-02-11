@@ -59,11 +59,17 @@ console.log(stats);
 
 #### Response Format
 
-query: `"Show me stats for entity 0x1234...5678"`
+query: `"Show me stats for 0x1234...5678"`
 response:
 
   ```json
-    
+    📊 *Agent Statistics*
+    💰 Price: 0.00057 USD (0.10000 IQ)
+    📈 Market Cap: 57.17K USD
+    📊 24h Change: 0%
+    👥 Holders: 0
+    🤖 Inferences: 9
+    🏷️ Category: Entertainment
   ```
 
 ## Error Handling
