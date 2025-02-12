@@ -63,16 +63,24 @@ const handler: () => Handler =
 			responses.push(response);
 		}
 
+		const formattedResponses = responses.map((response, i) => {
+			const prettyAction = actions[i].toLowerCase().replace(/_/g, " ");
+			const separator = "═══════════════════════════";
+			return dedent`
+				‎
+				${separator}
+				✨ Using ${prettyAction}
+				${separator}
+
+				${response.text}`;
+		});
+
+		const summaryText = dedent`
+			🎬 Here's how I completed your request step by step:
+			${formattedResponses.join("\n\n").trim()}
+		`;
+
 		await callback?.({
-			text: dedent`
-					🎬 Here's how I completed your request step by step:
-					${responses
-						.map((response, i) => {
-							const prettyAction = actions[i].toLowerCase().replace(/_/g, " ");
-							return `${"-".repeat(50)}\n✨ Using ${prettyAction}:\n${response.text}\n${"-".repeat(50)}`;
-						})
-						.join("\n\n")}
-			`,
-			action: responses[0].action,
+			text: summaryText,
 		});
 	};
