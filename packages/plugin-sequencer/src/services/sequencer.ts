@@ -37,14 +37,6 @@ export class SequencerService {
 			template: SEQUENCER_TEMPLATE,
 		})) as { actions: string[] };
 
-		await this.callback?.({
-			text: dedent`
-        🎯 Deduced the following actions to complete this task
-        - ${actions.join("\n- ")}
-      `,
-			action: actions[0],
-		});
-
 		const responses = await this.processActions(actions);
 
 		await this.callback?.({
