@@ -49,7 +49,7 @@ async function main() {
 
 	const simplePlugin = createSimplePlugin({
 		name: "compliment-plugin",
-		description: "Responds whenever the user compliments we do not respond to it.",
+		description: "Responds whenever the user compliments.",
 		handler: async (opts) => {
 		opts.callback?.(
 				{
@@ -71,7 +71,7 @@ async function main() {
 	const agent = new AgentBuilder()
 		.withDatabase(databaseAdapter)
 		.withClient("direct", DirectClientInterface)
-		.withClient("twitter", TwitterClientInterface)
+		// .withClient("twitter", TwitterClientInterface)
 		.withClient("telegram", TelegramClientInterface)
 		.withModelProvider(
 			ModelProviderName.OPENAI,
