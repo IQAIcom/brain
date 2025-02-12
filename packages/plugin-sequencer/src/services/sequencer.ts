@@ -48,50 +48,21 @@ export class SequencerService {
 
 	private async processActions(actions: string[]) {
 		const responses = [];
-		const memories = [];
 
 		for (const actionName of actions) {
-			const actionMemory = await this.createActionMemory(actionName);
-			memories.push(actionMemory);
-
+			const memory = await this.createActionMemory(actionName);
 			const response = await new Promise((resolve) => {
 				this.runtime.processActions(
 					this.message,
-					[...memories], // Pass all previous memories
+					[memory],
 					this.state,
 					resolve as HandlerCallback,
 				);
 			});
-
-			// Create and save response memory
-			const responseMemory = await this.createResponseMemory(
-				response as Content,
-				actionName,
-			);
-			memories.push(responseMemory);
 			responses.push(response);
 		}
 
 		return responses;
-	}
-
-	private async createResponseMemory(
-		response: Content,
-		actionName: string,
-	): Promise<Memory> {
-		const memory: Memory = {
-			id: stringToUuid(`${this.message.id}-${actionName}-response`),
-			content: response,
-			userId: this.state.userId,
-			roomId: this.state.roomId,
-			agentId: this.runtime.agentId,
-			createdAt: Date.now(),
-		};
-
-		await this.runtime.messageManager.addEmbeddingToMemory(memory);
-		await this.runtime.messageManager.createMemory(memory);
-
-		return memory;
 	}
 
 	private async createActionMemory(actionName: string): Promise<Memory> {
