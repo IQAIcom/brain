@@ -2,10 +2,11 @@ import type { Action, Handler } from "@elizaos/core";
 import { InputParserService } from "./input-parser";
 import { SEQUENCER_TEMPLATE } from "../lib/template";
 import dedent from "dedent";
+import type { Memory } from "@elizaos/core";
 
 export const getSequencerAction = (): Action => {
 	return {
-		name: "Sequencer",
+		name: "SEQUENCER",
 		similes: ["SEQUENCER"],
 		examples: [],
 		description:
@@ -25,10 +26,24 @@ const handler: () => Handler =
 			template: SEQUENCER_TEMPLATE,
 		})) as { actions: string[] };
 
-		callback?.({
+		await callback?.({
 			text: dedent`
-				🎯 Actions to call in sequence:
-				${actions.map((action, index) => `${index + 1}. ${action}`).join("\n")}
+				🎯 Deduced the following actions to complete this task
+				- ${actions.join("\n- ")}
 			`,
+			action: actions[0],
 		});
+
+		for (const actionName of actions) {
+			const newMemory: Memory = {
+				agentId: state.agentId,
+				roomId: state.roomId,
+				userId: state.userId,
+				content: {
+					text: `Run ${actionName}`,
+					action: actionName,
+				},
+			};
+			await runtime.processActions(message, [newMemory], state, callback);
+		}
 	};
