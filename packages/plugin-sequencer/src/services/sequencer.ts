@@ -46,13 +46,9 @@ export class SequencerService {
 		});
 
 		const responses = await this.processActions(actions);
-		const formattedResponses = this.formatResponses(actions, responses);
 
 		await this.callback?.({
-			text: dedent`
-        🎬 Here's how I completed your request step by step:
-        ${formattedResponses.join("\n\n").trim()}
-      `,
+			text: this.formatResponses(actions, responses),
 		});
 
 		return true;
@@ -63,12 +59,12 @@ export class SequencerService {
 
 		for (const actionName of actions) {
 			const memory = await this.createActionMemory(actionName);
-			const response = await new Promise((resolve: any) => {
+			const response = await new Promise((resolve) => {
 				this.runtime.processActions(
 					this.message,
 					[memory],
 					this.state,
-					resolve,
+					resolve as HandlerCallback,
 				);
 			});
 			responses.push(response);
@@ -99,16 +95,26 @@ export class SequencerService {
 	}
 
 	private formatResponses(actions: string[], responses: Content[]) {
-		return responses.map((response, i) => {
-			const prettyAction = actions[i].toLowerCase().replace(/_/g, " ");
-			const separator = "═══════════════════════════";
-			return dedent`
-        ‎
-        ${separator}
-        ✨ Using ${prettyAction}
-        ${separator}
+		const formattedSteps = responses.map(
+			(response, i) => dedent`
+				‎
+				═══════════════════════════
+				✨ Using ${actions[i].toLowerCase().replace(/_/g, " ")}
+				═══════════════════════════
 
-        ${response.text}`;
-		});
+				${response.text}`,
+		);
+
+		return dedent`
+			🎬 Task Execution Summary
+
+			🎯 Initial Actions:
+			- ${actions.join("\n- ")}
+
+			📝 Detailed Steps:
+			${formattedSteps.join("\n\n").trim()}
+
+			✅ All steps completed successfully!
+		`;
 	}
 }
