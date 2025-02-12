@@ -1,6 +1,6 @@
 import type { Plugin } from "@elizaos/core";
 import { getLoopEvaluator } from "./services/looper";
-import { getSequencerAction } from "./services/sequencer";
+import { getSequencerAction } from "./actions/sequencer";
 
 export async function createSequencerPlugin(): Promise<Plugin> {
 	return {

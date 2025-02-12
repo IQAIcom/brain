@@ -1,86 +1,114 @@
-import type { Action, Handler } from "@elizaos/core";
-import { InputParserService } from "./input-parser";
-import { SEQUENCER_TEMPLATE } from "../lib/template";
-import dedent from "dedent";
-import type { Memory } from "@elizaos/core";
+import type {
+	Content,
+	HandlerCallback,
+	IAgentRuntime,
+	Memory,
+	State,
+} from "@elizaos/core";
 import { stringToUuid } from "@elizaos/core";
-import type { Content } from "@elizaos/core";
+import dedent from "dedent";
+import { SEQUENCER_TEMPLATE } from "../lib/template";
+import { InputParserService } from "./input-parser";
 
-export const getSequencerAction = (): Action => {
-	return {
-		name: "SEQUENCER",
-		similes: ["SEQUENCER"],
-		examples: [],
-		description:
-			"Evaluates the goal and determines if the query should be handled with multiple action calls",
-		validate: async () => true,
-		handler: handler(),
-	};
-};
+export class SequencerService {
+	private runtime: IAgentRuntime;
+	private message: Memory;
+	private state: State;
+	private callback: HandlerCallback;
 
-const handler: () => Handler =
-	() => async (runtime, message, state, _options, callback) => {
+	constructor(
+		runtime: IAgentRuntime,
+		message: Memory,
+		state: State,
+		callback: HandlerCallback,
+	) {
+		this.runtime = runtime;
+		this.message = message;
+		this.state = state;
+		this.callback = callback;
+	}
+
+	async execute() {
 		const inputParser = new InputParserService();
 		const { actions } = (await inputParser.parseInputs({
-			runtime,
-			message,
-			state,
+			runtime: this.runtime,
+			message: this.message,
+			state: this.state,
 			template: SEQUENCER_TEMPLATE,
 		})) as { actions: string[] };
 
-		await callback?.({
+		await this.callback?.({
 			text: dedent`
-				🎯 Deduced the following actions to complete this task
-				- ${actions.join("\n- ")}
-			`,
+        🎯 Deduced the following actions to complete this task
+        - ${actions.join("\n- ")}
+      `,
 			action: actions[0],
 		});
 
+		const responses = await this.processActions(actions);
+		const formattedResponses = this.formatResponses(actions, responses);
+
+		await this.callback?.({
+			text: dedent`
+        🎬 Here's how I completed your request step by step:
+        ${formattedResponses.join("\n\n").trim()}
+      `,
+		});
+
+		return true;
+	}
+
+	private async processActions(actions: string[]) {
 		const responses = [];
 
 		for (const actionName of actions) {
-			const content: Content = {
-				text: `Run ${actionName}`,
-				action: actionName,
-			};
-			const userMessage = {
-				content,
-				userId: state.userId,
-				roomId: state.roomId,
-				agentId: runtime.agentId,
-			};
-
-			const memory: Memory = {
-				id: stringToUuid(`${message.id}-${actionName}`),
-				...userMessage,
-				createdAt: Date.now(),
-			};
-			await runtime.messageManager.addEmbeddingToMemory(memory);
-			await runtime.messageManager.createMemory(memory);
+			const memory = await this.createActionMemory(actionName);
 			const response = await new Promise((resolve: any) => {
-				runtime.processActions(message, [memory], state, resolve);
+				this.runtime.processActions(
+					this.message,
+					[memory],
+					this.state,
+					resolve,
+				);
 			});
 			responses.push(response);
 		}
 
-		const formattedResponses = responses.map((response, i) => {
+		return responses;
+	}
+
+	private async createActionMemory(actionName: string): Promise<Memory> {
+		const content: Content = {
+			text: `Run ${actionName}`,
+			action: actionName,
+		};
+
+		const memory: Memory = {
+			id: stringToUuid(`${this.message.id}-${actionName}`),
+			content,
+			userId: this.state.userId,
+			roomId: this.state.roomId,
+			agentId: this.runtime.agentId,
+			createdAt: Date.now(),
+		};
+
+		await this.runtime.messageManager.addEmbeddingToMemory(memory);
+		await this.runtime.messageManager.createMemory(memory);
+
+		return memory;
+	}
+
+	private formatResponses(actions: string[], responses: Content[]) {
+		return responses.map((response, i) => {
 			const prettyAction = actions[i].toLowerCase().replace(/_/g, " ");
 			const separator = "═══════════════════════════";
 			return dedent`
-				‎
-				${separator}
-				✨ Using ${prettyAction}
-				${separator}
+        ‎
+        ${separator}
+        ✨ Using ${prettyAction}
+        ${separator}
 
-				${response.text}`;
+        ${response.text}`;
 		});
-
-		const summaryText = dedent`
-			🎬 Here's how I completed your request step by step:
-			${formattedResponses.join("\n\n").trim()}
-		`;
-
-		await callback?.({
-			text: summaryText,
-		});
-	};
+	}
+}
