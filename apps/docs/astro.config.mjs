@@ -33,6 +33,7 @@ export default defineConfig({
             { label: 'Installation', link: '/getting-started/installation' },
             { label: 'Quick Start', link: '/getting-started/quickstart' },
             { label: 'Test your agent', link: '/getting-started/test-agent' },
+            {label: "Deploy your agent", link: "/getting-started/deployment"},
           ],
         },
         {

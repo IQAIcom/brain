@@ -1,0 +1,117 @@
+---
+title: Deployment 
+description: Guide for deploying Brain Framework agents on Node.js servers
+---
+
+import { Steps, Tabs, TabItem, Aside, Card, CardGrid } from '@astrojs/starlight/components';
+
+## Overview
+
+This guide covers deploying your Brain Framework agent on a Node.js server environment, including database setup considerations.
+
+<Aside type="note">
+**Current Limitations**
+- Serverless deployments are not supported when using the Heartbeat plugin
+- Runtime model downloads may impact cold starts
+</Aside>
+
+## Database Selection
+
+Choose the appropriate database adapter based on your deployment needs:
+
+<CardGrid stagger>
+    <Card title="PostgreSQL" icon="seti:db">
+      **@elizaos/adapter-postgres**
+      - Recommended for production deployments
+      - Scalable and robust
+    </Card>
+
+    <Card title="SQLite" icon="document">
+      **@elizaos/adapter-sqlite**
+      - Great for development and small deployments
+      - Self-contained file database
+    </Card>
+
+    <Card title="Supabase" icon="document">
+      **@elizaos/adapter-supabase**
+      - Cloud-native solution
+      - Managed database service
+    </Card>
+</CardGrid>
+
+## Server Requirements
+
+- Node.js 18 or higher
+- pnpm 9.x (recommended)
+- Database system based on chosen adapter
+- Persistent storage for database files (if using SQLite)
+
+## Production Setup
+
+<Steps>
+1. Install required packages:
+    
+      pnpm add pm2 @elizaos/adapter-postgres
+    
+
+2. Create a PM2 ecosystem file (`ecosystem.config.js`):
+    ```typescript
+      module.exports = {
+        apps: [{
+          name: 'brain-agent',
+          script: './dist/index.js',
+          instances: 1,
+          autorestart: true,
+          watch: false,
+          max_memory_restart: '1G',
+          env: {
+            NODE_ENV: 'production',
+            DATABASE_URL: 'postgresql://user:pass@localhost:5432/db'
+          }
+        }]
+      }
+      ```
+    
+
+3. Configure your database adapter:
+    ```typescript
+      import { AgentBuilder } from "@iqai/agent";
+      import { PostgresDatabaseAdapter } from "@elizaos/adapter-postgres";
+
+      const agent = new AgentBuilder()
+        .withDatabase(new PostgresDatabaseAdapter({
+          connectionString: process.env.DATABASE_URL
+        }))
+        .build();
+    ```
+    
+
+4. Build and start:
+    ```bash
+      pnpm build
+      pm2 start ecosystem.config.js
+    ```
+</Steps>
+
+## Database-Specific Considerations
+<Tabs>
+    <TabItem label="PostgreSQL">
+        ```bash
+        # Required environment variables
+        DATABASE_URL=postgresql://user:pass@localhost:5432/db
+        ```
+    </TabItem>
+    <TabItem label="SQLite">
+        ```bash
+        # Set file location
+        DATABASE_PATH=./data/agent.db
+        ```
+    </TabItem>
+    <TabItem label="Supabase">
+        ```bash
+        # Required environment variables
+        SUPABASE_URL=your-project-url
+        SUPABASE_KEY=your-api-key
+        ```
+    </TabItem>
+</Tabs>
