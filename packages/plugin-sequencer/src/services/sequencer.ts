@@ -107,14 +107,7 @@ export class SequencerService {
 
 		return dedent`
 			🎬 Task Execution Summary
-
-			🎯 Initial Actions:
-			- ${actions.join("\n- ")}
-
-			📝 Detailed Steps:
 			${formattedSteps.join("\n\n").trim()}
-
-			✅ All steps completed successfully!
 		`;
 	}
 }
