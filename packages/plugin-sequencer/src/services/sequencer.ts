@@ -3,6 +3,8 @@ import { InputParserService } from "./input-parser";
 import { SEQUENCER_TEMPLATE } from "../lib/template";
 import dedent from "dedent";
 import type { Memory } from "@elizaos/core";
+import { stringToUuid } from "@elizaos/core";
+import type { Content } from "@elizaos/core";
 
 export const getSequencerAction = (): Action => {
 	return {
@@ -34,16 +36,39 @@ const handler: () => Handler =
 			action: actions[0],
 		});
 
+		const responses = [];
+
 		for (const actionName of actions) {
-			const newMemory: Memory = {
-				agentId: state.agentId,
-				roomId: state.roomId,
-				userId: state.userId,
-				content: {
-					text: `Run ${actionName}`,
-					action: actionName,
-				},
+			const content: Content = {
+				text: `Run ${actionName}`,
+				action: actionName,
 			};
-			await runtime.processActions(message, [newMemory], state, callback);
+			const userMessage = {
+				content,
+				userId: state.userId,
+				roomId: state.roomId,
+				agentId: runtime.agentId,
+			};
+
+			const memory: Memory = {
+				id: stringToUuid(`${message.id}-${actionName}`),
+				...userMessage,
+				createdAt: Date.now(),
+			};
+			await runtime.messageManager.addEmbeddingToMemory(memory);
+			await runtime.messageManager.createMemory(memory);
+			const response = await new Promise((resolve: any) => {
+				runtime.processActions(message, [memory], state, resolve);
+			});
+			responses.push(response);
 		}
+
+		await callback?.({
+			text: dedent`
+				📠 Sequence:
+
+				${responses.map((response) => response.text).join(`\n\n${"-".repeat(50)}\n\n`)}
+			`,
+			action: responses[0].action,
+		});
 	};
