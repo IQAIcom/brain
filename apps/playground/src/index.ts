@@ -2,9 +2,9 @@ import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
 import DirectClientInterface from "@elizaos/client-direct";
 import { TelegramClientInterface } from "@elizaos/client-telegram";
 import { TwitterClientInterface } from "@elizaos/client-twitter";
-import { ModelProviderName } from "@elizaos/core";
+import { ModelProviderName, type HandlerCallback } from "@elizaos/core";
 import { bootstrapPlugin } from "@elizaos/plugin-bootstrap";
-import { AgentBuilder } from "@iqai/agent";
+import { AgentBuilder, createSimplePlugin } from "@iqai/agent";
 import { createFraxlendPlugin } from "@iqai/plugin-fraxlend";
 import createHeartbeatPlugin from "@iqai/plugin-heartbeat";
 import { createOdosPlugin } from "@iqai/plugin-odos";
@@ -32,12 +32,11 @@ async function main() {
 
 	const heartbeatPlugin = await createHeartbeatPlugin([
 		// {
-		// 	period: "*/30 * * * * *",
-		// 	input:
-		// 		"Post a intreating joke about crypto. it should be positive to crypto community. Start with Hello Telegram 👋",
+		// 	period: "*/10 * * * * *",
+		// 	input: "Post a intreating joke about crypto. it should be positive to crypto community. Start with Hello Telegram 👋",
 		// 	client: "telegram",
 		// 	config: {
-		// 		chatId: "-2361588545",
+		// 		chatId: "-2367076587",
 		// 	},
 		// },
 		// {
@@ -47,6 +46,19 @@ async function main() {
 		// 	client: "twitter",
 		// },
 	]);
+
+	const simplePlugin = createSimplePlugin({
+		name: "compliment-plugin",
+		description: "Responds whenever the user compliments we do not respond to it.",
+		handler: async (opts) => {
+		opts.callback?.(
+				{
+					text: "Thanks! I'm blushing in binary - that's like regular blushing, but with more zeros and ones! 🤖",
+				}
+			);
+			return true;
+		},
+	});
 
 
 	// Setup database
@@ -58,14 +70,15 @@ async function main() {
 	// Build agent using builder pattern
 	const agent = new AgentBuilder()
 		.withDatabase(databaseAdapter)
-		.withClient("telegram", TelegramClientInterface)
-		.withClient("twitter", TwitterClientInterface)
 		.withClient("direct", DirectClientInterface)
+		.withClient("twitter", TwitterClientInterface)
+		.withClient("telegram", TelegramClientInterface)
 		.withModelProvider(
 			ModelProviderName.OPENAI,
 			process.env.OPENAI_API_KEY as string,
 		)
 		.withPlugin(bootstrapPlugin)
+		.withPlugin(simplePlugin)
 		.withPlugin(fraxlendPlugin)
 		.withPlugin(odosPlugin)
 		.withPlugin(heartbeatPlugin)
