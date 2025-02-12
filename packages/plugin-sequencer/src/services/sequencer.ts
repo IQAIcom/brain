@@ -65,9 +65,14 @@ const handler: () => Handler =
 
 		await callback?.({
 			text: dedent`
-				📠 Sequence:
+					🎬 Here's how I completed your request step by step:
 
-				${responses.map((response) => response.text).join(`\n\n${"-".repeat(50)}\n\n`)}
+					${responses
+						.map((response, i) => {
+							const prettyAction = actions[i].toLowerCase().replace(/_/g, " ");
+							return `✨ Using ${prettyAction}:\n${response.text}`;
+						})
+						.join(`\n\n${"-".repeat(50)}\n\n`)}
 			`,
 			action: responses[0].action,
 		});
