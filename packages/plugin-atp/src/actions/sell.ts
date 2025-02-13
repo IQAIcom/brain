@@ -4,10 +4,8 @@ import { SwapService } from "../services/swap";
 import { WalletService } from "../services/wallet";
 import type { ATPActionParams } from "../types";
 import { SELL_AGENT_TEMPLATE } from "../lib/templates";
-import { formatWeiToNumber } from "../lib/format-number";
 import { elizaLogger } from "@elizaos/core";
 import dedent from "dedent";
-import { formatEther } from "viem";
 
 export const getSellAction = (opts: ATPActionParams): Action => {
   return {
