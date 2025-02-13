@@ -66,6 +66,20 @@ export default function Page({ agentId }: { agentId: UUID }) {
 		scrollToBottom();
 	}, []);
 
+const handleStreamLogs = () => {
+		const eventSource = apiClient.streamLogs(agentId);
+		
+		eventSource.onmessage = (event) => {
+			const response = JSON.parse(event.data);
+			console.log("logged stream", response);
+		};
+	
+		eventSource.onerror = () => {
+			console.log("stream")
+			eventSource.close();
+		};
+	};
+
 	const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
 		if (e.key === "Enter" && !e.shiftKey) {
 			e.preventDefault();
@@ -108,6 +122,8 @@ export default function Page({ agentId }: { agentId: UUID }) {
 			(old: ContentWithUser[] = []) => [...old, ...newMessages],
 		);
 
+		handleStreamLogs()
+
 		sendMessageMutation.mutate({
 			message: input,
 			selectedFile: selectedFile ? selectedFile : null,
@@ -117,6 +133,9 @@ export default function Page({ agentId }: { agentId: UUID }) {
 		setInput("");
 		formRef.current?.reset();
 	};
+
+
+	
 
 	useEffect(() => {
 		if (inputRef.current) {
