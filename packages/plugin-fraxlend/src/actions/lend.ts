@@ -35,6 +35,11 @@ const handler: (opts: FraxLendActionParams) => Handler =
 			template: LEND_TEMPLATE,
 		});
 
+		console.log("ℹ️ Executing Lend Action with params:", {
+			pairAddress,
+			amount,
+		});
+
 		try {
 			const walletService = new WalletService(
 				opts.walletPrivateKey,

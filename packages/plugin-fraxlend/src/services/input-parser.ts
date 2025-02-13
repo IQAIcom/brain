@@ -15,6 +15,8 @@ export class InputParserService {
 			template,
 		});
 
+		console.log("ℹ️ Current State:", context);
+
 		const content = await generateMessageResponse({
 			runtime,
 			context,
