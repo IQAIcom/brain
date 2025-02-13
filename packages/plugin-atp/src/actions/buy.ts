@@ -7,6 +7,7 @@ import { BUY_AGENT_TEMPLATE } from "../lib/templates";
 import { formatWeiToNumber } from "../lib/format-number";
 import { elizaLogger } from "@elizaos/core";
 import dedent from "dedent";
+import { formatEther } from "viem";
 
 export const getBuyAction = (opts: ATPActionParams): Action => {
   return {
@@ -59,14 +60,14 @@ const handler: (opts: ATPActionParams) => Handler =
       const walletService = new WalletService(opts.walletPrivateKey);
       const swapService = new SwapService(walletService);
 
-      const result = await swapService.buy({ tokenContract, amount: BigInt(amount) });
+      const result = await swapService.buy({ tokenContract, amount });
       elizaLogger.info('📝 Transaction result', { result });
 
       callback?.({
         text: dedent`
           ✅ Buy Transaction Successful
 
-          💰 Amount: ${formatWeiToNumber(amount)} IQ
+          💰 Amount: ${amount} IQ
           🤖 Agent: ${tokenContract}
           🔗 Transaction: ${result.txHash}
 
