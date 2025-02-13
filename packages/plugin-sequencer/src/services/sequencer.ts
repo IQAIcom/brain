@@ -10,7 +10,6 @@ import {
 	generateText,
 	stringToUuid,
 } from "@elizaos/core";
-import dedent from "dedent";
 import { z } from "zod";
 
 export class SequencerService {
@@ -65,40 +64,20 @@ export class SequencerService {
 		const { text } = (await new Promise((resolve) =>
 			handler(this.runtime, this.memory, this.state, null, resolve as any),
 		)) as Content;
-		console.log(`✨ Handler ${name} completed`);
 		this.createActionMemory(text);
 		return text;
 	}
 
-	private async createActionMemory(text: string): Promise<Memory> {
-		const content: Content = {
-			text: text,
-		};
-
-		const memory: Memory = {
+	private async createActionMemory(text: string) {
+		this.runtime.messageManager.createMemory({
 			id: stringToUuid(`${this.memory.id}-${text}`),
-			content,
+			content: {
+				text: text,
+			},
 			userId: this.state.userId,
 			roomId: this.state.roomId,
 			agentId: this.runtime.agentId,
 			createdAt: Date.now(),
-		};
-
-		// Save the memory
-		await this.runtime.messageManager.createMemory(memory);
-
-		// Update recentMessages in state
-		const recentMessages = [...(this.state.recentMessagesData || []), memory];
-		this.state.recentMessagesData = recentMessages;
-		this.state.recentMessages = this.formatMessages(recentMessages);
-
-		console.log("RESENT MESSAGES: ", this.state.resentMessages);
-
-		return memory;
-	}
-
-	private formatMessages(messages: Memory[]): string {
-		// Format messages as needed
-		return messages.map((msg) => `Assistant: ${msg.content.text}`).join("\n");
+		});
 	}
 }
