@@ -1,4 +1,4 @@
-import { type Address, erc20Abi } from "viem";
+import { type Address, erc20Abi  } from "viem";
 import type { WalletService } from "./wallet";
 import { ROUTER_ABI } from "../lib/router.abi";
 import { AGENT_ROUTER_ADDRESS, BASE_TOKEN_ADDRESS } from "../constants";
@@ -15,16 +15,17 @@ export class SwapService {
     this.baseTokenAddress = BASE_TOKEN_ADDRESS as Address;
   }
 
-  async buy({ tokenContract, amount }: { tokenContract: Address; amount: bigint }) {
+  async buy({ tokenContract, amount }: { tokenContract: Address; amount: string }) {
     const walletClient = this.walletService.getWalletClient();
     const publicClient = this.walletService.getPublicClient();
+    const amountInWei = BigInt(Number(amount) * 1e18);
 
     // Approve base token
     const approveTx = await walletClient.writeContract({
       address: this.baseTokenAddress,
       abi: erc20Abi,
       functionName: 'approve',
-      args: [this.routerAddress, amount],
+      args: [this.routerAddress, amountInWei],
 			chain: fraxtal,
 			account: walletClient.account,
     });
@@ -35,7 +36,7 @@ export class SwapService {
       address: this.routerAddress,
       abi: ROUTER_ABI,
       functionName: 'buy',
-      args: [tokenContract, amount, 0n],
+      args: [tokenContract, amountInWei, 0n],
 			chain: fraxtal,
 			account: walletClient.account,
     });
@@ -44,16 +45,16 @@ export class SwapService {
     return { txHash: buyTx };
   }
 
-  async sell({ tokenContract, amount }: { tokenContract: Address; amount: bigint }) {
+  async sell({ tokenContract, amount }: { tokenContract: Address; amount: string }) {
     const walletClient = this.walletService.getWalletClient();
     const publicClient = this.walletService.getPublicClient();
-
+    const amountInWei = BigInt(Number(amount) * 1e18); ;
     // Approve agent token
     const approveTx = await walletClient.writeContract({
       address: tokenContract,
       abi: erc20Abi,
       functionName: 'approve',
-      args: [this.routerAddress, amount],
+      args: [this.routerAddress, amountInWei],
 			chain: fraxtal,
 			account: walletClient.account,
     });
@@ -64,7 +65,7 @@ export class SwapService {
       address: this.routerAddress,
       abi: ROUTER_ABI,
       functionName: 'sell',
-      args: [tokenContract, amount,0n],
+      args: [tokenContract, amountInWei,0n],
 			chain: fraxtal,
 			account: walletClient.account,
     });

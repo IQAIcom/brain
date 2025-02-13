@@ -31,20 +31,20 @@ For token contract: First try to find it in recent messages (holdings, stats), i
 
 The response must include:
 - tokenContract: The token contract address
-- amount: The amount to purchase in base tokens
+- amount: The amount to purchase in base tokens (in ether values)
 - error: An error message if a valid tokenContract or amount cannot be determined (optional)
 
 Example response:
 \`\`\`json
 {
     "tokenContract": "0x1234567890123456789012345678901234567890",
-    "amount": "1000000000000000000",
+    "amount": "50000",
 }
 \`\`\`
 \`\`\`json
 {
     "tokenContract": "",
-    "amount": "1000000000000000000",
+    "amount": "10000",
     "error" : "No token contract found in context"
 }
 \`\`\`
@@ -67,20 +67,20 @@ For token contract: First try to find it in recent messages (holdings, stats), i
 
 The response must include:
 - tokenContract: The agent's token contract address
-- amount: The amount of base tokens to sell
+- amount: The amount of base tokens to sell (in ether values)
 - error: An error message if a valid tokenContract or amount cannot be determined (optional)
 
 Example response:
 \`\`\`json
 {
     "tokenContract": "0x1234567890123456789012345678901234567890",
-    "amount": "1000000000000000000",
+    "amount": "50000",
 }
 \`\`\`
 \`\`\`json
 {
     "tokenContract": "",
-    "amount": "1000000000000000000",
+    "amount": "100000",
     "error" : "No token contract found in context"
 }
 \`\`\`
