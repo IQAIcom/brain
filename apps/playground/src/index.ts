@@ -3,18 +3,16 @@ import DirectClientInterface from "@elizaos/client-direct";
 import { TelegramClientInterface } from "@elizaos/client-telegram";
 import { TwitterClientInterface } from "@elizaos/client-twitter";
 import { ModelProviderName } from "@elizaos/core";
-import { bootstrapPlugin } from "@elizaos/plugin-bootstrap";
 import { AgentBuilder } from "@iqai/agent";
+import { createATPPlugin } from "@iqai/plugin-atp";
 import { createFraxlendPlugin } from "@iqai/plugin-fraxlend";
 import createHeartbeatPlugin from "@iqai/plugin-heartbeat";
 import { createOdosPlugin } from "@iqai/plugin-odos";
-import { createATPPlugin } from "@iqai/plugin-atp";
+import createSequencerPlugin from "@iqai/plugin-sequencer";
 import Database from "better-sqlite3";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { fraxtal } from "viem/chains";
-import createSequencerPlugin from "@iqai/plugin-sequencer";
-
 async function main() {
 	// Initialize plugins
 	const fraxlendPlugin = await createFraxlendPlugin({
@@ -32,24 +30,17 @@ async function main() {
 	});
 
 	const heartbeatPlugin = await createHeartbeatPlugin([
-		// {
-		// 	period: "*/30 * * * * *",
-		// 	input:
-		// 		"Post a intreating joke about crypto. it should be positive to crypto community. Start with Hello Telegram 👋",
-		// 	client: "telegram",
-		// 	config: {
-		// 		chatId: "-2361588545",
-		// 	},
-		// },
-		// {
-		// 	period: "*/30 * * * * *",
-		// 	input:
-		// 		"Post a intreating joke about crypto. it should be positive to crypto community. Start with Hey Twitter 👋",
-		// 	client: "twitter",
-		// },
+		{
+			period: "0 0 1 1 */100 *",
+			input:
+				"Post a intreating joke about crypto. it should be positive to crypto community. Start with Hey Twitter 👋",
+			client: "twitter",
+		},
 	]);
 
-	const sequencerPlugin = await createSequencerPlugin();
+	const sequencerPlugin = await createSequencerPlugin({
+		plugins: [fraxlendPlugin, odosPlugin, atpPlugin, heartbeatPlugin],
+	});
 
 	// Setup database
 	const dataDir = path.join(process.cwd(), "./data");
@@ -67,11 +58,6 @@ async function main() {
 			ModelProviderName.OPENAI,
 			process.env.OPENAI_API_KEY as string,
 		)
-		.withPlugin(bootstrapPlugin)
-		.withPlugin(fraxlendPlugin)
-		.withPlugin(odosPlugin)
-		.withPlugin(heartbeatPlugin)
-		.withPlugin(atpPlugin)
 		.withPlugin(sequencerPlugin)
 		.withCharacter({
 			name: "BrainBot",

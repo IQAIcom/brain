@@ -1,112 +1,71 @@
-import type {
-	Content,
-	HandlerCallback,
-	IAgentRuntime,
-	Memory,
-	State,
+import {
+	composeContext,
+	generateText,
+	type Handler,
+	ModelClass,
+	type Plugin,
+	type HandlerCallback,
+	type IAgentRuntime,
+	type Memory,
+	type State,
+	elizaLogger,
 } from "@elizaos/core";
-import { stringToUuid } from "@elizaos/core";
-import dedent from "dedent";
-import { SEQUENCER_TEMPLATE } from "../lib/template";
-import { InputParserService } from "./input-parser";
+import { CONTEXT_MESSAGE } from "../lib/template";
+import { z } from "zod";
 
 export class SequencerService {
 	private runtime: IAgentRuntime;
-	private message: Memory;
+	private memory: Memory;
 	private state: State;
 	private callback: HandlerCallback;
+	private plugins: Plugin[];
 
 	constructor(
 		runtime: IAgentRuntime,
 		message: Memory,
 		state: State,
 		callback: HandlerCallback,
+		plugins: Plugin[],
 	) {
 		this.runtime = runtime;
-		this.message = message;
+		this.memory = message;
 		this.state = state;
 		this.callback = callback;
+		this.plugins = plugins;
 	}
 
 	async execute() {
-		const inputParser = new InputParserService();
-		const { actions } = (await inputParser.parseInputs({
+		const actions = this.plugins.flatMap((p) => p.actions).filter(Boolean);
+		console.log(`ℹ️ All Actions names: ${actions.map((a) => a?.name)}`);
+
+		const output = await generateText({
 			runtime: this.runtime,
-			message: this.message,
-			state: this.state,
-			template: SEQUENCER_TEMPLATE,
-		})) as { actions: string[] };
-
-		const responses = await this.processActions(actions);
-
-		await this.callback?.({
-			text: this.formatResponses(actions, responses),
+			modelClass: ModelClass.LARGE,
+			context: this.memory.content.text,
+			maxSteps: 4,
+			tools: Object.fromEntries(
+				actions.map((a) => [
+					a.name,
+					{
+						parameters: z.object({}),
+						description: a.description,
+						execute: () => this.handlerWrapper(a.name, a.handler),
+					},
+				]),
+			),
 		});
 
-		return true;
-	}
-	private async processActions(actions: string[]) {
-		const responses = [];
-
-		for (const actionName of actions) {
-			const actionMemory = await this.createActionMemory(actionName);
-
-			if (responses.length > 0) {
-				actionMemory.content.text = `User request: ${this.message.content.text}\n\nPool statistics:\n${responses[responses.length - 1].text}\n\nNow ${actionMemory.content.text}`;
-			} else {
-				actionMemory.content.text = `${this.message.content.text}\n\n${actionMemory.content.text}`;
-			}
-
-			const response = await new Promise((resolve) => {
-				this.runtime.processActions(
-					actionMemory,
-					[actionMemory],
-					this.state,
-					resolve as HandlerCallback,
-				);
-			});
-
-			responses.push(response);
-		}
-
-		return responses;
+		this.callback({
+			text: output,
+		});
 	}
 
-	private async createActionMemory(actionName: string): Promise<Memory> {
-		const content: Content = {
-			text: `Run ${actionName}`,
-			action: actionName,
-		};
-
-		const memory: Memory = {
-			id: stringToUuid(`${this.message.id}-${actionName}`),
-			content,
-			userId: this.state.userId,
-			roomId: this.state.roomId,
-			agentId: this.runtime.agentId,
-			createdAt: Date.now(),
-		};
-
-		await this.runtime.messageManager.addEmbeddingToMemory(memory);
-		await this.runtime.messageManager.createMemory(memory);
-
-		return memory;
-	}
-
-	private formatResponses(actions: string[], responses: Content[]) {
-		const formattedSteps = responses.map(
-			(response, i) => dedent`
-        ‎
-        ═══════════════════════════
-        ✨ Using ${actions[i].toLowerCase().replace(/_/g, " ")}
-        ═══════════════════════════
-
-        ${response.text}`,
-		);
-
-		return dedent`
-      🎬 Task Execution Summary
-      ${formattedSteps.join("\n\n").trim()}
-    `;
+	private async handlerWrapper(name: string, handler: Handler) {
+		console.log(`ℹ️ Executing handler: ${name}`);
+		const data = (await new Promise((resolve) =>
+			handler(this.runtime, this.memory, this.state, null, resolve as any),
+		)) as Memory;
+		console.log(`✅ Handler executed: ${name}`);
+		this.memory.content.text = this.memory.content.text + data.content.text;
 	}
 }

@@ -7,7 +7,8 @@
 	"dependencies": {
 		"@elizaos/core": "0.1.9",
 		"dedent": "^1.5.3",
-		"tsup": "8.3.6"
+		"tsup": "8.3.6",
+		"zod": "^3.24.2"
 	},
 	"scripts": {
 		"build": "tsup --format esm",
@@ -15,7 +16,7 @@
 	},
 	"devDependencies": {
 		"@0no-co/graphqlsp": "^1.8.0",
-		"@types/node-cron": "^3.0.11",
-		"@iqai/tsconfig": "workspace:*"
+		"@iqai/tsconfig": "workspace:*",
+		"@types/node-cron": "^3.0.11"
 	}
 }
