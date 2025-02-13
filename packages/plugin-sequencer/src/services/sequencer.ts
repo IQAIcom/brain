@@ -45,20 +45,27 @@ export class SequencerService {
 
 		return true;
 	}
-
 	private async processActions(actions: string[]) {
 		const responses = [];
 
 		for (const actionName of actions) {
-			const memory = await this.createActionMemory(actionName);
+			const actionMemory = await this.createActionMemory(actionName);
+
+			if (responses.length > 0) {
+				actionMemory.content.text = `User request: ${this.message.content.text}\n\nPool statistics:\n${responses[responses.length - 1].text}\n\nNow ${actionMemory.content.text}`;
+			} else {
+				actionMemory.content.text = `${this.message.content.text}\n\n${actionMemory.content.text}`;
+			}
+
 			const response = await new Promise((resolve) => {
 				this.runtime.processActions(
-					this.message,
-					[memory],
+					actionMemory,
+					[actionMemory],
 					this.state,
 					resolve as HandlerCallback,
 				);
 			});
+
 			responses.push(response);
 		}
 
@@ -89,17 +96,17 @@ export class SequencerService {
 	private formatResponses(actions: string[], responses: Content[]) {
 		const formattedSteps = responses.map(
 			(response, i) => dedent`
-				‎
-				═══════════════════════════
-				✨ Using ${actions[i].toLowerCase().replace(/_/g, " ")}
-				═══════════════════════════
+        ‎
+        ═══════════════════════════
+        ✨ Using ${actions[i].toLowerCase().replace(/_/g, " ")}
+        ═══════════════════════════
 
-				${response.text}`,
+        ${response.text}`,
 		);
 
 		return dedent`
-			🎬 Task Execution Summary
-			${formattedSteps.join("\n\n").trim()}
-		`;
+      🎬 Task Execution Summary
+      ${formattedSteps.join("\n\n").trim()}
+    `;
 	}
 }
