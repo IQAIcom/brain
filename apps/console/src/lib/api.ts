@@ -98,7 +98,7 @@ export const apiClient = {
 				Accept: "audio/mpeg",
 				"Transfer-Encoding": "chunked",
 			},
-		}),
+		}), 
 	whisper: async (agentId: string, audioBlob: Blob) => {
 		const formData = new FormData();
 		formData.append("file", audioBlob, "recording.wav");
@@ -108,4 +108,8 @@ export const apiClient = {
 			body: formData,
 		});
 	},
+	streamLogs: (agentId: string) => {
+    const eventSource = new EventSource(`${BASE_URL}/${agentId}/stream`);
+    return eventSource;
+  },
 };
