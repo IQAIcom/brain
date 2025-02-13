@@ -1,8 +1,17 @@
-import type { Handler, HandlerCallback, IAgentRuntime, Memory, Plugin, State } from "@elizaos/core";
+import type { ActionExample, Handler, HandlerCallback, IAgentRuntime, Memory, Plugin, State, Validator } from "@elizaos/core";
 
 export interface SimplePluginOptions {
   name: string;
   description: string;
+  actions: SimpleAction[];
+}
+
+export interface SimpleAction {
+  name: string;
+  description?: string;
+  similes?: string[];
+  examples?: ActionExample[][];
+  validate?: Validator;
   handler: SimpleHandler;
 }
 
@@ -19,34 +28,34 @@ export interface HandlerOptions {
 }
 
 export const createSimplePlugin = (options: SimplePluginOptions): Plugin => {
-  const handlerWrapper: Handler = (
-    runtime: IAgentRuntime,
-    message: Memory,
-    state?: State,
-    handlerOptions?: { [key: string]: unknown },
-    callback?: HandlerCallback
-  ) => {
-    return options.handler({
-      runtime,
-      message,
-      state: state ,
-      options: handlerOptions,
-      callback
-    });
+  const createHandlerWrapper = (handler: SimpleHandler): Handler => {
+    return (
+      runtime: IAgentRuntime,
+      message: Memory,
+      state?: State,
+      handlerOptions?: { [key: string]: unknown },
+      callback?: HandlerCallback
+    ) => {
+      return handler({
+        runtime,
+        message,
+        state: state,
+        options: handlerOptions,
+        callback
+      });
+    };
   };
 
   return {
     name: options.name,
     description: options.description,
-    actions: [
-      {
-        name: `EXECUTE_${options.name}`,
-        description: options.description,
-        handler: handlerWrapper,
-        similes: [],
-        examples: [],
-        validate: async () => true
-      }
-    ]
+    actions: options.actions.map(action => ({
+      name: action.name,
+      description: action.description || '',
+      handler: createHandlerWrapper(action.handler),
+      similes: action.similes || [],
+      examples: action.examples || [],
+      validate: action.validate || (async () => true)
+    }))
   };
 };

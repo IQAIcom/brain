@@ -47,17 +47,37 @@ async function main() {
 		// },
 	]);
 
-	const simplePlugin = createSimplePlugin({
-		name: "compliment-plugin",
-		description: "Responds whenever the user compliments.",
-		handler: async (opts) => {
-		opts.callback?.(
-				{
-					text: "Thanks! I'm blushing in binary - that's like regular blushing, but with more zeros and ones! 🤖",
+	const timePlugin = createSimplePlugin({
+		name: "time-plugin",
+		description: "Provides current time and timezone information",
+		actions: [
+			{
+				name: "tell time",
+				description: "Returns the current time in different formats",
+				handler: async (opts) => {
+					const now = new Date();
+					const localTime = now.toLocaleTimeString();
+					const utcTime = now.toUTCString();
+
+					opts.callback?.({
+						text: `🕒 Current time:\nLocal: ${localTime}\nUTC: ${utcTime}`
+					});
+					return true;
 				}
-			);
-			return true;
-		},
+			},
+			{
+				name: "timezone",
+				description: "Returns the current timezone information",
+				handler: async (opts) => {
+					const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+					opts.callback?.({
+						text: `🌍 Your timezone is: ${timezone}`
+					});
+					return true;
+				}
+			}
+		]
 	});
 
 
@@ -78,7 +98,7 @@ async function main() {
 			process.env.OPENAI_API_KEY as string,
 		)
 		.withPlugin(bootstrapPlugin)
-		.withPlugin(simplePlugin)
+		.withPlugin(timePlugin)
 		.withPlugin(fraxlendPlugin)
 		.withPlugin(odosPlugin)
 		.withPlugin(heartbeatPlugin)
