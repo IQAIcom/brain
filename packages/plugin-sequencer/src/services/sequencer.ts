@@ -1,16 +1,15 @@
 import {
-	composeContext,
-	generateText,
+	type Content,
 	type Handler,
-	ModelClass,
-	type Plugin,
 	type HandlerCallback,
 	type IAgentRuntime,
 	type Memory,
+	ModelClass,
+	type Plugin,
 	type State,
-	elizaLogger,
+	generateText,
 } from "@elizaos/core";
-import { CONTEXT_MESSAGE } from "../lib/template";
+import dedent from "dedent";
 import { z } from "zod";
 
 export class SequencerService {
@@ -61,11 +60,17 @@ export class SequencerService {
 	}
 
 	private async handlerWrapper(name: string, handler: Handler) {
-		console.log(`ℹ️ Executing handler: ${name}`);
-		const data = (await new Promise((resolve) =>
+		console.log(`\n🔄 Executing handler: ${name}...`);
+		const { text } = (await new Promise((resolve) =>
 			handler(this.runtime, this.memory, this.state, null, resolve as any),
-		)) as Memory;
-		console.log(`✅ Handler executed: ${name}`);
-		this.memory.content.text = this.memory.content.text + data.content.text;
+		)) as Content;
+		console.log(`✨ Handler ${name} completed successfully`);
+		console.log(`📝 Output: ${text}\n`);
+		this.memory.content.text = dedent`
+			${this.memory.content.text}
+			## Response from ${name}:
+			${text}
+		`;
+		return text;
 	}
 }
