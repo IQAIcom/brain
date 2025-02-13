@@ -92,11 +92,13 @@ export class SequencerService {
 		this.state.recentMessagesData = recentMessages;
 		this.state.recentMessages = this.formatMessages(recentMessages);
 
+		console.log("RESENT MESSAGES: ", this.state.resentMessages);
+
 		return memory;
 	}
 
 	private formatMessages(messages: Memory[]): string {
 		// Format messages as needed
-		return messages.map((msg) => `User: ${msg.content.text}`).join("\n");
+		return messages.map((msg) => `Assistant: ${msg.content.text}`).join("\n");
 	}
 }
