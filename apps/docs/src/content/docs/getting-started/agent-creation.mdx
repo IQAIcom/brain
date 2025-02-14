@@ -1,0 +1,125 @@
+---
+title: Agent Creation
+description: In-depth guide to creating and configuring Brain Framework agents
+---
+
+import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+
+## Overview
+
+Brain Framework uses a builder pattern for creating agents, allowing flexible configuration of databases, clients, model providers, plugins and character settings.
+
+## Database Configuration
+
+The database adapter provides persistence for the agent. Available options:
+
+```typescript
+// SQLite
+import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
+import Database from "better-sqlite3";
+
+const sqliteAdapter = new SqliteDatabaseAdapter(
+  new Database("./data/db.sqlite")
+);
+
+// PostgreSQL
+import { PostgresDatabaseAdapter } from "@elizaos/adapter-postgres";
+
+const postgresAdapter = new PostgresDatabaseAdapter({
+  connectionString: "postgresql://user:pass@localhost:5432/db"
+});
+
+// Supabase
+import { SupabaseDatabaseAdapter } from "@elizaos/adapter-supabase";
+
+const supabaseAdapter = new SupabaseDatabaseAdapter({
+  url: process.env.SUPABASE_URL,
+  key: process.env.SUPABASE_KEY
+});
+```
+
+## Client Interfaces
+
+Client interfaces determine how your agent can communicate:
+
+```typescript
+// Available clients
+.withClient("direct", DirectClientInterface)    // Direct chat
+.withClient("telegram", TelegramClientInterface) // Telegram bot
+.withClient("twitter", TwitterClientInterface)   // Twitter bot
+```
+
+Each client may require specific environment variables:
+- Telegram: `TELEGRAM_BOT_TOKEN`
+- Twitter: `TWITTER_API_KEY`, `TWITTER_API_SECRET`, etc.
+
+## Model Provider
+
+Configure the AI model powering your agent:
+
+```typescript
+.withModelProvider(
+  ModelProviderName.OPENAI,  // Currently only OpenAI is supported
+  process.env.OPENAI_API_KEY
+)
+```
+
+## Character Configuration
+
+Define your agent's personality and behavior:
+
+```typescript
+.withCharacter({
+  name: "MyBot",        // Display name
+  bio: "Description",   // Bot's description/purpose
+  username: "mybot",    // Unique identifier
+  
+  // Example interactions
+  messageExamples: [
+    "Hello, how can I help?",
+    "Let me check that for you."
+  ],
+  
+  // Additional context/background
+  lore: [
+    "Created to help with customer service",
+    "Specializes in technical support"
+  ],
+  
+  // Response styling
+  style: {
+    all: ["Professional", "Helpful"],     // General style
+    chat: ["Conversational", "Friendly"], // Chat-specific style
+    post: ["Informative", "Clear"]        // Social media post style
+  }
+})
+```
+
+## Error Handling
+
+Implement proper error handling for production:
+
+```typescript
+async function main() {
+  try {
+    const agent = new AgentBuilder()
+      // ... configuration
+      .build();
+      
+    await agent.start();
+  } catch (error) {
+    console.error("Failed to start agent:", error);
+    process.exit(1);
+  }
+}
+
+main().catch(console.error);
+```
+
+<Aside type="tip">
+Remember to:
+- Configure proper database persistence
+- Set up all required environment variables
+- Handle errors appropriately
+- Monitor agent performance
+</Aside>
