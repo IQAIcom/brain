@@ -58,23 +58,23 @@ export class SequencerService {
 
 	private async handlerWrapper(name: string, handler: Handler) {
 		elizaLogger.info(`\n🔄 Executing handler: ${name}...`);
-		const { text } = (await new Promise((resolve) =>
-			handler(this.runtime, this.memory, this.state, null, resolve as any),
-		)) as Content;
-		await this.createActionMemory(text);
-		return text;
-	}
-
-	private async createActionMemory(text: string) {
+		const { text } = await new Promise<Content>((resolve) =>
+			handler(
+				this.runtime,
+				this.memory,
+				this.state,
+				null,
+				resolve as HandlerCallback,
+			),
+		);
 		await this.runtime.messageManager.createMemory({
 			id: stringToUuid(`${this.memory.id}-${text}`),
-			content: {
-				text: text,
-			},
-			userId: this.state.userId,
+			content: { text },
+			userId: this.memory.userId,
 			roomId: this.state.roomId,
 			agentId: this.runtime.agentId,
 			createdAt: Date.now(),
 		});
+		return text;
 	}
 }
