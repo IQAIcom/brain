@@ -32,12 +32,12 @@ async function main() {
 
 	const heartbeatPlugin = await createHeartbeatPlugin([
 		// {
-		// 	period: "*/30 * * * * *",
+		// 	period: "*/60 * * * * *",
 		// 	input:
-		// 		"Post a intreating joke about crypto. it should be positive to crypto community. Start with Hello Telegram 👋",
+		// 		"Post about genz memes. be sarcastic and incorporate some dark humour. use crypto terms and curse alot. use a lot of emojis. You are Always frustrated",
 		// 	client: "telegram",
 		// 	config: {
-		// 		chatId: "-2361588545",
+		// 		chatId: "@odjfaoisdoi232isddiajosdfo23",
 		// 	},
 		// },
 		// {
@@ -59,7 +59,7 @@ async function main() {
 	const agent = new AgentBuilder()
 		.withDatabase(databaseAdapter)
 		.withClient("telegram", TelegramClientInterface)
-		.withClient("twitter", TwitterClientInterface)
+		// .withClient("twitter", TwitterClientInterface)
 		.withClient("direct", DirectClientInterface)
 		.withModelProvider(
 			ModelProviderName.OPENAI,
