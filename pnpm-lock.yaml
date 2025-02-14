@@ -274,6 +274,9 @@ importers:
       dedent:
         specifier: ^1.5.3
         version: 1.5.3
+      zod:
+        specifier: ^3.24.2
+        version: 3.24.2
     devDependencies:
       '@iqai/tsconfig':
         specifier: workspace:*
@@ -4172,6 +4175,22 @@ packages:
       zod-to-json-schema: 3.24.1(zod@3.24.1)
     transitivePeerDependencies:
       - openai
+    dev: false
+
+  /@langchain/openai@0.3.17(@langchain/core@0.3.38):
+    resolution: {integrity: sha512-uw4po32OKptVjq+CYHrumgbfh4NuD7LqyE+ZgqY9I/LrLc6bHLMc+sisHmI17vgek0K/yqtarI0alPJbzrwyag==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@langchain/core': '>=0.3.29 <0.4.0'
+    dependencies:
+      '@langchain/core': 0.3.38
+      js-tiktoken: 1.0.18
+      openai: 4.83.0(zod@3.24.2)
+      zod: 3.24.2
+      zod-to-json-schema: 3.24.1(zod@3.24.2)
+    transitivePeerDependencies:
+      - encoding
+      - ws
     dev: false
 
   /@langchain/openai@0.3.17(@langchain/core@0.3.38)(ws@8.18.0):
@@ -12071,7 +12090,7 @@ packages:
         optional: true
     dependencies:
       '@langchain/core': 0.3.38
-      '@langchain/openai': 0.3.17(@langchain/core@0.3.38)(ws@8.18.0)
+      '@langchain/openai': 0.3.17(@langchain/core@0.3.38)
       '@langchain/textsplitters': 0.1.0(@langchain/core@0.3.38)
       handlebars: 4.7.8
       js-tiktoken: 1.0.18
@@ -12082,8 +12101,8 @@ packages:
       p-retry: 4.6.2
       uuid: 10.0.0
       yaml: 2.7.0
-      zod: 3.24.1
-      zod-to-json-schema: 3.24.1(zod@3.24.1)
+      zod: 3.24.2
+      zod-to-json-schema: 3.24.1(zod@3.24.2)
     transitivePeerDependencies:
       - encoding
       - openai
@@ -13591,6 +13610,30 @@ packages:
       node-fetch: 2.7.0
       ws: 8.18.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       zod: 3.24.1
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
+  /openai@4.83.0(zod@3.24.2):
+    resolution: {integrity: sha512-fmTsqud0uTtRKsPC7L8Lu55dkaTwYucqncDHzVvO64DKOpNTuiYwjbR/nVgpapXuYy8xSnhQQPUm+3jQaxICgw==}
+    hasBin: true
+    peerDependencies:
+      ws: ^8.18.0
+      zod: ^3.23.8
+    peerDependenciesMeta:
+      ws:
+        optional: true
+      zod:
+        optional: true
+    dependencies:
+      '@types/node': 18.19.75
+      '@types/node-fetch': 2.6.12
+      abort-controller: 3.0.0
+      agentkeepalive: 4.6.0
+      form-data-encoder: 1.7.2
+      formdata-node: 4.4.1
+      node-fetch: 2.7.0
+      zod: 3.24.2
     transitivePeerDependencies:
       - encoding
     dev: false
@@ -17365,6 +17408,14 @@ packages:
       zod: 3.24.1
     dev: false
 
+  /zod-to-json-schema@3.24.1(zod@3.24.2):
+    resolution: {integrity: sha512-3h08nf3Vw3Wl3PK+q3ow/lIil81IT2Oa7YpQyUUDsEWbXveMesdfK1xBd2RhCkynwZndAxixji/7SYJJowr62w==}
+    peerDependencies:
+      zod: ^3.24.1
+    dependencies:
+      zod: 3.24.2
+    dev: false
+
   /zod-to-ts@1.2.0(typescript@5.7.3)(zod@3.24.1):
     resolution: {integrity: sha512-x30XE43V+InwGpvTySRNz9kB7qFU8DlyEy7BsSTCHPH1R0QasMmHWZDCzYm6bVXtj/9NNJAZF3jW8rzFvH5OFA==}
     peerDependencies:
@@ -17381,6 +17432,10 @@ packages:
 
   /zod@3.24.1:
     resolution: {integrity: sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A==}
+    dev: false
+
+  /zod@3.24.2:
+    resolution: {integrity: sha512-lY7CDW43ECgW9u1TcT3IoXHflywfVqDYze4waEz812jR/bZ8FHDsl7pFQoSZTz5N+2NqRXs8GBwnAwo3ZNxqhQ==}
     dev: false
 
   /zwitch@2.0.4:

@@ -1,0 +1,169 @@
+---
+title: "Creating Plugins"
+description: "Learn how to create plugins for Brain Framework"
+---
+
+Brain Framework offers two approaches to creating plugins: **Simple Plugin Creation** and **Traditional Plugin Creation**. Both methods extend the framework's functionality efficiently.
+
+## Simple Plugin Creation
+
+For simpler use cases, Brain Framework provides a streamlined approach using `createSimplePlugin`.
+
+### Creating a Simple Plugin
+
+```ts
+import { createSimplePlugin } from "@iqai/agent";
+
+const yourPlugin = createSimplePlugin({
+  name: "your-plugin",
+  description: "Your plugin description",
+  actions: [
+    {
+      name: "action-name",
+      description: "Action description",
+      handler: async (opts) => {
+        try {
+          // Your action logic here
+          opts.callback?.({
+            text: "Action response"
+          });
+          return true;
+        } catch (error) {
+          console.error('Error in action handler:', error);
+          opts.callback?.({
+            text: "❌ Action error"
+          });
+          return false;
+        }
+      }
+    }
+  ]
+});
+```
+
+### Example: Time Plugin
+
+Here's a practical example of a simple plugin that provides time-related functionality:
+
+```ts
+const timePlugin = createSimplePlugin({
+  name: "time-plugin",
+  description: "Provides current time and timezone information",
+  actions: [
+    {
+      name: "TELL_TIME",
+      description: "Returns the current time in different formats",
+      handler: async (opts) => {
+        const now = new Date();
+        const localTime = now.toLocaleTimeString();
+        const utcTime = now.toUTCString();
+
+        opts.callback?.({
+          text: `🕒 Current time:\nLocal: ${localTime}\nUTC: ${utcTime}`
+        });
+        return true;
+      }
+    }
+  ]
+});
+```
+
+## Traditional Plugin Creation
+
+### Plugin Structure
+
+Plugins are organized under the `packages` directory with the following structure:
+
+```bash
+packages/
+  plugin-your-feature/
+    src/
+      __tests__/      # Test files
+      actions/        # Action definitions
+      services/       # Services for business logic
+      lib/           # Utility functions
+    index.ts         # Main plugin export
+    types.ts         # Type definitions
+    README.md        # Plugin documentation
+    package.json
+```
+
+### Creating a Traditional Plugin
+
+#### Create the main plugin file (`index.ts`):
+
+```ts
+export async function createYourPlugin(opts: YourPluginParams): Promise<Plugin> {
+  const actions = [
+    getActionOne(opts),
+    getActionTwo(opts),
+  ];
+
+  return {
+    name: "Your Plugin",
+    description: "Description of your plugin",
+    providers: [],
+    evaluators: [],
+    services: [],
+    actions,
+  };
+}
+
+export default createYourPlugin;
+```
+
+#### Define actions:
+
+```ts
+export const getYourAction = (opts: YourPluginParams): Action => {
+  return {
+    name: "YOUR_ACTION_NAME",
+    description: "What your action does",
+    similes: [
+      "ALTERNATIVE_COMMAND_1",
+      "ALTERNATIVE_COMMAND_2"
+    ],
+    validate: async () => true,
+    handler: handler(opts),
+    examples: [
+      {
+        user: "user",
+        content: { text: "EXAMPLE_COMMAND" },
+      }
+    ],
+  };
+};
+```
+
+## Best Practices
+
+- Use **kebab-case** for plugin names (e.g., `plugin-your-feature`)
+- Use **Upper kebab--case** for action names (e.g., `YOUR_ACTION_NAME`)
+- Implement proper error handling using `try-catch` blocks
+- Include comprehensive **documentation**
+- Add meaningful **tests** under `__tests__` directory
+- Use **descriptive names** for actions and functions
+- Keep **services separate** from actions
+- Include **examples** for each action
+
+## Plugin Integration
+
+To use your plugin, integrate it with the agent builder:
+
+```ts
+const agent = new AgentBuilder()
+  .withPlugin(yourPlugin)
+  // ... other configurations
+  .build();
+```
+
+## Required Elements
+
+| Requirement    | Description |
+|---------------|-------------|
+| **Tests** | Include tests under `__tests__` directory |
+| **Documentation** | Provide a detailed `README.md` |
+| **Error Handling** | Implement `try-catch` blocks in all actions |
+| **Types** | Define proper type definitions in `types.ts` |
+
+This documentation covers both approaches to creating plugins in Brain Framework, allowing you to choose the method that best suits your needs.
