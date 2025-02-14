@@ -1,15 +1,17 @@
-import type { WalletService } from "./wallet-service";
-import { BAMM_ADDRESSES, BAMM_ABI } from "../lib/constants";
+import type { WalletService } from "./wallet";
+import { BAMM_ADDRESSES } from "../constants";
+import { BAMM_FACTORY_ABI } from "../lib/bamm.abi";
+import { erc20Abi } from "viem";
 import type { Address } from "viem";
 
-export class LendService {
+export class RemoveCollateralService {
   private walletService: WalletService;
 
   constructor(walletService: WalletService) {
     this.walletService = walletService;
   }
 
-  async lend({
+  async execute({
     pairAddress,
     amount
   }: {
@@ -20,8 +22,14 @@ export class LendService {
     const walletClient = this.walletService.getWalletClient();
 
     // Implementation will include:
-    // 1. Check LP token balance
-    // 2. Approve BAMM contract
-    // 3. Execute lending transaction
+    // 1. Get BAMM instance
+    // 2. Check collateral balance
+    // 3. Verify solvency after removal
+    // 4. Execute withdrawal
+
+    return {
+      txHash: "0x",
+      amount
+    };
   }
 }

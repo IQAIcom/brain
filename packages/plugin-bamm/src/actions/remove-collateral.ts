@@ -1,30 +1,29 @@
 import type { Action } from "@elizaos/core";
 import { elizaLogger } from "@elizaos/core";
 import type { BAMMActionParams } from "../types";
-import { LendService } from "../services/lend";
+import { RemoveCollateralService } from "../services/remove-collateral";
 import { InputParserService } from "../services/input-parser";
 import dedent from "dedent";
 import { formatWeiToNumber } from "../lib/format-number";
-import { LEND_TEMPLATE } from "../lib/templates";
+import { REMOVE_COLLATERAL_TEMPLATE } from "../lib/templates";
 import { WalletService } from "../services/wallet";
 
-export const getLendAction = (opts: BAMMActionParams): Action => {
+export const getRemoveCollateralAction = (opts: BAMMActionParams): Action => {
   return {
-    name: "BAMM_LEND",
-    description: "Lend LP tokens to a BAMM pool",
+    name: "BAMM_REMOVE_COLLATERAL",
+    description: "Remove collateral from your BAMM position",
     similes: [
-      "LEND",
-      "PROVIDE_LIQUIDITY",
-      "DEPOSIT_LP",
-      "ADD_LIQUIDITY",
-      "SUPPLY_LP"
+      "REMOVE_COLLATERAL",
+      "WITHDRAW_COLLATERAL",
+      "DECREASE_COLLATERAL",
+      "PULL_COLLATERAL"
     ],
     validate: async () => true,
     handler: handler(opts),
     examples: [
       [{
         user: "user",
-        content: { text: "Lend 100 LP tokens to BAMM pool" }
+        content: { text: "Remove 50 ETH collateral from BAMM" }
       }]
     ]
   };
@@ -32,14 +31,14 @@ export const getLendAction = (opts: BAMMActionParams): Action => {
 
 const handler = (opts: BAMMActionParams) => {
   return async (runtime, message, state, _options, callback) => {
-    elizaLogger.info('Starting lending action');
+    elizaLogger.info('Starting remove collateral action');
     try {
       const inputParser = new InputParserService();
-      const { poolAddress, amount, error } = await inputParser.parseInputs({
+      const { pairAddress, amount, error } = await inputParser.parseInputs({
         runtime,
         message,
         state,
-        template: LEND_TEMPLATE,
+        template: REMOVE_COLLATERAL_TEMPLATE,
       });
 
       if (error) {
@@ -50,28 +49,28 @@ const handler = (opts: BAMMActionParams) => {
       }
 
       const walletService = new WalletService(opts.walletPrivateKey, opts.chain);
-      const lendService = new LendService(walletService);
+      const removeCollateralService = new RemoveCollateralService(walletService);
 
-      const result = await lendService.execute({
-        pairAddress: poolAddress,
+      const result = await removeCollateralService.execute({
+        pairAddress,
         amount: BigInt(amount)
       });
 
       callback?.({
         text: dedent`
-          ✅ Lending Transaction Successful
+          ✅ Collateral Removal Successful
 
-          💰 Amount: ${formatWeiToNumber(amount)} LP tokens
+          🔓 Amount: ${formatWeiToNumber(amount)} tokens
           🔗 Transaction: ${result.txHash}
 
-          LP tokens have been lent to the BAMM pool.
+          Collateral has been removed from your BAMM position.
         `,
       });
       return true;
     } catch (error) {
       callback?.({
         text: dedent`
-          ❌ Lending Transaction Failed
+          ❌ Collateral Removal Failed
 
           Error: ${error.message}
 

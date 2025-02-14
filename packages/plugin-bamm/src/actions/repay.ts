@@ -1,30 +1,30 @@
 import type { Action } from "@elizaos/core";
 import { elizaLogger } from "@elizaos/core";
 import type { BAMMActionParams } from "../types";
-import { LendService } from "../services/lend";
+import { RepayService } from "../services/repay";
 import { InputParserService } from "../services/input-parser";
 import dedent from "dedent";
 import { formatWeiToNumber } from "../lib/format-number";
-import { LEND_TEMPLATE } from "../lib/templates";
+import { REPAY_TEMPLATE } from "../lib/templates";
 import { WalletService } from "../services/wallet";
 
-export const getLendAction = (opts: BAMMActionParams): Action => {
+export const getRepayAction = (opts: BAMMActionParams): Action => {
   return {
-    name: "BAMM_LEND",
-    description: "Lend LP tokens to a BAMM pool",
+    name: "BAMM_REPAY",
+    description: "Repay borrowed assets to BAMM pool",
     similes: [
-      "LEND",
-      "PROVIDE_LIQUIDITY",
-      "DEPOSIT_LP",
-      "ADD_LIQUIDITY",
-      "SUPPLY_LP"
+      "REPAY",
+      "PAY_BACK",
+      "RETURN_LOAN",
+      "SETTLE_DEBT",
+      "CLEAR_LOAN"
     ],
     validate: async () => true,
     handler: handler(opts),
     examples: [
       [{
         user: "user",
-        content: { text: "Lend 100 LP tokens to BAMM pool" }
+        content: { text: "Repay 500 USDC to BAMM pool" }
       }]
     ]
   };
@@ -32,14 +32,14 @@ export const getLendAction = (opts: BAMMActionParams): Action => {
 
 const handler = (opts: BAMMActionParams) => {
   return async (runtime, message, state, _options, callback) => {
-    elizaLogger.info('Starting lending action');
+    elizaLogger.info('Starting repay action');
     try {
       const inputParser = new InputParserService();
-      const { poolAddress, amount, error } = await inputParser.parseInputs({
+      const { pairAddress, amount, error } = await inputParser.parseInputs({
         runtime,
         message,
         state,
-        template: LEND_TEMPLATE,
+        template: REPAY_TEMPLATE,
       });
 
       if (error) {
@@ -50,28 +50,28 @@ const handler = (opts: BAMMActionParams) => {
       }
 
       const walletService = new WalletService(opts.walletPrivateKey, opts.chain);
-      const lendService = new LendService(walletService);
+      const repayService = new RepayService(walletService);
 
-      const result = await lendService.execute({
-        pairAddress: poolAddress,
+      const result = await repayService.execute({
+        pairAddress,
         amount: BigInt(amount)
       });
 
       callback?.({
         text: dedent`
-          ✅ Lending Transaction Successful
+          ✅ Repayment Successful
 
-          💰 Amount: ${formatWeiToNumber(amount)} LP tokens
+          💰 Amount Repaid: ${formatWeiToNumber(amount)} tokens
           🔗 Transaction: ${result.txHash}
 
-          LP tokens have been lent to the BAMM pool.
+          Loan has been partially or fully repaid.
         `,
       });
       return true;
     } catch (error) {
       callback?.({
         text: dedent`
-          ❌ Lending Transaction Failed
+          ❌ Repayment Failed
 
           Error: ${error.message}
 
