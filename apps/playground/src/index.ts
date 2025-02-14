@@ -10,6 +10,7 @@ import Database from "better-sqlite3";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { fraxtal } from "viem/chains";
+
 async function main() {
 	// Initialize plugins
 	const fraxlendPlugin = await createFraxlendPlugin({
