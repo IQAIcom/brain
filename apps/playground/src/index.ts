@@ -52,7 +52,7 @@ async function main() {
 		description: "Provides current time and timezone information",
 		actions: [
 			{
-				name: "tell time",
+				name: "TELL_TIME",
 				description: "Returns the current time in different formats",
 				handler: async (opts) => {
 					const now = new Date();
