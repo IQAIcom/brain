@@ -2,9 +2,9 @@ import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
 import DirectClientInterface from "@elizaos/client-direct";
 import { TelegramClientInterface } from "@elizaos/client-telegram";
 import { TwitterClientInterface } from "@elizaos/client-twitter";
-import { ModelProviderName } from "@elizaos/core";
+import { ModelProviderName, type HandlerCallback } from "@elizaos/core";
 import { bootstrapPlugin } from "@elizaos/plugin-bootstrap";
-import { AgentBuilder } from "@iqai/agent";
+import { AgentBuilder, createSimplePlugin } from "@iqai/agent";
 import { createFraxlendPlugin } from "@iqai/plugin-fraxlend";
 import createHeartbeatPlugin from "@iqai/plugin-heartbeat";
 import { createOdosPlugin } from "@iqai/plugin-odos";
@@ -32,12 +32,11 @@ async function main() {
 
 	const heartbeatPlugin = await createHeartbeatPlugin([
 		// {
-		// 	period: "*/60 * * * * *",
-		// 	input:
-		// 		"Post about genz memes. be sarcastic and incorporate some dark humour. use crypto terms and curse alot. use a lot of emojis. You are Always frustrated",
+		// 	period: "*/10 * * * * *",
+		// 	input: "Post a intreating joke about crypto. it should be positive to crypto community. Start with Hello Telegram 👋",
 		// 	client: "telegram",
 		// 	config: {
-		// 		chatId: "@odjfaoisdoi232isddiajosdfo23",
+		// 		chatId: "-2367076587",
 		// 	},
 		// },
 		// {
@@ -47,6 +46,39 @@ async function main() {
 		// 	client: "twitter",
 		// },
 	]);
+
+	const timePlugin = createSimplePlugin({
+		name: "time-plugin",
+		description: "Provides current time and timezone information",
+		actions: [
+			{
+				name: "TELL_TIME",
+				description: "Returns the current time in different formats",
+				handler: async (opts) => {
+					const now = new Date();
+					const localTime = now.toLocaleTimeString();
+					const utcTime = now.toUTCString();
+
+					opts.callback?.({
+						text: `🕒 Current time:\nLocal: ${localTime}\nUTC: ${utcTime}`
+					});
+					return true;
+				}
+			},
+			{
+				name: "timezone",
+				description: "Returns the current timezone information",
+				handler: async (opts) => {
+					const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+					opts.callback?.({
+						text: `🌍 Your timezone is: ${timezone}`
+					});
+					return true;
+				}
+			}
+		]
+	});
 
 
 	// Setup database
@@ -58,14 +90,15 @@ async function main() {
 	// Build agent using builder pattern
 	const agent = new AgentBuilder()
 		.withDatabase(databaseAdapter)
-		.withClient("telegram", TelegramClientInterface)
-		// .withClient("twitter", TwitterClientInterface)
 		.withClient("direct", DirectClientInterface)
+		.withClient("twitter", TwitterClientInterface)
+		.withClient("telegram", TelegramClientInterface)
 		.withModelProvider(
 			ModelProviderName.OPENAI,
 			process.env.OPENAI_API_KEY as string,
 		)
 		.withPlugin(bootstrapPlugin)
+		.withPlugin(timePlugin)
 		.withPlugin(fraxlendPlugin)
 		.withPlugin(odosPlugin)
 		.withPlugin(heartbeatPlugin)
