@@ -4,7 +4,6 @@ import { SwapService } from "../services/swap";
 import { WalletService } from "../services/wallet";
 import type { ATPActionParams } from "../types";
 import { SELL_AGENT_TEMPLATE } from "../lib/templates";
-import { formatWeiToNumber } from "../lib/format-number";
 import { elizaLogger } from "@elizaos/core";
 import dedent from "dedent";
 
@@ -59,14 +58,14 @@ const handler: (opts: ATPActionParams) => Handler =
       const walletService = new WalletService(opts.walletPrivateKey);
       const swapService = new SwapService(walletService);
 
-      const result = await swapService.sell({ tokenContract, amount: BigInt(amount) });
+      const result = await swapService.sell({ tokenContract, amount });
       elizaLogger.info('📝 Transaction result', { result });
 
       callback?.({
         text: dedent`
           ✅ Sell Transaction Successful
 
-          💰 Amount: ${formatWeiToNumber(amount)} tokens
+          💰 Amount: ${amount} tokens
           🤖 Agent: ${tokenContract}
           🔗 Transaction: ${result.txHash}
 

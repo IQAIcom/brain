@@ -32,6 +32,7 @@ export default defineConfig({
             { label: 'overview', link: '/getting-started/overview' },
             { label: 'Quick Start', link: '/getting-started/quickstart' },
             { label: 'Agent Creation', link: '/getting-started/agent-creation' },
+            { label: 'Creating plugins', link: '/getting-started/creating-plugins' },
             { label: 'Test your agent', link: '/getting-started/test-agent' },
             {label: "Deploy your agent", link: "/getting-started/deployment"},
           ],
