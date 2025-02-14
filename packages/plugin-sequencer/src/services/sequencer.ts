@@ -38,7 +38,9 @@ export class SequencerService {
 			runtime: this.runtime,
 			modelClass: ModelClass.LARGE,
 			context: this.memory.content.text,
-			maxSteps: 4,
+			customSystemPrompt:
+				"You are a Sequencer. You will execute the following actions in order to achieve the goal. Never give up without completing the goal.",
+			maxSteps: 10,
 			tools: Object.fromEntries(
 				actions.map((a) => [
 					a.name,
