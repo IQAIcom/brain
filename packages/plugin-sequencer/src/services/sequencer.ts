@@ -5,7 +5,6 @@ import {
 	type IAgentRuntime,
 	type Memory,
 	ModelClass,
-	type Plugin,
 	type State,
 	elizaLogger,
 	generateText,
