@@ -5,10 +5,22 @@ import dedent from "dedent";
 export const getSequencerAction = (): Action => {
 	return {
 		name: "SEQUENCER",
-		similes: ["SEQUENCER"],
+		similes: [
+			"SEQUENCER",
+			"SEQUENCE",
+			"CHAIN",
+			"ORCHESTRATE",
+			"COORDINATE",
+			"MULTI_STEP",
+			"PIPELINE",
+		],
 		examples: [],
-		description:
-			"Evaluates the goal and determines if the query should be handled with multiple action calls",
+		description: dedent`
+			Select this action when the user's request requires multiple action calls
+			to be fully addressed. This handles complex queries by breaking them down
+			into a sequence of individual actions that work together to achieve the
+			desired result.
+		`,
 		validate: async () => true,
 		handler: handler(),
 	};
