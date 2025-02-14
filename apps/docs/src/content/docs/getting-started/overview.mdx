@@ -3,7 +3,7 @@ title: Overview
 description: Understanding Brain Framework's core concepts and architecture
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import { Card, CardGrid, Aside } from '@astrojs/starlight/components';
 
 ## Introduction
 
@@ -25,29 +25,10 @@ Brain Framework is a powerful toolkit for building AI agents that can interact w
   </Card>
 
   <Card title="Model Providers" icon="setting">
-    AI models that power the agent's understanding and responses (e.g., OpenAI).
+    AI models that power the agent's understanding and responses. With support for OpenAI, Claude, and more.
   </Card>
 </CardGrid>
 
-## Basic Architecture
-
-```typescript
-import { AgentBuilder } from '@iqai/agent';
-import DirectClientInterface from "@elizaos/client-direct";
-import { ModelProviderName } from "@elizaos/core";
-import { bootstrapPlugin } from "@elizaos/plugin-bootstrap";
-
-async function main() {
-  const agent = new AgentBuilder()
-    .withClient("direct", DirectClientInterface)     // Communication interface
-    .withModelProvider(                             // AI model configuration
-      ModelProviderName.OPENAI,
-      process.env.OPENAI_API_KEY
-    )
-    .withPlugin(bootstrapPlugin)                    // Core functionality
-    .build();
-
-  await agent.start();
-}
-
-main().catch(console.error);
+<Aside title="Futher Reading" type="tip">
+  For more under the hood details check out [ElizaOS](https://elizaos.github.io/eliza/docs/intro/)
+</Aside>
