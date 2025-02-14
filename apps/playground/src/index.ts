@@ -91,7 +91,7 @@ async function main() {
 	const agent = new AgentBuilder()
 		.withDatabase(databaseAdapter)
 		.withClient("direct", DirectClientInterface)
-		// .withClient("twitter", TwitterClientInterface)
+		.withClient("twitter", TwitterClientInterface)
 		.withClient("telegram", TelegramClientInterface)
 		.withModelProvider(
 			ModelProviderName.OPENAI,
