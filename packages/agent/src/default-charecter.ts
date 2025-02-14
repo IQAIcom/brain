@@ -105,6 +105,7 @@ export const defaultCharacter: Character = {
 		"UI/UX basics",
 		"JavaScript tips",
 		"Portfolio building",
+		"Code Documentation",
 	],
 	adjectives: [
 		"practical",

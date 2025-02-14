@@ -1,17 +1,18 @@
 {
 	"name": "brain",
-	"private": true,"scripts": {
-    "build": "turbo build --concurrency=11",
-    "dev": "turbo dev --concurrency=11",
-    "clean": "turbo clean --concurrency=11 && rm -rf node_modules",
-    "clean-modules": "echo '🧹 Cleaning all node_modules directories...' && find . -name 'node_modules' -type d -exec rm -rf {} + && echo '✨ All node_modules directories have been removed!'",
-    "clean-dist": "echo '🧹 Cleaning all dist directories...' && find . -name 'dist' -type d -exec rm -rf {} + && echo '✨ All dist directories have been removed!'",
-    "format": "biome format . --write",
-    "lint": "biome check .",
-    "lint:fix": "biome check . --apply",
-    "changeset": "changeset",
-    "version-packages": "changeset version",
-    "publish-packages": "turbo run build lint --concurrency=11 && changeset version && changeset publish"
+	"private": true,
+	"scripts": {
+		"build": "turbo build --concurrency 50",
+		"dev": "turbo dev --concurrency 50",
+		"clean": "turbo clean && rm -rf node_modules",
+		"clean-modules": "echo '🧹 Cleaning all node_modules directories...' && find . -name 'node_modules' -type d -exec rm -rf {} + && echo '✨ All node_modules directories have been removed!'",
+		"clean-dist": "echo '🧹 Cleaning all dist directories...' && find . -name 'dist' -type d -exec rm -rf {} + && echo '✨ All dist directories have been removed!'",
+		"format": "biome format . --write",
+		"lint": "biome check .",
+		"lint:fix": "biome check . --apply",
+		"changeset": "changeset",
+		"version-packages": "changeset version",
+		"publish-packages": "turbo run build lint && changeset version && changeset publish"
 	},
 	"devDependencies": {
 		"@changesets/cli": "^2.27.1",

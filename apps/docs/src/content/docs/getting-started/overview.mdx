@@ -1,0 +1,34 @@
+---
+title: Overview
+description: Understanding Brain Framework's core concepts and architecture
+---
+
+import { Card, CardGrid, Aside } from '@astrojs/starlight/components';
+
+## Introduction
+
+Brain Framework is a powerful toolkit for building AI agents that can interact with blockchain protocols and social media platforms. It uses a builder pattern for flexible configuration and supports various plugins for extended functionality.
+
+## Core Concepts
+
+<CardGrid>
+  <Card title="Agent" icon="comment-alt">
+    The central entity that processes inputs and manages interactions. Built using AgentBuilder with various configurations.
+  </Card>
+
+  <Card title="Clients" icon="random">
+    Communication interfaces that enable interaction through different channels (Direct, Telegram, Twitter).
+  </Card>
+
+  <Card title="Plugins" icon="puzzle">
+    Extensions that add specific capabilities like DeFi operations, token swaps, or scheduled tasks.
+  </Card>
+
+  <Card title="Model Providers" icon="setting">
+    AI models that power the agent's understanding and responses. With support for OpenAI, Claude, and more.
+  </Card>
+</CardGrid>
+
+<Aside title="Futher Reading" type="tip">
+  For more under the hood details check out [ElizaOS](https://elizaos.github.io/eliza/docs/intro/)
+</Aside>

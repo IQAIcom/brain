@@ -9,6 +9,7 @@ const LENDING_PAIRS_QUERY = graphql(`
       id
       name
       symbol
+      address
       asset {
         symbol
         decimals
@@ -29,6 +30,7 @@ export class LendingStatsService {
 		try {
 			const data = await client.request(LENDING_PAIRS_QUERY);
 			return data.pairs.map((pair) => ({
+				address: pair.id,
 				symbol: pair.symbol,
 				assetSymbol: pair.asset.symbol,
 				apr: this.calculateApr(
@@ -73,6 +75,7 @@ export class LendingStatsService {
 
 				return dedent`
 					🏦 ${pool.symbol} (${pool.assetSymbol})
+					├ 🔗 Address: ${pool.address}
 					├ 📈 APR: ${pool.apr}%
 					├ 📊 Utilization: ${formattedUtilization}%
 					└ 💰 Total Supply: ${formattedSupply} ${pool.assetSymbol}

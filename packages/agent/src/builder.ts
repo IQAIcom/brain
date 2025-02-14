@@ -24,6 +24,7 @@ export class AgentBuilder {
 
 	public withClients(clients: { name: string; client: Client }[]) {
 		this.options.clients = [...(this.options.clients || []), ...clients];
+		return this;
 	}
 
 	public withPlugin(plugin: Plugin) {
@@ -33,6 +34,7 @@ export class AgentBuilder {
 
 	public withPlugins(plugins: Plugin[]) {
 		this.options.plugins = [...(this.options.plugins || []), ...plugins];
+		return this;
 	}
 
 	public withModelProvider(provider: ModelProviderName, key: string) {
