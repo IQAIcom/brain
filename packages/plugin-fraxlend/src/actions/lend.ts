@@ -1,4 +1,4 @@
-import type { Action, Handler } from "@elizaos/core";
+import { elizaLogger, type Action, type Handler } from "@elizaos/core";
 import { LEND_TEMPLATE } from "../lib/templates";
 import { InputParserService } from "../services/input-parser";
 import { LendService } from "../services/lend";
@@ -27,6 +27,8 @@ export const getLendAction = (opts: FraxLendActionParams): Action => {
 
 const handler: (opts: FraxLendActionParams) => Handler =
 	(opts) => async (runtime, message, state, _options, callback) => {
+		elizaLogger.info("💬 Recent Messages", state.recentMessages);
+
 		const inputParser = new InputParserService();
 		const { pairAddress, amount } = await inputParser.parseInputs({
 			runtime,

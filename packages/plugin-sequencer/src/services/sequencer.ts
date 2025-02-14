@@ -31,9 +31,8 @@ export class SequencerService {
 	}
 
 	async execute() {
-		elizaLogger.info(
-			`ℹ️ All Actions names: ${this.runtime.actions.map((a) => a?.name)}`,
-		);
+		const actions = this.runtime.actions.filter((a) => a.name !== "SEQUENCER");
+		elizaLogger.info(`ℹ️ All Actions names: ${actions.map((a) => a?.name)}`);
 
 		const output = await generateText({
 			runtime: this.runtime,
@@ -41,7 +40,7 @@ export class SequencerService {
 			context: this.memory.content.text,
 			maxSteps: 4,
 			tools: Object.fromEntries(
-				this.runtime.actions.map((a) => [
+				actions.map((a) => [
 					a.name,
 					{
 						parameters: z.object({}),
@@ -77,6 +76,5 @@ export class SequencerService {
 			agentId: this.runtime.agentId,
 			createdAt: Date.now(),
 		});
-		await this.runtime.updateRecentMessageState(this.state);
 	}
 }
