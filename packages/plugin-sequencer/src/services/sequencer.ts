@@ -7,6 +7,7 @@ import {
 	ModelClass,
 	type Plugin,
 	type State,
+	elizaLogger,
 	generateText,
 	stringToUuid,
 } from "@elizaos/core";
@@ -17,25 +18,23 @@ export class SequencerService {
 	private memory: Memory;
 	private state: State;
 	private callback: HandlerCallback;
-	private plugins: Plugin[];
 
 	constructor(
 		runtime: IAgentRuntime,
 		message: Memory,
 		state: State,
 		callback: HandlerCallback,
-		plugins: Plugin[],
 	) {
 		this.runtime = runtime;
 		this.memory = message;
 		this.state = state;
 		this.callback = callback;
-		this.plugins = plugins;
 	}
 
 	async execute() {
-		const actions = this.plugins.flatMap((p) => p.actions).filter(Boolean);
-		console.log(`ℹ️ All Actions names: ${actions.map((a) => a?.name)}`);
+		elizaLogger.info(
+			`ℹ️ All Actions names: ${this.runtime.actions.map((a) => a?.name)}`,
+		);
 
 		const output = await generateText({
 			runtime: this.runtime,
@@ -43,7 +42,7 @@ export class SequencerService {
 			context: this.memory.content.text,
 			maxSteps: 4,
 			tools: Object.fromEntries(
-				actions.map((a) => [
+				this.runtime.actions.map((a) => [
 					a.name,
 					{
 						parameters: z.object({}),
@@ -60,16 +59,16 @@ export class SequencerService {
 	}
 
 	private async handlerWrapper(name: string, handler: Handler) {
-		console.log(`\n🔄 Executing handler: ${name}...`);
+		elizaLogger.info(`\n🔄 Executing handler: ${name}...`);
 		const { text } = (await new Promise((resolve) =>
 			handler(this.runtime, this.memory, this.state, null, resolve as any),
 		)) as Content;
-		this.createActionMemory(text);
+		await this.createActionMemory(text);
 		return text;
 	}
 
 	private async createActionMemory(text: string) {
-		this.runtime.messageManager.createMemory({
+		await this.runtime.messageManager.createMemory({
 			id: stringToUuid(`${this.memory.id}-${text}`),
 			content: {
 				text: text,
@@ -79,5 +78,6 @@ export class SequencerService {
 			agentId: this.runtime.agentId,
 			createdAt: Date.now(),
 		});
+		await this.runtime.updateRecentMessageState(this.state);
 	}
 }
