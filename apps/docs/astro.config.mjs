@@ -45,6 +45,7 @@ export default defineConfig({
             { label: 'Odos', link: '/plugins/odos' },
             {label: "ATP", link: "/plugins/atp"},
             {label: "Heartbeat", link: "/plugins/heartbeat"},
+            {label: "Sequencer", link: "/plugins/sequencer"},
           ],
         }
       ],
