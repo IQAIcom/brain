@@ -11,7 +11,7 @@ The Odos plugin enables your agent to perform token swaps and exchanges using th
 <Steps>
 1. Install the required packages:
    ```bash
-   pnpm add @iqai/agent @iqai/plugin-odos @elizaos/core
+   pnpm add @iqai/agent @iqai/plugin-odos
    ```
 
 2. Create a `.env` file with required configuration:
@@ -33,9 +33,8 @@ The Odos plugin enables your agent to perform token swaps and exchanges using th
 Here's how to set up an agent with the Odos plugin:
 
 ```typescript
-import { AgentBuilder } from "@iqai/agent";
+import { AgentBuilder, ModelProviderName } from "@iqai/agent";
 import { createOdosPlugin } from "@iqai/plugin-odos";
-import { ModelProviderName } from "@elizaos/core";
 import { fraxtal } from "viem/chains";
 
 async function main() {

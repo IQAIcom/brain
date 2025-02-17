@@ -7,7 +7,6 @@ import {
 	type ICacheManager,
 	type IDatabaseAdapter,
 	type IDatabaseCacheAdapter,
-	ModelProviderName,
 	stringToUuid,
 	type Client,
 	type Plugin,
@@ -17,6 +16,7 @@ import {
 import path from "node:path";
 import { defaultCharacter } from "./default-charecter";
 import dedent from "dedent";
+import { ModelProviderName } from "./types";
 
 export interface AgentOptions {
 	databaseAdapter?: IDatabaseAdapter & IDatabaseCacheAdapter;
