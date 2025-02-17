@@ -1,3 +1,8 @@
+---
+description: creation of new plugins for brain framework
+globs: 
+---
+
 # Brain Framework Plugin Creation Guide
 
 ## Plugin Structure
@@ -114,3 +119,4 @@ const handler: (opts: YourPluginParams) => Handler =
 - Use **meaningful and descriptive naming** for functions and variables.
 
 This guide reflects the actual structure used in the Brain Framework, including the ATP plugin example provided in the codebase context.
+

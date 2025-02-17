@@ -7,11 +7,11 @@ import {
 	type ICacheManager,
 	type IDatabaseAdapter,
 	type IDatabaseCacheAdapter,
-	ModelProviderName,
 	stringToUuid,
 	type Client,
 	type Plugin,
 	type Character,
+	ModelProviderName,
 	elizaLogger,
 } from "@elizaos/core";
 import path from "node:path";

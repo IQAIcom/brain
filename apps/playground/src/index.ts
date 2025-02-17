@@ -1,7 +1,6 @@
 import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
 import DirectClientInterface from "@elizaos/client-direct";
-import { ModelProviderName } from "@elizaos/core";
-import { AgentBuilder } from "@iqai/agent";
+import { AgentBuilder, ModelProviderName } from "@iqai/agent";
 import { createATPPlugin } from "@iqai/plugin-atp";
 import { createFraxlendPlugin } from "@iqai/plugin-fraxlend";
 import createNearPlugin from "@iqai/plugin-near";
