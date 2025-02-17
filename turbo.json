@@ -5,8 +5,7 @@
 	"tasks": {
 		"build": {
 			"inputs": ["$TURBO_DEFAULT$", ".env*"],
-			"outputs": ["dist/**", ".next/**", "!.next/cache/**"],
-			"cache": false
+			"outputs": ["dist/**", ".next/**", "!.next/cache/**"]
 		},
 		"test": {
 			"outputs": ["coverage/**"],
