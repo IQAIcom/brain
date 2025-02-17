@@ -1,0 +1,21 @@
+{
+	"name": "@iqai/plugin-near",
+	"version": "0.1.9",
+	"main": "dist/index.js",
+	"type": "module",
+	"types": "dist/index.d.ts",
+	"dependencies": {
+		"@elizaos/core": "0.1.9",
+		"tsup": "8.3.6",
+		"viem": "^2.22.15",
+		"dedent": "^1.5.3",
+		"@near-js/client": "0.0.2"
+	},
+	"scripts": {
+		"build": "tsup --format esm",
+		"dev": "tsup --format esm --watch"
+	},
+	"devDependencies": {
+		"@iqai/tsconfig": "workspace:*"
+	}
+}
