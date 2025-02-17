@@ -11,7 +11,7 @@ import type { AgentEvent, NearAgentConfig, NearEventListener } from "../types";
 export class NearAgent extends Service {
 	static serviceType: ServiceType = ServiceType.TRANSCRIPTION;
 	private static readonly DEFAULT_NETWORK_ID = "mainnet";
-	private static readonly DEFAULT_NODE_URL = "https://rpc.mainnet.near.org";
+	private static readonly DEFAULT_NODE_URL = "https://rpc.ankr.com/near";
 	private static readonly DEFAULT_GAS_LIMIT = "200000000000000";
 	private static readonly DEFAULT_CRON_EXPRESSION = "*/10 * * * * *";
 	private static readonly DEFAULT_RESPONSE_METHOD = "agent_response";
@@ -42,6 +42,9 @@ export class NearAgent extends Service {
 		elizaLogger.info("🤖 NEAR Agent service initialized with polling");
 	}
 	private async pollEvents(listener: NearEventListener) {
+		elizaLogger.info(
+			`ℹ️ Polling for ${listener.eventName} event from contract: ${listener.contractId}`,
+		);
 		try {
 			const currentBlock = await this.account.connection.provider.block({
 				finality: "final",
