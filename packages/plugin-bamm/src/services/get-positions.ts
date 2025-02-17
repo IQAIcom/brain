@@ -110,6 +110,10 @@ export class BammPositionsService {
 			.map((pos) => {
 				const isLend =
 					pos.vault.rented === null || pos.vault.rented <= BigInt(0);
+				// return if token0 and token1 is 0
+				if (pos.vault.token0 === 0n && pos.vault.token1 === 0n) {
+					return null;
+				}
 
 				return dedent`
             **💰 BAMM Position**
