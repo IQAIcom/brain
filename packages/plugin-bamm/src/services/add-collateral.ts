@@ -1,7 +1,7 @@
 
 import type { WalletService } from "./wallet";
 import { BAMM_ADDRESSES } from "../constants";
-import { BAMM_FACTORY_ABI } from "../lib/bamm.abi";
+import { BAMM_FACTORY_ABI } from "../lib/bamm-factory.abi";
 import { erc20Abi } from "viem";
 import type { Address } from "viem";
 
