@@ -26,6 +26,13 @@ export type NearAgentConfig = {
 		networkId: string;
 		nodeUrl: string;
 	};
+
+	indexerConfig?: {
+		baseUrl: string;
+		apiKey: string;
+		blocksPerBatch: number;
+		resetBlockIdOnStart: boolean;
+	};
 };
 
 export type AgentEvent = {

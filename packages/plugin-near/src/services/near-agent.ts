@@ -5,22 +5,45 @@ import {
 	elizaLogger,
 } from "@elizaos/core";
 import { type Account, connect } from "near-api-js";
-import * as cron from "node-cron";
 import type { AgentEvent, NearAgentConfig, NearEventListener } from "../types";
+import axios from "axios";
+import * as fs from "node:fs/promises";
+import { exists } from "node:fs";
+import { promisify } from "node:util";
+
+const existsAsync = promisify(exists);
+
+interface IndexerConfig {
+	baseUrl?: string;
+	apiKey?: string;
+	blocksPerBatch?: number;
+	resetBlockIdOnStart?: boolean;
+}
 
 export class NearAgent extends Service {
 	static serviceType: ServiceType = ServiceType.TRANSCRIPTION;
 	private static readonly DEFAULT_NETWORK_ID = "mainnet";
 	private static readonly DEFAULT_NODE_URL = "https://1rpc.io/near";
 	private static readonly DEFAULT_GAS_LIMIT = "200000000000000";
-	private static readonly DEFAULT_CRON_EXPRESSION = "*/10 * * * * *";
 	private static readonly DEFAULT_RESPONSE_METHOD = "agent_response";
+	private static readonly BLOCK_ID_FILE = "last_block_id.txt";
+	private static readonly DEFAULT_BLOCKS_PER_BATCH = 2;
 
 	private account: Account;
-	private lastBlockHeight = 0;
+	private indexerConfig: Required<IndexerConfig>;
+	private isProcessing = false;
 
 	constructor(private readonly opts: NearAgentConfig) {
 		super();
+		this.indexerConfig = {
+			baseUrl:
+				opts.indexerConfig?.baseUrl || "https://mainnet.neardata.xyz/v0/block/",
+			apiKey: opts.indexerConfig?.apiKey || "",
+			blocksPerBatch:
+				opts.indexerConfig?.blocksPerBatch ||
+				NearAgent.DEFAULT_BLOCKS_PER_BATCH,
+			resetBlockIdOnStart: opts.indexerConfig?.resetBlockIdOnStart || false,
+		};
 	}
 
 	async initialize(_runtime: IAgentRuntime) {
@@ -32,76 +55,140 @@ export class NearAgent extends Service {
 
 		this.account = await near.account(this.opts.accountId);
 
-		for (const listener of this.opts.listeners) {
-			cron.schedule(
-				listener.cronExpression || NearAgent.DEFAULT_CRON_EXPRESSION,
-				() => this.pollEvents(listener),
-			);
+		if (this.indexerConfig.resetBlockIdOnStart) {
+			await this.resetBlockId();
 		}
 
-		elizaLogger.info("🤖 NEAR Agent service initialized with polling");
-	}
-	private async pollEvents(listener: NearEventListener) {
-		elizaLogger.info(
-			`ℹ️ Polling for ${listener.eventName} event from contract: ${listener.contractId}`,
-		);
-		try {
-			const currentBlock = await this.account.connection.provider.block({
-				finality: "final",
-			});
-			const currentHeight = currentBlock.header.height;
+		// Start continuous processing
+		this.startProcessing();
 
-			if (this.lastBlockHeight === 0) {
-				this.lastBlockHeight = currentHeight - 1;
+		elizaLogger.info("🤖 NEAR Agent service initialized with indexer");
+	}
+
+	private async startProcessing() {
+		if (this.isProcessing) return;
+		this.isProcessing = true;
+
+		while (this.isProcessing) {
+			try {
+				await this.processBlocksBatch();
+				// Small delay to prevent overwhelming the indexer
+				await new Promise((resolve) => setTimeout(resolve, 1000));
+			} catch (error) {
+				elizaLogger.error("Block processing error", { error });
+				await new Promise((resolve) => setTimeout(resolve, 5000));
+			}
+		}
+	}
+
+	private async resetBlockId() {
+		if (await existsAsync(NearAgent.BLOCK_ID_FILE)) {
+			await fs.unlink(NearAgent.BLOCK_ID_FILE);
+			elizaLogger.info(`Reset block ID file: ${NearAgent.BLOCK_ID_FILE}`);
+		}
+	}
+
+	private async fetchJson(url: string) {
+		try {
+			const headers: Record<string, string> = {};
+			if (this.indexerConfig.apiKey) {
+				headers.Authorization = `Bearer ${this.indexerConfig.apiKey}`;
 			}
 
-			const blockDetails = await this.account.connection.provider.block({
-				blockId: currentHeight,
-			});
+			const response = await axios.get(url, { headers, timeout: 3000 });
+			return response.data;
+		} catch (error) {
+			elizaLogger.error("Fetch error", { error, url });
+			return null;
+		}
+	}
 
-			for (const chunk of blockDetails.chunks) {
-				const chunkDetails = await this.account.connection.provider.chunk(
-					chunk.chunk_hash,
-				);
+	private async getLatestBlockHeight(): Promise<number> {
+		const data = await this.fetchJson("https://api.fastnear.com/status");
+		return data?.sync_block_height || 0;
+	}
 
-				const relevantTxs = chunkDetails.transactions.filter(
-					(tx) => tx.receiver_id === listener.contractId,
-				);
+	private async getLastBlockId(): Promise<number> {
+		try {
+			if (await existsAsync(NearAgent.BLOCK_ID_FILE)) {
+				const content = await fs.readFile(NearAgent.BLOCK_ID_FILE, "utf-8");
+				return Number.parseInt(content.trim(), 10);
+			}
+		} catch (error) {
+			elizaLogger.error("Error reading last block ID", { error });
+		}
+		return await this.getLatestBlockHeight();
+	}
 
-				for (const tx of relevantTxs) {
-					const txStatus = await this.account.connection.provider.txStatus(
-						tx.hash,
-						listener.contractId,
-						"EXECUTED",
-					);
+	private async saveLastBlockId(blockId: number) {
+		await fs.writeFile(NearAgent.BLOCK_ID_FILE, blockId.toString());
+	}
 
-					for (const { outcome } of txStatus.receipts_outcome) {
-						for (const log of outcome.logs) {
-							try {
-								const eventData = JSON.parse(log);
-								if (eventData.event === listener.eventName) {
-									await this.handleEvent(
-										{
-											eventType: eventData.event,
-											requestId: eventData.request_id,
-											payload: eventData.data,
-											sender: tx.signer_id,
-											timestamp: Date.now(),
-										},
-										listener,
-									);
-								}
-							} catch (error) {
-								elizaLogger.error("Failed to parse log", { log, error });
-							}
-						}
-					}
+	private async processBlocksBatch() {
+		const startBlockId = await this.getLastBlockId();
+		const promises = Array.from(
+			{ length: this.indexerConfig.blocksPerBatch },
+			(_, i) => this.processBlock(startBlockId + i + 1),
+		);
+
+		const results = await Promise.all(promises);
+		const successfulBlocks = results.filter((result) => result !== null);
+
+		if (successfulBlocks.length > 0) {
+			const maxBlockId = Math.max(...(successfulBlocks as number[]));
+			await this.saveLastBlockId(maxBlockId);
+			elizaLogger.info(`Processed blocks up to ${maxBlockId}`);
+		}
+	}
+
+	private async processBlock(blockId: number): Promise<number | null> {
+		const data = await this.fetchJson(
+			`${this.indexerConfig.baseUrl}${blockId}`,
+		);
+		if (!data?.shards) return null;
+
+		await this.processShards(data.shards, blockId);
+		return blockId;
+	}
+
+	private async processShards(shards: any[], _blockId: number) {
+		for (const shard of shards) {
+			if (!shard.receipt_execution_outcomes) continue;
+
+			for (const outcome of shard.receipt_execution_outcomes) {
+				const logs = outcome.execution_outcome?.outcome?.logs || [];
+				for (const log of logs) {
+					await this.processLog(log, outcome);
 				}
 			}
+		}
+	}
 
-			this.lastBlockHeight = currentHeight;
+	private async processLog(log: string, receipt: any) {
+		try {
+			// Look for EVENT_JSON format
+			const match = log.match(/EVENT_JSON:(.*)$/);
+			if (!match) return;
+
+			const eventData = JSON.parse(match[1]);
+
+			// Process for each listener
+			for (const listener of this.opts.listeners) {
+				if (eventData.event === listener.eventName) {
+					await this.handleEvent(
+						{
+							eventType: eventData.event,
+							requestId: eventData.request_id,
+							payload: eventData.data,
+							sender: receipt.execution_outcome.outcome.executor_id,
+							timestamp: Date.now(),
+						},
+						listener,
+					);
+				}
+			}
 		} catch (error) {
-			elizaLogger.error("Event polling failed", { error });
+			elizaLogger.error("Log processing error", { error, log });
 		}
 	}
 

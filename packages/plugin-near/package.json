@@ -8,6 +8,7 @@
 		"@elizaos/core": "0.1.9",
 		"@near-js/client": "0.0.2",
 		"@types/node-cron": "^3.0.11",
+		"axios": "^1.7.9",
 		"dedent": "^1.5.3",
 		"near-api-js": "^5.0.1",
 		"node-cron": "^3.0.3",
