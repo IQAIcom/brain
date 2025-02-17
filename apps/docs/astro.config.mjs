@@ -4,7 +4,7 @@ import starlight from '@astrojs/starlight';
 import vercel from '@astrojs/vercel';
 
 export default defineConfig({
-  output: 'static',
+  output: 'server',
   adapter: vercel({
     imageService:true
   }),
@@ -29,7 +29,7 @@ export default defineConfig({
         {
           label: 'Getting Started',
           items: [
-            { label: 'overview', link: '/getting-started/overview' },
+            { label: 'Overview', link: '/getting-started/overview' },
             { label: 'Quick Start', link: '/getting-started/quickstart' },
             { label: 'Agent Creation', link: '/getting-started/agent-creation' },
             { label: 'Creating plugins', link: '/getting-started/creating-plugins' },
