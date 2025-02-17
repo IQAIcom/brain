@@ -11,12 +11,12 @@ import {
 	type Client,
 	type Plugin,
 	type Character,
+	ModelProviderName,
 	elizaLogger,
 } from "@elizaos/core";
 import path from "node:path";
 import { defaultCharacter } from "./default-charecter";
 import dedent from "dedent";
-import type { ModelProviderName } from "./types";
 
 export interface AgentOptions {
 	databaseAdapter?: IDatabaseAdapter & IDatabaseCacheAdapter;
