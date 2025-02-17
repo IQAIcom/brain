@@ -25,7 +25,6 @@ Example response:
 Extract the lending information from all recent messages.
 Respond with a JSON markdown block containing poolAddress and amount.`;
 
-
 export const BORROW_TEMPLATE = `Respond with a JSON object containing borrowing information.
 Extract the borrowing details from all recent messages.
 
@@ -50,61 +49,65 @@ Example response:
 Extract the borrowing information from all recent messages.
 Respond with a JSON markdown block containing pairAddress, borrowAmount, collateralAmount and receiver.`;
 
-
-export const ADD_COLLATERAL_TEMPLATE = `Respond with a JSON object containing collateral information.
+export const ADD_COLLATERAL_TEMPLATE = `Respond with a JSON object containing collateral addition information.
 Extract the collateral details from all recent messages.
 
 The response must include:
-- pairAddress: The BAMM pool address
+- bammAddress: The BAMM pool address
+- collateralToken: The address of the collateral token
 - amount: The amount of collateral to add (in ether values)
-- error: An error message if valid pairAddress or amount cannot be determined (optional)
+- error: An error message if valid bammAddress, collateralToken, or amount cannot be determined (optional)
 
 Example response:
 \`\`\`json
 {
-    "pairAddress": "0x1234567890123456789012345678901234567890",
+    "bammAddress": "0x1234567890123456789012345678901234567890",
+    "collateralToken": "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
     "amount": "1000"
 }
 \`\`\`
 \`\`\`json
 {
-    "pairAddress": "",
+    "bammAddress": "",
+    "collateralToken": "",
     "amount": "",
-    "error": "No pool address found in context"
+    "error": "Required fields missing"
 }
 \`\`\`
 
 {{recentMessages}}
 Extract the collateral information from all recent messages.
-Respond with a JSON markdown block containing pairAddress and amount.`;
+Respond with a JSON markdown block containing bammAddress, collateralToken, and amount.`;
 
 export const REMOVE_COLLATERAL_TEMPLATE = `Respond with a JSON object containing collateral withdrawal information.
 Extract the withdrawal details from all recent messages.
 
 The response must include:
-- pairAddress: The BAMM pool address
+- bammAddress: The BAMM pool address
+- collateralToken: The address of the collateral token
 - amount: The amount of collateral to withdraw (in ether values)
-- error: An error message if valid pairAddress or amount cannot be determined (optional)
+- error: An error message if valid bammAddress, collateralToken, or amount cannot be determined (optional)
 
 Example response:
 \`\`\`json
 {
-    "pairAddress": "0x1234567890123456789012345678901234567890",
+    "bammAddress": "0x1234567890123456789012345678901234567890",
+    "collateralToken": "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
     "amount": "1000"
 }
 \`\`\`
 \`\`\`json
 {
-    "pairAddress": "",
+    "bammAddress": "",
+    "collateralToken": "",
     "amount": "",
-    "error": "No pool address found in context"
+    "error": "Required fields missing"
 }
 \`\`\`
 
 {{recentMessages}}
 Extract the withdrawal information from all recent messages.
-Respond with a JSON markdown block containing pairAddress and amount.`;
-
+Respond with a JSON markdown block containing bammAddress, collateralToken, and amount.`;
 
 export const REPAY_TEMPLATE = `Respond with a JSON object containing repayment information.
 Extract the repayment details from all recent messages.
