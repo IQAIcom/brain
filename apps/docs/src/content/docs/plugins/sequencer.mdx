@@ -1,0 +1,106 @@
+---
+title: "Sequencer Plugin"
+description: "Plugin for orchestrating multi-step operations and action sequences in IQ AI agents"
+---
+
+import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+
+The **Sequencer Plugin** enables your agent to execute complex multi-step operations by:
+
+**Coordinating multiple actions** in a specific sequence
+**Handling state and context** across actions
+**Providing detailed execution feedback**
+
+---
+
+## Installation
+
+<Steps>
+1. Install the required packages:
+
+   ```bash
+   pnpm add @iqai/agent @iqai/plugin-sequencer
+   ```
+
+2. Create a **.env** file with the required configuration:
+
+   ```bash
+   OPENAI_API_KEY=your-openai-api-key
+   ```
+</Steps>
+
+---
+
+## Basic Setup
+
+Here's a complete example of setting up an agent with the Sequencer plugin:
+
+```typescript
+import { AgentBuilder } from "@iqai/agent";
+import createSequencerPlugin from "@iqai/plugin-sequencer";
+import { ModelProviderName } from "@elizaos/core";
+
+async function main() {
+  // Initialize Sequencer plugin
+  const sequencerPlugin = await createSequencerPlugin();
+
+  // Create agent with plugin
+  const agent = new AgentBuilder()
+   .withModelProvider(
+      ModelProviderName.OPENAI,
+      process.env.OPENAI_API_KEY
+    )
+    .withPlugins([sequencerPlugin])
+    .build();
+
+  await agent.start();
+}
+
+main().catch(console.error);
+```
+
+---
+
+## Available Operations
+
+- **Action Sequencing**: Execute multiple actions in order
+- **State Management**: Maintain context across actions
+
+---
+
+## Usage Examples
+
+| Type | Example Query |
+|-----------|--------------|
+| Portfolio | `Get my AI token holdings, then sell 10% of the top holding` |
+| DeFi | `Get Fraxlend pool with highest APR, then lend 0.1 FRAX to the pool` |
+
+---
+
+## Error Handling
+
+Implement proper error handling for sequence operations:
+
+```typescript
+try {
+	const sequencerPlugin = await createSequencerPlugin();
+} catch (error) {
+  console.error('Failed to initialize sequencer plugin:', error);
+}
+```
+
+---
+
+## Best Practices
+
+- ✔ **Action Validation**: Verify all actions exist before sequencing
+- ✔ **Error Recovery**: Implement robust error handling
+- ✔ **Logging**: Check detailed logs of sequence execution
+
+---
+
+## Common Issues and Troubleshooting
+
+- **Missing Actions**: Ensure all required action plugins are installed
+- **State Persistence**: Verify database configuration
+- **Sequence Timeouts**: Check maxSteps configuration
