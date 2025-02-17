@@ -11,21 +11,20 @@ import type { NearAgentConfig, AgentEvent } from "../types";
 export class NearAgent extends Service {
 	static serviceType: ServiceType = ServiceType.TRANSCRIPTION;
 	private account: Account;
-	private contract: Contract;
 	private lastBlockHeight = 0;
 
-	constructor(private readonly config: NearAgentConfig) {
+	constructor(private readonly opts: NearAgentConfig) {
 		super();
 	}
 
 	async initialize(_runtime: IAgentRuntime) {
 		const near = await connect({
-			networkId: this.config.networkConfig?.networkId || "mainnet",
+			networkId: this.opts.networkConfig?.networkId || "mainnet",
 			nodeUrl:
-				this.config.networkConfig?.nodeUrl || "https://rpc.mainnet.near.org",
+				this.opts.networkConfig?.nodeUrl || "https://rpc.mainnet.near.org",
 		});
 
-		this.account = await near.account(this.config.accountId);
+		this.account = await near.account(this.opts.accountId);
 
 		// Start polling for events
 		cron.schedule("*/10 * * * * *", () => this.pollEvents()); // Every 10 seconds
@@ -56,25 +55,25 @@ export class NearAgent extends Service {
 
 				// Filter transactions for our contract
 				const relevantTxs = chunkDetails.transactions.filter(
-					(tx) => tx.receiver_id === this.config.contractId,
+					(tx) => tx.receiver_id === this.opts.contractId,
 				);
 
 				// Get transaction outcomes which contain the logs
 				for (const tx of relevantTxs) {
 					const txStatus = await this.account.connection.provider.txStatus(
 						tx.hash,
-						this.config.contractId,
+						this.opts.contractId,
 						"EXECUTED",
 					);
 
 					// Process logs from transaction receipts
-					for (const outcome of txStatus.receipts_outcome) {
-						for (const log of outcome.outcome.logs) {
+					for (const { outcome } of txStatus.receipts_outcome) {
+						for (const log of outcome.logs) {
 							try {
 								const eventData = JSON.parse(log);
 								if (
 									eventData.event &&
-									this.config.eventHandlers[eventData.event]
+									this.opts.eventHandlers[eventData.event]
 								) {
 									await this.handleEvent({
 										eventType: eventData.event,
@@ -99,19 +98,19 @@ export class NearAgent extends Service {
 	}
 
 	private async handleEvent(event: AgentEvent) {
-		const handler = this.config.eventHandlers[event.eventType];
+		const handler = this.opts.eventHandlers[event.eventType];
 
 		try {
 			const result = await handler.handler(event.payload);
 
 			await this.account.functionCall({
-				contractId: this.config.contractId,
+				contractId: this.opts.contractId,
 				methodName: "agent_response",
 				args: {
 					request_id: event.requestId,
 					result: result,
 				},
-				gas: BigInt(this.config.gasLimit || "200000000000000"),
+				gas: BigInt(this.opts.gasLimit || "200000000000000"),
 			});
 
 			elizaLogger.info(`Event ${event.requestId} processed successfully`);
