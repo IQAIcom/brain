@@ -1,3 +1,9 @@
+import type { Account } from "near-api-js";
+
+export type HandlerContext = {
+	account: Account;
+};
+
 export type NearAgentConfig = {
 	// Core NEAR connection config
 	accountId: string;
@@ -11,8 +17,9 @@ export type NearAgentConfig = {
 	// Agent behavior definition
 	eventHandlers: {
 		[eventName: string]: {
-			handler: (input: any) => Promise<any>;
-			inputSchema?: Record<string, any>; // JSON schema for validation
+			handler: (input: any, context: HandlerContext) => Promise<any>;
+			inputSchema?: Record<string, any>;
+			outputSchema?: Record<string, any>;
 		};
 	};
 

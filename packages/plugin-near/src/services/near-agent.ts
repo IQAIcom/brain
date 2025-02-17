@@ -4,9 +4,9 @@ import {
 	ServiceType,
 	elizaLogger,
 } from "@elizaos/core";
-import { connect, type Account, type Contract } from "near-api-js";
+import { type Account, connect } from "near-api-js";
 import * as cron from "node-cron";
-import type { NearAgentConfig, AgentEvent } from "../types";
+import type { AgentEvent, NearAgentConfig } from "../types";
 
 export class NearAgent extends Service {
 	static serviceType: ServiceType = ServiceType.TRANSCRIPTION;
@@ -101,8 +101,9 @@ export class NearAgent extends Service {
 		const handler = this.opts.eventHandlers[event.eventType];
 
 		try {
-			const result = await handler.handler(event.payload);
-
+			const result = await handler.handler(event.payload, {
+				account: this.account,
+			});
 			await this.account.functionCall({
 				contractId: this.opts.contractId,
 				methodName: "agent_response",

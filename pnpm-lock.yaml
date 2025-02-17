@@ -219,6 +219,9 @@ importers:
       '@iqai/plugin-heartbeat':
         specifier: workspace:*
         version: link:../../packages/plugin-heartbeat
+      '@iqai/plugin-near':
+        specifier: workspace:*
+        version: link:../../packages/plugin-near
       '@iqai/plugin-odos':
         specifier: workspace:*
         version: link:../../packages/plugin-odos
@@ -399,6 +402,9 @@ importers:
       '@near-js/client':
         specifier: 0.0.2
         version: 0.0.2
+      '@types/node-cron':
+        specifier: ^3.0.11
+        version: 3.0.11
       dedent:
         specifier: ^1.5.3
         version: 1.5.3
@@ -6640,7 +6646,6 @@ packages:
 
   /@types/node-cron@3.0.11:
     resolution: {integrity: sha512-0ikrnug3/IyneSHqCBeslAhlK2aBfYek1fGo4bP4QnZPmiqSGRK+Oy7ZMisLWkesffJvQ1cqAcBnJC+8+nxIAg==}
-    dev: true
 
   /@types/node-fetch@2.6.12:
     resolution: {integrity: sha512-8nneRWKCg3rMtF69nLQJnOYUcbafYeFSjqkw3jCRLsqkWFlHaoQrr5mXmofFGOx3DKn7UfmBMyov8ySvLRVldA==}
