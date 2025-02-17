@@ -50,10 +50,9 @@ Brain Framework's plugin system allows you to extend your agent's capabilities w
 ## Using Plugins
 
 ```typescript
-import { AgentBuilder } from "@iqai/agent";
+import { AgentBuilder, ModelProviderName } from "@iqai/agent";
 import { createFraxlendPlugin } from "@iqai/plugin-fraxlend";
 import { createOdosPlugin } from "@iqai/plugin-odos";
-import { ModelProviderName } from "@elizaos/core";
 import { bootstrapPlugin } from "@elizaos/plugin-bootstrap";
 import { fraxtal } from "viem/chains";
 
