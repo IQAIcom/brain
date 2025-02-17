@@ -1,5 +1,11 @@
 # @iqai/agent
 
+## 0.0.5
+
+### Patch Changes
+
+- 31aadcc: Exports model name enum as value instead of type
+
 ## 0.0.4
 
 ### Patch Changes
