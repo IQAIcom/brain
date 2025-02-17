@@ -11,6 +11,7 @@ export type NearEventListener = {
 	inputSchema?: Record<string, any>;
 	outputSchema?: Record<string, any>;
 	responseMethodName?: string;
+	cronExpression?: string;
 };
 
 export type NearAgentConfig = {
@@ -20,9 +21,6 @@ export type NearAgentConfig = {
 
 	// Array of event listeners
 	listeners: NearEventListener[];
-
-	// cron
-	cronExpression?: string;
 
 	// Optional configurations
 	gasLimit?: string;
