@@ -22,7 +22,7 @@ import { Avatar, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import ChatTtsButton from "./ui/chat/chat-tts-button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
-import { formatMessageWithCodeBlocks } from "@/lib/formatResponse";
+import { FormatMessageWithCodeBlocks } from "@/lib/formatResponse";
 
 type ExtraContentFields = {
 	user: string;
@@ -202,11 +202,11 @@ export default function Page({ agentId }: { agentId: UUID }) {
 									<div className="flex flex-col">
 										<ChatBubbleMessage isLoading={message?.isLoading}>
 											{message?.user !== "user" ? (
-												<AIWriter>
-													{formatMessageWithCodeBlocks(message?.text)}
-												</AIWriter>
+												// <AIWriter>
+													FormatMessageWithCodeBlocks(message?.text)
+												// {/* </AIWriter> */}
 											) : (
-												formatMessageWithCodeBlocks(message?.text)
+												FormatMessageWithCodeBlocks(message?.text)
 											)}
 											{/* Attachments */}
 											<div>
