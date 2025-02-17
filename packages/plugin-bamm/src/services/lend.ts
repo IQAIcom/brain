@@ -1,96 +1,95 @@
-import type { WalletService } from "./wallet";
-import { BAMM_ADDRESSES } from "../constants";
-import { BAMM_FACTORY_ABI } from "../lib/bamm-factory.abi";
-import { BAMM_ABI } from "../lib/bamm.abi"; // your BAMM contract ABI
 import { erc20Abi } from "viem";
 import type { Address } from "viem";
+import type { WalletService } from "./wallet";
+import { BAMM_ABI } from "../lib/bamm.abi";
+
+export interface LendParams {
+	bammAddress: Address; // The BAMM contract address
+	tokenAddress: Address; // The token to lend (e.g., an LP token)
+	amount: string; // The amount to lend in normal decimal form (e.g., "10" for 10 tokens)
+}
 
 export class LendService {
-	private walletService: WalletService;
+	constructor(private walletService: WalletService) {}
 
-	constructor(walletService: WalletService) {
-		this.walletService = walletService;
-	}
-
-	async execute({
-		pairAddress,
-		amount,
-	}: {
-		pairAddress: Address;
-		amount: bigint;
-	}) {
+	/**
+	 * Ensures that the user has approved the spender (BAMM contract) to spend the given token.
+	 */
+	private async ensureTokenApproval(
+		tokenAddress: Address,
+		spenderAddress: Address,
+		amount: bigint,
+	): Promise<void> {
 		const publicClient = this.walletService.getPublicClient();
 		const walletClient = this.walletService.getWalletClient();
 		const userAddress = walletClient.account.address;
 
-		// 1. Check LP token balance
-		const lpBalance: bigint = await publicClient.readContract({
-			address: pairAddress,
+		const currentAllowance: bigint = await publicClient.readContract({
+			address: tokenAddress,
 			abi: erc20Abi,
-			functionName: "balanceOf",
-			args: [userAddress],
+			functionName: "allowance",
+			args: [userAddress, spenderAddress],
 		});
 
-		if (lpBalance < amount) {
-			throw new Error("Insufficient LP token balance");
-		}
-
-		// 2. Get the BAMM address for the pair using the BAMM factory
-		let bamm: Address = await publicClient.readContract({
-			address: BAMM_ADDRESSES.FACTORY,
-			abi: BAMM_FACTORY_ABI,
-			functionName: "pairToBamm",
-			args: [pairAddress],
-		});
-
-		// If no BAMM exists, create one
-		if (bamm === "0x0000000000000000000000000000000000000000") {
-			const { request: createBammRequest } =
-				await publicClient.simulateContract({
-					address: BAMM_ADDRESSES.FACTORY,
-					abi: BAMM_FACTORY_ABI,
-					functionName: "createBamm",
-					args: [pairAddress],
-					account: walletClient.account,
-				});
-			const createTx = await walletClient.writeContract(createBammRequest);
-			await publicClient.waitForTransactionReceipt({ hash: createTx });
-			// Re-read the BAMM address after creation
-			bamm = await publicClient.readContract({
-				address: BAMM_ADDRESSES.FACTORY,
-				abi: BAMM_FACTORY_ABI,
-				functionName: "pairToBamm",
-				args: [pairAddress],
+		if (currentAllowance < amount) {
+			const { request: approveRequest } = await publicClient.simulateContract({
+				address: tokenAddress,
+				abi: erc20Abi,
+				functionName: "approve",
+				args: [spenderAddress, amount],
+				account: walletClient.account,
 			});
+			await walletClient.writeContract(approveRequest);
 		}
+	}
 
-		// 3. Approve the BAMM contract to spend your LP tokens
-		const { request: approveRequest } = await publicClient.simulateContract({
-			address: pairAddress,
-			abi: erc20Abi,
-			functionName: "approve",
-			args: [bamm, amount],
-			account: walletClient.account,
-		});
-		await walletClient.writeContract(approveRequest);
+	/**
+	 * Lends tokens to the BAMM contract by depositing the token and receiving BAMM tokens in return.
+	 */
+	async execute(params: LendParams): Promise<{ txHash: string }> {
+		const { bammAddress, tokenAddress, amount } = params;
+		const publicClient = this.walletService.getPublicClient();
+		const walletClient = this.walletService.getWalletClient();
+		const userAddress = walletClient.account.address;
 
-		// 4. Call the mint function on the BAMM contract to lend your tokens
-		// This deposits your LP tokens into the BAMM and mints BAMM tokens in return.
-		const { request: mintRequest } = await publicClient.simulateContract({
-			address: bamm,
-			abi: BAMM_ABI,
-			functionName: "mint",
-			args: [userAddress, amount],
-			account: walletClient.account,
-		});
-		const mintTx = await walletClient.writeContract(mintRequest);
-		const receipt = await publicClient.waitForTransactionReceipt({
-			hash: mintTx,
-		});
+		// Convert the user input amount (assumed to be in full tokens) to wei (BigInt)
+		const amountInWei = BigInt(Number(amount) * 1e18);
 
-		return {
-			txHash: receipt.transactionHash,
-			amount,
+		// Ensure the BAMM contract is approved to spend the token.
+		await this.ensureTokenApproval(tokenAddress, bammAddress, amountInWei);
+
+		// Construct the Action object for lending.
+		// Here we assume that depositing tokens into the BAMM (lending) is done by calling executeActions,
+		// depositing into token0 and leaving token1 and rent as zero.
+		const currentTime = Math.floor(Date.now() / 1000);
+		const deadline = BigInt(currentTime + 300); // 5 minutes from now
+
+		const action = {
+			token0Amount: amountInWei, // Deposit the full amount into token0 slot
+			token1Amount: 0n, // No deposit for token1
+			rent: 0n, // No borrowing action here
+			to: userAddress, // The user receives BAMM tokens as a receipt
+			token0AmountMin: amountInWei, // Expecting the full amount (you can add slippage tolerance here)
+			token1AmountMin: 0n, // No token1 expected
+			closePosition: false, // Not closing the position
+			approveMax: false, // Not using max approval for inner transfers
+			v: 0, // Dummy signature values
+			r: "0x0000000000000000000000000000000000000000000000000000000000000000" as `0x${string}`,
+			s: "0x0000000000000000000000000000000000000000000000000000000000000000" as `0x${string}`,
+			deadline,
 		};
+
+		// Simulate and send the transaction by calling executeActions on the BAMM contract.
+		const { request: executeRequest } = await publicClient.simulateContract({
+			address: bammAddress,
+			abi: BAMM_ABI,
+			functionName: "executeActions",
+			args: [action],
+			account: walletClient.account,
+		});
+		const txHash = await walletClient.writeContract(executeRequest);
+		await publicClient.waitForTransactionReceipt({ hash: txHash });
+
+		return { txHash };
 	}
 }

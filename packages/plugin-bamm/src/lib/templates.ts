@@ -2,52 +2,66 @@ export const LEND_TEMPLATE = `Respond with a JSON object containing lending info
 Extract the lending details from all recent messages.
 
 The response must include:
-- poolAddress: The BAMM pool address
-- amount: The amount to lend (in ether values)
+- bammAddress: The BAMM contract address
+- tokenAddress: The token to lend (e.g., an LP token)
+- amount: The amount to lend in normal decimal form (e.g., "10" for 10 tokens)
 - error: An error message if valid poolAddress or amount cannot be determined (optional)
 
 Example response:
 \`\`\`json
 {
-    "poolAddress": "0x1234567890123456789012345678901234567890",
+    "bammAddress": "0x1234567890123456789012345678901234567890",
+    "tokenAddress": "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
     "amount": "1000"
 }
 \`\`\`
 \`\`\`json
 {
-    "poolAddress": "",
+    "bammAddress": "",
+    "tokenAddress": "",
     "amount": "",
-    "error": "No pool address found in context"
+    "error": "No pool address or token address found in context"
 }
 \`\`\`
 
 {{recentMessages}}
 Extract the lending information from all recent messages.
-Respond with a JSON markdown block containing poolAddress and amount.`;
+Respond with a JSON markdown block containing bammAddress, tokenAddress and amount.`;
 
 export const BORROW_TEMPLATE = `Respond with a JSON object containing borrowing information.
 Extract the borrowing details from all recent messages.
 
 The response must include:
-- pairAddress: The BAMM pool address
-- borrowAmount: The amount to borrow (in ether values)
-- collateralAmount: The amount of collateral to provide (in ether values)
-- receiver: The address that will receive the borrowed assets
+- bammAddress: The BAMM pool address
+- borrowToken: The address of the token to borrow
+- amount: The amount to borrow (in human-readable form)
+- collateralToken: The address of the token to use as collateral
 - error: An error message if required parameters cannot be determined (optional)
 
 Example response:
 \`\`\`json
 {
-    "pairAddress": "0x1234567890123456789012345678901234567890",
-    "borrowAmount": "1000",
-    "collateralAmount": "2000",
-    "receiver": "0x1234567890123456789012345678901234567890"
+    "bammAddress": "0x1234567890123456789012345678901234567890",
+    "borrowToken": "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
+    "amount": "1000",
+    "collateralToken": "0x9876543210987654321098765432109876543210"
+}
+\`\`\`
+\`\`\`json
+{
+    "bammAddress": "",
+    "borrowToken": "",
+    "amount": "",
+    "collateralToken": "",
+    "error": "Required fields missing"
 }
 \`\`\`
 
 {{recentMessages}}
 Extract the borrowing information from all recent messages.
-Respond with a JSON markdown block containing pairAddress, borrowAmount, collateralAmount and receiver.`;
+Respond with a JSON markdown block containing bammAddress, borrowToken, amount, and collateralToken.`;
+
+// Other templates remain unchanged, only showing the updated one for brevity.  The other templates would be updated similarly if their corresponding services changed.
 
 export const ADD_COLLATERAL_TEMPLATE = `Respond with a JSON object containing collateral addition information.
 Extract the collateral details from all recent messages.
