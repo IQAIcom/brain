@@ -26,8 +26,10 @@ export class NearAgent extends Service {
 
 		this.account = await near.account(this.opts.accountId);
 
-		// Start polling for events
-		cron.schedule("*/10 * * * * *", () => this.pollEvents()); // Every 10 seconds
+		cron.schedule(this.opts.cronExpression || "*/10 * * * * *", () =>
+			this.pollEvents(),
+		);
+
 		elizaLogger.info("🤖 NEAR Agent service initialized with polling");
 	}
 
@@ -53,16 +55,18 @@ export class NearAgent extends Service {
 					chunk.chunk_hash,
 				);
 
-				// Filter transactions for our contract
-				const relevantTxs = chunkDetails.transactions.filter(
-					(tx) => tx.receiver_id === this.opts.contractId,
+				// Filter transactions for our contracts
+				const relevantTxs = chunkDetails.transactions.filter((tx) =>
+					this.opts.listeners.some(
+						(listener) => listener.contractId === tx.receiver_id,
+					),
 				);
 
 				// Get transaction outcomes which contain the logs
 				for (const tx of relevantTxs) {
 					const txStatus = await this.account.connection.provider.txStatus(
 						tx.hash,
-						this.opts.contractId,
+						tx.receiver_id,
 						"EXECUTED",
 					);
 
@@ -73,7 +77,9 @@ export class NearAgent extends Service {
 								const eventData = JSON.parse(log);
 								if (
 									eventData.event &&
-									this.opts.eventHandlers[eventData.event]
+									this.opts.listeners.some(
+										(l) => l.eventName === eventData.event,
+									)
 								) {
 									await this.handleEvent({
 										eventType: eventData.event,
@@ -98,15 +104,19 @@ export class NearAgent extends Service {
 	}
 
 	private async handleEvent(event: AgentEvent) {
-		const handler = this.opts.eventHandlers[event.eventType];
+		const listener = this.opts.listeners.find(
+			(l) => l.eventName === event.eventType,
+		);
+		if (!listener) return;
 
 		try {
-			const result = await handler.handler(event.payload, {
+			const result = await listener.handler(event.payload, {
 				account: this.account,
 			});
+
 			await this.account.functionCall({
-				contractId: this.opts.contractId,
-				methodName: "agent_response",
+				contractId: listener.contractId,
+				methodName: listener.responseMethodName || "agent_response",
 				args: {
 					request_id: event.requestId,
 					result: result,

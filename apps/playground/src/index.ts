@@ -31,11 +31,11 @@ async function main() {
 	const nearPlugin = await createNearPlugin({
 		accountId: process.env.NEAR_ACCOUNT_ID as string,
 		accountKey: process.env.NEAR_PRIVATE_KEY as string,
-		contractId: "amm.ai-is-near.near",
-		agentId: "ai-is-near.near",
-
-		eventHandlers: {
-			run_agent: {
+		listeners: [
+			{
+				eventName: "run_agent",
+				contractId: "amm.ai-is-near.near",
+				responseMethodName: "agent_response",
 				handler: async (payload, { account }) => {
 					const request = JSON.parse(payload.message);
 
@@ -64,7 +64,7 @@ async function main() {
 					throw new Error("Illegal amount");
 				},
 			},
-		},
+		],
 	});
 
 	const sequencerPlugin = await createSequencerPlugin();

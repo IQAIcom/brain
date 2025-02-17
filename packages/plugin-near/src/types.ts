@@ -4,24 +4,25 @@ export type HandlerContext = {
 	account: Account;
 };
 
+export type NearEventListener = {
+	eventName: string;
+	contractId: string;
+	handler: (input: any, context: HandlerContext) => Promise<any>;
+	inputSchema?: Record<string, any>;
+	outputSchema?: Record<string, any>;
+	responseMethodName?: string;
+};
+
 export type NearAgentConfig = {
 	// Core NEAR connection config
 	accountId: string;
 	accountKey: string;
-	contractId: string;
 
-	// Agent identity and permissions
-	agentId: string;
-	allowedContracts?: string[];
+	// Array of event listeners
+	listeners: NearEventListener[];
 
-	// Agent behavior definition
-	eventHandlers: {
-		[eventName: string]: {
-			handler: (input: any, context: HandlerContext) => Promise<any>;
-			inputSchema?: Record<string, any>;
-			outputSchema?: Record<string, any>;
-		};
-	};
+	// cron
+	cronExpression?: string;
 
 	// Optional configurations
 	gasLimit?: string;
@@ -37,10 +38,4 @@ export type AgentEvent = {
 	payload: any;
 	sender: string;
 	timestamp: number;
-};
-
-export type AgentResponse = {
-	requestId: string;
-	result: any;
-	error?: string;
 };
