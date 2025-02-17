@@ -28,9 +28,9 @@ import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
 import { ModelProviderName } from "@elizaos/core";
 
 const agent = new AgentBuilder()
-	.withDatabase(new SqliteDatabaseAdapter(new Database()))
-	.withModelProvider(ModelProviderName.OPENAI, "your-openai-key")
-	.build();
+ .withDatabase(new SqliteDatabaseAdapter(new Database()))
+ .withModelProvider(ModelProviderName.OPENAI, "your-openai-key")
+ .build();
 
 await agent.start();
 ```

@@ -37,9 +37,8 @@ The **Heartbeat Plugin** enables automated scheduling of tasks and social media 
 Here's a complete example of setting up an agent with the Heartbeat plugin:
 
 ```typescript
-import { AgentBuilder } from "@iqai/agent";
+import { AgentBuilder, ModelProviderName } from "@iqai/agent";
 import { createHeartbeatPlugin } from "@iqai/plugin-heartbeat";
-import { ModelProviderName } from "@elizaos/core";
 
 async function main() {
   // Initialize Heartbeat plugin

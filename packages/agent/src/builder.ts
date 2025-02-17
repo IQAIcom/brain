@@ -3,12 +3,11 @@ import type {
 	Client,
 	IDatabaseAdapter,
 	IDatabaseCacheAdapter,
-	ModelProviderName,
 	Plugin,
 	CacheStore,
 } from "@elizaos/core";
 import { Agent, type AgentOptions } from "./agent";
-
+import { type ModelProviderName } from "./types";
 export class AgentBuilder {
 	private options: Partial<AgentOptions> = {};
 
