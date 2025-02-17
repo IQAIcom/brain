@@ -1,5 +1,11 @@
 # @iqai/agent
 
+## 0.0.4
+
+### Patch Changes
+
+- c58ed29: Fix elizaos/core model name to use import as value instead of type
+
 ## 0.0.3
 
 ### Patch Changes
