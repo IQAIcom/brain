@@ -4,15 +4,20 @@ import { BAMM_FACTORY_ABI } from "../lib/bamm-factory.abi";
 import { BAMM_ABI } from "../lib/bamm.abi"; // Provided BAMM ABI
 import type { Address } from "viem";
 import dedent from "dedent";
+import { formatWeiToNumber } from "../lib/format-number";
 
 export interface BammPosition {
 	bamm: Address;
-	isUser: boolean;
 	vault: {
 		token0: bigint;
 		token1: bigint;
 		rented: bigint;
 	} | null;
+	// Additional Frax pool fields
+	pairAddress: string;
+	poolName: string;
+	token0Symbol: string;
+	token1Symbol: string;
 }
 
 export class BammPositionsService {
@@ -55,50 +60,68 @@ export class BammPositionsService {
 			});
 
 			// 4. If the user is registered, get their vault details
-			let vault = null;
 			if (isUser) {
-				vault = await publicClient.readContract({
+				const vault = await publicClient.readContract({
 					address: bamm,
 					abi: BAMM_ABI,
 					functionName: "getUserVault",
 					args: [userAddress],
 				});
+				// get pair address from the BAMM contract
+				const pairAddress = await publicClient.readContract({
+					address: bamm,
+					abi: BAMM_ABI,
+					functionName: "pair",
+					args: [],
+				});
+				// call fraxswap API to get the pool details
+				const response = await fetch(
+					`https://api.frax.finance/v2/fraxswap/pools/${pairAddress}`,
+				);
+				if (!response.ok) {
+					throw new Error(
+						`Failed to fetch pool details: ${response.statusText}`,
+					);
+				}
+				const poolData = await response.json();
+				const poolName = poolData.pools[0].poolName;
+				const token0Symbol = poolData.pools[0].token0Symbol;
+				const token1Symbol = poolData.pools[0].token1Symbol;
+				positions.push({
+					bamm,
+					vault,
+					pairAddress,
+					poolName,
+					token0Symbol,
+					token1Symbol,
+				});
 			}
-
-			positions.push({
-				bamm,
-				isUser,
-				vault,
-			});
 		}
 
 		return positions;
 	}
 
 	formatPositions(positions: BammPosition[]) {
-		if (
-			positions.length === 0 ||
-			positions.map((p) => p.isUser).every((v) => !v)
-		) {
+		if (positions.length === 0 || positions.every((v) => !v)) {
 			return "📊 No Active BAMM Positions Found";
 		}
 
 		const formattedPositions = positions
 			.map((pos) => {
-				if (!pos.isUser) return null;
 				const isLend =
 					pos.vault.rented === null || pos.vault.rented <= BigInt(0);
 
 				return dedent`
-            💰 BAMM Position
-            - Contract: ${pos.bamm}
-            - Token0 Amount: ${pos.vault?.token0.toString() || "0"}
-            - Token1 Amount: ${pos.vault?.token1.toString() || "0"}
-            ${isLend ? "💸 Lending" : `💰 Borrowing: ${pos.vault.rented}`}
+            **💰 BAMM Position**
+            - bamm: ${pos.bamm}
+						- Pair: ${pos.pairAddress}
+            - ${pos.token0Symbol}: ${formatWeiToNumber(pos.vault?.token0 || 0n)}
+            - ${pos.token1Symbol}: ${formatWeiToNumber(pos.vault?.token1 || 0n)}
+            - ${isLend ? "💸 Lending" : `💰 Borrowing: ${formatWeiToNumber(pos.vault.rented)}`}
         `;
 			})
 			.filter(Boolean)
-			.join("\n");
+			.join("\n\n");
 
 		return `📊 *Your Active BAMM Positions*\n\n${formattedPositions}`;
 	}
