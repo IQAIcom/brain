@@ -1,84 +1,80 @@
 import type { Action } from "@elizaos/core";
 import { elizaLogger } from "@elizaos/core";
 import type { BAMMActionParams } from "../types";
-import { RepayService } from "../services/repay";
 import { InputParserService } from "../services/input-parser";
 import dedent from "dedent";
-import { formatWeiToNumber } from "../lib/format-number";
 import { REPAY_TEMPLATE } from "../lib/templates";
 import { WalletService } from "../services/wallet";
+import { RepayService } from "../services/repay";
 
 export const getRepayAction = (opts: BAMMActionParams): Action => {
-  return {
-    name: "BAMM_REPAY",
-    description: "Repay borrowed assets to BAMM pool",
-    similes: [
-      "REPAY",
-      "PAY_BACK",
-      "RETURN_LOAN",
-      "SETTLE_DEBT",
-      "CLEAR_LOAN"
-    ],
-    validate: async () => true,
-    handler: handler(opts),
-    examples: [
-      [{
-        user: "user",
-        content: { text: "Repay 500 USDC to BAMM pool" }
-      }]
-    ]
-  };
+	return {
+		name: "BAMM_REPAY",
+		description: "Repay borrowed assets from a BAMM pool",
+		similes: ["REPAY", "RETURN", "PAY_BACK", "REPAY_LOAN"],
+		validate: async () => true,
+		handler: handler(opts),
+		examples: [],
+	};
 };
 
 const handler = (opts: BAMMActionParams) => {
-  return async (runtime, message, state, _options, callback) => {
-    elizaLogger.info('Starting repay action');
-    try {
-      const inputParser = new InputParserService();
-      const { pairAddress, amount, error } = await inputParser.parseInputs({
-        runtime,
-        message,
-        state,
-        template: REPAY_TEMPLATE,
-      });
+	return async (runtime, message, state, _options, callback) => {
+		elizaLogger.info("Starting repay action");
+		try {
+			const inputParser = new InputParserService();
+			const { bammAddress, borrowToken, amount, collateralToken, error } =
+				await inputParser.parseInputs({
+					runtime,
+					message,
+					state,
+					template: REPAY_TEMPLATE,
+				});
 
-      if (error) {
-        callback?.({
-          text: `❌ ${error}`,
-        });
-        return false;
-      }
+			if (error) {
+				callback?.({
+					text: `❌ ${error}`,
+				});
+				return false;
+			}
 
-      const walletService = new WalletService(opts.walletPrivateKey, opts.chain);
-      const repayService = new RepayService(walletService);
+			const walletService = new WalletService(
+				opts.walletPrivateKey,
+				opts.chain,
+			);
+			const repayService = new RepayService(walletService);
 
-      const result = await repayService.execute({
-        pairAddress,
-        amount: BigInt(amount)
-      });
+			const result = await repayService.execute({
+				bammAddress,
+				borrowToken,
+				amount,
+				collateralToken,
+			});
 
-      callback?.({
-        text: dedent`
-          ✅ Repayment Successful
+			callback?.({
+				text: dedent`
+          ✅ Repayment Transaction Successful
 
-          💰 Amount Repaid: ${formatWeiToNumber(amount)} tokens
+          🏦 BAMM Address: ${bammAddress}
+          🪙 Borrow Token: ${borrowToken}
+          💰 Amount Repaid: ${amount}
           🔗 Transaction: ${result.txHash}
 
-          Loan has been partially or fully repaid.
+          Borrowed assets have been successfully repaid to the BAMM pool.
         `,
-      });
-      return true;
-    } catch (error) {
-      callback?.({
-        text: dedent`
-          ❌ Repayment Failed
+			});
+			return true;
+		} catch (error) {
+			callback?.({
+				text: dedent`
+          ❌ Repayment Transaction Failed
 
           Error: ${error.message}
 
           Please verify your inputs and try again.
         `,
-      });
-      return false;
-    }
-  };
+			});
+			return false;
+		}
+	};
 };
