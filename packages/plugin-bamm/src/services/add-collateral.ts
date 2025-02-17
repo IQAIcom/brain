@@ -2,7 +2,6 @@ import { erc20Abi } from "viem";
 import type { Address } from "viem";
 import type { WalletService } from "./wallet";
 import { BAMM_ABI } from "../lib/bamm.abi";
-import dedent from "dedent";
 import { elizaLogger } from "@elizaos/core";
 
 export interface AddCollateralParams {
