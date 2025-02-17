@@ -8,8 +8,6 @@ export type NearEventListener = {
 	eventName: string;
 	contractId: string;
 	handler: (input: any, context: HandlerContext) => Promise<any>;
-	inputSchema?: Record<string, any>;
-	outputSchema?: Record<string, any>;
 	responseMethodName?: string;
 	cronExpression?: string;
 };
