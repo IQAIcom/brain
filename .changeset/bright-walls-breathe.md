@@ -2,4 +2,4 @@
 "@iqai/agent": patch
 ---
 
-fix
+Fix elizaos/core model name import as value instead of type
