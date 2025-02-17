@@ -1,3 +1,7 @@
+---
+description: structured prompt to ensure that all plugin documentation follows a consistent format in Astro/MDX
+globs: 
+---
 # Plugin Documentation Structure Template
 
 Use this structured prompt to ensure that all plugin documentation follows a consistent format in Astro/MDX. Each plugin differs in functionality, but the documentation should always contain the following sections.
