@@ -36,9 +36,8 @@ The **Sequencer Plugin** enables your agent to execute complex multi-step operat
 Here's a complete example of setting up an agent with the Sequencer plugin:
 
 ```typescript
-import { AgentBuilder } from "@iqai/agent";
+import { AgentBuilder, ModelProviderName } from "@iqai/agent";
 import createSequencerPlugin from "@iqai/plugin-sequencer";
-import { ModelProviderName } from "@elizaos/core";
 
 async function main() {
   // Initialize Sequencer plugin
