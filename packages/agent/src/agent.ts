@@ -16,7 +16,7 @@ import {
 import path from "node:path";
 import { defaultCharacter } from "./default-charecter";
 import dedent from "dedent";
-import { ModelProviderName } from "./types";
+import type { ModelProviderName } from "./types";
 
 export interface AgentOptions {
 	databaseAdapter?: IDatabaseAdapter & IDatabaseCacheAdapter;
