@@ -75,16 +75,15 @@ export class RepayService {
 			const currentTime = Math.floor(Date.now() / 1000);
 			const deadline = BigInt(currentTime + 300);
 
-			// Construct the action object for repayment
 			const action = {
-				token0Amount: isBorrowingToken0 ? amountInWei : 0n, // repay token0 if borrowing token0
-				token1Amount: isBorrowingToken0 ? 0n : amountInWei, // repay token1 if borrowing token1
-				rent: effectiveRent, // reduce the rent by paying it back
+				token0Amount: isBorrowingToken0 ? amountInWei : 0n,
+				token1Amount: isBorrowingToken0 ? 0n : amountInWei,
+				rent: effectiveRent,
 				to: userAddress,
-				token0AmountMin: 0n, // slippage tolerance for token0, if any
-				token1AmountMin: 0n, // slippage tolerance for token1, if any
-				closePosition: false, // don't close the position yet
-				approveMax: false, // don't approve max, just the required amount
+				token0AmountMin: 0n,
+				token1AmountMin: 0n,
+				closePosition: false,
+				approveMax: false,
 				v: 0,
 				r: "0x0000000000000000000000000000000000000000000000000000000000000000" as `0x${string}`,
 				s: "0x0000000000000000000000000000000000000000000000000000000000000000" as `0x${string}`,

@@ -6,7 +6,6 @@ import { elizaLogger } from "@elizaos/core";
 
 export interface BorrowParams {
 	bammAddress: Address;
-	/** The token the user wants to borrow (either token0 or token1 from the BAMM) */
 	borrowToken: Address;
 	amount: string;
 }
@@ -14,12 +13,6 @@ export interface BorrowParams {
 export class BorrowService {
 	constructor(private walletService: WalletService) {}
 
-	/**
-	 * Borrows tokens from the BAMM contract.
-	 * Derives the collateral token automatically (if borrowToken == token0 then collateral is token1, and vice versa).
-	 * Computes the effective rent using the current rentedMultiplier so that:
-	 *    (rent * rentedMultiplier) / 1e18 == amountInWei.
-	 */
 	async execute(params: BorrowParams): Promise<{ txHash: string }> {
 		const { bammAddress, borrowToken, amount } = params;
 		const publicClient = this.walletService.getPublicClient();
@@ -28,7 +21,6 @@ export class BorrowService {
 		const amountInWei = BigInt(Math.floor(Number(amount) * 1e18));
 
 		try {
-			// 1. Read token0 and token1 from the BAMM contract.
 			const token0: Address = await publicClient.readContract({
 				address: bammAddress,
 				abi: BAMM_ABI,
@@ -48,7 +40,6 @@ export class BorrowService {
 			let collateralToken: Address;
 			let isBorrowingToken0: boolean;
 			if (normalizedBorrowToken === normalizedToken0) {
-				// Borrowing token0, so collateral is token1.
 				collateralToken = token1;
 				isBorrowingToken0 = true;
 			} else if (normalizedBorrowToken === normalizedToken1) {
@@ -61,7 +52,6 @@ export class BorrowService {
 				);
 			}
 
-			// 2. Check if the user has sufficient collateral balance.
 			const collateralBalance: bigint = await publicClient.readContract({
 				address: collateralToken,
 				abi: erc20Abi,
@@ -72,10 +62,8 @@ export class BorrowService {
 				throw new Error("Insufficient collateral token balance");
 			}
 
-			// 3. Approve BAMM to spend the collateral if needed.
 			await this.ensureTokenApproval(collateralToken, bammAddress, amountInWei);
 
-			// Get rentedMultiplier
 			const rentedMultiplier: bigint = await publicClient.readContract({
 				address: bammAddress,
 				abi: BAMM_ABI,
@@ -86,7 +74,6 @@ export class BorrowService {
 			// Calculate rent based on borrowed amount and rentedMultiplier
 			const rent = (amountInWei * rentedMultiplier) / BigInt(1e18);
 
-			// Construct the action object
 			const currentTime = Math.floor(Date.now() / 1000);
 			const deadline = BigInt(currentTime + 300);
 
@@ -105,7 +92,6 @@ export class BorrowService {
 				deadline,
 			};
 
-			// 6. Simulate and execute the transaction.
 			const { request: executeRequest } = await publicClient.simulateContract({
 				address: bammAddress,
 				abi: BAMM_ABI,

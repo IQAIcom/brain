@@ -6,7 +6,6 @@ import { elizaLogger } from "@elizaos/core";
 
 export interface WithdrawParams {
 	bammAddress: Address;
-	/** The amount of BAMM tokens (in normal decimals) to redeem for Fraxswap LP */
 	amount: string;
 }
 

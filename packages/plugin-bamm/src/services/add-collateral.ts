@@ -7,7 +7,7 @@ import { elizaLogger } from "@elizaos/core";
 export interface AddCollateralParams {
 	bammAddress: Address;
 	collateralToken: Address;
-	amount: string; // e.g. "10" means 10 tokens in normal decimal
+	amount: string;
 }
 
 export class AddCollateralService {

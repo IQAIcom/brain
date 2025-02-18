@@ -6,7 +6,6 @@ import { elizaLogger } from "@elizaos/core";
 
 export interface LendParams {
 	bammAddress: Address;
-	/** The amount of Fraxswap LP tokens to deposit, in normal decimal form (e.g. "10" for 10 tokens) */
 	amount: string;
 }
 
@@ -44,7 +43,7 @@ export class LendService {
 				throw new Error("Insufficient Fraxswap LP token balance");
 			}
 
-			// 3. Approve the BAMM contract to spend LP tokens if needed
+			// 3. Approve the BAMM contract to spend LP tokens
 			const allowance: bigint = await publicClient.readContract({
 				address: lpTokenAddress,
 				abi: erc20Abi,

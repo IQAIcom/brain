@@ -46,12 +46,7 @@ export class BammPositionsService {
 
 		// 2. Loop through each BAMM contract address
 		for (const bamm of bammsArray) {
-			// Safety-check for a valid address
-			if (bamm === "0x0000000000000000000000000000000000000000") {
-				continue;
-			}
-
-			// 3. Check if the user is registered in this BAMM using isUser (returns a bool)
+			// 3. Check if the user is registered in this BAMM using isUser
 			const isUser: boolean = await publicClient.readContract({
 				address: bamm,
 				abi: BAMM_ABI,

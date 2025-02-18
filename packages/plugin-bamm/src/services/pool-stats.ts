@@ -79,9 +79,6 @@ export class BammPoolsStatsService {
 		return filteredPools;
 	}
 
-	/**
-	 * Neatly formats the pool stats using dedent.
-	 */
 	formatPoolsStats(pools: PoolStats[]): string {
 		if (pools.length === 0) {
 			return "📊 No BAMM Pools Found";
