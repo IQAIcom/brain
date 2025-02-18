@@ -33,13 +33,13 @@ async function main() {
 		listeners: [
 			{
 				eventName: "run_agent",
-				contractId: "amm.ai-is-near.near",
+				contractId: "iqai.testnet",
 				responseMethodName: "agent_response",
 				handler: async (payload, { account }) => {
 					const request = JSON.parse(payload.message);
 
 					const balances = await account.viewFunction({
-						contractId: "amm.ai-is-near.near",
+						contractId: "iqai.testnet",
 						methodName: "get_swap_balances",
 						args: {
 							token_in: request.token_in,
@@ -64,6 +64,10 @@ async function main() {
 				},
 			},
 		],
+		networkConfig: {
+			networkId: "testnet",
+			nodeUrl: "https://rpc.testnet.near.org",
+		},
 	});
 
 	const sequencerPlugin = await createSequencerPlugin();
