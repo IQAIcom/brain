@@ -5,7 +5,17 @@ import { BAMM_FACTORY_ABI } from "../lib/bamm-factory.abi";
 import { BAMM_ABI } from "../lib/bamm.abi";
 import type { Address } from "viem";
 import formatNumber from "../lib/format-number";
-import type { PoolStats } from "../types";
+
+export interface PoolStats {
+	poolAddress: string;
+	bammAddress: string;
+	createdAtTimestamp: string;
+	token0Symbol: string;
+	token0AmountLocked: number;
+	token1Symbol: string;
+	token1AmountLocked: number;
+	tvl: number;
+}
 
 export class BammPoolsStatsService {
 	// Frax API endpoint for all Fraxswap pools
@@ -64,12 +74,6 @@ export class BammPoolsStatsService {
 			if (pairToBammMap.has(poolPair)) {
 				// Set the BAMM address from our mapping.
 				pool.bammAddress = pairToBammMap.get(poolPair);
-				// 5. Compute APRs.
-				pool.bammApr = pool.tvl > 0 ? (pool.fees24H / pool.tvl) * 365 * 100 : 0;
-				pool.fraxswapApr =
-					pool.tvl > 0
-						? ((pool.volumeSwap24H * pool.feePercentage) / pool.tvl) * 365 * 100
-						: 0;
 				filteredPools.push(pool);
 			}
 		}
@@ -91,14 +95,6 @@ export class BammPoolsStatsService {
           📊 Pool: ${poolName}
           - Pool Address: ${pool.poolAddress}
           - BAMM Address: ${pool.bammAddress}
-          - BAMM APR: ${
-						pool.bammApr > 0 ? `${formatNumber(pool.bammApr || 0)}%` : "N/A"
-					}
-          - Fraxswap APR: ${
-						pool.fraxswapApr > 0
-							? `${formatNumber(pool.fraxswapApr || 0)}%`
-							: "N/A"
-					}
           - TVL: $${formatNumber(pool.tvl || 0)}
           - ${pool.token0Symbol} Locked: ${formatNumber(
 						pool.token0AmountLocked || 0,
