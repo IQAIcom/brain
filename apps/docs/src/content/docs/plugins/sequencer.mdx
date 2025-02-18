@@ -3,7 +3,7 @@ title: "Sequencer Plugin"
 description: "Plugin for orchestrating multi-step operations and action sequences in IQ AI agents"
 ---
 
-import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+import { Steps, Tabs, TabItem, Aside, Card } from '@astrojs/starlight/components';
 
 The **Sequencer Plugin** enables your agent to execute complex multi-step operations by:
 
@@ -21,14 +21,7 @@ The **Sequencer Plugin** enables your agent to execute complex multi-step operat
    ```bash
    pnpm add @iqai/agent @iqai/plugin-sequencer
    ```
-
-2. Create a **.env** file with the required configuration:
-
-   ```bash
-   OPENAI_API_KEY=your-openai-api-key
-   ```
 </Steps>
-
 ---
 
 ## Basic Setup
@@ -60,42 +53,10 @@ main().catch(console.error);
 
 ---
 
-## Available Operations
-
-- **Action Sequencing**: Execute multiple actions in order
-- **State Management**: Maintain context across actions
-
----
-
 ## Usage Examples
 
-| Type | Example Query |
-|-----------|--------------|
-| Portfolio | `Get my AI token holdings, then sell 10% of the top holding` |
-| DeFi | `Get Fraxlend pool with highest APR, then lend 0.1 FRAX to the pool` |
-
----
-
-## Error Handling
-
-Implement proper error handling for sequence operations:
-
-```typescript
-try {
-	const sequencerPlugin = await createSequencerPlugin();
-} catch (error) {
-  console.error('Failed to initialize sequencer plugin:', error);
-}
-```
-
----
-
-## Best Practices
-
-- ✔ **Action Validation**: Verify all actions exist before sequencing
-- ✔ **Error Recovery**: Implement robust error handling
-- ✔ **Logging**: Check detailed logs of sequence execution
-
+- Get my AI token holdings, then sell 10% of the top holding
+- Get Fraxlend pool with highest APR, then lend 0.1 FRAX to the pool
 ---
 
 ## Common Issues and Troubleshooting
