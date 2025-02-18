@@ -19,7 +19,7 @@ The **ATP Plugin** enables your agent to interact with **IQ's Agent Tokenization
 1. Install the required packages:
 
    ```bash
-   pnpm add @iqai/agent @iqai/plugin-atp @elizaos/core
+   pnpm add @iqai/agent @iqai/plugin-atp
    ```
 
 2. Create a **.env** file with the required configuration:
@@ -36,9 +36,8 @@ The **ATP Plugin** enables your agent to interact with **IQ's Agent Tokenization
 Here's a complete example of setting up an agent with the ATP plugin:
 
 ```typescript
-import { Agent } from "@iqai/agent";
+import { AgentBuilder, ModelProviderName } from "@iqai/agent";
 import { createATPPlugin } from "@iqai/plugin-atp";
-import { ModelProviderName } from "@elizaos/core";
 
 async function main() {
   // Initialize ATP plugin

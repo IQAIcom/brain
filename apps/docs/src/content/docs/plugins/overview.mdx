@@ -5,6 +5,7 @@ description: Overview of available Brain Framework plugins
 
 import { Aside } from '@astrojs/starlight/components';
 import { Card, CardGrid } from '@astrojs/starlight/components';
+import ExternalLink from "../../../components/ExternalLink.astro"
 
 Brain Framework's plugin system allows you to extend your agent's capabilities with various integrations. Each plugin adds specific functionality, such as DeFi operations, token swaps, or other blockchain interactions.
 
@@ -50,10 +51,9 @@ Brain Framework's plugin system allows you to extend your agent's capabilities w
 ## Using Plugins
 
 ```typescript
-import { AgentBuilder } from "@iqai/agent";
+import { AgentBuilder, ModelProviderName } from "@iqai/agent";
 import { createFraxlendPlugin } from "@iqai/plugin-fraxlend";
 import { createOdosPlugin } from "@iqai/plugin-odos";
-import { ModelProviderName } from "@elizaos/core";
 import { bootstrapPlugin } from "@elizaos/plugin-bootstrap";
 import { fraxtal } from "viem/chains";
 
@@ -84,6 +84,18 @@ async function main() {
 
 main().catch(console.error);
 ```
+
+
+
+### Using elizaOS plugins
+Browse the full collection of community plugins at <ExternalLink href="https://github.com/elizaos-plugins">ElizaOS Plugins</ExternalLink>, including:
+- Additional client interfaces
+- Data storage solutions
+- Integration tools
+- Utility plugins
+
+This compatibility ensures you have access to a wide range of tools while building your agents.
+
 
 <Aside type="note">
 On-chain plugins require chain configuration and wallet access. Store sensitive information with care.

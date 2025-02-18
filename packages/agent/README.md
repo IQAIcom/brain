@@ -23,14 +23,13 @@ Basic usage with builder pattern:
 
 ```typescript
 import Database from "better-sqlite3";
-import { AgentBuilder } from "@iqai/agent";
+import { AgentBuilder, ModelProviderName } from "@iqai/agent";
 import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
-import { ModelProviderName } from "@elizaos/core";
 
 const agent = new AgentBuilder()
-	.withDatabase(new SqliteDatabaseAdapter(new Database()))
-	.withModelProvider(ModelProviderName.OPENAI, "your-openai-key")
-	.build();
+ .withDatabase(new SqliteDatabaseAdapter(new Database()))
+ .withModelProvider(ModelProviderName.OPENAI, "your-openai-key")
+ .build();
 
 await agent.start();
 ```

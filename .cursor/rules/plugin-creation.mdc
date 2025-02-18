@@ -1,3 +1,8 @@
+---
+description: creation of new plugins for brain framework
+globs: 
+---
+
 # Brain Framework Plugin Creation Guide
 
 ## Plugin Structure
@@ -25,6 +30,8 @@ packages/
 ### 1. Plugin Entry (`index.ts`)
 
 ```typescript
+import type { Plugin } from "@elizaos/core";
+
 export async function createYourPlugin(opts: YourPluginParams): Promise<Plugin> {
   const actions = [
     getActionOne(opts),
@@ -55,10 +62,13 @@ export default createYourPlugin;
 - Implement **proper error handling**.
 - Use `elizaLogger` for debugging.
 - Follow the `Action` interface from `@elizaos/core`.
+- Package is @iqai . Dont use @brain . Ensure you use @elizaos/core when needed.
 
 ### Example Action Structure
 
 ```typescript
+import type { Action, Handler, Runtime, Message, State, Options } from "@elizaos/core";
+
 export const getYourAction = (opts: YourPluginParams): Action => {
   return {
     name: "YOUR_ACTION_NAME",
@@ -95,6 +105,34 @@ const handler: (opts: YourPluginParams) => Handler =
 
 ---
 
+## Example package.json
+
+- Name should start with @iqai/plugin-
+
+```json
+{
+	"name": "@iqai/plugin-example",
+	"version": "0.1.9",
+	"main": "dist/index.js",
+	"type": "module",
+	"types": "dist/index.d.ts",
+	"dependencies": {
+		"@elizaos/core": "0.1.9",
+		"tsup": "8.3.6",
+		"dedent": "^1.5.3"
+	},
+	"scripts": {
+		"build": "tsup --format esm",
+		"dev": "tsup --format esm --watch"
+	},
+	"devDependencies": {
+		"@iqai/tsconfig": "workspace:*"
+	}
+}
+```
+
+___
+
 ## Required Elements
 
 - **TypeScript**: Use TypeScript for all code files.
@@ -108,9 +146,11 @@ const handler: (opts: YourPluginParams) => Handler =
 ## Best Practices
 
 - Use **kebab-case** for plugin names (e.g., `plugin-your-feature`).
+- In package.json plugin name should use iqai org (e.g., `@iqai/plugin-your-feature`).
 - Follow a **consistent logging format**.
 - Implement **proper type definitions**.
 - Keep **services separate** from actions.
 - Use **meaningful and descriptive naming** for functions and variables.
 
 This guide reflects the actual structure used in the Brain Framework, including the ATP plugin example provided in the codebase context.
+
