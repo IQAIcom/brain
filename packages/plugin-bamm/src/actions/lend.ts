@@ -16,7 +16,16 @@ export const getLendAction = (opts: BAMMActionParams): Action => {
 		similes: ["LEND", "SUPPLY", "DEPOSIT", "PROVIDE_LIQUIDITY"],
 		validate: async () => true,
 		handler: handler(opts),
-		examples: [],
+		examples: [
+			[
+				{
+					user: "user",
+					content: {
+						text: "lend 10k lp tokens to 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84 bamm",
+					},
+				},
+			],
+		],
 	};
 };
 

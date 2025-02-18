@@ -20,7 +20,16 @@ export const getRemoveCollateralAction = (opts: BAMMActionParams): Action => {
 		],
 		validate: async () => true,
 		handler: handler(opts),
-		examples: [],
+		examples: [
+			[
+				{
+					user: "user",
+					content: {
+						text: "remove 10k collateral of 0xCc3023635dF54FC0e43F47bc4BeB90c3d1fbDa9f from this 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84 bamm",
+					},
+				},
+			],
+		],
 	};
 };
 

@@ -19,7 +19,24 @@ export const getBammPositionsAction = (opts: BAMMActionParams): Action => {
 		],
 		validate: async () => true,
 		handler: handler(opts),
-		examples: [],
+		examples: [
+			[
+				{
+					user: "user",
+					content: {
+						text: "my bamm positions please",
+					},
+				},
+			],
+			[
+				{
+					user: "user",
+					content: {
+						text: "get my bamm holdings",
+					},
+				},
+			],
+		],
 	};
 };
 

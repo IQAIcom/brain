@@ -11,14 +11,14 @@ import { WalletService } from "../services/wallet";
 export const getWithdrawAction = (opts: BAMMActionParams): Action => {
 	return {
 		name: "BAMM_WITHDRAW",
-		description: "Withdraw LP tokens from BAMM pool by redeeming BAMM tokens.", // Updated description
+		description: "Withdraw LP tokens from BAMM pool by redeeming BAMM tokens.",
 		similes: [
 			"WITHDRAW",
 			"REMOVE_LIQUIDITY",
 			"EXIT_POOL",
 			"PULL_LIQUIDITY",
 			"WITHDRAW_LP",
-			"REDEEM_BAMM", // Added simile
+			"REDEEM_BAMM",
 		],
 		validate: async () => true,
 		handler: handler(opts),
@@ -26,7 +26,9 @@ export const getWithdrawAction = (opts: BAMMActionParams): Action => {
 			[
 				{
 					user: "user",
-					content: { text: "Redeem 100 BAMM tokens for LP tokens" }, // Updated example
+					content: {
+						text: "withdraw 15k bamm tokens from 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84",
+					},
 				},
 			],
 		],

@@ -10,6 +10,7 @@ export const getBammPoolStatsAction = (opts: BAMMActionParams): Action => {
 		description: "Get statistics for all BAMM pools",
 		similes: [
 			"VIEW_POOLS",
+			"VIEW_BAMMS",
 			"CHECK_POOLS",
 			"GET_POOL_INFO",
 			"VIEW_POOL_STATS",
@@ -19,7 +20,32 @@ export const getBammPoolStatsAction = (opts: BAMMActionParams): Action => {
 		],
 		validate: async () => true,
 		handler: handler(opts),
-		examples: [],
+		examples: [
+			[
+				{
+					user: "user",
+					content: {
+						text: "bamm pools please",
+					},
+				},
+			],
+			[
+				{
+					user: "user",
+					content: {
+						text: "show me all bamm pools",
+					},
+				},
+			],
+			[
+				{
+					user: "user",
+					content: {
+						text: "fetch all bamms",
+					},
+				},
+			],
+		],
 	};
 };
 
