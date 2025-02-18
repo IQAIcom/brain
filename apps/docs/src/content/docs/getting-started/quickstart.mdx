@@ -1,10 +1,22 @@
 ---
+layout: ../../../components/starlight/BaseLayout.astro
 title: Quick Start
 description: Get up and running with Brain Framework
 ---
 import { Steps } from '@astrojs/starlight/components';
 
-## Basic Usage
+
+
+In this guide, we'll create a basic AI agent using Brain Framework. You'll learn how to set up an agent with essential configurations and get it running with minimal setup. This will give you a foundation to build upon as you explore more advanced features.
+
+## Creating Your First Agent
+
+To create an agent, you'll need three key components:
+
+1. **LLM Model Provider**: Choose your preferred language model (OpenAI, Claude, etc.) that will power your agent's intelligence.
+2. **Client Interface**: Select how users will interact with your agent. Brain Framework supports various client integrations including Discord, Telegram, Twitter, Instagram, WhatsApp and more. In this example, we'll use the Direct client which provides HTTP endpoints for interaction.
+3. **Prompts and Plugins**: Define your agent's behavior through prompts and extend functionality using plugins. In this quickstart example, we'll use the default prompts that come with the framework. For customizing prompts and adding plugins, check out [Agent Creation Guide](/getting-started/agent-creation).
+
 <Steps>
 1. Import the required dependencies:
    ```javascript
@@ -25,25 +37,9 @@ import { Steps } from '@astrojs/starlight/components';
 
    main().catch(console.error);
    ```
+
+3. Run your agent and test:
+   After starting your agent, visit [IQAI Console](https://console.iqai.com) to interact with it through a ready-to-use interface. This allows you to test your agent without building a custom client application.
+
+   For more details on testing your agent, check out [Testing Your Agent](/getting-started/test-agent)
 </Steps>
-
-## Error Handling
-Add basic error handling to your implementation:
-
-```javascript
-async function main() {
-  try {
-    const agent = new AgentBuilder()
-      .withModelProvider(ModelProviderName.OPENAI, process.env.OPENAI_API_KEY)
-      .withClient("direct", DirectClientInterface)
-      .build();
-
-    await agent.start();
-  } catch (error) {
-    console.error('Failed to setup agent:', error);
-    process.exit(1);
-  }
-}
-
-main().catch(console.error);
-```

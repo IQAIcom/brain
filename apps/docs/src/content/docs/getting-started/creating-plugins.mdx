@@ -1,15 +1,30 @@
 ---
+layout: ../../../components/starlight/BaseLayout.astro
 title: "Creating Plugins"
 description: "Learn how to create plugins for Brain Framework"
 ---
+import ExternalLink from "../../../components/ExternalLink.astro"
 
-Brain Framework offers two approaches to creating plugins: **Simple Plugin Creation** and **Traditional Plugin Creation**. Both methods extend the framework's functionality efficiently.
 
-## Simple Plugin Creation
+Brain Framework provides two approaches to plugin development: a simplified utility method and the standard plugin structure.
 
-For simpler use cases, Brain Framework provides a streamlined approach using `createSimplePlugin`.
 
-### Creating a Simple Plugin
+## Plugin Integration
+
+To use your plugin, integrate it with the agent builder:
+
+```ts
+const agent = new AgentBuilder()
+  .withPlugin(yourPlugin)
+  // ... other configurations
+  .build();
+```
+
+
+
+## Quick Plugin Creation
+
+Brain Framework's `createSimplePlugin` utility lets you create plugins with minimal boilerplate:
 
 ```ts
 import { createSimplePlugin } from "@iqai/agent";
@@ -43,7 +58,7 @@ const yourPlugin = createSimplePlugin({
 
 ### Example: Time Plugin
 
-Here's a practical example of a simple plugin that provides time-related functionality:
+Here's a practical example using the simplified approach:
 
 ```ts
 const timePlugin = createSimplePlugin({
@@ -68,11 +83,19 @@ const timePlugin = createSimplePlugin({
 });
 ```
 
-## Traditional Plugin Creation
 
-### Plugin Structure
+## Full Plugin Structure
 
-Plugins are organized under the `packages` directory with the following structure:
+When your plugin needs advanced features like:
+- Custom service implementations
+- Data providers
+- Complex state management
+- Custom evaluators
+- Multiple interconnected actions
+
+You can leverage the full plugin structure:
+
+### Directory Structure
 
 ```bash
 packages/
@@ -80,7 +103,7 @@ packages/
     src/
       __tests__/      # Test files
       actions/        # Action definitions
-      services/       # Services for business logic
+      services/      # Services for business logic
       lib/           # Utility functions
     index.ts         # Main plugin export
     types.ts         # Type definitions
@@ -88,9 +111,9 @@ packages/
     package.json
 ```
 
-### Creating a Traditional Plugin
+### Implementation
 
-#### Create the main plugin file (`index.ts`):
+Main plugin file (`index.ts`):
 
 ```ts
 export async function createYourPlugin(opts: YourPluginParams): Promise<Plugin> {
@@ -112,7 +135,7 @@ export async function createYourPlugin(opts: YourPluginParams): Promise<Plugin> 
 export default createYourPlugin;
 ```
 
-#### Define actions:
+Action definition:
 
 ```ts
 export const getYourAction = (opts: YourPluginParams): Action => {
@@ -138,7 +161,7 @@ export const getYourAction = (opts: YourPluginParams): Action => {
 ## Best Practices
 
 - Use **kebab-case** for plugin names (e.g., `plugin-your-feature`)
-- Use **Upper kebab--case** for action names (e.g., `YOUR_ACTION_NAME`)
+- Use **Upper kebab-case** for action names (e.g., `YOUR_ACTION_NAME`)
 - Implement proper error handling using `try-catch` blocks
 - Include comprehensive **documentation**
 - Add meaningful **tests** under `__tests__` directory
@@ -146,24 +169,6 @@ export const getYourAction = (opts: YourPluginParams): Action => {
 - Keep **services separate** from actions
 - Include **examples** for each action
 
-## Plugin Integration
 
-To use your plugin, integrate it with the agent builder:
+For detailed information about plugin development, including advanced features and examples, visit <ExternalLink href="https://elizaos.github.io/eliza/docs/packages/plugins">Plugin Development Guide</ExternalLink>
 
-```ts
-const agent = new AgentBuilder()
-  .withPlugin(yourPlugin)
-  // ... other configurations
-  .build();
-```
-
-## Required Elements
-
-| Requirement    | Description |
-|---------------|-------------|
-| **Tests** | Include tests under `__tests__` directory |
-| **Documentation** | Provide a detailed `README.md` |
-| **Error Handling** | Implement `try-catch` blocks in all actions |
-| **Types** | Define proper type definitions in `types.ts` |
-
-This documentation covers both approaches to creating plugins in Brain Framework, allowing you to choose the method that best suits your needs.

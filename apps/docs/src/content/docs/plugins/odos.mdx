@@ -1,8 +1,10 @@
 ---
+layout: ../../../components/starlight/BaseLayout.astro
 title: Odos Plugin
 description: Plugin for integrating Odos token swap operations into your agent
 ---
 import {Steps, Tabs, TabItem, Aside} from '@astrojs/starlight/components';
+import { PackageManagers } from 'starlight-package-managers'
 
 The Odos plugin enables your agent to perform token swaps and exchanges using the Odos protocol. It provides optimized routing for token exchanges with competitive rates.
 
@@ -10,9 +12,8 @@ The Odos plugin enables your agent to perform token swaps and exchanges using th
 
 <Steps>
 1. Install the required packages:
-   ```bash
-   pnpm add @iqai/agent @iqai/plugin-odos
-   ```
+   <PackageManagers pkg="@iqai/plugin-odos" />
+
 
 2. Create a `.env` file with required configuration:
    ```env
