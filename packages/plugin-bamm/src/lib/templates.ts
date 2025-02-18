@@ -24,6 +24,7 @@ Example response:
 {{recentMessages}}
 Extract the lending information from all recent messages.
 Respond with a JSON markdown block containing bammAddress and amount.`;
+
 export const BORROW_TEMPLATE = `Respond with a JSON object containing borrowing information.
 Extract the borrowing details from all recent messages.
 
@@ -31,7 +32,6 @@ The response must include:
 - bammAddress: The BAMM pool address
 - borrowToken: The address of the token to borrow
 - amount: The amount to borrow (in human-readable form)
-- collateralToken: The address of the token to use as collateral
 - error: An error message if required parameters cannot be determined (optional)
 
 Example response:
@@ -39,8 +39,7 @@ Example response:
 {
     "bammAddress": "0x1234567890123456789012345678901234567890",
     "borrowToken": "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
-    "amount": "1000",
-    "collateralToken": "0x9876543210987654321098765432109876543210"
+    "amount": "1000"
 }
 \`\`\`
 \`\`\`json
@@ -48,14 +47,13 @@ Example response:
     "bammAddress": "",
     "borrowToken": "",
     "amount": "",
-    "collateralToken": "",
     "error": "Required fields missing"
 }
 \`\`\`
 
 {{recentMessages}}
 Extract the borrowing information from all recent messages.
-Respond with a JSON markdown block containing bammAddress, borrowToken, amount, and collateralToken.`;
+Respond with a JSON markdown block containing bammAddress, borrowToken, and amount.`;
 
 export const ADD_COLLATERAL_TEMPLATE = `Respond with a JSON object containing collateral addition information.
 Extract the collateral details from all recent messages.

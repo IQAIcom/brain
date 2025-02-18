@@ -7,6 +7,7 @@ import { BORROW_TEMPLATE } from "../lib/templates";
 import { WalletService } from "../services/wallet";
 import { BorrowService } from "../services/borrow";
 import formatNumber from "../lib/format-number";
+import { Address } from "viem";
 
 export const getBorrowAction = (opts: BAMMActionParams): Action => {
 	return {
@@ -24,7 +25,8 @@ const handler = (opts: BAMMActionParams) => {
 		elizaLogger.info("Starting borrow action");
 		try {
 			const inputParser = new InputParserService();
-			const { bammAddress, borrowToken, amount, collateralToken, error } =
+			// collateralToken is no longer needed in the input
+			const { bammAddress, borrowToken, amount, error } =
 				await inputParser.parseInputs({
 					runtime,
 					message,
@@ -49,15 +51,15 @@ const handler = (opts: BAMMActionParams) => {
 				bammAddress,
 				borrowToken,
 				amount,
-				collateralToken,
 			});
 
 			callback?.({
 				text: dedent`
           ✅ Borrowing Transaction Successful
 
-          💸 Borrow Amount: ${formatNumber(amount)} tokens
-          🔒 Collateral Token: ${collateralToken}
+					🌐 BAMM Address: ${bammAddress}
+          💸 Borrow Amount: ${formatNumber(amount)}
+					💰 Borrowed Token: ${borrowToken}
           🔗 Transaction: ${result.txHash}
 
           Funds have been borrowed from the BAMM pool.
@@ -65,6 +67,7 @@ const handler = (opts: BAMMActionParams) => {
 			});
 			return true;
 		} catch (error) {
+			// Improved error message
 			callback?.({
 				text: dedent`
           ❌ Borrowing Transaction Failed
