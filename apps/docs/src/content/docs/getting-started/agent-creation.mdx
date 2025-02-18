@@ -13,30 +13,48 @@ Brain Framework uses a builder pattern for creating agents, allowing flexible co
 
 The database adapter provides persistence for the agent. Available options:
 
-```typescript
-// SQLite
-import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
-import Database from "better-sqlite3";
+<Tabs>
+  <TabItem label="SQLite">
+    ```typescript
+    import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
+    import Database from "better-sqlite3";
 
-const sqliteAdapter = new SqliteDatabaseAdapter(
-  new Database("./data/db.sqlite")
-);
+    const sqliteAdapter = new SqliteDatabaseAdapter(
+      new Database("./data/db.sqlite")
+    );
 
-// PostgreSQL
-import { PostgresDatabaseAdapter } from "@elizaos/adapter-postgres";
+    // Add database to agent
+    .withDatabase(sqliteAdapter)
+    ```
+  </TabItem>
+  <TabItem label="PostgreSQL">
+    ```typescript
+    import { PostgresDatabaseAdapter } from "@elizaos/adapter-postgres";
 
-const postgresAdapter = new PostgresDatabaseAdapter({
-  connectionString: "postgresql://user:pass@localhost:5432/db"
-});
+    const postgresAdapter = new PostgresDatabaseAdapter({
+      connectionString: "postgresql://user:pass@localhost:5432/db"
+    });
 
-// Supabase
-import { SupabaseDatabaseAdapter } from "@elizaos/adapter-supabase";
+    // Add database to agent
+    .withDatabase(postgresAdapter)
+    ```
+  </TabItem>
+  <TabItem label="Supabase">
+    ```typescript
+    import { SupabaseDatabaseAdapter } from "@elizaos/adapter-supabase";
 
-const supabaseAdapter = new SupabaseDatabaseAdapter({
-  url: process.env.SUPABASE_URL,
-  key: process.env.SUPABASE_KEY
-});
-```
+    const supabaseAdapter = new SupabaseDatabaseAdapter({
+      url: process.env.SUPABASE_URL,
+      key: process.env.SUPABASE_KEY
+    });
+
+    // Add database to agent
+    .withDatabase(supabaseAdapter)
+    ```
+  </TabItem>
+</Tabs>
+
+For more database adapters, visit [ElizaOS Database Adapters](https://elizaos.github.io/eliza/docs/packages/adapters/)
 
 ## Client Interfaces
 
@@ -49,9 +67,11 @@ Client interfaces determine how your agent can communicate:
 .withClient("twitter", TwitterClientInterface)   // Twitter bot
 ```
 
-Each client may require specific environment variables:
+Each client may require specific environment variables. Example:
 - Telegram: `TELEGRAM_BOT_TOKEN`
 - Twitter: `TWITTER_API_KEY`, `TWITTER_API_SECRET`, etc.
+
+Browse all available client plugins at [ElizaOS Client Plugins](https://github.com/orgs/elizaos-plugins/repositories?language=&q=client-&sort=&type=all)
 
 ## Model Provider
 
@@ -59,10 +79,36 @@ Configure the AI model powering your agent:
 
 ```typescript
 .withModelProvider(
-  ModelProviderName.OPENAI,  // Currently only OpenAI is supported
+  ModelProviderName.OPENAI,
   process.env.OPENAI_API_KEY
 )
 ```
+
+For available model providers, visit [ElizaOS Model Providers](https://elizaos.github.io/eliza/docs/quickstart/#choose-your-model)
+
+## Plugins
+
+Brain Framework supports both its native plugins and ElizaOS plugins. Here's how to add plugins to your agent:
+
+```typescript
+// Initialize plugins
+const fraxlendPlugin = await createFraxlendPlugin({
+  chain: fraxtal,
+  walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
+});
+
+const odosPlugin = await createOdosPlugin({
+  chain: fraxtal,
+  walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
+});
+
+// Add plugins to agent
+.withPlugins([fraxlendPlugin, odosPlugin])
+```
+
+Browse available plugins:
+- [Brain Framework Plugins](https://github.com/IQAIcom/brain/tree/main/packages)
+- [ElizaOS Plugins](https://github.com/elizaos-plugins)
 
 ## Character Configuration
 
@@ -73,19 +119,19 @@ Define your agent's personality and behavior:
   name: "MyBot",        // Display name
   bio: "Description",   // Bot's description/purpose
   username: "mybot",    // Unique identifier
-  
+
   // Example interactions
   messageExamples: [
     "Hello, how can I help?",
     "Let me check that for you."
   ],
-  
+
   // Additional context/background
   lore: [
     "Created to help with customer service",
     "Specializes in technical support"
   ],
-  
+
   // Response styling
   style: {
     all: ["Professional", "Helpful"],     // General style
@@ -94,6 +140,8 @@ Define your agent's personality and behavior:
   }
 })
 ```
+
+For detailed character configuration options, visit [ElizaOS Character Configuration](https://elizaos.github.io/eliza/docs/core/characterfile/)
 
 ## Error Handling
 
@@ -105,7 +153,7 @@ async function main() {
     const agent = new AgentBuilder()
       // ... configuration
       .build();
-      
+
     await agent.start();
   } catch (error) {
     console.error("Failed to start agent:", error);

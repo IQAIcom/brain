@@ -5,6 +5,13 @@ description: Get up and running with Brain Framework
 import { Steps } from '@astrojs/starlight/components';
 
 ## Basic Usage
+
+To create an agent, you'll need three key components:
+
+1. **LLM Model Provider**: Choose your preferred language model (OpenAI, Claude, etc.) that will power your agent's intelligence.
+2. **Client Interface**: Select how users will interact with your agent. Brain Framework supports various client integrations including Discord, Telegram, Twitter, Instagram, WhatsApp and more. In this example, we'll use the Direct client which provides HTTP endpoints for interaction.
+3. **Prompts and Plugins**: Define your agent's behavior through prompts and extend functionality using plugins. In this quickstart example, we'll use the default prompts that come with the framework. For customizing prompts and adding plugins, check out [Agent Creation Guide](/getting-started/agent-creation).
+
 <Steps>
 1. Import the required dependencies:
    ```javascript
@@ -25,6 +32,11 @@ import { Steps } from '@astrojs/starlight/components';
 
    main().catch(console.error);
    ```
+
+3. Run your agent and test:
+   After starting your agent, visit [IQAI Console](https://console.iqai.com) to interact with it through a ready-to-use interface. This allows you to test your agent without building a custom client application.
+
+   For more details on testing your agent, check out [Testing Your Agent](/getting-started/test-agent)
 </Steps>
 
 ## Error Handling
