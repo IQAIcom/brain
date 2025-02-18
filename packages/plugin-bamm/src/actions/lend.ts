@@ -7,6 +7,7 @@ import { LEND_TEMPLATE } from "../lib/templates";
 import { WalletService } from "../services/wallet";
 import { LendService } from "../services/lend";
 import { BAMM_ABI } from "../lib/bamm.abi";
+import formatNumber from "../lib/format-number";
 
 export const getLendAction = (opts: BAMMActionParams): Action => {
 	return {
@@ -58,7 +59,7 @@ const handler = (opts: BAMMActionParams) => {
           ✅ Lending Transaction Successful
 
           🏦 BAMM Address: ${bammAddress}
-          💰 Amount Lent: ${amount}
+          💰 Amount Lent: ${formatNumber(amount)}
           🔗 Transaction: ${result.txHash}
 
           LP Tokens have been successfully lent to the BAMM pool.
