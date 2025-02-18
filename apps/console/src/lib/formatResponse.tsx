@@ -1,11 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { Copy } from "lucide-react";
+import { Check, Copy } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import { cn } from "./utils";
+import { useState } from "react";
 
-export const FormatMessageWithCodeBlocks = (text: string) => {
+export const MarkDown = ({text}: {text: string}) => {
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
@@ -13,6 +14,14 @@ export const FormatMessageWithCodeBlocks = (text: string) => {
       components={{
         // Code blocks with syntax highlighting
         code: ({ node, inline, className, children, ...props }) => {
+          const [copied, setCopied] = useState(false);
+          
+          const handleCopy = () => {
+            navigator.clipboard.writeText(String(children));
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
+          };
+
           if (inline) {
             return (
               <code className='bg-muted px-1.5 py-0.5 rounded-sm' {...props}>
@@ -20,6 +29,7 @@ export const FormatMessageWithCodeBlocks = (text: string) => {
               </code>
             );
           }
+
           const language = className?.replace("language-", "");
           return (
             <div className='relative min-h-8'>
@@ -37,15 +47,18 @@ export const FormatMessageWithCodeBlocks = (text: string) => {
                 <Button
                   variant='ghost'
                   size='sm'
-                  onClick={() => navigator.clipboard.writeText(String(children))}
+                  onClick={handleCopy}
                 >
-                  <Copy className='h-4 w-4 text-muted-foreground' />
+                  {copied ? (
+                    <Check className='h-4 w-4 text-green-500' />
+                  ) : (
+                    <Copy className='h-4 w-4 text-muted-foreground' />
+                  )}
                 </Button>
               </div>
             </div>
           );
-        },
-        // Lists with proper indentation
+        },        // Lists with proper indentation
         li: ({ className, ...props }) => (
           <li className={cn("ml-4", className)} {...props} />
         ),

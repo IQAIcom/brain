@@ -22,7 +22,8 @@ import { Avatar, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import ChatTtsButton from "./ui/chat/chat-tts-button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
-import { FormatMessageWithCodeBlocks } from "@/lib/formatResponse";
+import { MarkDown } from "@/lib/formatResponse";
+import ReactMarkdown from "react-markdown";
 
 type ExtraContentFields = {
 	user: string;
@@ -174,6 +175,33 @@ export default function Page({ agentId }: { agentId: UUID }) {
 
 	const CustomAnimatedDiv = animated.div as React.FC<AnimatedDivProps>;
 
+	const markdownText = `
+# React Markdown Example
+
+- Some text
+- Some other text
+
+## Subtitle
+
+### Additional info
+
+This is a [link](https://github.com/remarkjs/react-markdown)
+
+\`\`\`typescript
+const Example = () => {
+  const [state, setState] = useState(null);
+  
+  return (
+    <div>
+      <h1>Code Block Example</h1>
+      {state && <p>{state}</p>}
+    </div>
+  );
+}
+\`\`\`
+
+`;
+
 	return (
 		<div className="flex flex-col w-full h-[calc(100dvh)] p-4">
 			<div className="flex-1 overflow-y-auto">
@@ -202,11 +230,11 @@ export default function Page({ agentId }: { agentId: UUID }) {
 									<div className="flex flex-col">
 										<ChatBubbleMessage isLoading={message?.isLoading}>
 											{message?.user !== "user" ? (
-												// <AIWriter>
-													FormatMessageWithCodeBlocks(message?.text)
-												// {/* </AIWriter> */}
+												<AIWriter>
+													<MarkDown text={message.text}/>
+												</AIWriter>
 											) : (
-												FormatMessageWithCodeBlocks(message?.text)
+												message.text
 											)}
 											{/* Attachments */}
 											<div>
