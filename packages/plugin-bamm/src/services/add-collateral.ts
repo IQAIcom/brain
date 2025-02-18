@@ -13,16 +13,11 @@ export interface AddCollateralParams {
 export class AddCollateralService {
 	constructor(private walletService: WalletService) {}
 
-	/**
-	 * Adds collateral to a BAMM position by depositing collateralToken via executeActions.
-	 * Automatically detects if the token is token0 or token1.
-	 */
 	async execute(params: AddCollateralParams): Promise<{ txHash: string }> {
 		const { bammAddress, collateralToken, amount } = params;
 		const publicClient = this.walletService.getPublicClient();
 		const walletClient = this.walletService.getWalletClient();
 		const userAddress = walletClient.account.address;
-
 		const amountInWei = BigInt(Number(amount) * 1e18);
 
 		await this.ensureTokenApproval(collateralToken, bammAddress, amountInWei);
@@ -42,10 +37,8 @@ export class AddCollateralService {
 		const normalizedCollateral = collateralToken.toLowerCase();
 		const normalizedToken0 = token0Address.toLowerCase();
 		const normalizedToken1 = token1Address.toLowerCase();
-
 		const isToken0 = normalizedCollateral === normalizedToken0;
 		const isToken1 = normalizedCollateral === normalizedToken1;
-
 		if (!isToken0 && !isToken1) {
 			throw new Error(
 				"Collateral token does not match token0 or token1 in the BAMM",
@@ -53,7 +46,7 @@ export class AddCollateralService {
 		}
 
 		const currentTime = Math.floor(Date.now() / 1000);
-		const deadline = BigInt(currentTime + 300); // 5 minutes from now
+		const deadline = BigInt(currentTime + 300);
 
 		const action = {
 			token0Amount: isToken0 ? amountInWei : 0n,
@@ -69,6 +62,7 @@ export class AddCollateralService {
 			s: "0x0000000000000000000000000000000000000000000000000000000000000000" as `0x${string}`,
 			deadline,
 		};
+
 		try {
 			const { request: executeRequest } = await publicClient.simulateContract({
 				address: bammAddress,
@@ -82,7 +76,7 @@ export class AddCollateralService {
 			return { txHash };
 		} catch (error) {
 			elizaLogger.error("Error in add collateral service:", error);
-			throw error;
+			throw Error("Error in add collateral service");
 		}
 	}
 
@@ -94,14 +88,12 @@ export class AddCollateralService {
 		const publicClient = this.walletService.getPublicClient();
 		const walletClient = this.walletService.getWalletClient();
 		const userAddress = walletClient.account.address;
-
 		const currentAllowance = await publicClient.readContract({
 			address: collateralAddress,
 			abi: erc20Abi,
 			functionName: "allowance",
 			args: [userAddress, spenderAddress],
 		});
-
 		if (currentAllowance < amount) {
 			const { request: approveRequest } = await publicClient.simulateContract({
 				address: collateralAddress,

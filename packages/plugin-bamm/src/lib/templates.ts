@@ -31,7 +31,7 @@ Extract the borrowing details from all recent messages.
 The response must include:
 - bammAddress: The BAMM pool address
 - borrowToken: The address of the token to borrow
-- amount: The amount to borrow (in human-readable form)
+- amount: The amount to borrow in normal decimal form (e.g., "10" for 10 tokens,"10000" for 10k tokens)
 - error: An error message if required parameters cannot be determined (optional)
 
 Example response:
@@ -61,7 +61,7 @@ Extract the collateral details from all recent messages.
 The response must include:
 - bammAddress: The BAMM pool address
 - collateralToken: The address of the collateral token
-- amount: The amount of collateral to add (in ether values)
+- amount: The amount of collateral in normal decimal form (e.g., "10" for 10 tokens,"10000" for 10k tokens)
 - error: An error message if valid bammAddress, collateralToken, or amount cannot be determined (optional)
 
 Example response:
@@ -91,7 +91,7 @@ Extract the withdrawal details from all recent messages.
 The response must include:
 - bammAddress: The BAMM pool address
 - collateralToken: The address of the collateral token
-- amount: The amount of collateral to withdraw (in ether values)
+- amount: The amount of collateral in normal decimal form (e.g., "10" for 10 tokens,"10000" for 10k tokens)
 - error: An error message if valid bammAddress, collateralToken, or amount cannot be determined (optional)
 
 Example response:
@@ -121,7 +121,7 @@ Extract the repayment details from all recent messages.
 The response must include:
 - bammAddress: The BAMM pool address
 - borrowToken: The address of the token being repaid (the borrowed token)
-- amount: The amount to repay (in normal decimal form)
+- amount: The amount to repay in normal decimal form (e.g., "10" for 10 tokens,"10000" for 10k tokens)
 - collateralToken: The address of the collateral token.
 - error: An error message if valid parameters cannot be determined (optional)
 
@@ -154,7 +154,7 @@ Extract the withdrawal details from all recent messages.
 
 The response must include:
 - bammAddress: The BAMM pool address
-- amount: The amount of BAMM tokens to redeem for LP tokens (in normal decimal form)
+- amount: The amount of BAMM tokens to redeem for LP in normal decimal form (e.g., "10" for 10 tokens,"10000" for 10k tokens)
 - error: An error message if valid bammAddress or amount cannot be determined (optional)
 
 Example response:

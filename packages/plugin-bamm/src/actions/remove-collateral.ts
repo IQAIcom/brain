@@ -37,7 +37,12 @@ const handler = (opts: BAMMActionParams) => {
 					state,
 					template: REMOVE_COLLATERAL_TEMPLATE,
 				});
-
+			elizaLogger.info(`
+				🔍 Parsed Inputs for remove collateral
+				BAMM Address: ${bammAddress}
+				Collateral Token: ${collateralToken}
+				Amount: ${amount}
+				`);
 			if (error) {
 				callback?.({
 					text: `❌ ${error}`,

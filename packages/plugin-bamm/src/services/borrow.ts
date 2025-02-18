@@ -15,8 +15,10 @@ export class BorrowService {
 	constructor(private walletService: WalletService) {}
 
 	/**
-	 * Borrow tokens from the BAMM contract, deriving the collateral token automatically.
-	 * If borrowToken == token0, then collateral is token1. Otherwise, token0 is collateral.
+	 * Borrows tokens from the BAMM contract.
+	 * Derives the collateral token automatically (if borrowToken == token0 then collateral is token1, and vice versa).
+	 * Computes the effective rent using the current rentedMultiplier so that:
+	 *    (rent * rentedMultiplier) / 1e18 == amountInWei.
 	 */
 	async execute(params: BorrowParams): Promise<{ txHash: string }> {
 		const { bammAddress, borrowToken, amount } = params;
@@ -24,8 +26,9 @@ export class BorrowService {
 		const walletClient = this.walletService.getWalletClient();
 		const userAddress = walletClient.account.address;
 		const amountInWei = BigInt(Math.floor(Number(amount) * 1e18));
+
 		try {
-			// 1. Determine token0 / token1 from BAMM
+			// 1. Read token0 and token1 from the BAMM contract.
 			const token0: Address = await publicClient.readContract({
 				address: bammAddress,
 				abi: BAMM_ABI,
@@ -38,19 +41,18 @@ export class BorrowService {
 				functionName: "token1",
 				args: [],
 			});
-
-			// 2. Identify which is the collateral token
 			const normalizedBorrowToken = borrowToken.toLowerCase();
 			const normalizedToken0 = token0.toLowerCase();
 			const normalizedToken1 = token1.toLowerCase();
 
 			let collateralToken: Address;
 			let isBorrowingToken0: boolean;
-
 			if (normalizedBorrowToken === normalizedToken0) {
+				// Borrowing token0, so collateral is token1.
 				collateralToken = token1;
 				isBorrowingToken0 = true;
 			} else if (normalizedBorrowToken === normalizedToken1) {
+				// Borrowing token1, so collateral is token0.
 				collateralToken = token0;
 				isBorrowingToken0 = false;
 			} else {
@@ -59,28 +61,39 @@ export class BorrowService {
 				);
 			}
 
-			// 3. Check user has enough collateral
-			const balance: bigint = await publicClient.readContract({
+			// 2. Check if the user has sufficient collateral balance.
+			const collateralBalance: bigint = await publicClient.readContract({
 				address: collateralToken,
 				abi: erc20Abi,
 				functionName: "balanceOf",
 				args: [userAddress],
 			});
-			if (balance < amountInWei) {
+			if (collateralBalance < amountInWei) {
 				throw new Error("Insufficient collateral token balance");
 			}
 
-			// 4. Approve BAMM to spend the collateral if needed
+			// 3. Approve BAMM to spend the collateral if needed.
 			await this.ensureTokenApproval(collateralToken, bammAddress, amountInWei);
 
-			// 5. Build the action object
+			// Get rentedMultiplier
+			const rentedMultiplier: bigint = await publicClient.readContract({
+				address: bammAddress,
+				abi: BAMM_ABI,
+				functionName: "rentedMultiplier",
+				args: [],
+			});
+
+			// Calculate rent based on borrowed amount and rentedMultiplier
+			const rent = (amountInWei * rentedMultiplier) / BigInt(1e18);
+
+			// Construct the action object
 			const currentTime = Math.floor(Date.now() / 1000);
 			const deadline = BigInt(currentTime + 300);
 
 			const action = {
 				token0Amount: isBorrowingToken0 ? -amountInWei : 0n,
 				token1Amount: isBorrowingToken0 ? 0n : -amountInWei,
-				rent: amountInWei,
+				rent: rent,
 				to: userAddress,
 				token0AmountMin: 0n,
 				token1AmountMin: 0n,
@@ -92,7 +105,7 @@ export class BorrowService {
 				deadline,
 			};
 
-			// 6. Simulate & execute the transaction
+			// 6. Simulate and execute the transaction.
 			const { request: executeRequest } = await publicClient.simulateContract({
 				address: bammAddress,
 				abi: BAMM_ABI,
@@ -100,7 +113,6 @@ export class BorrowService {
 				args: [action],
 				account: walletClient.account,
 			});
-
 			const txHash = await walletClient.writeContract(executeRequest);
 			await publicClient.waitForTransactionReceipt({ hash: txHash });
 

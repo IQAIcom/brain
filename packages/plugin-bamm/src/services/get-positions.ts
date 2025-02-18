@@ -119,6 +119,7 @@ export class BammPositionsService {
 						- Pair: ${pos.pairAddress}
             - ${pos.token0Symbol}: ${formatWeiToNumber(pos.vault?.token0 || 0n)}
             - ${pos.token1Symbol}: ${formatWeiToNumber(pos.vault?.token1 || 0n)}
+						- rented: ${formatWeiToNumber(pos.vault?.rented || 0n)}
         `;
 			})
 			.filter(Boolean)

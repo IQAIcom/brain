@@ -6,7 +6,6 @@ import { elizaLogger } from "@elizaos/core";
 
 export interface RepayParams {
 	bammAddress: Address;
-	/** The token that was borrowed (either token0 or token1 in the BAMM) */
 	borrowToken: Address;
 	amount: string;
 }
@@ -14,10 +13,6 @@ export interface RepayParams {
 export class RepayService {
 	constructor(private walletService: WalletService) {}
 
-	/**
-	 * Repays the borrowed amount by interacting with the BAMM contract.
-	 * We automatically derive which token is collateral by reading token0/token1 from BAMM.
-	 */
 	async execute(params: RepayParams): Promise<{ txHash: string }> {
 		const { bammAddress, borrowToken, amount } = params;
 		const publicClient = this.walletService.getPublicClient();
@@ -26,7 +21,6 @@ export class RepayService {
 		const amountInWei = BigInt(Math.floor(Number(amount) * 1e18));
 
 		try {
-			// 1. Determine token0 / token1 from BAMM
 			const token0: Address = await publicClient.readContract({
 				address: bammAddress,
 				abi: BAMM_ABI,
@@ -40,8 +34,6 @@ export class RepayService {
 				args: [],
 			});
 
-			// 2. Figure out if the user is repaying token0 or token1
-			// We'll set the appropriate field to negative in the action.
 			const normalizedBorrowToken = borrowToken.toLowerCase();
 			const normalizedToken0 = token0.toLowerCase();
 			const normalizedToken1 = token1.toLowerCase();
@@ -57,7 +49,6 @@ export class RepayService {
 				);
 			}
 
-			// 3. Check if the user has enough of the borrowed token to repay
 			const balance: bigint = await publicClient.readContract({
 				address: borrowToken,
 				abi: erc20Abi,
@@ -68,29 +59,38 @@ export class RepayService {
 				throw new Error("Insufficient balance of borrowed token to repay");
 			}
 
-			// 4. Approve the BAMM contract to spend the borrowed token if needed
 			await this.ensureTokenApproval(borrowToken, bammAddress, amountInWei);
 
-			// 5. Construct the Action object for repaying the borrowed tokens
+			const rentedMultiplier: bigint = await publicClient.readContract({
+				address: bammAddress,
+				abi: BAMM_ABI,
+				functionName: "rentedMultiplier",
+				args: [],
+			});
+
+			// Calculate effective rent for repayment (negative rent for repayment)
+			const effectiveRent =
+				-(amountInWei * 1_000_000_000_000_000_000n) / rentedMultiplier;
+
 			const currentTime = Math.floor(Date.now() / 1000);
 			const deadline = BigInt(currentTime + 300);
 
+			// Construct the action object for repayment
 			const action = {
-				token0Amount: isBorrowingToken0 ? amountInWei : 0n,
-				token1Amount: isBorrowingToken0 ? 0n : amountInWei,
-				rent: -amountInWei,
+				token0Amount: isBorrowingToken0 ? amountInWei : 0n, // repay token0 if borrowing token0
+				token1Amount: isBorrowingToken0 ? 0n : amountInWei, // repay token1 if borrowing token1
+				rent: effectiveRent, // reduce the rent by paying it back
 				to: userAddress,
-				token0AmountMin: 0n,
-				token1AmountMin: 0n,
-				closePosition: false,
-				approveMax: false,
+				token0AmountMin: 0n, // slippage tolerance for token0, if any
+				token1AmountMin: 0n, // slippage tolerance for token1, if any
+				closePosition: false, // don't close the position yet
+				approveMax: false, // don't approve max, just the required amount
 				v: 0,
 				r: "0x0000000000000000000000000000000000000000000000000000000000000000" as `0x${string}`,
 				s: "0x0000000000000000000000000000000000000000000000000000000000000000" as `0x${string}`,
 				deadline,
 			};
 
-			// 6. Call executeActions to perform the repayment
 			const { request: executeRequest } = await publicClient.simulateContract({
 				address: bammAddress,
 				abi: BAMM_ABI,
@@ -100,7 +100,6 @@ export class RepayService {
 			});
 			const txHash = await walletClient.writeContract(executeRequest);
 			await publicClient.waitForTransactionReceipt({ hash: txHash });
-
 			return { txHash };
 		} catch (error) {
 			elizaLogger.error("Error repaying:", error);
@@ -116,14 +115,12 @@ export class RepayService {
 		const publicClient = this.walletService.getPublicClient();
 		const walletClient = this.walletService.getWalletClient();
 		const userAddress = walletClient.account.address;
-
 		const currentAllowance: bigint = await publicClient.readContract({
 			address: tokenAddress,
 			abi: erc20Abi,
 			functionName: "allowance",
 			args: [userAddress, spenderAddress],
 		});
-
 		if (currentAllowance < amount) {
 			const { request: approveRequest } = await publicClient.simulateContract({
 				address: tokenAddress,
