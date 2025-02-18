@@ -32,6 +32,13 @@ const handler = (opts: BAMMActionParams) => {
 					template: REPAY_TEMPLATE,
 				});
 
+			elizaLogger.info(`
+				🔍 Parsed Inputs for repay
+				BAMM Address: ${bammAddress}
+				Borrow Token: ${borrowToken}
+				Amount: ${amount}
+				`);
+
 			if (error) {
 				callback?.({
 					text: `❌ ${error}`,

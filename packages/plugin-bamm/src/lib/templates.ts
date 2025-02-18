@@ -121,7 +121,7 @@ Extract the repayment details from all recent messages.
 The response must include:
 - bammAddress: The BAMM pool address
 - borrowToken: The address of the token being repaid (the borrowed token)
-- amount: The amount to repay (in human-readable form)
+- amount: The amount to repay (in normal decimal form)
 - collateralToken: The address of the collateral token.
 - error: An error message if valid parameters cannot be determined (optional)
 
