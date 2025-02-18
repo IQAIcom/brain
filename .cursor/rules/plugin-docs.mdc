@@ -1,6 +1,6 @@
 ---
 description: structured prompt to ensure that all plugin documentation follows a consistent format in Astro/MDX
-globs: 
+globs:
 ---
 # Plugin Documentation Structure Template
 
@@ -12,8 +12,6 @@ title: "Plugin <PLUGIN_NAME>"
 description: "Documentation for the <PLUGIN_NAME> Astro plugin."
 
 ---
-
-## Overview
 
 Provide a high-level summary of what the plugin does and its primary use case.
 
