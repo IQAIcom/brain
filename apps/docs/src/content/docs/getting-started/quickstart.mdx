@@ -4,7 +4,6 @@ description: Get up and running with Brain Framework
 ---
 import { Steps } from '@astrojs/starlight/components';
 
-## Basic Usage
 
 To create an agent, you'll need three key components:
 
@@ -38,24 +37,3 @@ To create an agent, you'll need three key components:
 
    For more details on testing your agent, check out [Testing Your Agent](/getting-started/test-agent)
 </Steps>
-
-## Error Handling
-Add basic error handling to your implementation:
-
-```javascript
-async function main() {
-  try {
-    const agent = new AgentBuilder()
-      .withModelProvider(ModelProviderName.OPENAI, process.env.OPENAI_API_KEY)
-      .withClient("direct", DirectClientInterface)
-      .build();
-
-    await agent.start();
-  } catch (error) {
-    console.error('Failed to setup agent:', error);
-    process.exit(1);
-  }
-}
-
-main().catch(console.error);
-```
