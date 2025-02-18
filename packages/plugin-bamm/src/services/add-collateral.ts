@@ -25,7 +25,7 @@ export class AddCollateralService {
 
 		const amountInWei = BigInt(Number(amount) * 1e18);
 
-		await this.ensureTokenApproval(collateralToken, userAddress, amountInWei);
+		await this.ensureTokenApproval(collateralToken, bammAddress, amountInWei);
 
 		const token0Address: Address = await publicClient.readContract({
 			address: bammAddress,
@@ -76,7 +76,6 @@ export class AddCollateralService {
 				functionName: "executeActions",
 				args: [action],
 				account: walletClient.account,
-				// nonce: nonce,
 			});
 			const txHash = await walletClient.writeContract(executeRequest);
 			await publicClient.waitForTransactionReceipt({ hash: txHash });

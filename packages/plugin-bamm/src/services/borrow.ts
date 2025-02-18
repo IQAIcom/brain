@@ -40,7 +40,6 @@ export class BorrowService {
 			});
 
 			// 2. Identify which is the collateral token
-			// If the user is borrowing token0, the collateral is token1. Otherwise, token0 is collateral.
 			const normalizedBorrowToken = borrowToken.toLowerCase();
 			const normalizedToken0 = token0.toLowerCase();
 			const normalizedToken1 = token1.toLowerCase();
