@@ -1,17 +1,16 @@
 ---
-title: Deployment 
+title: Deployment
 description: Guide for deploying Brain Framework agents on Node.js servers
 ---
 
 import { Steps, Tabs, TabItem, Aside, Card, CardGrid } from '@astrojs/starlight/components';
+import { PackageManagers } from 'starlight-package-managers'
 
-## Overview
 
 This guide covers deploying your Brain Framework agent on any long running Node.js server environment, including database setup considerations.
 
-<Aside type="note">
-**Current Limitations**
-- Serverless deployments are not currently supported.
+<Aside type="caution">
+  Currently some plugins don't support serverless deployments. but we are planning to add support for serverless deployments in the future.
 </Aside>
 
 ## Database Selection
@@ -49,13 +48,13 @@ Choose the appropriate database adapter based on your deployment needs:
 
 <Steps>
 1. Install required packages:
-    
-      pnpm add pm2 @elizaos/adapter-postgres
-    
+   <PackageManagers pkg="@elizaos/adapter-postgres" />
 
+
+      
 2. Create a PM2 ecosystem file (`ecosystem.config.js`):
     ```typescript
-      module.exports = {
+      module.exports     = {
         apps: [{
           name: 'brain-agent',
           script: './dist/index.js',
@@ -70,7 +69,7 @@ Choose the appropriate database adapter based on your deployment needs:
         }]
       }
       ```
-    
+
 
 3. Configure your database adapter:
     ```typescript
@@ -83,7 +82,7 @@ Choose the appropriate database adapter based on your deployment needs:
         }))
         .build();
     ```
-    
+
 
 4. Build and start:
     ```bash
