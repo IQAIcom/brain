@@ -25,6 +25,9 @@ export default defineConfig({
       editLink: {
         baseUrl: 'https://github.com/IQAIcom/brain/edit/main/apps/docs/',
       },
+      components: {
+        PageSidebar: './src/components/starlight/page-sidebar.astro',
+      },
       sidebar: [
         {
           label: 'Getting Started',
