@@ -9,6 +9,47 @@ import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
 
 Brain Framework uses a builder pattern for creating agents, allowing flexible configuration of databases, clients, model providers, plugins and character settings.
 
+Before diving into individual configuration options, here's how all the pieces come together using Brain Framework's builder pattern:
+
+
+```typescript
+import { AgentBuilder, ModelProviderName } from "@iqai/agent";
+import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
+import DirectClientInterface from "@elizaos/client-direct";
+import Database from "better-sqlite3";
+
+async function main() {
+  // Setup database
+  const databaseAdapter = new SqliteDatabaseAdapter(
+    new Database("./data/db.sqlite")
+  );
+
+  const agent = new AgentBuilder()
+    .withDatabase(databaseAdapter)
+    .withClient("direct", DirectClientInterface)
+    .withModelProvider(ModelProviderName.OPENAI, process.env.OPENAI_API_KEY)
+    .withCharacter({
+      name: "MyBot",
+      bio: "A helpful assistant",
+      username: "mybot",
+      messageExamples: ["Hello! How can I help?"],
+      lore: ["Created to assist users"],
+      style: {
+        all: ["Professional"],
+        chat: ["Friendly"],
+        post: ["Clear"]
+      }
+    })
+    .build();
+
+  await agent.start();
+}
+
+main().catch(console.error);
+```
+
+The sections below detail each configuration option available through the builder pattern.
+
 ## Database Configuration
 
 The database adapter provides persistence for the agent. Available options:
