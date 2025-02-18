@@ -7,28 +7,48 @@ import { Card, CardGrid, Aside } from '@astrojs/starlight/components';
 
 ## Introduction
 
-Brain Framework is a powerful toolkit for building AI agents that can interact with blockchain protocols and social media platforms
+Brain Framework is a developer-first toolkit for building AI agents with enhanced flexibility and type safety. It provides a TypeScript-first approach to agent configuration and development.
+
+### Why Brain Framework?
+
+While ElizaOS offers an excellent foundation for AI agents through character.json configurations, many developers seek more programmatic control and type safety in their agent development workflow. Brain Framework addresses this by providing:
+
+- Code-based configuration with full TypeScript support
+- Builder pattern for intuitive agent setup
+- Enhanced developer experience with improved tooling
+- Full compatibility with existing ElizaOS plugins
+- Specialized core plugins for advanced functionality
+
+### Key Features
+
+- **Type-Safe Configuration**: Move beyond character.json with fully typed configuration options
+- **Builder Pattern**: Intuitive API for constructing and configuring agents
+- **Core Plugins**:
+  - Heartbeat: Simplified cron job implementation
+  - Sequencer: Chain multiple actions from a single user query
+  - ATP Integration: Ready for agent tokenization
+- **Extended Plugin System**: Create custom plugins with improved utilities and helpers
 
 ## Core Concepts
 
 <CardGrid>
   <Card title="Agent" icon="comment-alt">
-    The central entity that processes inputs and manages interactions. Built using AgentBuilder with various configurations.
+    Configured through code using AgentBuilder, providing type-safe setup and flexible configuration options.
   </Card>
 
   <Card title="Clients" icon="random">
-    Communication interfaces that enable interaction through different channels (Direct, Telegram, Twitter).
+    Type-safe communication interfaces for various platforms (Direct, Telegram, Twitter) with improved error handling.
   </Card>
 
   <Card title="Plugins" icon="puzzle">
-    Extensions that add specific capabilities like DeFi operations, token swaps, or scheduled tasks.
+    Enhanced plugin system with utilities for easier development. Includes specialized plugins for DeFi operations, scheduling, and more.
   </Card>
 
   <Card title="Model Providers" icon="setting">
-    AI models that power the agent's understanding and responses. With support for OpenAI, Claude, and more.
+    Structured integration with AI models (OpenAI, Claude, etc.) maintaining type safety throughout.
   </Card>
 </CardGrid>
 
-<Aside title="Futher Reading" type="tip">
-  For more under the hood details check out [ElizaOS](https://elizaos.github.io/eliza/docs/intro/)
-</Aside>
+### For IQAI ATP Users
+
+If you're planning to tokenize your agents through IQAI's ATP platform, Brain Framework is the recommended choice for development. It provides seamless integration with the ATP ecosystem while maintaining full flexibility for standalone use.
