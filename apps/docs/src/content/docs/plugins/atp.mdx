@@ -4,6 +4,8 @@ description: "Plugin for interacting with IQ ATP (Agent Tokenization Platform) f
 ---
 
 import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+import { PackageManagers } from 'starlight-package-managers'
+
 
 The **ATP Plugin** enables your agent to interact with **IQ's Agent Tokenization Platform**. It provides functionality for:
 
@@ -17,16 +19,20 @@ The **ATP Plugin** enables your agent to interact with **IQ's Agent Tokenization
 
 <Steps>
 1. Install the required packages:
+   <PackageManagers pkg="@iqai/agent @iqai/plugin-atp" />
 
-   ```bash
-   pnpm add @iqai/agent @iqai/plugin-atp
-   ```
 
 2. Create a **.env** file with the required configuration:
 
    ```bash
    WALLET_PRIVATE_KEY=your-wallet-private-key
    ```
+   <Aside type="danger" title="Security Warning">
+   Never commit your `.env` file or share your private key. Anyone with access to your private key can control your wallet and funds. Make sure to:
+   - Add `.env` to your `.gitignore` file
+   - Never share your private key in any form
+   - Use a dedicated development wallet with limited funds
+   </Aside>
 </Steps>
 
 ---

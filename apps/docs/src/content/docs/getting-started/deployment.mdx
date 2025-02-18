@@ -4,6 +4,8 @@ description: Guide for deploying Brain Framework agents on Node.js servers
 ---
 
 import { Steps, Tabs, TabItem, Aside, Card, CardGrid } from '@astrojs/starlight/components';
+import { PackageManagers } from 'starlight-package-managers'
+
 
 This guide covers deploying your Brain Framework agent on any long running Node.js server environment, including database setup considerations.
 
@@ -47,7 +49,8 @@ Choose the appropriate database adapter based on your deployment needs:
 <Steps>
 1. Install required packages:
 
-      pnpm add pm2 @elizaos/adapter-postgres
+  <PackageManagers pkg="@elizaos/adapter-postgres" />
+
 
 
 2. Create a PM2 ecosystem file (`ecosystem.config.js`):

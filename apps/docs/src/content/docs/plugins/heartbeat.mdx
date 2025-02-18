@@ -4,6 +4,7 @@ description: "Plugin for scheduling automated messages and social media posts us
 ---
 
 import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+import { PackageManagers } from 'starlight-package-managers'
 
 The **Heartbeat Plugin** enables automated scheduling of tasks and social media interactions. It provides functionality for:
 
@@ -18,10 +19,8 @@ The **Heartbeat Plugin** enables automated scheduling of tasks and social media 
 
 <Steps>
 1. Install the required package:
+   <PackageManagers pkg="@iqai/plugin-heartbeat" />
 
-   ```bash
-   pnpm add @iqai/plugin-heartbeat
-   ```
 
 2. Create a **.env** file with platform-specific configurations as needed:
 
