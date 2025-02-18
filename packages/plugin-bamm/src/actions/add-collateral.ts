@@ -64,7 +64,9 @@ const handler = (opts: BAMMActionParams) => {
 				text: dedent`
           ✅ Collateral Addition Successful
 
+					🌐 BAMM Address: ${bammAddress}
           🔒 Amount: ${formatNumber(amount)} tokens
+					💰 Token: ${collateralToken}
           🔗 Transaction: ${result.txHash}
 
           Collateral has been added to your BAMM position.

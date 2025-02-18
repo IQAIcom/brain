@@ -64,7 +64,9 @@ const handler = (opts: BAMMActionParams) => {
 				text: dedent`
           ✅ Collateral Removal Successful
 
+					🔓 BAMM Address: ${bammAddress}
           🔓 Amount: ${formatNumber(amount)} tokens
+					🔓 Collateral Token: ${collateralToken}
           🔗 Transaction: ${result.txHash}
 
           Collateral has been removed from your BAMM position.
