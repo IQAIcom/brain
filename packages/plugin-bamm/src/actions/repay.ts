@@ -6,6 +6,7 @@ import dedent from "dedent";
 import { REPAY_TEMPLATE } from "../lib/templates";
 import { WalletService } from "../services/wallet";
 import { RepayService } from "../services/repay";
+import formatNumber from "../lib/format-number";
 
 export const getRepayAction = (opts: BAMMActionParams): Action => {
 	return {
@@ -23,7 +24,7 @@ const handler = (opts: BAMMActionParams) => {
 		elizaLogger.info("Starting repay action");
 		try {
 			const inputParser = new InputParserService();
-			const { bammAddress, borrowToken, amount, collateralToken, error } =
+			const { bammAddress, borrowToken, amount, error } =
 				await inputParser.parseInputs({
 					runtime,
 					message,
@@ -48,7 +49,6 @@ const handler = (opts: BAMMActionParams) => {
 				bammAddress,
 				borrowToken,
 				amount,
-				collateralToken,
 			});
 
 			callback?.({
@@ -57,7 +57,7 @@ const handler = (opts: BAMMActionParams) => {
 
           🏦 BAMM Address: ${bammAddress}
           🪙 Borrow Token: ${borrowToken}
-          💰 Amount Repaid: ${amount}
+					💰 Amount: ${formatNumber(amount)}
           🔗 Transaction: ${result.txHash}
 
           Borrowed assets have been successfully repaid to the BAMM pool.

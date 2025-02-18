@@ -3,15 +3,11 @@ import type { Address } from "viem";
 import type { WalletService } from "./wallet";
 import { BAMM_ABI } from "../lib/bamm.abi";
 
-/**
- * The user specifies how much they want to repay for their borrowed collateral,
- * and the service calls the executeActions function to handle the repayment transaction.
- */
 export interface RepayParams {
-	bammAddress: Address; // The BAMM contract address
-	borrowToken: Address; // The token the user borrowed (e.g., token0 or token1)
-	amount: string; // Amount the user wants to repay in human-readable form
-	collateralToken: Address; // The token being used as collateral
+	bammAddress: Address;
+	/** The token that was borrowed (either token0 or token1 in the BAMM) */
+	borrowToken: Address;
+	amount: string;
 }
 
 export class RepayService {
@@ -19,49 +15,82 @@ export class RepayService {
 
 	/**
 	 * Repays the borrowed amount by interacting with the BAMM contract.
+	 * We automatically derive which token is collateral by reading token0/token1 from BAMM.
 	 */
 	async execute(params: RepayParams): Promise<{ txHash: string }> {
-		const { bammAddress, borrowToken, amount, collateralToken } = params;
+		const { bammAddress, borrowToken, amount } = params;
 		const publicClient = this.walletService.getPublicClient();
 		const walletClient = this.walletService.getWalletClient();
 		const userAddress = walletClient.account.address;
-		const amountInWei = BigInt(Number(amount) * 1e18);
+		const amountInWei = BigInt(Math.floor(Number(amount) * 1e18));
 
-		// 1. Check if the user has enough balance of the borrow token to repay
+		// 1. Determine token0 / token1 from BAMM
+		const token0: Address = await publicClient.readContract({
+			address: bammAddress,
+			abi: BAMM_ABI,
+			functionName: "token0",
+			args: [],
+		});
+		const token1: Address = await publicClient.readContract({
+			address: bammAddress,
+			abi: BAMM_ABI,
+			functionName: "token1",
+			args: [],
+		});
+
+		// 2. Figure out if the user is repaying token0 or token1
+		// We'll set the appropriate field to negative in the action.
+		const normalizedBorrowToken = borrowToken.toLowerCase();
+		const normalizedToken0 = token0.toLowerCase();
+		const normalizedToken1 = token1.toLowerCase();
+
+		let isBorrowingToken0: boolean;
+		if (normalizedBorrowToken === normalizedToken0) {
+			isBorrowingToken0 = true;
+		} else if (normalizedBorrowToken === normalizedToken1) {
+			isBorrowingToken0 = false;
+		} else {
+			throw new Error(
+				"borrowToken does not match token0 or token1 in the BAMM",
+			);
+		}
+
+		// 3. Check if the user has enough of the borrowed token to repay
 		const balance: bigint = await publicClient.readContract({
 			address: borrowToken,
 			abi: erc20Abi,
 			functionName: "balanceOf",
 			args: [userAddress],
 		});
-
 		if (balance < amountInWei) {
-			throw new Error("Insufficient balance of borrow token to repay");
+			throw new Error("Insufficient balance of borrowed token to repay");
 		}
 
-		// 2. Ensure token approval for BAMM contract to spend the borrow token
+		// 4. Approve the BAMM contract to spend the borrowed token if needed
 		await this.ensureTokenApproval(borrowToken, bammAddress, amountInWei);
 
-		// 3. Construct the Action object for repaying the borrowed tokens
+		// 5. Construct the Action object for repaying the borrowed tokens
 		const currentTime = Math.floor(Date.now() / 1000);
-		const deadline = BigInt(currentTime + 300); // e.g., 5 minutes from now
+		const deadline = BigInt(currentTime + 300);
 
+		// Negative tokenXAmount indicates removing tokens from the vault,
+		// so we set whichever is the borrowed token to negative, the other to 0n.
 		const action = {
-			token0Amount: borrowToken === collateralToken ? 0n : -amountInWei, // repay token (negative value)
-			token1Amount: borrowToken !== collateralToken ? -amountInWei : 0n, // repay token (negative value)
-			rent: -amountInWei, // repayment of the borrowed amount
-			to: userAddress, // the user receives their returned tokens
-			token0AmountMin: 0n, // no slippage allowed (you can adjust this as needed)
-			token1AmountMin: 0n, // no slippage allowed
-			closePosition: false, // not closing position here
-			approveMax: false, // not using max approval
-			v: 0, // Dummy signature values (set to 0)
+			token0Amount: isBorrowingToken0 ? 0n : -amountInWei,
+			token1Amount: isBorrowingToken0 ? -amountInWei : 0n,
+			rent: -amountInWei, // Negative rent to repay
+			to: userAddress, // the user is the recipient for any leftover
+			token0AmountMin: 0n,
+			token1AmountMin: 0n,
+			closePosition: false,
+			approveMax: false,
+			v: 0,
 			r: "0x0000000000000000000000000000000000000000000000000000000000000000" as `0x${string}`,
 			s: "0x0000000000000000000000000000000000000000000000000000000000000000" as `0x${string}`,
 			deadline,
 		};
 
-		// 4. Call executeActions to perform the repayment
+		// 6. Call executeActions to perform the repayment
 		const { request: executeRequest } = await publicClient.simulateContract({
 			address: bammAddress,
 			abi: BAMM_ABI,
@@ -69,18 +98,14 @@ export class RepayService {
 			args: [action],
 			account: walletClient.account,
 		});
-
 		const txHash = await walletClient.writeContract(executeRequest);
 		await publicClient.waitForTransactionReceipt({ hash: txHash });
 
 		return { txHash };
 	}
 
-	/**
-	 * Ensure that the token approval is set for the borrow token.
-	 */
 	private async ensureTokenApproval(
-		borrowAddress: Address,
+		tokenAddress: Address,
 		spenderAddress: Address,
 		amount: bigint,
 	) {
@@ -88,8 +113,8 @@ export class RepayService {
 		const walletClient = this.walletService.getWalletClient();
 		const userAddress = walletClient.account.address;
 
-		const currentAllowance = await publicClient.readContract({
-			address: borrowAddress,
+		const currentAllowance: bigint = await publicClient.readContract({
+			address: tokenAddress,
 			abi: erc20Abi,
 			functionName: "allowance",
 			args: [userAddress, spenderAddress],
@@ -97,7 +122,7 @@ export class RepayService {
 
 		if (currentAllowance < amount) {
 			const { request: approveRequest } = await publicClient.simulateContract({
-				address: borrowAddress,
+				address: tokenAddress,
 				abi: erc20Abi,
 				functionName: "approve",
 				args: [spenderAddress, amount],
