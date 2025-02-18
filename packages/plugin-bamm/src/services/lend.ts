@@ -6,83 +6,77 @@ import { elizaLogger } from "@elizaos/core";
 
 export interface LendParams {
 	bammAddress: Address;
-	tokenAddress: Address;
+	/** The amount of Fraxswap LP tokens to deposit, in normal decimal form (e.g. "10" for 10 tokens) */
 	amount: string;
 }
 
 export class LendService {
 	constructor(private walletService: WalletService) {}
 
-	private async ensureTokenApproval(
-		tokenAddress: Address,
-		spenderAddress: Address,
-		amount: bigint,
-	): Promise<void> {
-		const publicClient = this.walletService.getPublicClient();
-		const walletClient = this.walletService.getWalletClient();
-		const userAddress = walletClient.account.address;
-
-		const currentAllowance: bigint = await publicClient.readContract({
-			address: tokenAddress,
-			abi: erc20Abi,
-			functionName: "allowance",
-			args: [userAddress, spenderAddress],
-		});
-
-		if (currentAllowance < amount) {
-			const { request: approveRequest } = await publicClient.simulateContract({
-				address: tokenAddress,
-				abi: erc20Abi,
-				functionName: "approve",
-				args: [spenderAddress, amount],
-				account: walletClient.account,
-			});
-			await walletClient.writeContract(approveRequest);
-		}
-	}
-
+	/**
+	 * Lend Fraxswap LP tokens to the BAMM contract.
+	 * Reads the LP token address from bamm.pair(), approves the BAMM to spend them if needed,
+	 * and calls bamm.mint() to deposit.
+	 */
 	async execute(params: LendParams): Promise<{ txHash: string }> {
-		const { bammAddress, tokenAddress, amount } = params;
+		const { bammAddress, amount } = params;
 		const publicClient = this.walletService.getPublicClient();
 		const walletClient = this.walletService.getWalletClient();
 		const userAddress = walletClient.account.address;
-
-		const amountInWei = BigInt(Number(amount) * 1e18);
-
-		await this.ensureTokenApproval(tokenAddress, bammAddress, amountInWei);
-
-		const currentTime = Math.floor(Date.now() / 1000);
-		const deadline = BigInt(currentTime + 300);
-
-		const action = {
-			token0Amount: amountInWei,
-			token1Amount: 0n,
-			rent: 0n,
-			to: userAddress,
-			token0AmountMin: amountInWei,
-			token1AmountMin: 0n,
-			closePosition: false,
-			approveMax: false,
-			v: 0,
-			r: "0x0000000000000000000000000000000000000000000000000000000000000000" as `0x${string}`,
-			s: "0x0000000000000000000000000000000000000000000000000000000000000000" as `0x${string}`,
-			deadline,
-		};
+		const lpAmountWei = BigInt(Math.floor(Number(amount) * 1e18));
 		try {
-			// Simulate and send the transaction by calling executeActions on the BAMM contract.
-			const { request: executeRequest } = await publicClient.simulateContract({
+			// 1. Read the Fraxswap LP token address from the BAMM contract
+			const lpTokenAddress: Address = await publicClient.readContract({
 				address: bammAddress,
 				abi: BAMM_ABI,
-				functionName: "executeActions",
-				args: [action],
+				functionName: "pair",
+				args: [],
+			});
+
+			// 2. Check user’s LP token balance
+			const balance: bigint = await publicClient.readContract({
+				address: lpTokenAddress,
+				abi: erc20Abi,
+				functionName: "balanceOf",
+				args: [userAddress],
+			});
+			if (balance < lpAmountWei) {
+				throw new Error("Insufficient Fraxswap LP token balance");
+			}
+
+			// 3. Approve the BAMM contract to spend LP tokens if needed
+			const allowance: bigint = await publicClient.readContract({
+				address: lpTokenAddress,
+				abi: erc20Abi,
+				functionName: "allowance",
+				args: [userAddress, bammAddress],
+			});
+			if (allowance < lpAmountWei) {
+				const { request: approveRequest } = await publicClient.simulateContract(
+					{
+						address: lpTokenAddress,
+						abi: erc20Abi,
+						functionName: "approve",
+						args: [bammAddress, lpAmountWei],
+						account: walletClient.account,
+					},
+				);
+				await walletClient.writeContract(approveRequest);
+			}
+			// 4. Call bamm.mint(to, lpIn) to deposit LP and receive BAMM tokens
+			const { request: mintRequest } = await publicClient.simulateContract({
+				address: bammAddress,
+				abi: BAMM_ABI,
+				functionName: "mint",
+				args: [userAddress, lpAmountWei],
 				account: walletClient.account,
 			});
-			const txHash = await walletClient.writeContract(executeRequest);
+			const txHash = await walletClient.writeContract(mintRequest);
 			await publicClient.waitForTransactionReceipt({ hash: txHash });
 
 			return { txHash };
 		} catch (error) {
-			elizaLogger.error("Error in lend service:", error);
+			elizaLogger.error("Error in lend service", error);
 			throw error;
 		}
 	}

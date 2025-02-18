@@ -3,7 +3,6 @@ Extract the lending details from all recent messages.
 
 The response must include:
 - bammAddress: The BAMM contract address
-- tokenAddress: The token to lend (e.g., an LP token)
 - amount: The amount to lend in normal decimal form (e.g., "10" for 10 tokens)
 - error: An error message if valid poolAddress or amount cannot be determined (optional)
 
@@ -11,14 +10,12 @@ Example response:
 \`\`\`json
 {
     "bammAddress": "0x1234567890123456789012345678901234567890",
-    "tokenAddress": "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
     "amount": "1000"
 }
 \`\`\`
 \`\`\`json
 {
     "bammAddress": "",
-    "tokenAddress": "",
     "amount": "",
     "error": "No pool address or token address found in context"
 }
@@ -26,8 +23,7 @@ Example response:
 
 {{recentMessages}}
 Extract the lending information from all recent messages.
-Respond with a JSON markdown block containing bammAddress, tokenAddress and amount.`;
-
+Respond with a JSON markdown block containing bammAddress and amount.`;
 export const BORROW_TEMPLATE = `Respond with a JSON object containing borrowing information.
 Extract the borrowing details from all recent messages.
 
@@ -159,20 +155,20 @@ export const WITHDRAW_TEMPLATE = `Respond with a JSON object containing withdraw
 Extract the withdrawal details from all recent messages.
 
 The response must include:
-- pairAddress: The BAMM pool address
-- amount: The amount of LP tokens to withdraw (in ether values)
-- error: An error message if valid pairAddress or amount cannot be determined (optional)
+- bammAddress: The BAMM pool address
+- amount: The amount of BAMM tokens to redeem for LP tokens (in normal decimal form)
+- error: An error message if valid bammAddress or amount cannot be determined (optional)
 
 Example response:
 \`\`\`json
 {
-    "pairAddress": "0x1234567890123456789012345678901234567890",
+    "bammAddress": "0x1234567890123456789012345678901234567890",
     "amount": "1000"
 }
 \`\`\`
 \`\`\`json
 {
-    "pairAddress": "",
+    "bammAddress": "",
     "amount": "",
     "error": "No pool address found in context"
 }
@@ -180,4 +176,4 @@ Example response:
 
 {{recentMessages}}
 Extract the withdrawal information from all recent messages.
-Respond with a JSON markdown block containing pairAddress and amount.`;
+Respond with a JSON markdown block containing bammAddress and amount.`;

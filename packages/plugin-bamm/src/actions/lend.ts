@@ -6,6 +6,7 @@ import dedent from "dedent";
 import { LEND_TEMPLATE } from "../lib/templates";
 import { WalletService } from "../services/wallet";
 import { LendService } from "../services/lend";
+import { BAMM_ABI } from "../lib/bamm.abi";
 
 export const getLendAction = (opts: BAMMActionParams): Action => {
 	return {
@@ -23,14 +24,17 @@ const handler = (opts: BAMMActionParams) => {
 		elizaLogger.info("Starting lend action");
 		try {
 			const inputParser = new InputParserService();
-			const { bammAddress, tokenAddress, amount, error } =
-				await inputParser.parseInputs({
-					runtime,
-					message,
-					state,
-					template: LEND_TEMPLATE,
-				});
-
+			const { bammAddress, amount, error } = await inputParser.parseInputs({
+				runtime,
+				message,
+				state,
+				template: LEND_TEMPLATE,
+			});
+			elizaLogger.info(`
+					🔍 Parsed Inputs for lend:
+					BAMM Address: ${bammAddress}
+					Amount: ${amount}
+				`);
 			if (error) {
 				callback?.({
 					text: `❌ ${error}`,
@@ -46,7 +50,6 @@ const handler = (opts: BAMMActionParams) => {
 
 			const result = await lendService.execute({
 				bammAddress,
-				tokenAddress,
 				amount,
 			});
 
@@ -55,11 +58,10 @@ const handler = (opts: BAMMActionParams) => {
           ✅ Lending Transaction Successful
 
           🏦 BAMM Address: ${bammAddress}
-          🪙 Token Address: ${tokenAddress}
           💰 Amount Lent: ${amount}
           🔗 Transaction: ${result.txHash}
 
-          Tokens have been successfully lent to the BAMM pool.
+          LP Tokens have been successfully lent to the BAMM pool.
         `,
 			});
 			return true;
