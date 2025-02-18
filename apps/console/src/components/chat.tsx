@@ -15,7 +15,7 @@ import { type AnimatedProps, animated, useTransition } from "@react-spring/web";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Paperclip, Send, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import AIWriter from "react-aiwriter";
+// import AIWriter from "react-aiwriter";
 import { AudioRecorder } from "./audio-recorder";
 import CopyButton from "./copy-button";
 import { Avatar, AvatarImage } from "./ui/avatar";
