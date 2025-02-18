@@ -4,6 +4,7 @@ description: In-depth guide to creating and configuring Brain Framework agents
 ---
 
 import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+import ExternalLink from "../../../components/ExternalLink.astro"
 
 Brain Framework uses a builder pattern for creating agents, allowing flexible configuration of databases, clients, model providers, plugins and character settings.
 
@@ -111,7 +112,7 @@ Each client may require specific environment variables. Example:
 - Telegram: `TELEGRAM_BOT_TOKEN`
 - Twitter: `TWITTER_API_KEY`, `TWITTER_API_SECRET`, etc.
 
-Browse all available client plugins at <a href="https://github.com/orgs/elizaos-plugins/repositories?language=&q=client-&sort=&type=all" target="_blank">ElizaOS Client Plugins</a>
+Browse all available client plugins at <ExternalLink href="https://github.com/orgs/elizaos-plugins/repositories?language=&q=client-&sort=&type=all">ElizaOS Client Plugins</ExternalLink>
 
 
 ## Model Provider
@@ -125,10 +126,10 @@ Configure the AI model powering your agent:
 )
 ```
 
-For available model providers, visit <a href="https://elizaos.github.io/eliza/docs/quickstart/#choose-your-model" target="_blank">ElizaOS Model Providers</a>
+For available model providers, visit <ExternalLink href="https://elizaos.github.io/eliza/docs/quickstart/#choose-your-model">ElizaOS Model Providers</ExternalLink>
 
 
-## Plugins
+ExternalLink## Plugins
 
 Brain Framework supports both its native plugins and ElizaOS plugins. Here's how to add plugins to your agent:
 
@@ -149,8 +150,8 @@ const odosPlugin = await createOdosPlugin({
 ```
 
 Browse available plugins:
-- <a href="https://github.com/IQAIcom/brain/tree/main/packages" target="_blank">Brain Framework Plugins</a>
-- <a href="https://github.com/elizaos-plugins" target="_blank">ElizaOS Plugins</a>
+- <ExternalLink href="https://github.com/IQAIcom/brain/tree/main/packages">Brain Framework Plugins</ExternalLink>
+- <ExternalLink href="https://github.com/elizaos-plugins">ElizaOS Plugins</ExternalLink>
 
 ## Character Configuration
 
@@ -183,7 +184,7 @@ Define your agent's personality and behavior:
 })
 ```
 
-For detailed character configuration options, visit <a href="https://elizaos.github.io/eliza/docs/core/characterfile/" target="_blank">ElizaOS Character Configuration</a>
+For detailed character configuration options, visit <ExternalLink  href="https://elizaos.github.io/eliza/docs/core/characterfile/">ElizaOS Character Configuration</ExternalLink>
 
 ## Error Handling
 
