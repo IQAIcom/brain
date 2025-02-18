@@ -108,8 +108,6 @@ export class BammPositionsService {
 
 		const formattedPositions = positions
 			.map((pos) => {
-				const isLend =
-					pos.vault.rented === null || pos.vault.rented <= BigInt(0);
 				// return if token0 and token1 is 0
 				if (pos.vault.token0 === 0n && pos.vault.token1 === 0n) {
 					return null;
@@ -121,7 +119,6 @@ export class BammPositionsService {
 						- Pair: ${pos.pairAddress}
             - ${pos.token0Symbol}: ${formatWeiToNumber(pos.vault?.token0 || 0n)}
             - ${pos.token1Symbol}: ${formatWeiToNumber(pos.vault?.token1 || 0n)}
-            - ${isLend ? "💸 Lending" : `💰 Borrowing: ${formatWeiToNumber(pos.vault.rented)}`}
         `;
 			})
 			.filter(Boolean)
