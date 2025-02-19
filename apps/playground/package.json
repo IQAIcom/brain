@@ -19,6 +19,7 @@
 		"@elizaos/plugin-bootstrap": "0.1.9",
 		"@iqai/agent": "workspace:*",
 		"@iqai/plugin-atp": "workspace:*",
+		"@iqai/plugin-bamm": "workspace:*",
 		"@iqai/plugin-fraxlend": "workspace:*",
 		"@iqai/plugin-heartbeat": "workspace:*",
 		"@iqai/plugin-sequencer": "workspace:*",

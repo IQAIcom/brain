@@ -52,6 +52,7 @@ export default defineConfig({
             { label: '💰 Fraxlend', link: '/plugins/fraxlend' },
             { label: '🔄 Odos', link: '/plugins/odos' },
             { label: "⚡ ATP", link: "/plugins/atp"},
+            { label: "💰 BAMM", link: "/plugins/bamm"},
             { label: "💓 Heartbeat", link: "/plugins/heartbeat"},
             { label: "📝 Sequencer", link: "/plugins/sequencer"},
           ],
