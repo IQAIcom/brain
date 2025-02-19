@@ -70,6 +70,10 @@ Borrow assets from a BAMM pool using collateral.
 borrow 100k of 0xCc3023635dF54FC0e43F47bc4BeB90c3d1fbDa9f from this 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84 bamm
 ```
 
+```plaintext
+borrow 100k of cabu from this 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84 bamm
+```
+
 ### 2. **BAMM_LEND**  
 
 Lend assets to a BAMM pool.
@@ -90,6 +94,10 @@ Add collateral to your BAMM position.
 add 100k collateral of 0xCc3023635dF54FC0e43F47bc4BeB90c3d1fbDa9f to this 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84 bamm
 ```
 
+```plaintext
+add 100k collateral of IQT to this 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84 bamm
+```
+
 ### 4. **BAMM_REMOVE_COLLATERAL**  
 
 Remove collateral from your BAMM position.
@@ -100,6 +108,10 @@ Remove collateral from your BAMM position.
 remove 10k collateral of 0xCc3023635dF54FC0e43F47bc4BeB90c3d1fbDa9f from this 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84 bamm
 ```
 
+```plaintext
+remove 10k collateral of iqt from this 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84 bamm
+```
+
 ### 5. **BAMM_REPAY**  
 
 Repay borrowed assets to a BAMM pool.
@@ -108,6 +120,10 @@ Repay borrowed assets to a BAMM pool.
 
 ```plaintext
 repay 3k of 0xCc3023635dF54FC0e43F47bc4BeB90c3d1fbDa9f to this 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84 bamm
+```
+
+```plaintext
+repay 3k of cabu to this 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84 bamm
 ```
 
 ### 6. **BAMM_WITHDRAW**  
