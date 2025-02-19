@@ -15,14 +15,13 @@ import { type AnimatedProps, animated, useTransition } from "@react-spring/web";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Paperclip, Send, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-// import AIWriter from "react-aiwriter";
+import AIWriter from "react-aiwriter";
 import { AudioRecorder } from "./audio-recorder";
 import CopyButton from "./copy-button";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import ChatTtsButton from "./ui/chat/chat-tts-button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
-import { MarkDown } from "@/lib/formatResponse";
 import ReactMarkdown from "react-markdown";
 
 type ExtraContentFields = {
@@ -203,15 +202,11 @@ export default function Page({ agentId }: { agentId: UUID }) {
 									<div className="flex flex-col">
 										<ChatBubbleMessage isLoading={message?.isLoading}>
 											{message?.user !== "user" ? (
-												// <AIWriter>
-													
-													<>
-														{/* <MarkDown text={message.text}/> */}
-														<div className="prose prose-p:leading-normal prose-primary prose-sm max-w-none">
-															<ReactMarkdown>{message.text}</ReactMarkdown>
-														</div>
-													</>
-												// </AIWriter>
+												<AIWriter>
+													<div className="prose prose-p:leading-normal prose-primary prose-sm max-w-none">
+														<ReactMarkdown>{message.text}</ReactMarkdown>
+													</div>
+												</AIWriter>
 											) : (
 												message.text
 											)}
