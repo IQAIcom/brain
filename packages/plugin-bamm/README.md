@@ -1,9 +1,11 @@
-
 # 🎧 Plugin BAMM
 
 A **plugin** for interacting with **BAMM**, enabling borrowing, lending, and managing liquidity positions in Fraxswap-style pools.
 
-[More about BAMM](https://docs.frax.com/protocol/subprotocols/bamm/overview)
+Learn more about BAMM:
+
+- [Frax docs](https://docs.frax.com/protocol/subprotocols/bamm/overview)
+- [IQ Wiki](https://iq.wiki/wiki/bamm-borrow-automated-market-maker)
 
 ---
 
