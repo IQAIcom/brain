@@ -3,7 +3,7 @@ import { elizaLogger } from "@elizaos/core";
 import type { BAMMActionParams } from "../types";
 import { AddCollateralService } from "../services/add-collateral";
 import dedent from "dedent";
-import formatNumber, { formatWeiToNumber } from "../lib/format-number";
+import formatNumber from "../lib/format-number";
 import { WalletService } from "../services/wallet";
 import { ADD_COLLATERAL_TEMPLATE } from "../lib/templates";
 import { InputParserService } from "../services/input-parser";
