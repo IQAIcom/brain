@@ -1,4 +1,5 @@
 import type { Account } from "near-api-js";
+import type { KeyPairString } from "near-api-js/lib/utils";
 
 export type HandlerContext = {
 	account: Account;
@@ -15,7 +16,7 @@ export type NearEventListener = {
 export type NearAgentConfig = {
 	// Core NEAR connection config
 	accountId: string;
-	accountKey: string;
+	accountKey: KeyPairString;
 
 	// Array of event listeners
 	listeners: NearEventListener[];

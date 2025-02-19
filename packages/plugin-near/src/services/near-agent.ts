@@ -4,9 +4,10 @@ import {
 	ServiceType,
 	elizaLogger,
 } from "@elizaos/core";
-import { type Account, connect } from "near-api-js";
+import { type Account, connect, keyStores, KeyPair } from "near-api-js";
 import * as cron from "node-cron";
 import type { AgentEvent, NearAgentConfig, NearEventListener } from "../types";
+import { KeyPairString } from "near-api-js/lib/utils";
 
 export class NearAgent extends Service {
 	static serviceType: ServiceType = ServiceType.TRANSCRIPTION;
@@ -24,10 +25,19 @@ export class NearAgent extends Service {
 	}
 
 	async initialize(_runtime: IAgentRuntime) {
+		const keyStore = new keyStores.InMemoryKeyStore();
+		const keyPair = KeyPair.fromString(this.opts.accountKey);
+		await keyStore.setKey(
+			this.opts.networkConfig?.networkId || NearAgent.DEFAULT_NETWORK_ID,
+			this.opts.accountId,
+			keyPair,
+		);
+
 		const near = await connect({
 			networkId:
 				this.opts.networkConfig?.networkId || NearAgent.DEFAULT_NETWORK_ID,
 			nodeUrl: this.opts.networkConfig?.nodeUrl || NearAgent.DEFAULT_NODE_URL,
+			keyStore,
 		});
 
 		this.account = await near.account(this.opts.accountId);
