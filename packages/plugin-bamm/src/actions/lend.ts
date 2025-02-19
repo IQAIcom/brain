@@ -53,11 +53,13 @@ const handler = (opts: BAMMActionParams) => {
 				state,
 				template: LEND_TEMPLATE,
 			});
-			elizaLogger.info(`
-					🔍 Parsed Inputs for lend:
+			elizaLogger.info(
+				`
+				Lend Params:
 					BAMM Address: ${bammAddress}
 					Amount: ${amount}
-				`);
+				`,
+			);
 			if (error) {
 				callback?.({
 					text: `❌ ${error}`,

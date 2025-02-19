@@ -9,11 +9,12 @@ export async function getTokenAddressFromSymbol(
 	}
 	const data = await response.json();
 	// Look through the pools data to find the matching symbol and return the address
+	const lowerSymbol = symbol.toLowerCase();
 	for (const pool of data.pools) {
-		if (pool.token0Symbol === symbol) {
+		if (pool.token0Symbol.toLowerCase() === lowerSymbol) {
 			return pool.token0Address;
 		}
-		if (pool.token1Symbol === symbol) {
+		if (pool.token1Symbol.toLowerCase() === lowerSymbol) {
 			return pool.token1Address;
 		}
 	}

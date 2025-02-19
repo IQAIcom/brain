@@ -39,6 +39,29 @@ export const getRepayAction = (opts: BAMMActionParams): Action => {
 					},
 				},
 			],
+			[
+				{
+					user: "user",
+					content: {
+						text: "repay 3k of CABU to this 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84 bamm",
+					},
+				},
+				{
+					user: "system",
+					content: {
+						text: `
+							✅ Repayment Transaction Successful
+
+							🏦 BAMM Address: 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84
+							🪙 Borrow Token: CABU
+							💰 Amount: 3.00K
+							🔗 Transaction: 0x89085633b5f34ff7d441b607b6e31025a85dde80b99a60059bc381199dcaba46
+
+							Borrowed assets have been successfully repaid to the BAMM pool.
+						`,
+					},
+				},
+			],
 		],
 	};
 };
@@ -48,20 +71,23 @@ const handler = (opts: BAMMActionParams) => {
 		elizaLogger.info("Starting repay action");
 		try {
 			const inputParser = new InputParserService();
-			const { bammAddress, borrowToken, amount, error } =
+			const { bammAddress, borrowToken, borrowTokenSymbol, amount, error } =
 				await inputParser.parseInputs({
 					runtime,
 					message,
 					state,
 					template: REPAY_TEMPLATE,
 				});
-
-			elizaLogger.info(`
-				🔍 Parsed Inputs for repay
-				BAMM Address: ${bammAddress}
-				Borrow Token: ${borrowToken}
-				Amount: ${amount}
-				`);
+			elizaLogger.info(
+				`
+				Repay params:
+					bammAddress: ${bammAddress}
+					borrowToken: ${borrowToken}
+					borrowTokenSymbol: ${borrowTokenSymbol}
+					amount: ${amount}
+					error: ${error}
+				`,
+			);
 
 			if (error) {
 				callback?.({
@@ -79,6 +105,7 @@ const handler = (opts: BAMMActionParams) => {
 			const result = await repayService.execute({
 				bammAddress,
 				borrowToken,
+				borrowTokenSymbol,
 				amount,
 			});
 

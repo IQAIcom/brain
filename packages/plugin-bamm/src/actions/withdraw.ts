@@ -59,11 +59,13 @@ const handler = (opts: BAMMActionParams) => {
 				state,
 				template: WITHDRAW_TEMPLATE,
 			});
-			elizaLogger.info(`
-        🔍 Parsed Inputs for withdraw:
-        BAMM Address: ${bammAddress}
-        Amount: ${amount}
-      `);
+			elizaLogger.info(
+				`
+      	Withdraw Params:
+					BAMM Address: ${bammAddress}
+					Amount: ${amount}
+      	`,
+			);
 			if (error) {
 				callback?.({
 					text: `❌ ${error}`,

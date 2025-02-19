@@ -38,6 +38,28 @@ export const getBorrowAction = (opts: BAMMActionParams): Action => {
 					},
 				},
 			],
+			[
+				{
+					user: "user",
+					content: {
+						text: "borrow 5k of CABU from this 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84 bamm",
+					},
+				},
+				{
+					user: "system",
+					content: {
+						text: `
+							✅ Borrowing Transaction Successful
+							🌐 BAMM Address: 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84
+							💸 Borrow Amount: 5.00K
+							💰 Borrowed Token: CABU
+							🔗 Transaction: 0xa1f64e3cd4b3a2afd5cec80c344df082492097b6db6a5075a34b6792d374bcf1
+
+						  Funds have been borrowed from the BAMM pool.
+						`,
+					},
+				},
+			],
 		],
 	};
 };
@@ -48,14 +70,23 @@ const handler = (opts: BAMMActionParams) => {
 		try {
 			const inputParser = new InputParserService();
 			// collateralToken is no longer needed in the input
-			const { bammAddress, borrowToken, amount, error } =
+			const { bammAddress, borrowToken, borrowTokenSymbol, amount, error } =
 				await inputParser.parseInputs({
 					runtime,
 					message,
 					state,
 					template: BORROW_TEMPLATE,
 				});
-
+			elizaLogger.info(
+				`
+				Borrow params:
+					bammAddress: ${bammAddress}
+					borrowToken: ${borrowToken}
+					borrowTokenSymbol: ${borrowTokenSymbol}
+					amount: ${amount}
+					error: ${error}
+				`,
+			);
 			if (error) {
 				callback?.({
 					text: `❌ ${error}`,
@@ -72,6 +103,7 @@ const handler = (opts: BAMMActionParams) => {
 			const result = await borrowService.execute({
 				bammAddress,
 				borrowToken,
+				borrowTokenSymbol,
 				amount,
 			});
 
@@ -81,7 +113,7 @@ const handler = (opts: BAMMActionParams) => {
 
 					🌐 BAMM Address: ${bammAddress}
           💸 Borrow Amount: ${formatNumber(amount)}
-					💰 Borrowed Token: ${borrowToken}
+					💰 Borrowed Token: ${borrowToken ?? borrowTokenSymbol}
           🔗 Transaction: ${result.txHash}
 
           Funds have been borrowed from the BAMM pool.

@@ -44,6 +44,29 @@ export const getRemoveCollateralAction = (opts: BAMMActionParams): Action => {
 					},
 				},
 			],
+			[
+				{
+					user: "user",
+					content: {
+						text: "remove 10k collateral of IQT from this 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84 bamm",
+					},
+				},
+				{
+					user: "system",
+					content: {
+						text: `
+							✅ Collateral Removal Successful
+
+							🔓 BAMM Address: 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84
+							🔓 Amount: 10.00K tokens
+							🔓 Collateral Token: IQT
+							🔗 Transaction: 0x853a87e832d7e0a4d3db1d9177914b50119331dd86db75426bdf1d34bba23e33
+
+							Collateral has been removed from your BAMM position.
+						`,
+					},
+				},
+			],
 		],
 	};
 };
@@ -54,19 +77,28 @@ const handler = (opts: BAMMActionParams) => {
 		try {
 			const inputParser = new InputParserService();
 			// Use the updated template and expect bammAddress, collateralToken, and amount
-			const { bammAddress, collateralToken, amount, error } =
-				await inputParser.parseInputs({
-					runtime,
-					message,
-					state,
-					template: REMOVE_COLLATERAL_TEMPLATE,
-				});
-			elizaLogger.info(`
-				🔍 Parsed Inputs for remove collateral
-				BAMM Address: ${bammAddress}
-				Collateral Token: ${collateralToken}
-				Amount: ${amount}
-				`);
+			const {
+				bammAddress,
+				collateralToken,
+				collateralTokenSymbol,
+				amount,
+				error,
+			} = await inputParser.parseInputs({
+				runtime,
+				message,
+				state,
+				template: REMOVE_COLLATERAL_TEMPLATE,
+			});
+			elizaLogger.info(
+				`
+				Remove collateral params:
+					bammAddress: ${bammAddress}
+					collateralToken: ${collateralToken}
+					collateralTokenSymbol: ${collateralTokenSymbol}
+					amount: ${amount}
+					error: ${error}
+				`,
+			);
 			if (error) {
 				callback?.({
 					text: `❌ ${error}`,
@@ -86,6 +118,7 @@ const handler = (opts: BAMMActionParams) => {
 			const result = await removeCollateralService.execute({
 				bammAddress,
 				collateralToken,
+				collateralTokenSymbol,
 				amount,
 			});
 
@@ -95,7 +128,7 @@ const handler = (opts: BAMMActionParams) => {
 
 					🔓 BAMM Address: ${bammAddress}
           🔓 Amount: ${formatNumber(amount)} tokens
-					🔓 Collateral Token: ${collateralToken}
+					🔓 Collateral Token: ${collateralToken ?? collateralTokenSymbol}
           🔗 Transaction: ${result.txHash}
 
           Collateral has been removed from your BAMM position.

@@ -44,6 +44,29 @@ export const getAddCollateralAction = (opts: BAMMActionParams): Action => {
 					},
 				},
 			],
+			[
+				{
+					user: "user",
+					content: {
+						text: "add 100k collateral of IQT to this 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84 bamm",
+					},
+				},
+				{
+					user: "system",
+					content: {
+						text: `
+							✅ Collateral Addition Successful
+
+							🌐 BAMM Address: 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84
+							🔒 Amount: 100.00K tokens
+							💰 Token: IQT
+							🔗 Transaction: 0x1194ed3524f3cab3f8f5fbf55ef218c224fce026ad7fb5d612139439e58a43ef
+
+							Collateral has been added to your BAMM position.
+							`,
+					},
+				},
+			],
 		],
 	};
 };
@@ -67,7 +90,7 @@ const handler = (opts: BAMMActionParams) => {
 			});
 			elizaLogger.info(
 				`
-				 Add collateral params:
+				Add collateral params:
 					bammAddress: ${bammAddress}
 					collateralToken: ${collateralToken}
 					collateralTokenSymbol: ${collateralTokenSymbol}
@@ -82,11 +105,6 @@ const handler = (opts: BAMMActionParams) => {
 				});
 				return false;
 			}
-			elizaLogger.info(
-				`🔗 BAMM Address: ${bammAddress}`,
-				`💰 Collateral Token: ${collateralToken ?? collateralTokenSymbol}`,
-				`💰 Amount: ${amount}`,
-			);
 			const walletService = new WalletService(
 				opts.walletPrivateKey,
 				opts.chain,
@@ -106,7 +124,7 @@ const handler = (opts: BAMMActionParams) => {
 
 					🌐 BAMM Address: ${bammAddress}
           🔒 Amount: ${formatNumber(amount)} tokens
-					💰 Token: ${collateralToken}
+					💰 Token: ${collateralToken ?? collateralTokenSymbol}
           🔗 Transaction: ${result.txHash}
 
           Collateral has been added to your BAMM position.
