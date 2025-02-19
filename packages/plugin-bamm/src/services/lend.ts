@@ -3,6 +3,7 @@ import type { Address } from "viem";
 import type { WalletService } from "./wallet";
 import { BAMM_ABI } from "../lib/bamm.abi";
 import { elizaLogger } from "@elizaos/core";
+import { checkTokenBalance, ensureTokenApproval } from "../lib/token-utils";
 
 export interface LendParams {
 	bammAddress: Address;
@@ -33,35 +34,21 @@ export class LendService {
 			});
 
 			// 2. Check user’s LP token balance
-			const balance: bigint = await publicClient.readContract({
-				address: lpTokenAddress,
-				abi: erc20Abi,
-				functionName: "balanceOf",
-				args: [userAddress],
-			});
-			if (balance < lpAmountWei) {
-				throw new Error("Insufficient Fraxswap LP token balance");
-			}
+			await checkTokenBalance(
+				lpTokenAddress,
+				userAddress,
+				lpAmountWei,
+				publicClient,
+			);
 
 			// 3. Approve the BAMM contract to spend LP tokens
-			const allowance: bigint = await publicClient.readContract({
-				address: lpTokenAddress,
-				abi: erc20Abi,
-				functionName: "allowance",
-				args: [userAddress, bammAddress],
-			});
-			if (allowance < lpAmountWei) {
-				const { request: approveRequest } = await publicClient.simulateContract(
-					{
-						address: lpTokenAddress,
-						abi: erc20Abi,
-						functionName: "approve",
-						args: [bammAddress, lpAmountWei],
-						account: walletClient.account,
-					},
-				);
-				await walletClient.writeContract(approveRequest);
-			}
+			await ensureTokenApproval(
+				lpTokenAddress,
+				bammAddress,
+				lpAmountWei,
+				publicClient,
+				walletClient,
+			);
 			// 4. Call bamm.mint(to, lpIn) to deposit LP and receive BAMM tokens
 			const { request: mintRequest } = await publicClient.simulateContract({
 				address: bammAddress,

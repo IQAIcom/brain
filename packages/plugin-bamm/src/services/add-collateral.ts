@@ -5,6 +5,7 @@ import { BAMM_ABI } from "../lib/bamm.abi";
 import { elizaLogger } from "@elizaos/core";
 import { getTokenAddressFromSymbol } from "../lib/symbol-to-address";
 import { validateTokenAgainstBAMM } from "../lib/token-validator";
+import { checkTokenBalance, ensureTokenApproval } from "../lib/token-utils";
 
 export interface AddCollateralParams {
 	bammAddress: Address;
@@ -40,7 +41,19 @@ export class AddCollateralService {
 				publicClient,
 			);
 
-			await this.ensureTokenApproval(collateralToken, bammAddress, amountInWei);
+			await checkTokenBalance(
+				collateralToken,
+				userAddress,
+				amountInWei,
+				publicClient,
+			);
+			await ensureTokenApproval(
+				collateralToken,
+				bammAddress,
+				amountInWei,
+				publicClient,
+				walletClient,
+			);
 
 			const currentTime = Math.floor(Date.now() / 1000);
 			const deadline = BigInt(currentTime + 300);
@@ -72,32 +85,6 @@ export class AddCollateralService {
 		} catch (error) {
 			elizaLogger.error("Error in add collateral service:", error);
 			throw Error("Error in add collateral service");
-		}
-	}
-
-	private async ensureTokenApproval(
-		collateralAddress: Address,
-		spenderAddress: Address,
-		amount: bigint,
-	) {
-		const publicClient = this.walletService.getPublicClient();
-		const walletClient = this.walletService.getWalletClient();
-		const userAddress = walletClient.account.address;
-		const currentAllowance = await publicClient.readContract({
-			address: collateralAddress,
-			abi: erc20Abi,
-			functionName: "allowance",
-			args: [userAddress, spenderAddress],
-		});
-		if (currentAllowance < amount) {
-			const { request: approveRequest } = await publicClient.simulateContract({
-				address: collateralAddress,
-				abi: erc20Abi,
-				functionName: "approve",
-				args: [spenderAddress, amount],
-				account: walletClient.account,
-			});
-			await walletClient.writeContract(approveRequest);
 		}
 	}
 }

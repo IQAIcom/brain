@@ -4,6 +4,7 @@ import { BAMM_ABI } from "../lib/bamm.abi";
 import { elizaLogger } from "@elizaos/core";
 import { getTokenAddressFromSymbol } from "../lib/symbol-to-address";
 import { validateTokenAgainstBAMM } from "../lib/token-validator";
+import { checkTokenBalance } from "../lib/token-utils";
 
 export interface RemoveCollateralParams {
 	bammAddress: Address;
@@ -39,6 +40,13 @@ export class RemoveCollateralService {
 				collateralToken,
 				publicClient,
 			);
+			await checkTokenBalance(
+				collateralToken,
+				userAddress,
+				removeAmountWei,
+				publicClient,
+			);
+
 			const currentTime = Math.floor(Date.now() / 1000);
 			const deadline = BigInt(currentTime + 300);
 

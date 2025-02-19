@@ -5,6 +5,7 @@ import { BAMM_ABI } from "../lib/bamm.abi";
 import { elizaLogger } from "@elizaos/core";
 import { getTokenAddressFromSymbol } from "../lib/symbol-to-address";
 import { validateTokenAgainstBAMM } from "../lib/token-validator";
+import { checkTokenBalance, ensureTokenApproval } from "../lib/token-utils";
 
 export interface RepayParams {
 	bammAddress: Address;
@@ -35,18 +36,19 @@ export class RepayService {
 				borrowToken,
 				publicClient,
 			);
-
-			const balance: bigint = await publicClient.readContract({
-				address: borrowToken,
-				abi: erc20Abi,
-				functionName: "balanceOf",
-				args: [userAddress],
-			});
-			if (balance < amountInWei) {
-				throw new Error("Insufficient balance of borrowed token to repay");
-			}
-
-			await this.ensureTokenApproval(borrowToken, bammAddress, amountInWei);
+			await checkTokenBalance(
+				borrowToken,
+				userAddress,
+				amountInWei,
+				publicClient,
+			);
+			await ensureTokenApproval(
+				borrowToken,
+				bammAddress,
+				amountInWei,
+				publicClient,
+				walletClient,
+			);
 
 			const rentedMultiplier: bigint = await publicClient.readContract({
 				address: bammAddress,
@@ -90,32 +92,6 @@ export class RepayService {
 		} catch (error) {
 			elizaLogger.error("Error repaying:", error);
 			throw error;
-		}
-	}
-
-	private async ensureTokenApproval(
-		tokenAddress: Address,
-		spenderAddress: Address,
-		amount: bigint,
-	) {
-		const publicClient = this.walletService.getPublicClient();
-		const walletClient = this.walletService.getWalletClient();
-		const userAddress = walletClient.account.address;
-		const currentAllowance: bigint = await publicClient.readContract({
-			address: tokenAddress,
-			abi: erc20Abi,
-			functionName: "allowance",
-			args: [userAddress, spenderAddress],
-		});
-		if (currentAllowance < amount) {
-			const { request: approveRequest } = await publicClient.simulateContract({
-				address: tokenAddress,
-				abi: erc20Abi,
-				functionName: "approve",
-				args: [spenderAddress, amount],
-				account: walletClient.account,
-			});
-			await walletClient.writeContract(approveRequest);
 		}
 	}
 }
