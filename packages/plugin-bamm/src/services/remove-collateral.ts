@@ -3,6 +3,7 @@ import type { WalletService } from "./wallet";
 import { BAMM_ABI } from "../lib/bamm.abi";
 import { elizaLogger } from "@elizaos/core";
 import { getTokenAddressFromSymbol } from "../lib/symbol-to-address";
+import { validateTokenAgainstBAMM } from "../lib/token-validator";
 
 export interface RemoveCollateralParams {
 	bammAddress: Address;
@@ -33,43 +34,17 @@ export class RemoveCollateralService {
 					collateralTokenSymbol,
 				);
 			}
-
-			const token0Address: Address = await publicClient.readContract({
-				address: bammAddress,
-				abi: BAMM_ABI,
-				functionName: "token0",
-				args: [],
-			});
-			const token1Address: Address = await publicClient.readContract({
-				address: bammAddress,
-				abi: BAMM_ABI,
-				functionName: "token1",
-				args: [],
-			});
-			const normalizedCollateral = collateralToken.toLowerCase();
-			const normalizedToken0 = token0Address.toLowerCase();
-			const normalizedToken1 = token1Address.toLowerCase();
-			elizaLogger.info(
-				`
-				token0 ${normalizedToken0}
-				token1 ${normalizedToken1}
-				collateral ${normalizedCollateral}
-			`,
+			const tokenValidation = await validateTokenAgainstBAMM(
+				bammAddress,
+				collateralToken,
+				publicClient,
 			);
-			const isToken0 = normalizedCollateral === normalizedToken0;
-			const isToken1 = normalizedCollateral === normalizedToken1;
-			if (!isToken0 && !isToken1) {
-				throw new Error(
-					"Collateral token does not match token0 or token1 in the BAMM",
-				);
-			}
-
 			const currentTime = Math.floor(Date.now() / 1000);
 			const deadline = BigInt(currentTime + 300);
 
 			const action = {
-				token0Amount: isToken0 ? removeAmountWei : 0n,
-				token1Amount: isToken1 ? removeAmountWei : 0n,
+				token0Amount: tokenValidation.isToken0 ? removeAmountWei : 0n,
+				token1Amount: tokenValidation.isToken1 ? removeAmountWei : 0n,
 				rent: 0n,
 				to: userAddress,
 				token0AmountMin: 0n,

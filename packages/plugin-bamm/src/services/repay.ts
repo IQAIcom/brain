@@ -4,6 +4,7 @@ import type { WalletService } from "./wallet";
 import { BAMM_ABI } from "../lib/bamm.abi";
 import { elizaLogger } from "@elizaos/core";
 import { getTokenAddressFromSymbol } from "../lib/symbol-to-address";
+import { validateTokenAgainstBAMM } from "../lib/token-validator";
 
 export interface RepayParams {
 	bammAddress: Address;
@@ -29,33 +30,11 @@ export class RepayService {
 			if (borrowTokenSymbol) {
 				borrowToken = await getTokenAddressFromSymbol(borrowTokenSymbol);
 			}
-			const token0: Address = await publicClient.readContract({
-				address: bammAddress,
-				abi: BAMM_ABI,
-				functionName: "token0",
-				args: [],
-			});
-			const token1: Address = await publicClient.readContract({
-				address: bammAddress,
-				abi: BAMM_ABI,
-				functionName: "token1",
-				args: [],
-			});
-
-			const normalizedBorrowToken = borrowToken.toLowerCase();
-			const normalizedToken0 = token0.toLowerCase();
-			const normalizedToken1 = token1.toLowerCase();
-
-			let isBorrowingToken0: boolean;
-			if (normalizedBorrowToken === normalizedToken0) {
-				isBorrowingToken0 = true;
-			} else if (normalizedBorrowToken === normalizedToken1) {
-				isBorrowingToken0 = false;
-			} else {
-				throw new Error(
-					"borrowToken does not match token0 or token1 in the BAMM",
-				);
-			}
+			const tokenValidation = await validateTokenAgainstBAMM(
+				bammAddress,
+				borrowToken,
+				publicClient,
+			);
 
 			const balance: bigint = await publicClient.readContract({
 				address: borrowToken,
@@ -84,8 +63,8 @@ export class RepayService {
 			const deadline = BigInt(currentTime + 300);
 
 			const action = {
-				token0Amount: isBorrowingToken0 ? amountInWei : 0n,
-				token1Amount: isBorrowingToken0 ? 0n : amountInWei,
+				token0Amount: tokenValidation.isToken0 ? amountInWei : 0n,
+				token1Amount: tokenValidation.isToken1 ? amountInWei : 0n,
 				rent: effectiveRent,
 				to: userAddress,
 				token0AmountMin: 0n,

@@ -4,6 +4,7 @@ import type { WalletService } from "./wallet";
 import { BAMM_ABI } from "../lib/bamm.abi";
 import { elizaLogger } from "@elizaos/core";
 import { getTokenAddressFromSymbol } from "../lib/symbol-to-address";
+import { validateTokenAgainstBAMM } from "../lib/token-validator";
 
 export interface BorrowParams {
 	bammAddress: Address;
@@ -30,39 +31,14 @@ export class BorrowService {
 			if (borrowTokenSymbol) {
 				borrowToken = await getTokenAddressFromSymbol(borrowTokenSymbol);
 			}
-			const token0: Address = await publicClient.readContract({
-				address: bammAddress,
-				abi: BAMM_ABI,
-				functionName: "token0",
-				args: [],
-			});
-			const token1: Address = await publicClient.readContract({
-				address: bammAddress,
-				abi: BAMM_ABI,
-				functionName: "token1",
-				args: [],
-			});
-			const normalizedBorrowToken = borrowToken.toLowerCase();
-			const normalizedToken0 = token0.toLowerCase();
-			const normalizedToken1 = token1.toLowerCase();
-
-			let collateralToken: Address;
-			let isBorrowingToken0: boolean;
-			if (normalizedBorrowToken === normalizedToken0) {
-				collateralToken = token1;
-				isBorrowingToken0 = true;
-			} else if (normalizedBorrowToken === normalizedToken1) {
-				// Borrowing token1, so collateral is token0.
-				collateralToken = token0;
-				isBorrowingToken0 = false;
-			} else {
-				throw new Error(
-					"borrowToken does not match token0 or token1 in the BAMM",
-				);
-			}
+			const tokenValidation = await validateTokenAgainstBAMM(
+				bammAddress,
+				borrowToken,
+				publicClient,
+			);
 
 			const collateralBalance: bigint = await publicClient.readContract({
-				address: collateralToken,
+				address: borrowToken,
 				abi: erc20Abi,
 				functionName: "balanceOf",
 				args: [userAddress],
@@ -71,7 +47,7 @@ export class BorrowService {
 				throw new Error("Insufficient collateral token balance");
 			}
 
-			await this.ensureTokenApproval(collateralToken, bammAddress, amountInWei);
+			await this.ensureTokenApproval(borrowToken, bammAddress, amountInWei);
 
 			const rentedMultiplier: bigint = await publicClient.readContract({
 				address: bammAddress,
@@ -87,8 +63,8 @@ export class BorrowService {
 			const deadline = BigInt(currentTime + 300);
 
 			const action = {
-				token0Amount: isBorrowingToken0 ? -amountInWei : 0n,
-				token1Amount: isBorrowingToken0 ? 0n : -amountInWei,
+				token0Amount: tokenValidation.isToken0 ? -amountInWei : 0n,
+				token1Amount: tokenValidation.isToken1 ? -amountInWei : 0n,
 				rent: rent,
 				to: userAddress,
 				token0AmountMin: 0n,
