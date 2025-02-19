@@ -113,7 +113,7 @@ const handler = (opts: BAMMActionParams) => {
 
 					🌐 BAMM Address: ${bammAddress}
           💸 Borrow Amount: ${formatNumber(amount)}
-					💰 Borrowed Token: ${borrowToken ?? borrowTokenSymbol}
+					💰 Borrowed Token: ${borrowTokenSymbol ?? borrowToken}
           🔗 Transaction: ${result.txHash}
 
           Funds have been borrowed from the BAMM pool.

@@ -114,7 +114,7 @@ const handler = (opts: BAMMActionParams) => {
           ✅ Repayment Transaction Successful
 
           🏦 BAMM Address: ${bammAddress}
-          🪙 Borrow Token: ${borrowToken}
+          🪙 Borrow Token: ${borrowTokenSymbol ?? borrowToken}
 					💰 Amount: ${formatNumber(amount)}
           🔗 Transaction: ${result.txHash}
 

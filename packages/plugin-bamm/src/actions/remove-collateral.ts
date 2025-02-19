@@ -128,7 +128,7 @@ const handler = (opts: BAMMActionParams) => {
 
 					🔓 BAMM Address: ${bammAddress}
           🔓 Amount: ${formatNumber(amount)} tokens
-					🔓 Collateral Token: ${collateralToken ?? collateralTokenSymbol}
+					🔓 Collateral Token: ${collateralTokenSymbol ?? collateralToken}
           🔗 Transaction: ${result.txHash}
 
           Collateral has been removed from your BAMM position.
