@@ -30,6 +30,7 @@
 		"react": "^19.0.0",
 		"react-aiwriter": "^1.0.0",
 		"react-dom": "^19.0.0",
+		"react-markdown": "^9.0.3",
 		"react-router": "^7.1.1",
 		"react-router-dom": "^7.1.1",
 		"semver": "^7.6.3",

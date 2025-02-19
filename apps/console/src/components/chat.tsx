@@ -22,6 +22,7 @@ import { Avatar, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import ChatTtsButton from "./ui/chat/chat-tts-button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import ReactMarkdown from "react-markdown";
 
 type ExtraContentFields = {
 	user: string;
@@ -201,9 +202,22 @@ export default function Page({ agentId }: { agentId: UUID }) {
 									<div className="flex flex-col">
 										<ChatBubbleMessage isLoading={message?.isLoading}>
 											{message?.user !== "user" ? (
-												<AIWriter>{message?.text}</AIWriter>
+												<>
+													{/* Prevent AIWriter from flashing */}
+													{Date.now() - message.createdAt < 1000 ? (
+															<AIWriter>
+																	<div className="prose prose-p:leading-normal prose-primary prose-sm max-w-none">
+																			<ReactMarkdown>{message.text}</ReactMarkdown>
+																	</div>
+															</AIWriter>
+													) : (
+															<div className="prose prose-p:leading-normal prose-primary prose-sm max-w-none">
+																	<ReactMarkdown>{message.text}</ReactMarkdown>
+															</div>
+													)}
+												</>
 											) : (
-												message?.text
+												message.text
 											)}
 											{/* Attachments */}
 											<div>
