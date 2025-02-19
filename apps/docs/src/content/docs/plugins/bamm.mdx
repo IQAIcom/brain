@@ -1,0 +1,149 @@
+---
+layout: ../../../components/starlight/BaseLayout.astro
+title: "BAMM Plugin"
+description: "Plugin for interacting with BAMM for borrowing, lending, and managing liquidity positions."
+---
+
+import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+import { PackageManagers } from 'starlight-package-managers';
+
+The **BAMM Plugin** enables you to interact with **BAMM**, a decentralized platform for borrowing, lending, and managing liquidity positions in Fraxswap-style pools.
+
+---
+
+## Installation
+
+<Steps>
+1. Install the required package:
+   <PackageManagers pkg="@iqai/plugin-bamm" />
+
+2. Create a **.env** file with the following environment variable:
+   ```bash
+   WALLET_PRIVATE_KEY=your-wallet-private-key
+   ```
+   <Aside type="danger" title="Security Warning">
+   Never commit your `.env` file or share your private key. Anyone with access to your private key can control your wallet and funds. Make sure to:
+   - Add `.env` to your `.gitignore` file
+   - Never share your private key in any form
+   - Use a dedicated development wallet with limited funds
+   </Aside>
+</Steps>
+
+---
+
+## Basic Setup
+
+Here’s how to initialize and use the BAMM plugin:
+
+```typescript
+import { createBAMMPlugin } from '@iqai/plugin-bamm';
+import { fraxtal } from 'viem/chains';
+
+async function main() {
+  // Initialize BAMM plugin
+  const bammPlugin = await createBAMMPlugin({
+    walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
+    chain: fraxtal,
+  });
+
+  // Now the plugin is ready to use
+}
+```
+
+---
+
+## Available Operations
+
+The BAMM plugin allows the following operations:
+
+- **BAMM_BORROW**: Borrow assets from BAMM pools using collateral.
+- **BAMM_LEND**: Lend assets to BAMM pools.
+- **BAMM_ADD_COLLATERAL**: Add collateral to your BAMM position.
+- **BAMM_REMOVE_COLLATERAL**: Remove collateral from your BAMM position.
+- **BAMM_REPAY**: Repay borrowed assets to a BAMM pool.
+- **BAMM_WITHDRAW**: Withdraw LP tokens by redeeming BAMM tokens.
+- **BAMM_GET_POSITIONS**: View current positions in BAMM pools.
+- **BAMM_GET_POOL_STATS**: Get statistics for all BAMM pools.
+
+---
+
+## Usage Examples
+
+<Aside>Either token address or token symbol can be provided in the query. Only the bamm address is must</Aside>
+
+### BAMM_BORROW
+
+```plaintext
+borrow 10k of CABU from this 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84 bamm
+```
+
+### BAMM_LEND
+
+```plaintext
+lend 10k lp tokens to 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84 bamm
+```
+
+### BAMM_ADD_COLLATERAL
+
+```plaintext
+add 100k collateral of 0xCc3023635dF54FC0e43F47bc4BeB90c3d1fbDa9f to this 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84 bamm
+```
+
+### BAMM_REMOVE_COLLATERAL
+
+```plaintext
+remove 10k collateral of 0xCc3023635dF54FC0e43F47bc4BeB90c3d1fbDa9f from this 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84 bamm
+```
+
+### BAMM_REPAY
+
+```plaintext
+repay 3k of CABU to this 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84 bamm
+```
+
+---
+
+## Configuration Options
+
+The plugin requires the following configuration options:
+
+```typescript
+interface BAMMActionParams {
+  chain: Chain;              // Blockchain network configuration
+  walletPrivateKey: string;  // Private key for transactions
+}
+```
+
+---
+
+## Error Handling
+
+Handle errors gracefully by wrapping the plugin actions in `try/catch` blocks:
+
+```typescript
+try {
+  const bammPlugin = await createBAMMPlugin({
+    walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
+    chain: fraxtal,
+  });
+} catch (error) {
+  console.error('Failed to initialize BAMM plugin:', error);
+}
+```
+
+---
+
+## Best Practices
+
+1. **Security**: Never expose your wallet private key.
+2. **Amount Verification**: Always verify the amounts and token addresses before interacting with the plugin.
+3. **Rate Limits**: Be mindful of rate limits and avoid excessive transactions in a short period.
+
+---
+
+## Common Issues and Troubleshooting
+
+- **Insufficient Balance**: Ensure that your wallet has enough balance to perform the requested operations.
+- **Transaction Failure**: Confirm that the pool address is valid and your collateral is sufficient.
+- **Network Issues**: Ensure you have a stable connection to the blockchain network.
+- **Token Approval**: Check if the required tokens are approved for lending or borrowing.
