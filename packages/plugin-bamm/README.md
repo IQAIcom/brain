@@ -208,7 +208,7 @@ If transactions are failing, consider the following:
 
 For invalid inputs:
 
-- **Validate token addresses** – Ensure that the token addresses are correct.  
+- **Validate token addresses/symbols** – Ensure that the token addresses/symbols are correct.  
 - **Check amount format** – Ensure the amounts are formatted correctly.  
 - **Verify pool existence** – Confirm that the pool you're trying to interact with exists.
 
