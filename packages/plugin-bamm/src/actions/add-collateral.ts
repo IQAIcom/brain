@@ -53,13 +53,28 @@ const handler = (opts: BAMMActionParams) => {
 		elizaLogger.info("Starting add collateral action");
 		try {
 			const inputParser = new InputParserService();
-			const { bammAddress, collateralToken, amount, error } =
-				await inputParser.parseInputs({
-					runtime,
-					message,
-					state,
-					template: ADD_COLLATERAL_TEMPLATE,
-				});
+			const {
+				bammAddress,
+				collateralToken,
+				collateralTokenSymbol,
+				amount,
+				error,
+			} = await inputParser.parseInputs({
+				runtime,
+				message,
+				state,
+				template: ADD_COLLATERAL_TEMPLATE,
+			});
+			elizaLogger.info(
+				`
+				 Add collateral params:
+					bammAddress: ${bammAddress}
+					collateralToken: ${collateralToken}
+					collateralTokenSymbol: ${collateralTokenSymbol}
+					amount: ${amount}
+					error: ${error}
+				`,
+			);
 
 			if (error) {
 				callback?.({
@@ -69,7 +84,7 @@ const handler = (opts: BAMMActionParams) => {
 			}
 			elizaLogger.info(
 				`🔗 BAMM Address: ${bammAddress}`,
-				`💰 Collateral Token: ${collateralToken}`,
+				`💰 Collateral Token: ${collateralToken ?? collateralTokenSymbol}`,
 				`💰 Amount: ${amount}`,
 			);
 			const walletService = new WalletService(
@@ -81,6 +96,7 @@ const handler = (opts: BAMMActionParams) => {
 			const result = await addCollateralService.execute({
 				bammAddress,
 				collateralToken,
+				collateralTokenSymbol,
 				amount: amount,
 			});
 

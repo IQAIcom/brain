@@ -2,10 +2,12 @@ import type { Address } from "viem";
 import type { WalletService } from "./wallet";
 import { BAMM_ABI } from "../lib/bamm.abi";
 import { elizaLogger } from "@elizaos/core";
+import { getTokenAddressFromSymbol } from "../lib/symbol-to-address";
 
 export interface RemoveCollateralParams {
 	bammAddress: Address;
-	collateralToken: Address;
+	collateralToken?: Address;
+	collateralTokenSymbol?: string;
 	amount: string;
 }
 
@@ -13,13 +15,25 @@ export class RemoveCollateralService {
 	constructor(private walletService: WalletService) {}
 
 	async execute(params: RemoveCollateralParams): Promise<{ txHash: string }> {
-		const { bammAddress, collateralToken, amount } = params;
+		let { bammAddress, collateralToken, collateralTokenSymbol, amount } =
+			params;
+		if (!collateralToken && !collateralTokenSymbol) {
+			throw new Error(
+				"Either collateralToken or collateralTokenSymbol is required",
+			);
+		}
 		const publicClient = this.walletService.getPublicClient();
 		const walletClient = this.walletService.getWalletClient();
 		const userAddress = walletClient.account.address;
 		const removeAmountWei = -BigInt(Math.floor(Number(amount) * 1e18));
 
 		try {
+			if (collateralTokenSymbol) {
+				collateralToken = await getTokenAddressFromSymbol(
+					collateralTokenSymbol,
+				);
+			}
+
 			const token0Address: Address = await publicClient.readContract({
 				address: bammAddress,
 				abi: BAMM_ABI,

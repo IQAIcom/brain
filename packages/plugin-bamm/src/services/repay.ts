@@ -3,10 +3,12 @@ import type { Address } from "viem";
 import type { WalletService } from "./wallet";
 import { BAMM_ABI } from "../lib/bamm.abi";
 import { elizaLogger } from "@elizaos/core";
+import { getTokenAddressFromSymbol } from "../lib/symbol-to-address";
 
 export interface RepayParams {
 	bammAddress: Address;
-	borrowToken: Address;
+	borrowToken?: Address;
+	borrowTokenSymbol?: string;
 	amount: string;
 }
 
@@ -14,13 +16,19 @@ export class RepayService {
 	constructor(private walletService: WalletService) {}
 
 	async execute(params: RepayParams): Promise<{ txHash: string }> {
-		const { bammAddress, borrowToken, amount } = params;
+		let { bammAddress, borrowToken, borrowTokenSymbol, amount } = params;
+		if (!params.borrowToken && !params.borrowTokenSymbol) {
+			throw new Error("Either borrowToken or borrowTokenSymbol is required");
+		}
 		const publicClient = this.walletService.getPublicClient();
 		const walletClient = this.walletService.getWalletClient();
 		const userAddress = walletClient.account.address;
 		const amountInWei = BigInt(Math.floor(Number(amount) * 1e18));
 
 		try {
+			if (borrowTokenSymbol) {
+				borrowToken = await getTokenAddressFromSymbol(borrowTokenSymbol);
+			}
 			const token0: Address = await publicClient.readContract({
 				address: bammAddress,
 				abi: BAMM_ABI,
