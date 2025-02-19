@@ -202,11 +202,20 @@ export default function Page({ agentId }: { agentId: UUID }) {
 									<div className="flex flex-col">
 										<ChatBubbleMessage isLoading={message?.isLoading}>
 											{message?.user !== "user" ? (
-												<AIWriter>
-													<div className="prose prose-p:leading-normal prose-primary prose-sm max-w-none">
-														<ReactMarkdown>{message.text}</ReactMarkdown>
-													</div>
-												</AIWriter>
+												<>
+													{/* Prevent AIWriter from flashing */}
+													{Date.now() - message.createdAt < 1000 ? (
+															<AIWriter>
+																	<div className="prose prose-p:leading-normal prose-primary prose-sm max-w-none">
+																			<ReactMarkdown>{message.text}</ReactMarkdown>
+																	</div>
+															</AIWriter>
+													) : (
+															<div className="prose prose-p:leading-normal prose-primary prose-sm max-w-none">
+																	<ReactMarkdown>{message.text}</ReactMarkdown>
+															</div>
+													)}
+												</>
 											) : (
 												message.text
 											)}
