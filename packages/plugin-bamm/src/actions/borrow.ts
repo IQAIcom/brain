@@ -7,7 +7,6 @@ import { BORROW_TEMPLATE } from "../lib/templates";
 import { WalletService } from "../services/wallet";
 import { BorrowService } from "../services/borrow";
 import formatNumber from "../lib/format-number";
-import { Address } from "viem";
 
 export const getBorrowAction = (opts: BAMMActionParams): Action => {
 	return {

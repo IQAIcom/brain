@@ -6,7 +6,6 @@ import dedent from "dedent";
 import { LEND_TEMPLATE } from "../lib/templates";
 import { WalletService } from "../services/wallet";
 import { LendService } from "../services/lend";
-import { BAMM_ABI } from "../lib/bamm.abi";
 import formatNumber from "../lib/format-number";
 
 export const getLendAction = (opts: BAMMActionParams): Action => {

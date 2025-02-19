@@ -4,7 +4,7 @@ import type { BAMMActionParams } from "../types";
 import { WithdrawService } from "../services/withdraw";
 import { InputParserService } from "../services/input-parser";
 import dedent from "dedent";
-import formatNumber, { formatWeiToNumber } from "../lib/format-number";
+import formatNumber from "../lib/format-number";
 import { WITHDRAW_TEMPLATE } from "../lib/templates";
 import { WalletService } from "../services/wallet";
 
