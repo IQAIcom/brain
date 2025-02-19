@@ -27,12 +27,19 @@ export const getBammPositionsAction = (opts: BAMMActionParams): Action => {
 						text: "my bamm positions please",
 					},
 				},
-			],
-			[
 				{
-					user: "user",
+					user: "system",
 					content: {
-						text: "get my bamm holdings",
+						text: `
+							📊 *Your Active BAMM Positions*
+
+							**💰 BAMM Position**
+							- bamm: 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84
+							- Pair: 0xb4262A3619745c93Aa29C1E7FB227927647778d6
+							- IQT: 95.96K
+							- CABU: 26.12K
+							- rented: 5.00K
+						`,
 					},
 				},
 			],

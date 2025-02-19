@@ -28,6 +28,21 @@ export const getAddCollateralAction = (opts: BAMMActionParams): Action => {
 						text: "add 100k collateral of 0xCc3023635dF54FC0e43F47bc4BeB90c3d1fbDa9f to this 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84 bamm",
 					},
 				},
+				{
+					user: "system",
+					content: {
+						text: `
+							✅ Collateral Addition Successful
+
+							🌐 BAMM Address: 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84
+							🔒 Amount: 100.00K tokens
+							💰 Token: 0xCc3023635dF54FC0e43F47bc4BeB90c3d1fbDa9f
+							🔗 Transaction: 0x1194ed3524f3cab3f8f5fbf55ef218c224fce026ad7fb5d612139439e58a43ef
+
+							Collateral has been added to your BAMM position.
+							`,
+					},
+				},
 			],
 		],
 	};

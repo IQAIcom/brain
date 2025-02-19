@@ -25,23 +25,38 @@ export const getBammPoolStatsAction = (opts: BAMMActionParams): Action => {
 				{
 					user: "user",
 					content: {
-						text: "bamm pools please",
-					},
-				},
-			],
-			[
-				{
-					user: "user",
-					content: {
 						text: "show me all bamm pools",
 					},
 				},
-			],
-			[
 				{
-					user: "user",
+					user: "system",
 					content: {
-						text: "fetch all bamms",
+						text: `
+							📊 *BAMM Pool Stats:*
+							Total: 35
+
+							📊 Pool: FRAX/FXS
+							- Pool Address: 0xb4dA8dA10ffF1F6127ab71395053Aa1d499b503F
+							- BAMM Address: 0x659e0A9306144adE61c483A775e881356bcb9AEB
+							- TVL: $3.90M
+							- FRAX Locked: 1.96M
+							- FXS Locked: 1.11M
+
+							📊 Pool: FRAX/wfrxETH
+							- Pool Address: 0x4527bcEd9d41706D1436507e9a6e354d3FF44ff9
+							- BAMM Address: 0xBA082D3ef4d27d31c49f05dd8F096A236c0f7069
+							- TVL: $2.89M
+							- FRAX Locked: 1.45M
+							- wfrxETH Locked: 537.87
+
+							📊 Pool: FXS/wfrxETH
+							- Pool Address: 0x922Aa688F879050b2e32a63D764cf4E8B79c3Bdb
+							- BAMM Address: 0x3eA5cb029769a0fD0d1C51c16Fb6d64865312207
+							- TVL: $149.08K
+							- FXS Locked: 42.68K
+							- wfrxETH Locked: 33.02
+						  .....
+						`,
 					},
 				},
 			],

@@ -23,6 +23,20 @@ export const getLendAction = (opts: BAMMActionParams): Action => {
 						text: "lend 10k lp tokens to 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84 bamm",
 					},
 				},
+				{
+					user: "system",
+					content: {
+						text: `
+							✅ Lending Transaction Successful
+
+							🏦 BAMM Address: 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84
+							💰 Amount Lent: 10.00K
+							🔗 Transaction: 0xa20d7ffe93d1b2eb1c24e97904a9f32cd9e87cdc8dd076c6e95d36e37063b074
+
+							LP Tokens have been successfully lent to the BAMM pool.
+						`,
+					},
+				},
 			],
 		],
 	};

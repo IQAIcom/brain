@@ -28,6 +28,21 @@ export const getRemoveCollateralAction = (opts: BAMMActionParams): Action => {
 						text: "remove 10k collateral of 0xCc3023635dF54FC0e43F47bc4BeB90c3d1fbDa9f from this 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84 bamm",
 					},
 				},
+				{
+					user: "system",
+					content: {
+						text: `
+							✅ Collateral Removal Successful
+
+							🔓 BAMM Address: 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84
+							🔓 Amount: 10.00K tokens
+							🔓 Collateral Token: 0xCc3023635dF54FC0e43F47bc4BeB90c3d1fbDa9f
+							🔗 Transaction: 0x853a87e832d7e0a4d3db1d9177914b50119331dd86db75426bdf1d34bba23e33
+
+							Collateral has been removed from your BAMM position.
+						`,
+					},
+				},
 			],
 		],
 	};

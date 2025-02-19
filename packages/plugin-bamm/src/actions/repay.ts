@@ -23,6 +23,21 @@ export const getRepayAction = (opts: BAMMActionParams): Action => {
 						text: "repay 3k of 0xCc3023635dF54FC0e43F47bc4BeB90c3d1fbDa9f to this 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84 bamm",
 					},
 				},
+				{
+					user: "system",
+					content: {
+						text: `
+							✅ Repayment Transaction Successful
+
+							🏦 BAMM Address: 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84
+							🪙 Borrow Token: 0xCc3023635dF54FC0e43F47bc4BeB90c3d1fbDa9f
+							💰 Amount: 3.00K
+							🔗 Transaction: 0x89085633b5f34ff7d441b607b6e31025a85dde80b99a60059bc381199dcaba46
+
+							Borrowed assets have been successfully repaid to the BAMM pool.
+						`,
+					},
+				},
 			],
 		],
 	};

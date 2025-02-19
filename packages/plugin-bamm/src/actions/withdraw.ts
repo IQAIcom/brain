@@ -30,6 +30,19 @@ export const getWithdrawAction = (opts: BAMMActionParams): Action => {
 						text: "withdraw 15k bamm tokens from 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84",
 					},
 				},
+				{
+					user: "system",
+					content: {
+						text: `
+							✅ Withdrawal Successful
+
+							💰 Amount: 15.00K BAMM tokens redeemed
+							🔗 Transaction: 0xd23acc3267cbbd46f09af8471463327ac056cfbbba53c4199d110cb6d730a121
+
+							Bamm tokens have been withdrawn from the BAMM pool and converted to LP tokens.
+						`,
+					},
+				},
 			],
 		],
 	};

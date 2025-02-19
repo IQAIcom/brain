@@ -20,7 +20,21 @@ export const getBorrowAction = (opts: BAMMActionParams): Action => {
 				{
 					user: "user",
 					content: {
-						text: "borrow 100k of 0xCc3023635dF54FC0e43F47bc4BeB90c3d1fbDa9f from this 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84 bamm",
+						text: "borrow 5k of 0xCc3023635dF54FC0e43F47bc4BeB90c3d1fbDa9f from this 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84 bamm",
+					},
+				},
+				{
+					user: "system",
+					content: {
+						text: `
+							✅ Borrowing Transaction Successful
+							🌐 BAMM Address: 0xC5B225cF058915BF28D7d9DFA3043BD53C63Ea84
+							💸 Borrow Amount: 5.00K
+							💰 Borrowed Token: 0xCc3023635dF54FC0e43F47bc4BeB90c3d1fbDa9f
+							🔗 Transaction: 0xa1f64e3cd4b3a2afd5cec80c344df082492097b6db6a5075a34b6792d374bcf1
+
+						  Funds have been borrowed from the BAMM pool.
+						`,
 					},
 				},
 			],
