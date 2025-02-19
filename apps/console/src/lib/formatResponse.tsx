@@ -13,7 +13,7 @@ export const MarkDown = ({text}: {text: string}) => {
       rehypePlugins={[rehypeHighlight]}
       components={{
         // Code blocks with syntax highlighting
-        code: ({ node, inline, className, children, ...props }) => {
+        code: ({ node, className, children, ...props }) => {
           const [copied, setCopied] = useState(false);
           
           const handleCopy = () => {
@@ -21,14 +21,6 @@ export const MarkDown = ({text}: {text: string}) => {
             setCopied(true);
             setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
           };
-
-          if (inline) {
-            return (
-              <code className='bg-muted px-1.5 py-0.5 rounded-sm' {...props}>
-                {children}
-              </code>
-            );
-          }
 
           const language = className?.replace("language-", "");
           return (

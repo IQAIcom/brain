@@ -23,6 +23,7 @@ import { Badge } from "./ui/badge";
 import ChatTtsButton from "./ui/chat/chat-tts-button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { MarkDown } from "@/lib/formatResponse";
+import ReactMarkdown from "react-markdown";
 
 type ExtraContentFields = {
 	user: string;
@@ -203,7 +204,13 @@ export default function Page({ agentId }: { agentId: UUID }) {
 										<ChatBubbleMessage isLoading={message?.isLoading}>
 											{message?.user !== "user" ? (
 												// <AIWriter>
-													<MarkDown text={message.text}/>
+													
+													<>
+														{/* <MarkDown text={message.text}/> */}
+														<div className="prose prose-p:leading-normal prose-primary prose-sm max-w-none">
+															<ReactMarkdown>{message.text}</ReactMarkdown>
+														</div>
+													</>
 												// </AIWriter>
 											) : (
 												message.text
