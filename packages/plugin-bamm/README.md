@@ -3,7 +3,7 @@
 
 A **plugin** for interacting with **BAMM**, enabling borrowing, lending, and managing liquidity positions in Fraxswap-style pools.
 
-[More about BAMM](https://docs.frax.finance/bamm/overview)
+[More about BAMM](https://docs.frax.com/protocol/subprotocols/bamm/overview)
 
 ---
 
@@ -45,11 +45,12 @@ To use the plugin, import and initialize it:
 
 ```javascript
 import { createBAMMPlugin } from "@iqai/plugin-bamm";
+import { fraxtal } from "viem/chains";
 
 // Initialize the plugin
 const plugin = await createBAMMPlugin({
   walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
-  chain: 'fraxtal', // (defaults to fraxtal)
+  chain: fraxtal
 });
 ```
 
