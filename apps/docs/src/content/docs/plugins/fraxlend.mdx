@@ -1,8 +1,11 @@
 ---
+layout: ../../../components/starlight/BaseLayout.astro
 title: FraxLend Plugin
 description: Plugin for integrating FraxLend lending operations into your agent
 ---
 import {Steps, Tabs, TabItem, Aside} from '@astrojs/starlight/components';
+import { PackageManagers } from 'starlight-package-managers'
+
 
 The FraxLend plugin enables your agent to interact with FraxLend protocol, providing comprehensive lending and borrowing capabilities. It supports various operations including lending, borrowing, withdrawing, and managing collateral on the Fraxtal network.
 
@@ -10,9 +13,8 @@ The FraxLend plugin enables your agent to interact with FraxLend protocol, provi
 
 <Steps>
 1. Install the required packages:
-   ```bash
-   pnpm add @iqai/plugin-fraxlend
-   ```
+   <PackageManagers pkg="@iqai/plugin-fraxlend" />
+
 
 2. Create a `.env` file with required configuration:
    ```env
@@ -33,9 +35,8 @@ The FraxLend plugin enables your agent to interact with FraxLend protocol, provi
 Here's a complete example of setting up an agent with the FraxLend plugin:
 
 ```typescript
-import { AgentBuilder } from "@iqai/agent";
+import { AgentBuilder, ModelProviderName } from "@iqai/agent";
 import { createFraxlendPlugin } from "@iqai/plugin-fraxlend";
-import { ModelProviderName } from "@elizaos/core";
 import { fraxtal } from "viem/chains";
 
 async function main() {

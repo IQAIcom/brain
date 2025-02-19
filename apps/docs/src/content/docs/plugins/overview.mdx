@@ -1,59 +1,54 @@
 ---
+layout: ../../../components/starlight/BaseLayout.astro
 title: Plugins
 description: Overview of available Brain Framework plugins
 ---
 
 import { Aside } from '@astrojs/starlight/components';
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import { LinkCard, CardGrid } from '@astrojs/starlight/components';
+import ExternalLink from "../../../components/ExternalLink.astro"
 
 Brain Framework's plugin system allows you to extend your agent's capabilities with various integrations. Each plugin adds specific functionality, such as DeFi operations, token swaps, or other blockchain interactions.
 
-## Official Plugins
-
+### Utility Plugins
 <CardGrid>
-  <Card title="FraxLend Plugin" icon="document">
-    Enables lending and borrowing operations on Fraxtal network:
-    - Lending and borrowing assets
-    - Viewing positions and stats
+ <LinkCard
+    title="Heartbeat Plugin"
+    description="Schedule automated messages and social media posts with support for multiple concurrent schedules"
+    href="/plugins/heartbeat"
+  />
+  <LinkCard
+    title="Sequencer Plugin"
+    description="Chain multiple actions from a single user query with state management between operations"
+    href="/plugins/sequencer"
+  />
+</CardGrid>
 
-    [Learn more about FraxLend →](/plugins/fraxlend)
-  </Card>
-
-  <Card title="Odos Plugin" icon="random">
-    Provides optimized token swap capabilities:
-    - Token swaps
-    - Quote retrieval
-
-    [Learn more about Odos →](/plugins/odos)
-  </Card>
-
-  <Card title="ATP Plugin" icon="document">
-    Enables communication with IQ's Agent Tokenization Platform:
-    - Buying, selling, and managing tokens
-    - Viewing stats and positions
-
-    [Learn more about ATP →](/plugins/atp)
-  </Card>
-
-  <Card title="Heartbeat Plugin" icon="document">
-    Enables scheduling of automated messages and social media posts:
-    - Scheduling periodic messages
-    - Posting to social media platforms
-    - Maintaining continuous agent interactions
-    - Support for multiple concurrent schedules
-
-    [Learn more about Heartbeat →](/plugins/heartbeat)
-  </Card>
-
+### DeFi Plugins
+<CardGrid>
+ <LinkCard
+    title="FraxLend Plugin"
+    description="Enable lending and borrowing operations on Fraxtal network"
+    href="/plugins/fraxlend"
+  />
+  <LinkCard
+    title="Odos Plugin"
+    description="Execute optimized token swaps with quote retrieval"
+    href="/plugins/odos"
+  />
+  <LinkCard
+    title="ATP Plugin"
+    description="Interact with IQ's Agent Tokenization Platform for buying, selling, and managing tokens"
+    href="/plugins/atp"
+  />
 </CardGrid>
 
 ## Using Plugins
 
 ```typescript
-import { AgentBuilder } from "@iqai/agent";
+import { AgentBuilder, ModelProviderName } from "@iqai/agent";
 import { createFraxlendPlugin } from "@iqai/plugin-fraxlend";
 import { createOdosPlugin } from "@iqai/plugin-odos";
-import { ModelProviderName } from "@elizaos/core";
 import { bootstrapPlugin } from "@elizaos/plugin-bootstrap";
 import { fraxtal } from "viem/chains";
 
@@ -84,6 +79,18 @@ async function main() {
 
 main().catch(console.error);
 ```
+
+
+
+### Using elizaOS plugins
+Browse the full collection of community plugins at <ExternalLink href="https://github.com/elizaos-plugins">ElizaOS Plugins</ExternalLink>, including:
+- Additional client interfaces
+- Data storage solutions
+- Integration tools
+- Utility plugins
+
+This compatibility ensures you have access to a wide range of tools while building your agents.
+
 
 <Aside type="note">
 On-chain plugins require chain configuration and wallet access. Store sensitive information with care.
