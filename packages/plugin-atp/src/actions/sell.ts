@@ -61,7 +61,6 @@ const handler: (opts: ATPActionParams) => Handler =
 			const swapService = new SwapService(walletService);
 
 			const result = await swapService.sell({ tokenContract, amount });
-			elizaLogger.info("📝 Transaction result", { result });
 
 			callback?.({
 				text: dedent`
@@ -74,7 +73,6 @@ const handler: (opts: ATPActionParams) => Handler =
           Tokens have been sold successfully.
         `,
 			});
-			elizaLogger.info("✅ Sale completed successfully");
 			return true;
 		} catch (error) {
 			elizaLogger.error("❌ Sale failed", { error });

@@ -1,23 +1,29 @@
 import type { Action, Handler } from "@elizaos/core";
-import { elizaLogger } from "@elizaos/core";
-import { GET_AGENT_STATS_TEMPLATE } from "../lib/templates";
-import { AgentsStatsService } from "../services/agents-stats";
+import { AgentStatsService } from "../services/agent-stats";
 import { InputParserService } from "../services/input-parser";
 import type { ATPActionParams } from "../types";
+import { GET_AGENT_STATS_TEMPLATE } from "../lib/templates";
+import { elizaLogger } from "@elizaos/core";
 
-export const getAgentsStatsAction = (opts: ATPActionParams): Action => {
+export const getAgentStatsAction = (opts: ATPActionParams): Action => {
 	return {
 		name: "ATP_AGENT_STATS",
-		description: "Get stats from agents on IQ ATP",
+		description: "Get stats/details of given agent on ATP",
 		similes: [
 			"AGENT_STATS",
-			"VIEW_AGENTS_STATS",
-			"CHECK_AGENTS_STATS",
-			"GET_AGENTS_STATS",
-			"SHOW_AGENTS_STATS",
-			"CHECK_AGENTS_STATS",
-			"GET_AGENTS_STATS",
-			"SHOW_AGENTS_STATS",
+			"AGENT_DETAILS",
+			"VIEW_AGENT_STATS",
+			"VIEW_AGENT_DETAILS",
+			"CHECK_AGENT_STATS",
+			"GET_AGENT_STATS",
+			"GET_AGENT_DETAILS",
+			"SHOW_AGENT_STATS",
+			"SHOW_AGENT_DETAILS",
+			"CHECK_AGENT_STATS",
+			"GET_AGENT_DETAILS",
+			"GET_AGENT_STATS",
+			"SHOW_AGENT_DETAILS",
+			"SHOW_AGENT_STATS",
 		],
 		validate: async () => true,
 		handler: handler(opts),
@@ -44,15 +50,13 @@ const handler: (opts: ATPActionParams) => Handler =
 				return false;
 			}
 
-			const statsService = new AgentsStatsService();
+			const statsService = new AgentStatsService();
 			const stats = await statsService.getStats(tokenContract);
-			elizaLogger.info("📊 Agent stats data", { stats });
 
 			const formattedStats = statsService.formatStats(stats);
 			callback?.({
 				text: formattedStats,
 			});
-			elizaLogger.info("✅ Stats fetched successfully");
 			return true;
 		} catch (error) {
 			elizaLogger.error("❌ Stats fetch failed", { error });

@@ -3,7 +3,7 @@ import * as path from "node:path";
 import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
 import DirectClientInterface from "@elizaos/client-direct";
 import { AgentBuilder, ModelProviderName } from "@iqai/agent";
-import { createATPPlugin } from "@iqai/plugin-atp";
+import { createAtpPlugin } from "@iqai/plugin-atp";
 import { createBAMMPlugin } from "@iqai/plugin-bamm";
 import { createFraxlendPlugin } from "@iqai/plugin-fraxlend";
 import { createOdosPlugin } from "@iqai/plugin-odos";
@@ -23,7 +23,7 @@ async function main() {
 		walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
 	});
 
-	const atpPlugin = await createATPPlugin({
+	const atpPlugin = await createAtpPlugin({
 		walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
 	});
 	const sequencerPlugin = await createSequencerPlugin();

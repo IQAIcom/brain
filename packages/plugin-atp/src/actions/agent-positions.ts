@@ -29,13 +29,11 @@ const handler: (opts: ATPActionParams) => Handler =
 			const positionsService = new AgentPositionsService(walletService);
 
 			const positions = await positionsService.getPositions();
-			elizaLogger.info("📊 Total Positions", { positions });
 
 			const formattedPositions = positionsService.formatPositions(positions);
 			callback?.({
 				text: formattedPositions,
 			});
-			elizaLogger.info("✅ Positions fetched successfully");
 			return true;
 		} catch (error) {
 			elizaLogger.error("❌ Position fetch failed", { error });

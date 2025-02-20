@@ -61,7 +61,6 @@ const handler: (opts: ATPActionParams) => Handler =
 			const swapService = new SwapService(walletService);
 
 			const result = await swapService.buy({ tokenContract, amount });
-			elizaLogger.info("📝 Transaction result", { result });
 
 			callback?.({
 				text: dedent`
@@ -74,7 +73,6 @@ const handler: (opts: ATPActionParams) => Handler =
           Tokens have been purchased successfully.
         `,
 			});
-			elizaLogger.info("✅ Purchase completed successfully");
 			return true;
 		} catch (error) {
 			elizaLogger.error("❌ Purchase failed", { error });

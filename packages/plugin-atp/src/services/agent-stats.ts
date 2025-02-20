@@ -1,10 +1,10 @@
-import { elizaLogger } from "@elizaos/core";
-import dedent from "dedent";
 import { API_URLS } from "../constants";
+import dedent from "dedent";
 import formatNumber from "../lib/format-number";
 import type { AgentStats } from "../types";
+import { elizaLogger } from "@elizaos/core";
 
-export class AgentsStatsService {
+export class AgentStatsService {
 	async getStats(agentAddress: string): Promise<AgentStats> {
 		try {
 			const url = new URL(API_URLS.AGENTS_STATS);

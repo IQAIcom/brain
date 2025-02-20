@@ -23,3 +23,15 @@ export interface AgentStats {
 	inferenceCount: number;
 	category: string;
 }
+
+export interface Agent {
+	tokenContract: string;
+	agentContract: string;
+	isActive: boolean;
+	currentPriceInIq: number;
+	holdersCount: number;
+	inferenceCount: number;
+	name: string;
+	ticker: string;
+	currentPriceInUSD: number;
+}

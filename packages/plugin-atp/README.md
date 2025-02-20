@@ -100,6 +100,18 @@ Sell AI agent tokens **back to the protocol**.
 
 ---
 
+### ATP_GET_AGENTS
+
+List available **AI agents** for trading.
+
+💬 **Examples:**
+
+- "List agents on atp"
+- "Show me the top Agents on atp"
+- "Show me top 5 agents on atp sorted by holders count"
+
+---
+
 ## 📜 Response Format
 
 Actions return **structured responses** including:
