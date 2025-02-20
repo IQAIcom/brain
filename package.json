@@ -8,7 +8,7 @@
 		"clean-modules": "echo '🧹 Cleaning all node_modules directories...' && find . -name 'node_modules' -type d -exec rm -rf {} + && echo '✨ All node_modules directories have been removed!'",
 		"clean-dist": "echo '🧹 Cleaning all dist directories...' && find . -name 'dist' -type d -exec rm -rf {} + && echo '✨ All dist directories have been removed!'",
 		"format": "biome format . --write",
-		"lint": "biome check .",
+		"lint": "lint-staged --allow-empty",
 		"lint:fix": "biome check . --apply",
 		"changeset": "changeset",
 		"version-packages": "changeset version",
@@ -19,8 +19,13 @@
 		"biome": "^0.3.3",
 		"turbo": "^2.3.3"
 	},
-	"packageManager": "pnpm@8.15.6",
+	"packageManager": "pnpm@9.0.0",
 	"engines": {
 		"node": ">=23.6"
+	},
+	"lint-staged": {
+		"*.{js,mjs,jsx,ts,tsx,json}": [
+			"biome check --write --no-errors-on-unmatched"
+		]
 	}
 }
