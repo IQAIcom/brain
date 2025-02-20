@@ -78,6 +78,35 @@ export default defineConfig({
 						{ label: "📝 Sequencer", link: "/plugins/sequencer" },
 					],
 				},
+        {
+          label: 'Third-party',
+          items: [
+            { label: '📚 Overview', link: '/third-party/overview' },
+            {
+              label: '💾 Database Adapters',
+              items: [
+                { label: 'SQLite', link: '/third-party/adapters/sqlite' },
+                { label: 'PostgreSQL', link: '/third-party/adapters/postgres' },
+              ]
+            },
+            {
+              label: '🔌 Plugins',
+              items: [
+                { label: 'Bootstrap', link: '/third-party/plugins/bootstrap' },
+                { label: 'Image Generation', link: '/third-party/plugins/image-gen' },
+                { label: 'Node', link: '/third-party/plugins/node' },
+                { label: 'Solana', link: '/third-party/plugins/solana' },
+              ]
+            },
+            {
+              label: '🔗 Clients',
+              items: [
+                { label: 'Discord', link: '/third-party/clients/discord' },
+                { label: 'Telegram', link: '/third-party/clients/telegram' },
+              ]
+            }
+          ],
+        }
 			],
 		}),
 	],
