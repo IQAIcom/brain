@@ -9,7 +9,6 @@
 		"clean-dist": "echo '🧹 Cleaning all dist directories...' && find . -name 'dist' -type d -exec rm -rf {} + && echo '✨ All dist directories have been removed!'",
 		"format": "biome format . --write",
 		"lint": "lint-staged --allow-empty",
-		"lint:fix": "biome check . --apply",
 		"changeset": "changeset",
 		"version-packages": "changeset version",
 		"publish-packages": "turbo run build lint && changeset version && changeset publish",
