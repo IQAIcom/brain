@@ -4,7 +4,6 @@ import starlight from '@astrojs/starlight';
 import vercel from '@astrojs/vercel';
 
 export default defineConfig({
-  output: 'server',
   adapter: vercel({
     imageService:true
   }),
@@ -64,6 +63,7 @@ export default defineConfig({
             { label: '💰 Fraxlend', link: '/plugins/fraxlend' },
             { label: '🔄 Odos', link: '/plugins/odos' },
             { label: "⚡ ATP", link: "/plugins/atp"},
+            { label: "💰 BAMM", link: "/plugins/bamm"},
             { label: "💓 Heartbeat", link: "/plugins/heartbeat"},
             { label: "📝 Sequencer", link: "/plugins/sequencer"},
           ],

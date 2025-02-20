@@ -2,6 +2,7 @@ import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
 import DirectClientInterface from "@elizaos/client-direct";
 import { AgentBuilder, ModelProviderName } from "@iqai/agent";
 import { createATPPlugin } from "@iqai/plugin-atp";
+import { createBAMMPlugin } from "@iqai/plugin-bamm";
 import { createFraxlendPlugin } from "@iqai/plugin-fraxlend";
 import { createOdosPlugin } from "@iqai/plugin-odos";
 import createSequencerPlugin from "@iqai/plugin-sequencer";
@@ -27,6 +28,11 @@ async function main() {
 	});
 	const sequencerPlugin = await createSequencerPlugin();
 
+	const bammPlugin = await createBAMMPlugin({
+		walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
+		chain: fraxtal,
+	});
+
 	// Setup database
 	const dataDir = path.join(process.cwd(), "./data");
 	fs.mkdirSync(dataDir, { recursive: true });
@@ -41,7 +47,13 @@ async function main() {
 			ModelProviderName.OPENAI,
 			process.env.OPENAI_API_KEY as string,
 		)
-		.withPlugins([fraxlendPlugin, odosPlugin, atpPlugin, sequencerPlugin])
+		.withPlugins([
+			fraxlendPlugin,
+			odosPlugin,
+			atpPlugin,
+			sequencerPlugin,
+			bammPlugin,
+		])
 		.withCharacter({
 			name: "BrainBot",
 			bio: "You are BrainBot, a helpful assistant.",
