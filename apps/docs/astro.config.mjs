@@ -5,9 +5,7 @@ import vercel from '@astrojs/vercel';
 
 export default defineConfig({
   adapter: vercel({
-    imageService: true,
-    // Add Vercel Edge Config for redirects
-    edgeMiddleware: true
+    imageService: true
   }),
   integrations: [
     starlight({
