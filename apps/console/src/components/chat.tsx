@@ -16,13 +16,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Paperclip, Send, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import AIWriter from "react-aiwriter";
+import ReactMarkdown from "react-markdown";
 import { AudioRecorder } from "./audio-recorder";
 import CopyButton from "./copy-button";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import ChatTtsButton from "./ui/chat/chat-tts-button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
-import ReactMarkdown from "react-markdown";
 
 type ExtraContentFields = {
 	user: string;
@@ -205,15 +205,15 @@ export default function Page({ agentId }: { agentId: UUID }) {
 												<>
 													{/* Prevent AIWriter from flashing */}
 													{Date.now() - message.createdAt < 1000 ? (
-															<AIWriter>
-																	<div className="prose prose-p:leading-normal prose-primary prose-sm max-w-none">
-																			<ReactMarkdown>{message.text}</ReactMarkdown>
-																	</div>
-															</AIWriter>
-													) : (
+														<AIWriter>
 															<div className="prose prose-p:leading-normal prose-primary prose-sm max-w-none">
-																	<ReactMarkdown>{message.text}</ReactMarkdown>
+																<ReactMarkdown>{message.text}</ReactMarkdown>
 															</div>
+														</AIWriter>
+													) : (
+														<div className="prose prose-p:leading-normal prose-primary prose-sm max-w-none">
+															<ReactMarkdown>{message.text}</ReactMarkdown>
+														</div>
 													)}
 												</>
 											) : (

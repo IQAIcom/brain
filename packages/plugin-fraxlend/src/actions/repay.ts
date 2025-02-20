@@ -1,11 +1,11 @@
 import type { Action, Handler } from "@elizaos/core";
+import dedent from "dedent";
+import { formatWeiToNumber } from "../lib/format-number";
 import { WITHDRAW_TEMPLATE } from "../lib/templates";
 import { InputParserService } from "../services/input-parser";
 import { RepayService } from "../services/repay";
 import { WalletService } from "../services/wallet";
 import type { FraxLendActionParams } from "../types";
-import { formatWeiToNumber } from "../lib/format-number";
-import dedent from "dedent";
 
 export const getRepayAction = (opts: FraxLendActionParams): Action => {
 	return {

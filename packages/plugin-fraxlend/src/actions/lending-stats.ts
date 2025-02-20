@@ -1,7 +1,7 @@
 import type { Action, Handler } from "@elizaos/core";
+import dedent from "dedent";
 import { LendingStatsService } from "../services/lending-stats";
 import type { FraxLendActionParams } from "../types";
-import dedent from "dedent";
 
 export const getLendingStatsAction = (opts: FraxLendActionParams): Action => {
 	return {

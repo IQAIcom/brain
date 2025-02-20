@@ -1,7 +1,7 @@
-import { formatUnits } from "viem";
-import dedent from "dedent";
-import { EXCHANGE_TEMPLATE } from "../lib/templates";
 import type { IAgentRuntime, Memory, State } from "@elizaos/core";
+import dedent from "dedent";
+import { formatUnits } from "viem";
+import { EXCHANGE_TEMPLATE } from "../lib/templates";
 import { InputParserService } from "./input-parser";
 import type { WalletService } from "./wallet";
 
@@ -27,13 +27,11 @@ export class GetQuoteActionService {
 	private readonly API_URL = "https://api.odos.xyz";
 	private readonly walletService: WalletService;
 
-
-	 constructor(walletService: WalletService) {
-			this.walletService = walletService;
-		}
+	constructor(walletService: WalletService) {
+		this.walletService = walletService;
+	}
 
 	async execute(runtime: IAgentRuntime, message: Memory, state: State) {
-
 		const inputParser = new InputParserService();
 		const parsedOutput = await inputParser.parseInputs({
 			runtime,
@@ -42,16 +40,16 @@ export class GetQuoteActionService {
 			template: EXCHANGE_TEMPLATE,
 		});
 
-		if('error' in parsedOutput){
-			return new Error(parsedOutput.error);	
+		if ("error" in parsedOutput) {
+			return new Error(parsedOutput.error);
 		}
 
-		const { fromToken, toToken, chainId, amount } = parsedOutput
-		const userAddr = this.walletService.getWalletClient()?.account?.address
+		const { fromToken, toToken, chainId, amount } = parsedOutput;
+		const userAddr = this.walletService.getWalletClient()?.account?.address;
 		if (!userAddr) {
-            throw new Error("User address is not defined");
-            }
-		console.log('parsedOutput', parsedOutput)
+			throw new Error("User address is not defined");
+		}
+		console.log("parsedOutput", parsedOutput);
 
 		try {
 			const response = await fetch(`${this.API_URL}/sor/quote/v2`, {
@@ -71,17 +69,17 @@ export class GetQuoteActionService {
 					outputTokens: [
 						{
 							proportion: 1,
-							tokenAddress: toToken
-						}
+							tokenAddress: toToken,
+						},
 					],
 					slippageLimitPercent: 0.3,
 					referralCode: 0,
 					disableRFQs: true,
 					compact: true,
-				})
-			})
+				}),
+			});
 
-			const data = await response.json()
+			const data = await response.json();
 
 			if (!response.ok) {
 				throw new Error(`Failed to fetch quote: ${response.statusText}`);

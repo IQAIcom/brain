@@ -1,12 +1,12 @@
 import type { Action } from "@elizaos/core";
 import { elizaLogger } from "@elizaos/core";
-import type { BAMMActionParams } from "../types";
-import { InputParserService } from "../services/input-parser";
 import dedent from "dedent";
-import { BORROW_TEMPLATE } from "../lib/templates";
-import { WalletService } from "../services/wallet";
-import { BorrowService } from "../services/borrow";
 import formatNumber from "../lib/format-number";
+import { BORROW_TEMPLATE } from "../lib/templates";
+import { BorrowService } from "../services/borrow";
+import { InputParserService } from "../services/input-parser";
+import { WalletService } from "../services/wallet";
+import type { BAMMActionParams } from "../types";
 
 export const getBorrowAction = (opts: BAMMActionParams): Action => {
 	return {

@@ -1,9 +1,9 @@
+import { elizaLogger } from "@elizaos/core";
 import { erc20Abi } from "viem";
 import type { Address } from "viem";
-import type { WalletService } from "./wallet";
 import { BAMM_ABI } from "../lib/bamm.abi";
-import { elizaLogger } from "@elizaos/core";
 import { checkTokenBalance, ensureTokenApproval } from "../lib/token-utils";
+import type { WalletService } from "./wallet";
 
 export interface LendParams {
 	bammAddress: Address;

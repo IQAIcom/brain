@@ -15,11 +15,11 @@ export interface AgentPositionsResponse {
 }
 
 export interface AgentStats {
-  currentPriceInIq: number;
-  currentPriceInUSD: number;
-  marketCap: number;
-  changeIn24h: number;
-  holdersCount: number;
-  inferenceCount: number;
-  category: string;
+	currentPriceInIq: number;
+	currentPriceInUSD: number;
+	marketCap: number;
+	changeIn24h: number;
+	holdersCount: number;
+	inferenceCount: number;
+	category: string;
 }

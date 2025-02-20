@@ -1,3 +1,5 @@
+import * as fs from "node:fs";
+import * as path from "node:path";
 import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
 import DirectClientInterface from "@elizaos/client-direct";
 import { AgentBuilder, ModelProviderName } from "@iqai/agent";
@@ -7,8 +9,6 @@ import { createFraxlendPlugin } from "@iqai/plugin-fraxlend";
 import { createOdosPlugin } from "@iqai/plugin-odos";
 import createSequencerPlugin from "@iqai/plugin-sequencer";
 import Database from "better-sqlite3";
-import * as fs from "node:fs";
-import * as path from "node:path";
 import { fraxtal } from "viem/chains";
 
 async function main() {

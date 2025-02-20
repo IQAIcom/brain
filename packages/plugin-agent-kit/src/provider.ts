@@ -1,6 +1,6 @@
-import { type Provider, type IAgentRuntime, elizaLogger } from "@elizaos/core";
-import { CdpAgentkit } from "@coinbase/cdp-agentkit-core";
 import * as fs from "node:fs";
+import { CdpAgentkit } from "@coinbase/cdp-agentkit-core";
+import { type IAgentRuntime, type Provider, elizaLogger } from "@elizaos/core";
 import type { AgentKitConfig } from "./types.ts";
 
 export function createClient(config: AgentKitConfig) {

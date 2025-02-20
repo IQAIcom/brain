@@ -1,6 +1,6 @@
 import type { Plugin } from "@elizaos/core";
-import type { HeartbeatPluginParams } from "./types";
 import { Heartbeat } from "./services/heartbeat";
+import type { HeartbeatPluginParams } from "./types";
 
 export async function createHeartbeatPlugin(
 	opts: HeartbeatPluginParams,

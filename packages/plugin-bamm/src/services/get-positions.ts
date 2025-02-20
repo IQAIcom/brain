@@ -1,10 +1,10 @@
-import type { WalletService } from "./wallet";
+import dedent from "dedent";
+import type { Address } from "viem";
 import { BAMM_ADDRESSES } from "../constants";
 import { BAMM_FACTORY_ABI } from "../lib/bamm-factory.abi";
 import { BAMM_ABI } from "../lib/bamm.abi"; // Provided BAMM ABI
-import type { Address } from "viem";
-import dedent from "dedent";
 import { formatWeiToNumber } from "../lib/format-number";
+import type { WalletService } from "./wallet";
 
 export interface BammPosition {
 	bamm: Address;
