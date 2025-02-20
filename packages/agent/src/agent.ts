@@ -1,22 +1,22 @@
+import path from "node:path";
 import {
 	AgentRuntime,
 	CacheManager,
 	CacheStore,
+	type Character,
+	type Client,
 	DbCacheAdapter,
 	FsCacheAdapter,
 	type ICacheManager,
 	type IDatabaseAdapter,
 	type IDatabaseCacheAdapter,
-	stringToUuid,
-	type Client,
-	type Plugin,
-	type Character,
 	ModelProviderName,
+	type Plugin,
 	elizaLogger,
+	stringToUuid,
 } from "@elizaos/core";
-import path from "node:path";
-import { defaultCharacter } from "./default-charecter";
 import dedent from "dedent";
+import { defaultCharacter } from "./default-charecter";
 
 export interface AgentOptions {
 	databaseAdapter?: IDatabaseAdapter & IDatabaseCacheAdapter;

@@ -1,21 +1,20 @@
 {
-  "name": "@iqai/plugin-bamm",
-  "version": "0.0.1",
-  "main": "dist/index.js",
-  "type": "module",
-  "types": "dist/index.d.ts",
-  "dependencies": {
-    "@elizaos/core": "0.1.9",
-    "tsup": "8.3.6",
+	"name": "@iqai/plugin-bamm",
+	"version": "0.0.1",
+	"main": "dist/index.js",
+	"type": "module",
+	"types": "dist/index.d.ts",
+	"dependencies": {
+		"@elizaos/core": "0.1.9",
+		"tsup": "8.3.6",
 		"viem": "^2.22.15",
 		"dedent": "^1.5.3"
-
-  },
-  "scripts": {
+	},
+	"scripts": {
 		"build": "tsup --format esm",
 		"dev": "tsup --format esm --watch"
 	},
-  "devDependencies": {
-    "@iqai/tsconfig": "workspace:*"
-  }
+	"devDependencies": {
+		"@iqai/tsconfig": "workspace:*"
+	}
 }

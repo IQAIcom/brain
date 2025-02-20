@@ -1,12 +1,12 @@
 import type { Action } from "@elizaos/core";
 import { elizaLogger } from "@elizaos/core";
-import type { BAMMActionParams } from "../types";
-import { WithdrawService } from "../services/withdraw";
-import { InputParserService } from "../services/input-parser";
 import dedent from "dedent";
 import formatNumber from "../lib/format-number";
 import { WITHDRAW_TEMPLATE } from "../lib/templates";
+import { InputParserService } from "../services/input-parser";
 import { WalletService } from "../services/wallet";
+import { WithdrawService } from "../services/withdraw";
+import type { BAMMActionParams } from "../types";
 
 export const getWithdrawAction = (opts: BAMMActionParams): Action => {
 	return {

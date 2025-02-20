@@ -1,11 +1,11 @@
-import { elizaLogger, type Action, type Handler } from "@elizaos/core";
+import { type Action, type Handler, elizaLogger } from "@elizaos/core";
+import dedent from "dedent";
+import { formatWeiToNumber } from "../lib/format-number";
 import { LEND_TEMPLATE } from "../lib/templates";
 import { InputParserService } from "../services/input-parser";
 import { LendService } from "../services/lend";
 import { WalletService } from "../services/wallet";
 import type { FraxLendActionParams } from "../types";
-import { formatWeiToNumber } from "../lib/format-number";
-import dedent from "dedent";
 
 export const getLendAction = (opts: FraxLendActionParams): Action => {
 	return {

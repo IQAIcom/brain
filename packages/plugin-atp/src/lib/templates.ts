@@ -22,7 +22,6 @@ Example response:
 Extract the agent address from the most recent message.
 Respond with a JSON markdown block containing the tokenContract.`;
 
-
 export const BUY_AGENT_TEMPLATE = `Respond with a JSON object containing purchase information.
 Extract the purchase details from all recent messages, including previously shown holdings or stats.
 

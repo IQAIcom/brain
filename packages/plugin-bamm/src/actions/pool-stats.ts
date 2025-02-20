@@ -1,8 +1,8 @@
 import type { Action, Handler } from "@elizaos/core";
+import dedent from "dedent";
 import { BammPoolsStatsService } from "../services/pool-stats";
 import { WalletService } from "../services/wallet";
 import type { BAMMActionParams } from "../types";
-import dedent from "dedent";
 
 export const getBammPoolStatsAction = (opts: BAMMActionParams): Action => {
 	return {

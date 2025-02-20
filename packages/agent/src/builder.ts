@@ -1,11 +1,11 @@
 import type {
+	CacheStore,
 	Character,
 	Client,
 	IDatabaseAdapter,
 	IDatabaseCacheAdapter,
-	Plugin,
-	CacheStore,
 	ModelProviderName,
+	Plugin,
 } from "@elizaos/core";
 import { Agent, type AgentOptions } from "./agent";
 

@@ -1,7 +1,7 @@
 import type { Action, Handler } from "@elizaos/core";
 import { GetQuoteActionService } from "../services/get-quote";
-import type { OdosActionParams } from "../types";
 import { WalletService } from "../services/wallet";
+import type { OdosActionParams } from "../types";
 
 export const getQuoteAction = (opts: OdosActionParams): Action => {
 	return {
@@ -37,7 +37,7 @@ const handler: (opts: OdosActionParams) => Handler =
 				callback?.({
 					text: `Error fetching quote: ${quote.message}`,
 				});
-				return false
+				return false;
 			}
 			callback?.({
 				text: service.format(quote),

@@ -1,12 +1,12 @@
 import type { Action } from "@elizaos/core";
 import { elizaLogger } from "@elizaos/core";
-import type { BAMMActionParams } from "../types";
-import { InputParserService } from "../services/input-parser";
 import dedent from "dedent";
-import { REPAY_TEMPLATE } from "../lib/templates";
-import { WalletService } from "../services/wallet";
-import { RepayService } from "../services/repay";
 import formatNumber from "../lib/format-number";
+import { REPAY_TEMPLATE } from "../lib/templates";
+import { InputParserService } from "../services/input-parser";
+import { RepayService } from "../services/repay";
+import { WalletService } from "../services/wallet";
+import type { BAMMActionParams } from "../types";
 
 export const getRepayAction = (opts: BAMMActionParams): Action => {
 	return {

@@ -10,8 +10,8 @@ The response must include:
 
 ## Chain Ids
     ${Object.entries(CHAIN_IDS)
-        .map(([chainName, chainId]) => `${chainName}: ${chainId}`)
-        .join("\n")}
+			.map(([chainName, chainId]) => `${chainName}: ${chainId}`)
+			.join("\n")}
 
 Example response:
 \`\`\`json

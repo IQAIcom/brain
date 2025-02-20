@@ -1,8 +1,8 @@
 import dedent from "dedent";
 import { API_URLS } from "../constants";
 import formatNumber from "../lib/format-number";
-import type { WalletService } from "./wallet";
 import type { AgentPositionsResponse } from "../types";
+import type { WalletService } from "./wallet";
 
 export class AgentPositionsService {
 	private walletService: WalletService;
@@ -16,17 +16,19 @@ export class AgentPositionsService {
 		const userAddress = walletClient.account.address;
 		try {
 			const url = new URL(API_URLS.HOLDINGS);
-			url.searchParams.append('address', userAddress);
+			url.searchParams.append("address", userAddress);
 
 			const response = await fetch(url.toString(), {
-				method: 'GET',
+				method: "GET",
 				headers: {
-					'Content-Type': 'application/json',
+					"Content-Type": "application/json",
 				},
 			});
 
 			if (!response.ok) {
-				throw new Error(`Failed to fetch agent positions: ${response.statusText}`);
+				throw new Error(
+					`Failed to fetch agent positions: ${response.statusText}`,
+				);
 			}
 			return (await response.json()) as AgentPositionsResponse;
 		} catch (error) {
@@ -34,24 +36,25 @@ export class AgentPositionsService {
 		}
 	}
 
-
 	formatPositions(
 		positions: Awaited<ReturnType<AgentPositionsService["getPositions"]>>,
 	) {
 		if (positions.holdings.length === 0) {
 			return "📊 No Active Positions Found";
 		}
-		const formattedPositions = positions.holdings.map((pos)=>{
-			const tokenAmount = formatNumber(Number(pos.tokenAmount));
-			const currentPriceInUsd = formatNumber(pos.currentPriceInUsd);
+		const formattedPositions = positions.holdings
+			.map((pos) => {
+				const tokenAmount = formatNumber(Number(pos.tokenAmount));
+				const currentPriceInUsd = formatNumber(pos.currentPriceInUsd);
 
-			return dedent`
+				return dedent`
 				💰 ${pos.name}
 				- Token Contract: ${pos.tokenContract}
 				- Token Amount: ${tokenAmount}
 				- Current Price: ${currentPriceInUsd} USD
-			`
-		}).join("\n");
+			`;
+			})
+			.join("\n");
 
 		return `📊 *Your Active Positions*\n\n${formattedPositions}`;
 	}

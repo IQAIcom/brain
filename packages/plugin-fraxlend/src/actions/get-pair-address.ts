@@ -1,10 +1,10 @@
 import type { Action, Handler } from "@elizaos/core";
+import dedent from "dedent";
 import { GET_PAIR_ADDRESS_TEMPLATE } from "../lib/templates";
 import { InputParserService } from "../services/input-parser";
 import { PairAddressService } from "../services/pair-address";
 import { WalletService } from "../services/wallet";
 import type { FraxLendActionParams } from "../types";
-import dedent from "dedent";
 
 export const getPairAddressAction = (opts: FraxLendActionParams): Action => {
 	return {
