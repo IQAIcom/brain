@@ -1,5 +1,11 @@
 # @iqai/agent
 
+## 0.0.6
+
+### Patch Changes
+
+- f0a8af5: create bamm plugin
+
 ## 0.0.5
 
 ### Patch Changes
