@@ -6,5 +6,5 @@ export const API_URLS = {
 } as const;
 
 export const AGENT_ROUTER_ADDRESS =
-	"0x2da2ff5be0772d6b84b7734d000834910d6243ad";
-export const BASE_TOKEN_ADDRESS = "0xcc3023635df54fc0e43f47bc4beb90c3d1fbda9f";
+	"0xb1460781f019548d81ced6eac239025c05dc92a7";
+export const BASE_TOKEN_ADDRESS = "0x6efb84bda519726fa1c65558e520b92b51712101";
