@@ -1,5 +1,11 @@
 # @iqai/plugin-fraxlend
 
+## 0.1.11
+
+### Patch Changes
+
+- f0a8af5: create bamm plugin
+
 ## 0.1.10
 
 ### Patch Changes
