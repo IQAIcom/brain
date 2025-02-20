@@ -1,12 +1,12 @@
-import { getAgentStatsAction } from "./actions/agent-stats";
-import { getAgentPositionsAction } from "./actions/agent-positions";
-import type { ATPActionParams } from "./types";
 import type { Plugin } from "@elizaos/core";
+import { getAgentPositionsAction } from "./actions/agent-positions";
+import { getAgentStatsAction } from "./actions/agent-stats";
 import { getBuyAction } from "./actions/buy";
-import { getSellAction } from "./actions/sell";
 import { getAgentsAction } from "./actions/get-agents";
+import { getSellAction } from "./actions/sell";
+import type { ATPActionParams } from "./types";
 
-export async function createATPPlugin(opts: ATPActionParams): Promise<Plugin> {
+export async function createAtpPlugin(opts: ATPActionParams): Promise<Plugin> {
 	const actions = [
 		getAgentsAction(opts),
 		getAgentPositionsAction(opts),
@@ -25,4 +25,4 @@ export async function createATPPlugin(opts: ATPActionParams): Promise<Plugin> {
 	};
 }
 
-export default createATPPlugin;
+export default createAtpPlugin;

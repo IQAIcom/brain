@@ -1,8 +1,8 @@
 import type { Action, Handler } from "@elizaos/core";
+import { elizaLogger } from "@elizaos/core";
 import { AgentPositionsService } from "../services/agent-positions";
 import { WalletService } from "../services/wallet";
 import type { ATPActionParams } from "../types";
-import { elizaLogger } from "@elizaos/core";
 
 export const getAgentPositionsAction = (opts: ATPActionParams): Action => {
 	return {

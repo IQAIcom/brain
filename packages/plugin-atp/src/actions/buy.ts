@@ -1,11 +1,11 @@
 import type { Action, Handler } from "@elizaos/core";
+import { elizaLogger } from "@elizaos/core";
+import dedent from "dedent";
+import { BUY_AGENT_TEMPLATE } from "../lib/templates";
 import { InputParserService } from "../services/input-parser";
 import { SwapService } from "../services/swap";
 import { WalletService } from "../services/wallet";
 import type { ATPActionParams } from "../types";
-import { BUY_AGENT_TEMPLATE } from "../lib/templates";
-import { elizaLogger } from "@elizaos/core";
-import dedent from "dedent";
 
 export const getBuyAction = (opts: ATPActionParams): Action => {
 	return {

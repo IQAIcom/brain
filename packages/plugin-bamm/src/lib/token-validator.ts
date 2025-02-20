@@ -1,6 +1,6 @@
 import type { Address } from "viem";
-import { BAMM_ABI } from "./bamm.abi";
 import type { PublicClient } from "viem";
+import { BAMM_ABI } from "./bamm.abi";
 
 export interface TokenValidationResult {
 	isToken0: boolean;

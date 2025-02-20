@@ -1,14 +1,14 @@
 import type { Plugin } from "@elizaos/core";
 import type { Chain } from "viem";
-import { getLendAction } from "./actions/lend";
-import { getBorrowAction } from "./actions/borrow";
-import { getWithdrawAction } from "./actions/withdraw";
 import { getAddCollateralAction } from "./actions/add-collateral";
+import { getBorrowAction } from "./actions/borrow";
+import { getBammPositionsAction } from "./actions/get-positions";
+import { getLendAction } from "./actions/lend";
+import { getBammPoolStatsAction } from "./actions/pool-stats";
 import { getRemoveCollateralAction } from "./actions/remove-collateral";
 import { getRepayAction } from "./actions/repay";
-import { getBammPositionsAction } from "./actions/get-positions";
+import { getWithdrawAction } from "./actions/withdraw";
 import type { BAMMActionParams } from "./types";
-import { getBammPoolStatsAction } from "./actions/pool-stats";
 
 export const createBAMMPlugin = async (
 	opts: BAMMActionParams,
