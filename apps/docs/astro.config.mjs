@@ -76,6 +76,24 @@ export default defineConfig({
 						{ label: "💰 BAMM", link: "/plugins/bamm" },
 						{ label: "💓 Heartbeat", link: "/plugins/heartbeat" },
 						{ label: "📝 Sequencer", link: "/plugins/sequencer" },
+						{ label: "🔧 Bootstrap", link: "/plugins/bootstrap" },
+						{ label: "🎨 Images", link: "/plugins/image-gen" },
+						{ label: "📦 Node", link: "/plugins/node" },
+						{ label: "⛓️ Solana", link: "/plugins/solana" },
+					],
+				},
+				{
+					label: "Clients",
+					items: [
+						{ label: "💬 Discord", link: "/clients/discord" },
+						{ label: "📱 Telegram", link: "/clients/telegram" },
+					],
+				},
+				{
+					label: "Database Adapters",
+					items: [
+						{ label: "🗃️ SQLite", link: "/adapters/sqlite" },
+						{ label: "🐘 Postgres", link: "/adapters/postgres" },
 					],
 				},
 			],

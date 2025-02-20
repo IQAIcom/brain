@@ -1,0 +1,72 @@
+---
+title: "Solana Plugin"
+description: "Plugin for Solana blockchain integration with wallet management and trust scoring"
+---
+
+import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+import { PackageManagers } from 'starlight-package-managers'
+
+The **Solana Plugin** provides blockchain functionality including wallet management and transaction trust evaluation.
+
+## Installation
+
+<Steps>
+1. Install the package:
+   <PackageManagers pkg="@eliza/plugin-solana" />
+
+2. Configure environment:
+   ```bash
+   SOLANA_PRIVATE_KEY=your-wallet-private-key
+   SOLANA_RPC_URL=your-rpc-endpoint
+   ```
+</Steps>
+
+## Usage
+
+```typescript
+import { createSolanaPlugin } from "@eliza/plugin-solana";
+
+const solanaPlugin = createSolanaPlugin({
+  privateKey: process.env.SOLANA_PRIVATE_KEY,
+  rpcUrl: process.env.SOLANA_RPC_URL
+});
+
+const agent = new AgentBuilder()
+  .withPlugin(solanaPlugin)
+  .build();
+```
+
+## Features
+
+### Evaluators
+| Evaluator | Description |
+|-----------|-------------|
+| `trustEvaluator` | Assess transaction trust scores |
+
+### Providers
+| Provider | Description |
+|----------|-------------|
+| `walletProvider` | Wallet management and operations |
+| `trustScoreProvider` | Transaction trust metrics |
+
+## Configuration
+
+```typescript
+interface SolanaPluginConfig {
+  privateKey: string;
+  rpcUrl: string;
+  network?: "mainnet" | "testnet" | "devnet";
+  trustScoreThreshold?: number;
+}
+```
+
+## Best Practices
+
+- ✔️ Implement proper error handling for transactions
+- ✔️ Validate addresses before operations
+- ✔️ Monitor trust scores for suspicious activity
+- ✔️ Use appropriate network for testing
+
+<Aside type="caution">
+Secure your private keys and never expose them in your code or version control.
+</Aside>

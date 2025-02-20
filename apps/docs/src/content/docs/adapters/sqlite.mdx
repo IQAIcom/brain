@@ -1,0 +1,70 @@
+---
+title: "SQLite Adapter"
+description: "Database adapter for development and embedded SQLite storage"
+---
+
+import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+import { PackageManagers } from 'starlight-package-managers'
+
+The **SQLite Adapter** provides embedded database functionality, ideal for development and single-instance deployments.
+
+## Installation
+
+<Steps>
+1. Install required packages:
+   <PackageManagers pkg="@elizaos/adapter-sqlite better-sqlite3" />
+</Steps>
+
+## Basic Setup
+
+```typescript
+import { AgentBuilder } from "@iqai/agent";
+import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
+import Database from "better-sqlite3";
+
+const databaseAdapter = new SqliteDatabaseAdapter(
+  new Database("./data/db.sqlite")
+);
+
+const agent = new AgentBuilder()
+  .withDatabase(databaseAdapter)
+  // ... other configuration
+  .build();
+```
+
+## Key Features
+
+- ✔️ Built-in caching
+- ✔️ BLOB storage support
+- ✔️ Zero setup requirements
+
+## Storage Configuration
+
+```typescript
+import Database from "better-sqlite3";
+
+// Basic configuration
+const db = new Database("./data/db.sqlite");
+
+const adapter = new SqliteDatabaseAdapter(db);
+```
+
+## Collections Structure
+
+The adapter automatically manages these collections:
+- `rooms`
+- `participants`
+- `accounts`
+- `memories`
+- `knowledge`
+
+Additional metadata is stored as JSON within these collections.
+
+## Best Practices
+
+- ✔️ Use for development and testing
+- ✔️ Monitor database file size
+
+<Aside type="tip">
+SQLite is ideal for development, testing, and single-instance deployments where simplicity is key.
+</Aside>
