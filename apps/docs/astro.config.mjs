@@ -76,37 +76,26 @@ export default defineConfig({
 						{ label: "💰 BAMM", link: "/plugins/bamm" },
 						{ label: "💓 Heartbeat", link: "/plugins/heartbeat" },
 						{ label: "📝 Sequencer", link: "/plugins/sequencer" },
+						{ label: "🔧 Bootstrap", link: "/plugins/bootstrap" },
+						{ label: "🎨 Images", link: "/plugins/image-gen" },
+						{ label: "📦 Node", link: "/plugins/node" },
+						{ label: "⛓️ Solana", link: "/plugins/solana" },
 					],
 				},
-        {
-          label: 'Third-party',
-          items: [
-            { label: '📚 Overview', link: '/third-party/overview' },
-            {
-              label: '💾 Database Adapters',
-              items: [
-                { label: 'SQLite', link: '/third-party/adapters/sqlite' },
-                { label: 'PostgreSQL', link: '/third-party/adapters/postgres' },
-              ]
-            },
-            {
-              label: '🔌 Plugins',
-              items: [
-                { label: 'Bootstrap', link: '/third-party/plugins/bootstrap' },
-                { label: 'Image Generation', link: '/third-party/plugins/image-gen' },
-                { label: 'Node', link: '/third-party/plugins/node' },
-                { label: 'Solana', link: '/third-party/plugins/solana' },
-              ]
-            },
-            {
-              label: '🔗 Clients',
-              items: [
-                { label: 'Discord', link: '/third-party/clients/discord' },
-                { label: 'Telegram', link: '/third-party/clients/telegram' },
-              ]
-            }
-          ],
-        }
+				{
+					label: "Clients",
+					items: [
+						{ label: "💬 Discord", link: "/clients/discord" },
+						{ label: "📱 Telegram", link: "/clients/telegram" },
+					],
+				},
+				{
+					label: "Database Adapters",
+					items: [
+						{ label: "🗃️ SQLite", link: "/adapters/sqlite" },
+						{ label: "🐘 Postgres", link: "/adapters/postgres" },
+					],
+				},
 			],
 		}),
 	],
