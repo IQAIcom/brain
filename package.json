@@ -12,8 +12,7 @@
 		"lint:fix": "biome check . --apply",
 		"changeset": "changeset",
 		"version-packages": "changeset version",
-		"publish-packages": "turbo run build lint && changeset version && changeset publish",
-		"prepare": "husky install"
+		"publish-packages": "turbo run build lint && changeset version && changeset publish"
 	},
 	"devDependencies": {
 		"@changesets/cli": "^2.27.1",
