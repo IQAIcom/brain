@@ -87,6 +87,7 @@ export default defineConfig({
 					items: [
 						{ label: "💬 Discord", link: "/clients/discord" },
 						{ label: "📱 Telegram", link: "/clients/telegram" },
+						{ label: "🪶 Twitter", link: "/clients/twitter" },
 					],
 				},
 				{
