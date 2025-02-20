@@ -1,5 +1,5 @@
-import { type State, composeContext } from "@elizaos/core";
 import type { Tool } from "@coinbase/cdp-langchain";
+import { type State, composeContext } from "@elizaos/core";
 import dedent from "dedent";
 
 export class ContextComposer {

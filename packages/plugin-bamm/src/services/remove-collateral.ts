@@ -1,10 +1,10 @@
-import type { Address } from "viem";
-import type { WalletService } from "./wallet";
-import { BAMM_ABI } from "../lib/bamm.abi";
 import { elizaLogger } from "@elizaos/core";
+import type { Address } from "viem";
+import { BAMM_ABI } from "../lib/bamm.abi";
 import { getTokenAddressFromSymbol } from "../lib/symbol-to-address";
-import { validateTokenAgainstBAMM } from "../lib/token-validator";
 import { checkTokenBalance } from "../lib/token-utils";
+import { validateTokenAgainstBAMM } from "../lib/token-validator";
+import type { WalletService } from "./wallet";
 
 export interface RemoveCollateralParams {
 	bammAddress: Address;

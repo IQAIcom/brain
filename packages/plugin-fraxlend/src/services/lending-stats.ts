@@ -1,7 +1,7 @@
-import { graphql } from "gql.tada";
-import { client } from "../lib/graphql";
 import dedent from "dedent";
-import { formatUnits, formatEther } from "viem";
+import { graphql } from "gql.tada";
+import { formatEther, formatUnits } from "viem";
+import { client } from "../lib/graphql";
 
 const LENDING_PAIRS_QUERY = graphql(`
   query GetLendingPairs {

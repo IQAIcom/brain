@@ -1,18 +1,18 @@
+import type { CdpAgentkit } from "@coinbase/cdp-agentkit-core";
+import type { Tool } from "@coinbase/cdp-langchain";
 import {
 	type Action,
-	generateText,
 	type HandlerCallback,
 	type IAgentRuntime,
 	type Memory,
 	ModelClass,
 	type State,
 	generateObject,
+	generateText,
 } from "@elizaos/core";
-import type { Tool } from "@coinbase/cdp-langchain";
-import { ToolService } from "./services/tool-service.ts";
 import { ContextComposer } from "./services/context-composer.ts";
+import { ToolService } from "./services/tool-service.ts";
 import type { ActionResult, AgentKitActionParams } from "./types.ts";
-import type { CdpAgentkit } from "@coinbase/cdp-agentkit-core";
 
 export async function getAgentKitActions({
 	getClient,

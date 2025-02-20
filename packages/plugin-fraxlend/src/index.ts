@@ -1,14 +1,14 @@
-import { getLendingStatsAction } from "./actions/lending-stats";
-import { getAgentPositionsAction } from "./actions/agent-positions";
-import { getLendAction } from "./actions/lend";
-import { getWithdrawAction } from "./actions/withdraw";
-import { getBorrowAction } from "./actions/borrow";
-import { getRepayAction } from "./actions/repay";
-import { getAddCollateralAction } from "./actions/add-collateral";
-import { getRemoveCollateralAction } from "./actions/remove-collateral";
-import type { FraxLendActionParams } from "./types";
 import type { Plugin } from "@elizaos/core";
+import { getAddCollateralAction } from "./actions/add-collateral";
+import { getAgentPositionsAction } from "./actions/agent-positions";
+import { getBorrowAction } from "./actions/borrow";
 import { getPairAddressAction } from "./actions/get-pair-address";
+import { getLendAction } from "./actions/lend";
+import { getLendingStatsAction } from "./actions/lending-stats";
+import { getRemoveCollateralAction } from "./actions/remove-collateral";
+import { getRepayAction } from "./actions/repay";
+import { getWithdrawAction } from "./actions/withdraw";
+import type { FraxLendActionParams } from "./types";
 
 export async function createFraxlendPlugin(
 	opts: FraxLendActionParams,

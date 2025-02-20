@@ -1,10 +1,10 @@
 import dedent from "dedent";
-import type { WalletService } from "./wallet";
+import type { Address } from "viem";
 import { BAMM_ADDRESSES } from "../constants";
 import { BAMM_FACTORY_ABI } from "../lib/bamm-factory.abi";
 import { BAMM_ABI } from "../lib/bamm.abi";
-import type { Address } from "viem";
 import formatNumber from "../lib/format-number";
+import type { WalletService } from "./wallet";
 
 export interface PoolStats {
 	poolAddress: string;

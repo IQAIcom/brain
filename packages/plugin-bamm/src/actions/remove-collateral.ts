@@ -1,12 +1,12 @@
 import type { Action } from "@elizaos/core";
 import { elizaLogger } from "@elizaos/core";
-import type { BAMMActionParams } from "../types";
-import { RemoveCollateralService } from "../services/remove-collateral";
-import { InputParserService } from "../services/input-parser";
 import dedent from "dedent";
 import formatNumber from "../lib/format-number";
 import { REMOVE_COLLATERAL_TEMPLATE } from "../lib/templates";
+import { InputParserService } from "../services/input-parser";
+import { RemoveCollateralService } from "../services/remove-collateral";
 import { WalletService } from "../services/wallet";
+import type { BAMMActionParams } from "../types";
 
 export const getRemoveCollateralAction = (opts: BAMMActionParams): Action => {
 	return {

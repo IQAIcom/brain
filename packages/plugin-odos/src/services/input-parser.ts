@@ -22,18 +22,18 @@ export class InputParserService {
 			modelClass: ModelClass.SMALL,
 		});
 
-		if(response?.error){
-			const result =  { error: response!.error as string }
-			return result
+		if (response?.error) {
+			const result = { error: response.error as string };
+			return result;
 		}
 
-		const result =  { 
-			fromToken: response!.fromToken as Address, 
-			toToken: response!.toToken as Address, 
-			amount: response!.amount as string,
-			chainId: Number(response!.chain)
-		}
+		const result = {
+			fromToken: response.fromToken as Address,
+			toToken: response.toToken as Address,
+			amount: response.amount as string,
+			chainId: Number(response.chain),
+		};
 
-		return result
+		return result;
 	}
 }

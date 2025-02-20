@@ -1,6 +1,6 @@
 import type { Action, Handler } from "@elizaos/core";
-import { SequencerService } from "../services/sequencer";
 import dedent from "dedent";
+import { SequencerService } from "../services/sequencer";
 
 export const getSequencerAction = (): Action => {
 	return {

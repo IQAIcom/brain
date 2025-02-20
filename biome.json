@@ -13,7 +13,8 @@
 			".vercel/**",
 			"coverage/**",
 			"dist/**",
-			"graphql-env.d.ts"
+			"graphql-env.d.ts",
+			".astro"
 		]
 	},
 	"organizeImports": {

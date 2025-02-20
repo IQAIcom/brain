@@ -1,4 +1,4 @@
-import { ModelProviderName, type Character } from "@elizaos/core";
+import { type Character, ModelProviderName } from "@elizaos/core";
 
 export const defaultCharacter: Character = {
 	name: "BrainBot",
