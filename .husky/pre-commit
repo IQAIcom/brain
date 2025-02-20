@@ -1,1 +1,1 @@
-pnpm biome ci
+pnpm lint-staged
