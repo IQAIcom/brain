@@ -67,6 +67,24 @@ export default defineConfig({
             { label: "💓 Heartbeat", link: "/plugins/heartbeat"},
             { label: "📝 Sequencer", link: "/plugins/sequencer"},
           ],
+        },
+        {
+          label: 'Third-party',
+          items: [
+            { label: '📚 Overview', link: '/third-party/overview' },
+            {
+              label: '🔌 Plugins',
+              autogenerate: { directory: 'third-party/plugins' }
+            },
+            {
+              label: '🔗 Clients',
+              autogenerate: { directory: 'third-party/clients' }
+            },
+            {
+              label: '🔀 Adapter',
+              autogenerate: { directory: 'third-party/adapters' }
+            }
+          ],
         }
       ],
     }),

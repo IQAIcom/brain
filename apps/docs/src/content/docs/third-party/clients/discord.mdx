@@ -1,0 +1,72 @@
+---
+title: "Discord Client"
+description: "Integration guide for Discord bot functionality in Brain Framework"
+---
+
+import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+import { PackageManagers } from 'starlight-package-managers'
+
+The **Discord Client** enables your agent to interact with Discord servers, supporting message handling, voice interactions, and slash commands.
+
+## Installation
+
+<Steps>
+1. Install required packages:
+   <PackageManagers pkg="@elizaos/client-discord @elizaos/core" />
+
+2. Configure environment variables:
+   ```bash
+   # Required Discord credentials
+   DISCORD_API_TOKEN=your_bot_token
+   ```
+</Steps>
+
+## Basic Setup
+
+```typescript
+import { AgentBuilder, ModelProviderName } from "@iqai/agent";
+import { DiscordClientInterface } from "@elizaos/client-discord";
+import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
+import Database from "better-sqlite3";
+
+async function main() {
+  // Initialize database adapter
+  const databaseAdapter = new SqliteDatabaseAdapter(
+    new Database("./data/db.sqlite")
+  );
+
+  // Create agent with Discord client
+  const agent = new AgentBuilder()
+    .withDatabase(databaseAdapter)
+    .withClient("discord", DiscordClientInterface)
+    .withModelProvider(
+      ModelProviderName.OPENAI,
+      process.env.OPENAI_API_KEY
+    )
+    .withCharacter({
+      name: "DiscordBot",
+      bio: "A helpful Discord assistant",
+      username: "brain-bot"
+    })
+    .build();
+
+  await agent.start();
+}
+
+main().catch(console.error);
+```
+
+## Best Practices
+
+- ✔️ Always initialize with a database adapter
+- ✔️ Set appropriate character configuration for Discord context
+- ✔️ Handle client startup errors appropriately
+- ✔️ Implement proper Discord permission handling
+
+<Aside type="caution">
+Remember that `withDatabase()` is required before calling `build()`.
+</Aside>
+
+<Aside type="tip">
+You can use `withPlugins()` to add multiple plugins that enhance Discord functionality.
+</Aside>
