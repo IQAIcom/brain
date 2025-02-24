@@ -1,0 +1,2 @@
+export const DEFAULT_GAS_LIMIT_MULTIPLIER = 1.2;
+export const TRANSACTION_WAIT_BLOCKS = 1;
