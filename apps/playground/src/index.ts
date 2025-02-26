@@ -36,7 +36,7 @@ async function main() {
 
 	const mcpPlugin = await createMcpPlugin({
 		mode: "sse",
-		serverUrl: "http://localhost:6969",
+		serverUrl: "http://localhost:6969/sse",
 	});
 	// Setup database
 	const dataDir = path.join(process.cwd(), "./data");
