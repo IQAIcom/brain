@@ -45,6 +45,7 @@ Use **sse** mode to connect to a remote MCP server via Server-Sent Events. *(Not
 | 🔧 Param Name    | 📜 Description                              |
 |---------------------|----------------------------------------------|
 | `serverUrl`    | The base URL of the remote MCP server        |
+| `headers`    | Headers to include (if any) in the request to the remote server |
 
 ---
 
@@ -74,6 +75,7 @@ import { createMcpPlugin } from "@iqai/plugin-mcp";
 const plugin = await createMcpPlugin({
   mode: "sse",
   serverUrl: "YOUR_SERVER_URL",
+  headers: {}
 });
 ```
 
