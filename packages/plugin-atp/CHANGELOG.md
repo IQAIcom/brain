@@ -1,5 +1,13 @@
 # @iqai/plugin-atp
 
+## 0.2.0
+
+### Minor Changes
+
+- c8669aa: - Added action for fetching agents from atp
+  - Updated similes for ATP_AGENT_STATS action
+  - Updated agent router & base token address
+
 ## 0.1.9
 
 ### Patch Changes
