@@ -23,7 +23,7 @@ For detailed information on using the Brain Framework, visit our [documentation]
 
 ```bash
 # Clone the repository
-git clone https://github.com/IQAIcom/iq-ai-framework
+git clone https://github.com/IQAIcom/brain
 
 # Install dependencies
 pnpm install
