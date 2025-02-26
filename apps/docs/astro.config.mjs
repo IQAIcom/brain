@@ -80,6 +80,7 @@ export default defineConfig({
 						{ label: "🎨 Images", link: "/plugins/image-gen" },
 						{ label: "📦 Node", link: "/plugins/node" },
 						{ label: "⛓️ Solana", link: "/plugins/solana" },
+						{ label: "🔌 Mcp", link: "/plugins/mcp" },
 					],
 				},
 				{
