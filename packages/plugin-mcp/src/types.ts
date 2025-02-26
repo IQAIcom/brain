@@ -7,5 +7,4 @@ export type McpPluginConfig =
 	| {
 			mode: "sse";
 			serverUrl: string;
-			token?: string;
 	  };
