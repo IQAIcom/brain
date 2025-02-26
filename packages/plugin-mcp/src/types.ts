@@ -7,4 +7,5 @@ export type McpPluginConfig =
 	| {
 			mode: "sse";
 			serverUrl: string;
+			headers?: HeadersInit;
 	  };

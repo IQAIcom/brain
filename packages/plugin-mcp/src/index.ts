@@ -17,7 +17,11 @@ async function initializeMcpClient(config: McpPluginConfig): Promise<Client> {
 		let transport: Transport;
 
 		if (config.mode === "sse") {
-			transport = new SSEClientTransport(new URL(config.serverUrl));
+			transport = new SSEClientTransport(new URL(config.serverUrl), {
+				requestInit: {
+					headers: config.headers,
+				},
+			});
 		} else {
 			transport = new StdioClientTransport({
 				command: config.command,
