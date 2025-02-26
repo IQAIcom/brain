@@ -28,8 +28,6 @@ async function initializeMcpClient(config: McpPluginConfig): Promise<Client> {
 		const client = new Client(
 			{
 				name: "McpPluginClient",
-				//TODO: sync with package version
-				version: "0.0.1",
 			},
 			{
 				capabilities: {
