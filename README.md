@@ -52,7 +52,7 @@ pnpm dev
 pnpm build
 
 # Run tests
-pnpm test
+pnpm test:plugins
 
 # Create a new version
 pnpm changeset
