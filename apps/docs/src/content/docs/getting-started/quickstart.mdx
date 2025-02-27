@@ -3,10 +3,30 @@ title: Quick Start
 description: Get up and running with Brain Framework
 ---
 import { Steps } from '@astrojs/starlight/components';
+import { PackageManagers } from 'starlight-package-managers'
 
+In this guide, we'll create a basic AI agent using Brain Framework from scratch.
 
+## Creating a New Project
 
-In this guide, we'll create a basic AI agent using Brain Framework. You'll learn how to set up an agent with essential configurations and get it running with minimal setup. This will give you a foundation to build upon as you explore more advanced features.
+<Steps>
+1. Set up your project structure:
+   ```bash
+   mkdir -p my-brain-agent/src
+   cd my-brain-agent
+   npm init -y
+   touch src/index.js .env
+   ```
+
+2. Install the required Brain Framework packages:
+   <PackageManagers pkg="@iqai/agent @elizaos/client-direct dotenv" />
+
+3. Add your OpenAI API key to the `.env` file:
+   ```javascript
+   OPENAI_API_KEY=your_openai_api_key_here
+   ```
+</Steps>
+
 
 ## Creating Your First Agent
 
@@ -17,28 +37,60 @@ To create an agent, you'll need three key components:
 3. **Prompts and Plugins**: Define your agent's behavior through prompts and extend functionality using plugins. In this quickstart example, we'll use the default prompts that come with the framework. For customizing prompts and adding plugins, check out [Agent Creation Guide](/getting-started/agent-creation).
 
 <Steps>
-1. Import the required dependencies:
+1. Open `src/index.js` in your favorite code editor and add the following code:
    ```javascript
+   // Import required dependencies
    import { AgentBuilder, ModelProviderName } from '@iqai/agent';
    import DirectClientInterface from "@elizaos/client-direct";
-   ```
+   import dotenv from 'dotenv';
 
-2. Create your agent:
-   ```javascript
+   // Load environment variables
+   dotenv.config();
+
    async function main() {
+     // Create your agent with basic configuration
      const agent = new AgentBuilder()
        .withModelProvider(ModelProviderName.OPENAI, process.env.OPENAI_API_KEY)
        .withClient("direct", DirectClientInterface)
        .build();
 
+     // Start your agent
      await agent.start();
+
+     console.log('Agent is running! You can test it using the IQAI Console.');
    }
 
    main().catch(console.error);
    ```
 
-3. Run your agent and test:
+2. Update your `package.json` to support ES modules:
+   ```json
+   {
+     "type": "module",
+     "scripts": {
+       "start": "node src/index.js"
+     }
+   }
+   ```
+
+3. Install dotenv for environment variable loading:
+   <PackageManagers pkg="dotenv" />
+
+4. Run your agent:
+   <PackageManagers type="run" args="start" />
+
+
+5. Test your agent:
    After starting your agent, visit [IQAI Console](https://console.iqai.com) to interact with it through a ready-to-use interface. This allows you to test your agent without building a custom client application.
 
    For more details on testing your agent, check out [Testing Your Agent](/getting-started/test-agent)
 </Steps>
+
+## Next Steps
+
+Now that you have a basic agent running, you can:
+
+- Explore different [Model Providers](/guides/model-providers) to power your agent
+- Add [Plugins](/guides/plugins) to extend your agent's functionality
+- Customize your agent's [Prompts](/guides/prompts) to define specific behaviors
+- Deploy your agent to a [production environment](/deployment/overview)
