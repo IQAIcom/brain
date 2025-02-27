@@ -18,7 +18,7 @@ In this guide, we'll create a basic AI agent using Brain Framework from scratch.
    ```
 
 2. Install the required Brain Framework packages:
-   <PackageManagers pkg="@iqai/agent @elizaos/client-direct@0.1.9 dotenv @types/dotenv" />
+   <PackageManagers pkg="@iqai/agent @elizaos/client-direct@0.1.9 tsx dotenv @types/dotenv" />
 
 3. Add your OpenAI API key to the `.env` file:
    ```javascript
@@ -63,18 +63,18 @@ To create an agent, you'll need three key components:
       main().catch(console.error);
    ```
 
-2. Update your `package.json` to support ES modules:
+2. Update your `package.json` to support ES modules and scripts:
    ```json
    {
      "type": "module",
      "scripts": {
-       "start": "node src/index.js"
+       "dev": "tsx watch src/index.ts"
      }
    }
    ```
 
 3. Run your agent:
-   <PackageManagers type="run" args="start" />
+   <PackageManagers type="run" args="dev" />
 
 
 4. Test your agent:
