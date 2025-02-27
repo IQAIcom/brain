@@ -234,6 +234,9 @@ importers:
       '@iqai/plugin-heartbeat':
         specifier: workspace:*
         version: link:../../packages/plugin-heartbeat
+      '@iqai/plugin-mcp':
+        specifier: workspace:*
+        version: link:../../packages/plugin-mcp
       '@iqai/plugin-odos':
         specifier: workspace:*
         version: link:../../packages/plugin-wiki
@@ -430,6 +433,25 @@ importers:
       '@types/node-cron':
         specifier: ^3.0.11
         version: 3.0.11
+
+  packages/plugin-mcp:
+    dependencies:
+      '@elizaos/core':
+        specifier: 0.1.9
+        version: 0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38(openai@4.73.0(zod@3.24.2)))(axios@1.7.9)(react@19.0.0)(sswr@2.1.0(svelte@5.19.8))(svelte@5.19.8)(vue@3.5.13(typescript@5.7.3))(ws@8.18.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))
+      '@modelcontextprotocol/sdk':
+        specifier: 1.5.0
+        version: 1.5.0
+      dedent:
+        specifier: ^1.5.3
+        version: 1.5.3
+      tsup:
+        specifier: 8.3.6
+        version: 8.3.6(@swc/core@1.10.14(@swc/helpers@0.5.15))(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0)
+    devDependencies:
+      '@iqai/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
 
   packages/plugin-odos:
     dependencies:
@@ -2085,6 +2107,10 @@ packages:
 
   '@mdx-js/mdx@3.1.0':
     resolution: {integrity: sha512-/QxEhPAvGwbQmy1Px8F899L5Uc2KZ6JtXwlCgJmjSTBedwOZkByYcBG4GceIGPXRDsmfxhHazuS+hlOShRLeDw==}
+
+  '@modelcontextprotocol/sdk@1.5.0':
+    resolution: {integrity: sha512-IJ+5iVVs8FCumIHxWqpwgkwOzyhtHVKy45s6Ug7Dv0MfRpaYisH8QQ87rIWeWdOzlk8sfhitZ7HCyQZk7d6b8w==}
+    engines: {node: '>=18'}
 
   '@msgpack/msgpack@3.0.0-beta3':
     resolution: {integrity: sha512-LZYWBmrkKO0quyjnJCeSaqHOcsuZUvE+hlIYRqFc0qI27dLnsOdnv8Fsj2cyitzQTJZmCPm53vZ/P8QTH7E84A==}
@@ -4844,6 +4870,10 @@ packages:
     resolution: {integrity: sha512-T1C0XCUimhxVQzW4zFipdx0SficT651NnkR0ZSH3yQwh+mFMdLfgjABVi4YtMTtaL4s168593DaoaRLMqryavA==}
     engines: {node: '>=18.0.0'}
 
+  eventsource@3.0.5:
+    resolution: {integrity: sha512-LT/5J605bx5SNyE+ITBDiM3FxffBiq9un7Vx0EwMDM3vg8sWKx/tO2zC+LMqZ+smAM0F2hblaDZUVZF0te2pSw==}
+    engines: {node: '>=18.0.0'}
+
   execa@5.1.1:
     resolution: {integrity: sha512-8uSpZZocAZRBAPIEINJj3Lo9HyGitllczc27Eh5YYojjMFMn8yHMDMaUHE2Jqfq05D/wucwI4JGURyXt1vchyg==}
     engines: {node: '>=10'}
@@ -5369,6 +5399,10 @@ packages:
 
   iconv-lite@0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
+    engines: {node: '>=0.10.0'}
+
+  iconv-lite@0.6.3:
+    resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
     engines: {node: '>=0.10.0'}
 
   ieee754@1.2.1:
@@ -7031,6 +7065,10 @@ packages:
 
   raw-body@2.5.2:
     resolution: {integrity: sha512-8zGqypfENjCIqGhgXToC8aB2r7YrBX+AQAfIPs/Mlk+BtPTztOvTS01NRW/3Eh60J+a48lt8qsCzirQ6loCVfA==}
+    engines: {node: '>= 0.8'}
+
+  raw-body@3.0.0:
+    resolution: {integrity: sha512-RmkhL8CAyCRPXCE28MMH0z2PNWQBNk2Q09ZdxM9IOOXwxwZbN+qbWaatPkdkWIKL2ZVDImrN/pK5HTRz2PcS4g==}
     engines: {node: '>= 0.8'}
 
   rc@1.2.8:
@@ -11594,6 +11632,14 @@ snapshots:
       - acorn
       - supports-color
 
+  '@modelcontextprotocol/sdk@1.5.0':
+    dependencies:
+      content-type: 1.0.5
+      eventsource: 3.0.5
+      raw-body: 3.0.0
+      zod: 3.24.2
+      zod-to-json-schema: 3.24.1(zod@3.24.2)
+
   '@msgpack/msgpack@3.0.0-beta3': {}
 
   '@noble/ciphers@1.2.1': {}
@@ -12753,7 +12799,7 @@ snapshots:
   '@tavily/core@0.0.2':
     dependencies:
       axios: 1.7.9
-      js-tiktoken: 1.0.15
+      js-tiktoken: 1.0.18
     transitivePeerDependencies:
       - debug
 
@@ -14880,6 +14926,10 @@ snapshots:
 
   eventsource-parser@3.0.0: {}
 
+  eventsource@3.0.5:
+    dependencies:
+      eventsource-parser: 3.0.0
+
   execa@5.1.1:
     dependencies:
       cross-spawn: 7.0.6
@@ -15626,6 +15676,10 @@ snapshots:
       '@babel/runtime': 7.26.7
 
   iconv-lite@0.4.24:
+    dependencies:
+      safer-buffer: 2.1.2
+
+  iconv-lite@0.6.3:
     dependencies:
       safer-buffer: 2.1.2
 
@@ -17965,6 +18019,13 @@ snapshots:
       bytes: 3.1.2
       http-errors: 2.0.0
       iconv-lite: 0.4.24
+      unpipe: 1.0.0
+
+  raw-body@3.0.0:
+    dependencies:
+      bytes: 3.1.2
+      http-errors: 2.0.0
+      iconv-lite: 0.6.3
       unpipe: 1.0.0
 
   rc@1.2.8:

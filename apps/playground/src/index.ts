@@ -7,6 +7,7 @@ import { createAtpPlugin } from "@iqai/plugin-atp";
 import { createBAMMPlugin } from "@iqai/plugin-bamm";
 import { createFraxlendPlugin } from "@iqai/plugin-fraxlend";
 import { createOdosPlugin } from "@iqai/plugin-odos";
+import { createMcpPlugin } from "@iqai/plugin-mcp";
 import createSequencerPlugin from "@iqai/plugin-sequencer";
 import Database from "better-sqlite3";
 import { fraxtal } from "viem/chains";
@@ -33,6 +34,10 @@ async function main() {
 		chain: fraxtal,
 	});
 
+	const mcpPlugin = await createMcpPlugin({
+		mode: "sse",
+		serverUrl: "http://localhost:6969/sse",
+	});
 	// Setup database
 	const dataDir = path.join(process.cwd(), "./data");
 	fs.mkdirSync(dataDir, { recursive: true });
@@ -53,6 +58,7 @@ async function main() {
 			atpPlugin,
 			sequencerPlugin,
 			bammPlugin,
+			mcpPlugin,
 		])
 		.withCharacter({
 			name: "BrainBot",

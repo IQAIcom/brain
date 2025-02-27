@@ -20,6 +20,7 @@
 		"@iqai/agent": "workspace:*",
 		"@iqai/plugin-atp": "workspace:*",
 		"@iqai/plugin-bamm": "workspace:*",
+		"@iqai/plugin-mcp": "workspace:*",
 		"@iqai/plugin-fraxlend": "workspace:*",
 		"@iqai/plugin-heartbeat": "workspace:*",
 		"@iqai/plugin-sequencer": "workspace:*",

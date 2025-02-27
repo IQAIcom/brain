@@ -51,8 +51,7 @@ import { fraxtal } from "viem/chains";
 
 // Initialize the plugin
 const plugin = await createBAMMPlugin({
-  walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
-  chain: fraxtal
+  walletPrivateKey: process.env.WALLET_PRIVATE_KEY
 });
 ```
 
