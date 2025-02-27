@@ -1,54 +1,9 @@
-// src/createMcpPlugin.ts
-
-import { Client } from "@modelcontextprotocol/sdk/client/index.js";
-import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
-import type { McpPluginConfig } from "./types";
 import { elizaLogger, type Plugin } from "@elizaos/core";
 import type { Action } from "@elizaos/core";
-import { SSEClientTransport } from "@modelcontextprotocol/sdk/client/sse.js";
-import type { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
-import { createAction } from "./lib/create-action";
 import type { ListToolsResult } from "@modelcontextprotocol/sdk/types.js";
-/**
- * Initializes an MCP client based on configuration.
- */
-async function initializeMcpClient(config: McpPluginConfig): Promise<Client> {
-	try {
-		let transport: Transport;
-
-		if (config.mode === "sse") {
-			transport = new SSEClientTransport(new URL(config.serverUrl), {
-				requestInit: {
-					headers: config.headers,
-				},
-			});
-		} else {
-			transport = new StdioClientTransport({
-				command: config.command,
-				args: config.args,
-			});
-		}
-
-		const client = new Client(
-			{
-				name: "McpPluginClient",
-			},
-			{
-				capabilities: {
-					prompts: {},
-					resources: {},
-					tools: {},
-				},
-			},
-		);
-
-		await client.connect(transport);
-		return client;
-	} catch (error) {
-		elizaLogger.error("Failed to initialize MCP client");
-		throw error;
-	}
-}
+import type { McpPluginConfig } from "./types";
+import { createAction } from "./lib/create-action";
+import { McpClientService } from "./services/mcp-client";
 
 /**
  * Creates an MCP plugin by:
@@ -61,8 +16,9 @@ export async function createMcpPlugin(
 	config: McpPluginConfig,
 ): Promise<Plugin> {
 	try {
-		// Step 1: Connect to the MCP server.
-		const client = await initializeMcpClient(config);
+		// Step 1: Connect to the MCP server using the service.
+		const mcpClientService = new McpClientService(config);
+		const client = await mcpClientService.initialize();
 
 		// Step 2: Retrieve all tools
 		const toolsResponse = (await client.listTools()) as ListToolsResult;
