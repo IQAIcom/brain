@@ -4,10 +4,40 @@ description: Get up and running with Brain Framework
 ---
 import { Steps } from '@astrojs/starlight/components';
 import { PackageManagers } from 'starlight-package-managers'
+import { Aside } from '@astrojs/starlight/components';
 
-In this guide, we'll create a basic AI agent using Brain Framework from scratch.
 
-## Creating a New Project
+In this guide, we'll create a basic AI agent using Brain Framework from scratch. Before we go further, ensure you have Nodejs installed on your machine. You can download it from [here](https://nodejs.org/en/download).
+
+
+<Aside type="caution">
+   Node version should be >=23. Any version below 23 will not work.
+</Aside>
+
+## Using Brain Starter Template
+
+The fastest way to get started is using our pre-configured starter template which has all the basic setup ready to go.
+
+<Steps>
+1. Clone the brain-starter repository:
+   ```bash
+   git clone https://github.com/IQAIcom/brain-starter.git my-brain-agent
+   cd my-brain-agent
+   ```
+
+2. Install the dependencies:
+   <PackageManagers type="install" />
+
+3. Start the development server:
+   <PackageManagers type="run" args="dev" />
+
+4. Test your agent:
+   After starting your agent, visit [IQAI Console](https://console.iqai.com) to interact with it through a ready-to-use interface. This allows you to test your agent without building a custom client application.
+</Steps>
+
+## Creating a New Project From Scratch
+
+If you prefer to set up your project from scratch, you can follow these steps:
 
 <Steps>
 1. Set up your project structure:
