@@ -1,5 +1,4 @@
-import { elizaLogger, type Plugin } from "@elizaos/core";
-import type { Action } from "@elizaos/core";
+import type { Action, Plugin } from "@elizaos/core";
 import type { ListToolsResult } from "@modelcontextprotocol/sdk/types.js";
 import type { McpPluginConfig } from "./types";
 import { createAction } from "./lib/create-action";
