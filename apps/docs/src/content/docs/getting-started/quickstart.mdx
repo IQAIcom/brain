@@ -18,7 +18,7 @@ In this guide, we'll create a basic AI agent using Brain Framework from scratch.
    ```
 
 2. Install the required Brain Framework packages:
-   <PackageManagers pkg="@iqai/agent @elizaos/client-direct@0.1.9 dotenv" />
+   <PackageManagers pkg="@iqai/agent @elizaos/client-direct@0.1.9 dotenv @types/dotenv" />
 
 3. Add your OpenAI API key to the `.env` file:
    ```javascript
@@ -73,14 +73,11 @@ To create an agent, you'll need three key components:
    }
    ```
 
-3. Install dotenv for environment variable loading:
-   <PackageManagers pkg="dotenv @types/dotenv" />
-
-4. Run your agent:
+3. Run your agent:
    <PackageManagers type="run" args="start" />
 
 
-5. Test your agent:
+4. Test your agent:
    After starting your agent, visit [IQAI Console](https://console.iqai.com) to interact with it through a ready-to-use interface. This allows you to test your agent without building a custom client application.
 
    For more details on testing your agent, check out [Testing Your Agent](/getting-started/test-agent)
