@@ -18,7 +18,7 @@ In this guide, we'll create a basic AI agent using Brain Framework from scratch.
    ```
 
 2. Install the required Brain Framework packages:
-   <PackageManagers pkg="@iqai/agent @elizaos/client-direct@0.1.9 tsx dotenv @types/dotenv" />
+   <PackageManagers pkg="@iqai/agent @elizaos/client-direct@0.1.9 @elizaos/adapter-sqlite@0.1.9 better-sqlite3 @types/better-sqlite3 sharp tsx dotenv" />
 
 3. Add your OpenAI API key to the `.env` file:
    ```javascript
@@ -38,29 +38,36 @@ To create an agent, you'll need three key components:
 <Steps>
 1. Open `src/index.ts` in your favorite code editor and add the following code:
    ```javascript
-      import DirectClientInterface from "@elizaos/client-direct";
-      import { AgentBuilder, ModelProviderName } from "@iqai/agent";
-      import dotenv from "dotenv";
+   import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
+   import DirectClientInterface from "@elizaos/client-direct";
+   import { AgentBuilder, ModelProviderName } from "@iqai/agent";
+   import Database from "better-sqlite3";
+   import dotenv from "dotenv";
 
-      // Load environment variables
-      dotenv.config();
+   // Load environment variables
+   dotenv.config();
 
-      const OPENAI_API_KEY = process.env.OPENAI_API_KEY as string;
+   const OPENAI_API_KEY = process.env.OPENAI_API_KEY as string;
 
-      async function main() {
-         // Create your agent with basic configuration
-         const agent = new AgentBuilder()
-            .withModelProvider(ModelProviderName.OPENAI, OPENAI_API_KEY)
-            .withClient("direct", DirectClientInterface)
-            .build();
+   async function main() {
+      const databaseAdapter = new SqliteDatabaseAdapter(
+         new Database("./data/db.sqlite"),
+      );
 
-         // Start your agent
-         await agent.start();
+      // Create your agent with basic configuration
+      const agent = new AgentBuilder()
+         .withModelProvider(ModelProviderName.OPENAI, OPENAI_API_KEY)
+         .withDatabase(databaseAdapter)
+         .withClient("direct", DirectClientInterface)
+         .build();
 
-         console.log("Agent is running! You can test it using the IQAI Console.");
-      }
+      // Start your agent
+      await agent.start();
 
-      main().catch(console.error);
+      console.log("Agent is running! You can test it using the IQAI Console.");
+   }
+
+   main().catch(console.error);
    ```
 
 2. Update your `package.json` to support ES modules and scripts:
