@@ -5,6 +5,7 @@ import DirectClientInterface from "@elizaos/client-direct";
 import { AgentBuilder, ModelProviderName } from "@iqai/agent";
 import { createAtpPlugin } from "@iqai/plugin-atp";
 import { createBAMMPlugin } from "@iqai/plugin-bamm";
+import { createJsPlugin } from "@iqai/plugin-js";
 import { createFraxlendPlugin } from "@iqai/plugin-fraxlend";
 import { createOdosPlugin } from "@iqai/plugin-odos";
 import createSequencerPlugin from "@iqai/plugin-sequencer";
@@ -33,6 +34,8 @@ async function main() {
 		chain: fraxtal,
 	});
 
+	const jsPlugin = await createJsPlugin();
+
 	// Setup database
 	const dataDir = path.join(process.cwd(), "./data");
 	fs.mkdirSync(dataDir, { recursive: true });
@@ -53,6 +56,7 @@ async function main() {
 			atpPlugin,
 			sequencerPlugin,
 			bammPlugin,
+			jsPlugin,
 		])
 		.withCharacter({
 			name: "BrainBot",
