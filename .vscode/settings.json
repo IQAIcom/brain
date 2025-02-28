@@ -1,7 +1,8 @@
 {
-  "eslint.workingDirectories": [
-    {
-      "mode": "auto"
-    }
-  ]
+	"eslint.workingDirectories": [
+		{
+			"mode": "auto"
+		}
+	],
+	"yaml.schemaStore.enable": false
 }

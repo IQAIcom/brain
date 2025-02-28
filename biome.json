@@ -13,25 +13,20 @@
 			".vercel/**",
 			"coverage/**",
 			"dist/**",
-			"graphql-env.d.ts"
+			"graphql-env.d.ts",
+			".astro"
 		]
 	},
-	"organizeImports": {
-		"enabled": true
-	},
+	"formatter": { "enabled": true, "indentStyle": "tab" },
+	"organizeImports": { "enabled": true },
 	"linter": {
 		"enabled": true,
 		"rules": {
 			"recommended": true,
-			"correctness": {
-				"noUnusedVariables": "error"
-			},
-			"performance": {
-				"noDelete": "warn"
-			},
 			"suspicious": {
 				"noExplicitAny": "warn"
 			}
 		}
-	}
+	},
+	"javascript": { "formatter": { "quoteStyle": "double" } }
 }

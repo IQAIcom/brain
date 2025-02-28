@@ -1,11 +1,50 @@
 import type { Config } from "tailwindcss";
 import tailwindAnimate from "tailwindcss-animate";
+import type { PluginUtils } from "tailwindcss/types/config";
 
 export default {
 	darkMode: ["class"],
 	content: ["src/**/*.{ts,tsx}", "components/**/*.{ts,tsx}"],
 	theme: {
 		extend: {
+			typography: ({ theme }: PluginUtils) => ({
+				DEFAULT: {
+					css: {
+						"--tw-prose-body": theme("colors.foreground"),
+						"--tw-prose-headings": theme("colors.foreground"),
+						"--tw-prose-lead": theme("colors.foreground"),
+						"--tw-prose-links": theme("colors.primary.DEFAULT"),
+						"--tw-prose-bold": theme("colors.foreground"),
+						"--tw-prose-counters": theme("colors.foreground"),
+						"--tw-prose-bullets": theme("colors.foreground"),
+						"--tw-prose-hr": theme("colors.border"),
+						"--tw-prose-quotes": theme("colors.secondary.foreground"),
+						"--tw-prose-quote-borders": theme("colors.border"),
+						"--tw-prose-captions": theme("colors.muted.foreground"),
+						"--tw-prose-code": theme("colors.secondary.foreground"),
+						"--tw-prose-pre-code": theme("colors.secondary.foreground"),
+						"--tw-prose-pre-bg": theme("colors.secondary.DEFAULT"),
+						"--tw-prose-th-borders": theme("colors.border"),
+						"--tw-prose-td-borders": theme("colors.border"),
+						"--tw-prose-invert-body": theme("colors.background"),
+						"--tw-prose-invert-headings": theme("colors.background"),
+						"--tw-prose-invert-lead": theme("colors.background"),
+						"--tw-prose-invert-links": theme("colors.background"),
+						"--tw-prose-invert-bold": theme("colors.background"),
+						"--tw-prose-invert-counters": theme("colors.background"),
+						"--tw-prose-invert-bullets": theme("colors.background"),
+						"--tw-prose-invert-hr": theme("colors.background"),
+						"--tw-prose-invert-quotes": theme("colors.background"),
+						"--tw-prose-invert-quote-borders": theme("colors.background"),
+						"--tw-prose-invert-captions": theme("colors.background"),
+						"--tw-prose-invert-code": theme("colors.background"),
+						"--tw-prose-invert-pre-code": theme("colors.background"),
+						"--tw-prose-invert-pre-bg": theme("colors.background"),
+						"--tw-prose-invert-th-borders": theme("colors.background"),
+						"--tw-prose-invert-td-borders": theme("colors.background"),
+					},
+				},
+			}),
 			fontFamily: {
 				sans: [
 					"Inter",

@@ -1,11 +1,11 @@
 import type { Action, Handler } from "@elizaos/core";
+import dedent from "dedent";
+import { formatWeiToNumber } from "../lib/format-number";
 import { WITHDRAW_TEMPLATE } from "../lib/templates";
-import { InputParserService } from "../services/input-parser";
 import { AddCollateralService } from "../services/add-collateral";
+import { InputParserService } from "../services/input-parser";
 import { WalletService } from "../services/wallet";
 import type { FraxLendActionParams } from "../types";
-import { formatWeiToNumber } from "../lib/format-number";
-import dedent from "dedent";
 
 export const getAddCollateralAction = (opts: FraxLendActionParams): Action => {
 	return {

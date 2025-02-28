@@ -22,7 +22,6 @@ Example response:
 Extract the agent address from the most recent message.
 Respond with a JSON markdown block containing the tokenContract.`;
 
-
 export const BUY_AGENT_TEMPLATE = `Respond with a JSON object containing purchase information.
 Extract the purchase details from all recent messages, including previously shown holdings or stats.
 
@@ -98,3 +97,40 @@ If token contract cannot be found in context, respond with:
 {{recentMessages}}
 Extract the sell information from all recent messages.
 Respond with a JSON markdown block containing tokenContract and amount.`;
+
+export const GET_AGENTS_TEMPLATE = `Respond with a JSON object containing optional sort and limit parameters for agent listing.
+Extract the parameters from the most recent message.
+
+The response must include:
+- sort: Optional sorting parameter ("mcap", "holders", or "inferences")
+- limit: Optional number of agents to return
+- error: An error message if parameters are invalid (optional)
+
+NOTE: If no parameters are provided, return empty response with no error.
+
+Example response:
+\`\`\`json
+{
+    "sort": "mcap",
+    "limit": 5
+}
+\`\`\`
+\`\`\`json
+{
+    "sort": "holders"
+}
+\`\`\`
+\`\`\`json
+{
+    "limit": 10
+}
+\`\`\`
+\`\`\`json
+{
+    "error": "Invalid sort parameter. Use mcap, holders, or inferences"
+}
+\`\`\`
+
+{{recentMessages}}
+Extract the parameters from the most recent message.
+Respond with a JSON markdown block containing sort and/or limit.`;

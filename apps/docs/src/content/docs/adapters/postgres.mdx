@@ -1,0 +1,64 @@
+---
+title: "PostgreSQL Adapter"
+description: "Database adapter for enterprise deployments with vector search capabilities"
+---
+
+import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+import { PackageManagers } from 'starlight-package-managers'
+
+The **PostgreSQL Adapter** provides robust database functionality with vector search capabilities, ideal for production deployments.
+
+## Installation
+
+<Steps>
+1. Install required packages:
+   <PackageManagers pkg="@elizaos/adapter-postgres@0.1.9 pg" />
+
+2. Install PostgreSQL extension:
+   ```bash
+   CREATE EXTENSION pgvector;
+   ```
+</Steps>
+
+## Basic Setup
+
+```typescript
+import { AgentBuilder } from "@iqai/agent";
+import { PostgresDatabaseAdapter } from "@elizaos/adapter-postgres";
+
+const databaseAdapter = new PostgresDatabaseAdapter({
+  connectionString: "postgresql://user:pass@localhost:5432/db",
+  // or individual connection parameters
+  host: 'localhost',
+  port: 5432,
+  database: 'brain_agent',
+  user: 'postgres',
+  password: 'your_password'
+});
+
+const agent = new AgentBuilder()
+  .withDatabase(databaseAdapter)
+  // ... other configuration
+  .build();
+```
+
+## Key Features
+
+- ✔️ Vector search support
+- ✔️ Comprehensive logging
+- ✔️ Production scaling
+
+## Best Practices
+
+- ✔️ Use for production deployments
+- ✔️ Enable connection pooling
+- ✔️ Implement proper indexing
+- ✔️ Monitor vector search performance
+
+<Aside type="caution">
+Ensure pgvector extension is installed before initializing the adapter.
+</Aside>
+
+<Aside type="tip">
+PostgreSQL is recommended for prodcution deployments requiring vector search capabilities.
+</Aside>

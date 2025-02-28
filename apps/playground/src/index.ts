@@ -1,14 +1,15 @@
+import * as fs from "node:fs";
+import * as path from "node:path";
 import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
 import DirectClientInterface from "@elizaos/client-direct";
 import { AgentBuilder, ModelProviderName } from "@iqai/agent";
-import { createATPPlugin } from "@iqai/plugin-atp";
+import { createAtpPlugin } from "@iqai/plugin-atp";
+import { createBAMMPlugin } from "@iqai/plugin-bamm";
 import { createFraxlendPlugin } from "@iqai/plugin-fraxlend";
 import createNearPlugin from "@iqai/plugin-near";
 import { createOdosPlugin } from "@iqai/plugin-odos";
 import createSequencerPlugin from "@iqai/plugin-sequencer";
 import Database from "better-sqlite3";
-import * as fs from "node:fs";
-import * as path from "node:path";
 import { fraxtal } from "viem/chains";
 
 async function main() {
@@ -23,7 +24,7 @@ async function main() {
 		walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
 	});
 
-	const atpPlugin = await createATPPlugin({
+	const atpPlugin = await createAtpPlugin({
 		walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
 	});
 
@@ -71,6 +72,11 @@ async function main() {
 	});
 
 	const sequencerPlugin = await createSequencerPlugin();
+
+	const bammPlugin = await createBAMMPlugin({
+		walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
+		chain: fraxtal,
+	});
 
 	// Setup database
 	const dataDir = path.join(process.cwd(), "./data");

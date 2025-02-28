@@ -1,0 +1,58 @@
+---
+title: "Telegram Client"
+description: "Integration guide for Telegram bot functionality in Brain Framework"
+---
+
+import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+import { PackageManagers } from 'starlight-package-managers'
+
+The **Telegram Client** enables your agent to interact through Telegram, supporting both group chats and direct messages.
+
+## Installation
+
+<Steps>
+1. Install required packages:
+   <PackageManagers pkg="@elizaos/client-telegram@0.1.9 @elizaos/core@0.1.9" />
+
+2. Configure environment variables:
+   ```bash
+   TELEGRAM_BOT_TOKEN=your_bot_token
+   ```
+</Steps>
+
+## Basic Setup
+
+```typescript
+import { AgentBuilder, ModelProviderName } from "@iqai/agent";
+import { TelegramClientInterface } from "@elizaos/client-telegram";
+import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
+import Database from "better-sqlite3";
+
+async function main() {
+  const databaseAdapter = new SqliteDatabaseAdapter(
+    new Database("./data/db.sqlite")
+  );
+
+  const agent = new AgentBuilder()
+    .withDatabase(databaseAdapter)
+    .withClient("telegram", TelegramClientInterface)
+    .withModelProvider(
+      ModelProviderName.OPENAI,
+      process.env.OPENAI_API_KEY
+    )
+    .withCharacter({
+      name: "TelegramBot",
+      bio: "A helpful Telegram assistant",
+      username: "brain_bot"
+    })
+    .build();
+
+  await agent.start();
+}
+
+main().catch(console.error);
+```
+
+<Aside type="caution">
+Ensure your bot token is stored securely and never committed to version control.
+</Aside>

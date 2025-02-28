@@ -1,8 +1,8 @@
 import type { Action, Handler } from "@elizaos/core";
+import dedent from "dedent";
 import { AgentPositionsService } from "../services/agent-positions";
 import { WalletService } from "../services/wallet";
 import type { FraxLendActionParams } from "../types";
-import dedent from "dedent";
 
 export const getAgentPositionsAction = (opts: FraxLendActionParams): Action => {
 	return {

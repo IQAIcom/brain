@@ -1,0 +1,58 @@
+---
+title: "Twitter Client"
+description: "Integration guide for Twitter bot functionality in Brain Framework"
+---
+
+import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+import { PackageManagers } from 'starlight-package-managers'
+
+The **Twitter Client** enables your agent to interact through Twitter, supporting both group chats and direct messages.
+
+## Installation
+
+<Steps>
+1. Install required packages:
+   <PackageManagers pkg="@elizaos/client-twitter@0.1.9 @elizaos/core@0.1.9" />
+
+2. Configure environment variables:
+   ```bash
+   TWITTER_USERNAME=your_twitter_username
+   TWITTER_PASSWORD=your_twitter_password
+   ```
+</Steps>
+## Basic Setup
+
+```typescript
+import { AgentBuilder, ModelProviderName } from "@iqai/agent";
+import { TwitterClientInterface } from "@elizaos/client-twitter";
+import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
+import Database from "better-sqlite3";
+
+async function main() {
+  const databaseAdapter = new SqliteDatabaseAdapter(
+    new Database("./data/db.sqlite")
+  );
+
+  const agent = new AgentBuilder()
+    .withDatabase(databaseAdapter)
+    .withClient("twitter", TwitterClientInterface)
+    .withModelProvider(
+      ModelProviderName.OPENAI,
+      process.env.OPENAI_API_KEY
+    )
+    .withCharacter({
+      name: "TwitterBot",
+      bio: "A helpful Twitter assistant",
+      username: "brain_bot"
+    })
+    .build();
+
+  await agent.start();
+}
+
+main().catch(console.error);
+```
+
+<Aside type="caution">
+Ensure your bot token is stored securely and never committed to version control.
+</Aside>

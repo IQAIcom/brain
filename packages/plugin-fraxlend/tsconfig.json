@@ -1,18 +1,16 @@
 {
-  "extends": "@iqai/tsconfig/module.json",
-  "compilerOptions": {
-    "outDir": "dist",
-    "rootDir": "./src",
-    "declaration": true,
-    "plugins": [
-      {
-        "name": "@0no-co/graphqlsp",
-        "schema": "https://api.frax.finance/graphql/fraxtal/fraxlend",
-        "tadaOutputLocation": "./src/graphql-env.d.ts"
-      }
-    ]
-  },
-  "include": [
-    "src"
-  ]
+	"extends": "@iqai/tsconfig/module.json",
+	"compilerOptions": {
+		"outDir": "dist",
+		"rootDir": "./src",
+		"declaration": true,
+		"plugins": [
+			{
+				"name": "@0no-co/graphqlsp",
+				"schema": "https://api.frax.finance/graphql/fraxtal/fraxlend",
+				"tadaOutputLocation": "./src/graphql-env.d.ts"
+			}
+		]
+	},
+	"include": ["src"]
 }

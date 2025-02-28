@@ -16,6 +16,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Paperclip, Send, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import AIWriter from "react-aiwriter";
+import ReactMarkdown from "react-markdown";
 import { AudioRecorder } from "./audio-recorder";
 import CopyButton from "./copy-button";
 import { Avatar, AvatarImage } from "./ui/avatar";
@@ -201,9 +202,22 @@ export default function Page({ agentId }: { agentId: UUID }) {
 									<div className="flex flex-col">
 										<ChatBubbleMessage isLoading={message?.isLoading}>
 											{message?.user !== "user" ? (
-												<AIWriter>{message?.text}</AIWriter>
+												<>
+													{/* Prevent AIWriter from flashing */}
+													{Date.now() - message.createdAt < 1000 ? (
+														<AIWriter>
+															<div className="prose prose-p:leading-normal prose-primary prose-sm max-w-none">
+																<ReactMarkdown>{message.text}</ReactMarkdown>
+															</div>
+														</AIWriter>
+													) : (
+														<div className="prose prose-p:leading-normal prose-primary prose-sm max-w-none">
+															<ReactMarkdown>{message.text}</ReactMarkdown>
+														</div>
+													)}
+												</>
 											) : (
-												message?.text
+												message.text
 											)}
 											{/* Attachments */}
 											<div>

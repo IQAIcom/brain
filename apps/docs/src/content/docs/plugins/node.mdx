@@ -1,0 +1,70 @@
+---
+title: "Node Plugin"
+description: "Core Node.js-based services for enhanced agent capabilities"
+---
+
+import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+import { PackageManagers } from 'starlight-package-managers'
+
+The **Node Plugin** provides essential services for web browsing, media processing, and content analysis through Node.js.
+
+## Installation
+
+<Steps>
+1. Install the package:
+   <PackageManagers pkg="@eliza/plugin-node@0.1.9" />
+</Steps>
+
+## Usage
+
+```typescript
+import { createNodePlugin } from "@eliza/plugin-node";
+
+const nodePlugin = createNodePlugin();
+
+const agent = new AgentBuilder()
+  .withPlugin(nodePlugin)
+  .build();
+```
+
+## Available Services
+
+| Service | Description | Key Features |
+|---------|-------------|--------------|
+| `BrowserService` | Web capabilities | Page loading, content extraction, screenshots |
+| `ImageDescriptionService` | Image analysis | Content recognition, caption generation |
+| `LlamaService` | LLM integration | Text generation, analysis |
+| `PdfService` | PDF handling | Reading, parsing, text extraction |
+| `SpeechService` | Text-to-speech | Audio generation, voice synthesis |
+| `TranscriptionService` | Speech-to-text | Audio transcription, language detection |
+| `VideoService` | Video processing | Format conversion, frame extraction |
+
+## Configuration
+
+```typescript
+interface NodePluginConfig {
+  browserOptions?: {
+    headless?: boolean;
+    timeout?: number;
+  };
+  speechOptions?: {
+    defaultVoice?: string;
+    outputFormat?: string;
+  };
+  videoOptions?: {
+    maxDuration?: number;
+    outputFormats?: string[];
+  };
+}
+```
+
+## Best Practices
+
+- ✔️ Handle service errors appropriately
+- ✔️ Implement timeouts for browser operations
+- ✔️ Cache processed media when possible
+- ✔️ Monitor resource usage for media operations
+
+<Aside type="tip">
+Configure service-specific options based on your performance requirements.
+</Aside>

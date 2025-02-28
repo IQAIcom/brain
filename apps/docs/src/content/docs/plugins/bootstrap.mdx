@@ -1,0 +1,80 @@
+---
+title: "Bootstrap Plugin"
+description: "Essential baseline functionality plugin providing core actions, evaluators, and providers for agent operation"
+---
+
+import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+import { PackageManagers } from 'starlight-package-managers'
+
+The **Bootstrap Plugin** provides essential baseline functionality for your agent, including conversation management, room control, and core evaluation capabilities.
+
+## Installation
+
+<Steps>
+1. Install the package:
+   <PackageManagers pkg="@eliza/plugin-bootstrap@0.1.9" />
+
+2. Import and add to your agent:
+   ```typescript
+   import { createBootstrapPlugin } from "@eliza/plugin-bootstrap";
+
+   const agent = new AgentBuilder()
+     .withPlugin(createBootstrapPlugin())
+     .build();
+   ```
+</Steps>
+
+## Available Features
+
+### Actions
+
+| Action | Description | Example Usage |
+|--------|-------------|---------------|
+| `continue` | Continue the current conversation flow | `Continue our previous discussion` |
+| `followRoom` | Begin following a room for updates | `Follow room trading-signals` |
+| `unfollowRoom` | Stop following a room | `Unfollow room general-chat` |
+| `ignore` | Ignore specific messages or patterns | `Ignore messages from @spambot` |
+| `muteRoom` | Mute notifications from a room | `Mute room announcements` |
+| `unmuteRoom` | Restore notifications from a room | `Unmute room important-alerts` |
+
+## Usage Examples
+
+```typescript
+// Initialize plugin with default configuration
+const bootstrapPlugin = createBootstrapPlugin();
+
+// Add to agent
+const agent = new AgentBuilder()
+  .withPlugin(bootstrapPlugin)
+  .build();
+```
+
+## Configuration Options
+
+The bootstrap plugin accepts optional configuration parameters:
+
+```typescript
+interface BootstrapConfig {
+  enableBoredom?: boolean;    // Enable/disable boredom management
+  timeFormat?: string;        // Preferred time format
+  factChecking?: boolean;     // Enable/disable fact checking
+}
+```
+
+## Best Practices
+
+- ✔️ Initialize the bootstrap plugin first before other plugins
+- ✔️ Configure fact checking for sensitive operations
+- ✔️ Use room management features to organize conversations
+- ✔️ Implement proper error handling for actions
+
+## Common Issues and Troubleshooting
+
+- **Room Not Found**: Verify room identifiers before follow/unfollow operations
+- **Action Timeout**: Check network connectivity and retry the action
+- **Evaluation Errors**: Ensure proper context is provided for fact/goal evaluation
+- **Provider Unavailability**: Verify plugin initialization and configuration
+
+<Aside type="tip">
+The bootstrap plugin is essential for basic agent functionality. It's recommended to include it in all agent configurations.
+</Aside>

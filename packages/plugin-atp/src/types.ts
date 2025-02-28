@@ -15,11 +15,23 @@ export interface AgentPositionsResponse {
 }
 
 export interface AgentStats {
-  currentPriceInIq: number;
-  currentPriceInUSD: number;
-  marketCap: number;
-  changeIn24h: number;
-  holdersCount: number;
-  inferenceCount: number;
-  category: string;
+	currentPriceInIq: number;
+	currentPriceInUSD: number;
+	marketCap: number;
+	changeIn24h: number;
+	holdersCount: number;
+	inferenceCount: number;
+	category: string;
+}
+
+export interface Agent {
+	tokenContract: string;
+	agentContract: string;
+	isActive: boolean;
+	currentPriceInIq: number;
+	holdersCount: number;
+	inferenceCount: number;
+	name: string;
+	ticker: string;
+	currentPriceInUSD: number;
 }

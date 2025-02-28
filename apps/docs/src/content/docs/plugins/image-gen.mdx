@@ -1,0 +1,67 @@
+---
+title: "Image Generation Plugin"
+description: "Plugin for AI image generation capabilities with support for multiple providers"
+---
+
+import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+import { PackageManagers } from 'starlight-package-managers'
+
+The **Image Generation Plugin** enables AI image creation using Anthropic and Together services, with automatic caption generation.
+
+## Installation
+
+<Steps>
+1. Install the package:
+   <PackageManagers pkg="@eliza/plugin-image-generation@0.1.9" />
+
+2. Configure environment:
+   ```bash
+   # Choose your provider
+   ANTHROPIC_API_KEY=your-anthropic-key
+   TOGETHER_API_KEY=your-together-key
+   ```
+</Steps>
+
+## Usage
+
+```typescript
+import { createImageGenerationPlugin } from "@eliza/plugin-image-generation";
+
+const imagePlugin = createImageGenerationPlugin({
+  provider: "anthropic",
+  apiKey: process.env.ANTHROPIC_API_KEY,
+  defaultSize: "1024x1024"
+});
+
+const agent = new AgentBuilder()
+  .withPlugin(imagePlugin)
+  .build();
+```
+
+## Features
+
+| Action | Description | Example |
+|--------|-------------|---------|
+| `GENERATE_IMAGE` | Create image from text | `Generate an image of a mountain sunset` |
+
+## Configuration
+
+```typescript
+interface ImageGenerationConfig {
+  provider: "anthropic" | "together";
+  apiKey: string;
+  defaultSize?: string;
+  autoCaption?: boolean;
+}
+```
+
+## Best Practices
+
+- ✔️ Provide clear, detailed image descriptions
+- ✔️ Handle generation errors gracefully
+- ✔️ Implement appropriate content filtering
+- ✔️ Cache generated images when possible
+
+<Aside type="caution">
+Secure your API keys and never expose them in your code.
+</Aside>

@@ -1,6 +1,6 @@
-import { elizaLogger, type Plugin } from "@elizaos/core";
-import { createWalletProvider, createClient } from "./provider.ts";
+import { type Plugin, elizaLogger } from "@elizaos/core";
 import { getAgentKitActions } from "./actions.ts";
+import { createClient, createWalletProvider } from "./provider.ts";
 import type { AgentKitConfig } from "./types.ts";
 
 export async function createAgentKitPlugin(
