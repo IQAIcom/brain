@@ -21,7 +21,9 @@ export class NearAgent extends Service {
 
 	constructor(private readonly opts: NearAgentConfig) {
 		super();
-		elizaLogger.info("🌟 Initializing NEAR Agent service for account: " + this.opts.accountId);
+		elizaLogger.info(
+			`🌟 Initializing NEAR Agent service for account: ${this.opts.accountId}`,
+		);
 	}
 
 	async initialize(_runtime: IAgentRuntime) {
@@ -57,109 +59,135 @@ export class NearAgent extends Service {
 
 	private async pollEvents(listener: NearEventListener) {
 		try {
-				const currentBlock = await this.getCurrentBlock();
-				if (!currentBlock) return;
+			const currentBlock = await this.getCurrentBlock();
+			if (!currentBlock) return;
 
-				const transactions = await this.getRelevantTransactions(currentBlock, listener.contractId);
-				await this.processTransactions(transactions, listener);
+			const transactions = await this.getRelevantTransactions(
+				currentBlock,
+				listener.contractId,
+			);
+			await this.processTransactions(transactions, listener);
 
-				this.lastBlockHeight = currentBlock.header.height;
+			this.lastBlockHeight = currentBlock.header.height;
 		} catch (error) {
-				elizaLogger.error("Event polling failed", { error });
+			elizaLogger.error("Event polling failed", { error });
 		}
-}
+	}
 
-private async getCurrentBlock() {
+	private async getCurrentBlock() {
 		elizaLogger.info("🔍 Fetching current block information");
 		const currentBlock = await this.account.connection.provider.block({
-				finality: "final",
+			finality: "final",
 		});
 
 		if (this.lastBlockHeight === 0) {
-				this.lastBlockHeight = currentBlock.header.height - 1;
+			this.lastBlockHeight = currentBlock.header.height - 1;
 		}
 
 		return currentBlock;
-}
+	}
 
-private async getRelevantTransactions(block: any, contractId: string) {
+	private async getRelevantTransactions(block: any, contractId: string) {
 		const transactions = [];
 		const blockDetails = await this.account.connection.provider.block({
-				blockId: block.header.height,
+			blockId: block.header.height,
 		});
 
 		for (const chunk of blockDetails.chunks) {
-				const chunkDetails = await this.account.connection.provider.chunk(chunk.chunk_hash);
-				transactions.push(...chunkDetails.transactions.filter(tx => tx.receiver_id === contractId));
+			const chunkDetails = await this.account.connection.provider.chunk(
+				chunk.chunk_hash,
+			);
+			transactions.push(
+				...chunkDetails.transactions.filter(
+					(tx) => tx.receiver_id === contractId,
+				),
+			);
 		}
 
 		return transactions;
-}
+	}
 
-private async processTransactions(transactions: any[], listener: NearEventListener) {
+	private async processTransactions(
+		transactions: any[],
+		listener: NearEventListener,
+	) {
 		for (const tx of transactions) {
-				const events = await this.extractEventsFromTransaction(tx, listener);
-				for (const event of events) {
-						await this.handleEvent(event, listener);
-				}
+			const events = await this.extractEventsFromTransaction(tx, listener);
+			for (const event of events) {
+				await this.handleEvent(event, listener);
+			}
 		}
-}
+	}
 
-private async extractEventsFromTransaction(tx: any, listener: NearEventListener) {
+	private async extractEventsFromTransaction(
+		tx: any,
+		listener: NearEventListener,
+	) {
 		const events = [];
 		const txStatus = await this.account.connection.provider.txStatus(
-				tx.hash,
-				listener.contractId,
-				"EXECUTED"
+			tx.hash,
+			listener.contractId,
+			"EXECUTED",
 		);
 
 		for (const { outcome } of txStatus.receipts_outcome) {
-				for (const log of outcome.logs) {
-						const event = this.parseEventLog(log, listener.eventName, tx.signer_id);
-						if (event) events.push(event);
-				}
+			for (const log of outcome.logs) {
+				const event = this.parseEventLog(log, listener.eventName, tx.signer_id);
+				if (event) events.push(event);
+			}
 		}
 
 		return events;
-}
+	}
 
-private parseEventLog(log: string, eventName: string, signerId: string): AgentEvent | null {
+	private parseEventLog(
+		log: string,
+		eventName: string,
+		signerId: string,
+	): AgentEvent | null {
 		try {
-				const eventData = JSON.parse(log);
-				if (eventData.event === eventName) {
-						return {
-								eventType: eventData.event,
-								requestId: eventData.request_id,
-								payload: eventData.data,
-								sender: signerId,
-								timestamp: Date.now(),
-						};
-				}
+			const eventData = JSON.parse(log);
+			if (eventData.event === eventName) {
+				return {
+					eventType: eventData.event,
+					requestId: eventData.request_id,
+					payload: eventData.data,
+					sender: signerId,
+					timestamp: Date.now(),
+				};
+			}
 		} catch (error) {
-				elizaLogger.error("Failed to parse log", { log, error });
+			elizaLogger.error("Failed to parse log", { log, error });
 		}
 		return null;
-}
+	}
 
-private async handleEvent(event: AgentEvent, listener: NearEventListener) {
+	private async handleEvent(event: AgentEvent, listener: NearEventListener) {
 		try {
-				elizaLogger.info(`🔄 Processing event with ID: ${event.requestId}`);
-				const result = await listener.handler(event.payload, { account: this.account });
+			elizaLogger.info(`🔄 Processing event with ID: ${event.requestId}`);
+			const result = await listener.handler(event.payload, {
+				account: this.account,
+			});
 
-				await this.sendResponse(event.requestId, result, listener);
-				elizaLogger.info(`✅ Event ${event.requestId} processed successfully`);
+			await this.sendResponse(event.requestId, result, listener);
+			elizaLogger.info(`✅ Event ${event.requestId} processed successfully`);
 		} catch (error) {
-				elizaLogger.error("Event processing failed", { error });
+			elizaLogger.error("Event processing failed", { error });
 		}
-}
+	}
 
-private async sendResponse(requestId: string, result: any, listener: NearEventListener) {
+	private async sendResponse(
+		requestId: string,
+		result: any,
+		listener: NearEventListener,
+	) {
 		elizaLogger.info("📤 Sending response back to contract");
 		await this.account.functionCall({
-				contractId: listener.contractId,
-				methodName: listener.responseMethodName || NearAgent.DEFAULT_RESPONSE_METHOD,
-				args: { request_id: requestId, result },
-				gas: BigInt(this.opts.gasLimit || NearAgent.DEFAULT_GAS_LIMIT),
+			contractId: listener.contractId,
+			methodName:
+				listener.responseMethodName || NearAgent.DEFAULT_RESPONSE_METHOD,
+			args: { request_id: requestId, result },
+			gas: BigInt(this.opts.gasLimit || NearAgent.DEFAULT_GAS_LIMIT),
 		});
-}
+	}
 }
