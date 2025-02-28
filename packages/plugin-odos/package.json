@@ -6,9 +6,10 @@
 	"types": "dist/index.d.ts",
 	"dependencies": {
 		"@elizaos/core": "0.1.9",
+		"dedent": "^1.5.3",
 		"tsup": "8.3.6",
 		"viem": "^2.22.15",
-		"dedent": "^1.5.3"
+		"vitest": "^3.0.7"
 	},
 	"scripts": {
 		"build": "tsup --format esm",
