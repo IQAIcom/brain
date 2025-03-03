@@ -53,7 +53,6 @@ export class ExecuteService {
 
 			await jail.set("global", jail.derefInto());
 
-			// Clear console output array
 			this.consoleOutput = [];
 
 			// Setup secure console API with output capturing
@@ -97,10 +96,8 @@ export class ExecuteService {
 
 		if (!this.context) throw new Error("VM context not initialized");
 
-		// Clear previous console output
 		this.consoleOutput = [];
 
-		// Wrap the code to capture both console logs and return values
 		const wrappedCode = `
       (function() {
         let __result;
@@ -139,7 +136,6 @@ export class ExecuteService {
 				}),
 			]);
 
-			// Check if there was an error thrown inside the wrapped function
 			if (executionResult?.error) {
 				throw new Error(executionResult.error.message);
 			}
@@ -147,7 +143,7 @@ export class ExecuteService {
 			return {
 				success: true,
 				result: executionResult?.returned,
-				consoleOutput: [...this.consoleOutput], // Make a copy of the output
+				consoleOutput: [...this.consoleOutput],
 				stats: {
 					cpuTime: Number(this.isolate.cpuTime),
 					wallTime: Number(this.isolate.wallTime),
