@@ -256,7 +256,7 @@ export class NearAgent extends Service {
 					const txStatus = await this.account.connection.provider.txStatus(
 						txHash,
 						listener.contractId,
-						"EXECUTED",
+						"INCLUDED",
 					);
 
 					for (const { outcome } of txStatus.receipts_outcome) {
