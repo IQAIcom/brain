@@ -19,6 +19,8 @@ export class NearAgent extends Service {
 	private account: Account;
 	private lastBlockHeight = 0;
 
+	private BLOCK_TO_CHECK = 189_074_446;
+
 	constructor(private readonly opts: NearAgentConfig) {
 		super();
 		elizaLogger.info(
@@ -58,15 +60,19 @@ export class NearAgent extends Service {
 	}
 
 	private async pollEvents(listener: NearEventListener) {
+		elizaLogger.info("🔄 Polling for events");
 		try {
 			const currentBlock = await this.getCurrentBlock();
 			if (!currentBlock) return;
 
-			const transactions = await this.getRelevantTransactions(
+			const relevantItems = await this.getRelevantItems(
 				currentBlock,
 				listener.contractId,
 			);
-			await this.processTransactions(transactions, listener);
+			elizaLogger.info(
+				`🌟 Found ${relevantItems.length} relevant items (receipts/transactions)`,
+			);
+			await this.processItems(relevantItems, listener);
 
 			this.lastBlockHeight = currentBlock.header.height;
 		} catch (error) {
@@ -75,20 +81,19 @@ export class NearAgent extends Service {
 	}
 
 	private async getCurrentBlock() {
-		elizaLogger.info("🔍 Fetching current block information");
-		const currentBlock = await this.account.connection.provider.block({
-			finality: "final",
-		});
+		// const currentBlock = await this.account.connection.provider.block({
+		//     finality: "final",
+		// });
+		// if (this.lastBlockHeight === 0) {
+		//     this.lastBlockHeight = currentBlock.header.height - 1;
+		// }
+		// return currentBlock;
 
-		if (this.lastBlockHeight === 0) {
-			this.lastBlockHeight = currentBlock.header.height - 1;
-		}
-
-		return currentBlock;
+		return { header: { height: this.BLOCK_TO_CHECK } };
 	}
 
-	private async getRelevantTransactions(block: any, contractId: string) {
-		const transactions = [];
+	private async getRelevantItems(block: any, contractId: string) {
+		const relevantItems = [];
 		const blockDetails = await this.account.connection.provider.block({
 			blockId: block.header.height,
 		});
@@ -97,24 +102,49 @@ export class NearAgent extends Service {
 			const chunkDetails = await this.account.connection.provider.chunk(
 				chunk.chunk_hash,
 			);
-			transactions.push(
-				...chunkDetails.transactions.filter(
-					(tx) => tx.receiver_id === contractId,
-				),
+
+			// Process receipts
+			for (const receipt of chunkDetails.receipts) {
+				if (receipt.receiver_id === contractId) {
+					relevantItems.push({
+						type: "receipt",
+						data: receipt,
+						receiver_id: receipt.receiver_id,
+						receipt_id: receipt.receipt_id,
+						predecessor_id: receipt.predecessor_id,
+					});
+				}
+			}
+
+			// Also keep processing transactions in case there are any
+			relevantItems.push(
+				...chunkDetails.transactions
+					.filter((tx) => tx.receiver_id === contractId)
+					.map((tx) => ({ type: "transaction", data: tx })),
 			);
 		}
 
-		return transactions;
+		elizaLogger.info(
+			`🌟 Found ${relevantItems.length} relevant items (receipts/transactions)`,
+		);
+		return relevantItems;
 	}
 
-	private async processTransactions(
-		transactions: any[],
-		listener: NearEventListener,
-	) {
-		for (const tx of transactions) {
-			const events = await this.extractEventsFromTransaction(tx, listener);
-			for (const event of events) {
-				await this.handleEvent(event, listener);
+	private async processItems(items: any[], listener: NearEventListener) {
+		for (const item of items) {
+			if (item.type === "transaction") {
+				const events = await this.extractEventsFromTransaction(
+					item.data,
+					listener,
+				);
+				for (const event of events) {
+					await this.handleEvent(event, listener);
+				}
+			} else if (item.type === "receipt") {
+				const events = await this.extractEventsFromReceipt(item.data, listener);
+				for (const event of events) {
+					await this.handleEvent(event, listener);
+				}
 			}
 		}
 	}
@@ -137,6 +167,40 @@ export class NearAgent extends Service {
 			}
 		}
 
+		return events;
+	}
+
+	private async extractEventsFromReceipt(
+		receipt: any,
+		listener: NearEventListener,
+	) {
+		const events = [];
+		try {
+			// Using the transaction status functionality to access the receipt outcome
+			const txResult = await this.account.connection.provider.txStatus(
+				receipt.receipt_id,
+				receipt.receiver_id,
+				"EXECUTED",
+			);
+
+			// Process any logs from the receipt outcomes
+			if (txResult?.receipts_outcome) {
+				for (const { outcome } of txResult.receipts_outcome) {
+					for (const log of outcome.logs) {
+						const event = this.parseEventLog(
+							log,
+							listener.eventName,
+							receipt.predecessor_id,
+						);
+						if (event) events.push(event);
+					}
+				}
+			}
+		} catch (error) {
+			elizaLogger.info(
+				`Could not process receipt ${receipt.receipt_id} - it may be a different type of receipt`,
+			);
+		}
 		return events;
 	}
 

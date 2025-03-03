@@ -67,7 +67,7 @@ async function main() {
 		],
 		networkConfig: {
 			networkId: "testnet",
-			nodeUrl: "https://rpc.testnet.near.org",
+			nodeUrl: "https://rpc.web4.testnet.page/",
 		},
 	});
 
