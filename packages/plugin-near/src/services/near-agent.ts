@@ -116,31 +116,18 @@ export class NearAgent extends Service {
 				}
 			}
 
-			// Also keep processing transactions in case there are any
-			relevantItems.push(
-				...chunkDetails.transactions
-					.filter((tx) => tx.receiver_id === contractId)
-					.map((tx) => ({ type: "transaction", data: tx })),
-			);
+			// We no longer process transactions directly
 		}
 
 		elizaLogger.info(
-			`🌟 Found ${relevantItems.length} relevant items (receipts/transactions)`,
+			`🌟 Found ${relevantItems.length} relevant items (receipts)`,
 		);
 		return relevantItems;
 	}
 
 	private async processItems(items: any[], listener: NearEventListener) {
 		for (const item of items) {
-			if (item.type === "transaction") {
-				const events = await this.extractEventsFromTransaction(
-					item.data,
-					listener,
-				);
-				for (const event of events) {
-					await this.handleEvent(event, listener);
-				}
-			} else if (item.type === "receipt") {
+			if (item.type === "receipt") {
 				const events = await this.extractEventsFromReceipt(item.data, listener);
 				for (const event of events) {
 					await this.handleEvent(event, listener);
@@ -149,58 +136,60 @@ export class NearAgent extends Service {
 		}
 	}
 
-	private async extractEventsFromTransaction(
-		tx: any,
-		listener: NearEventListener,
-	) {
-		const events = [];
-		const txStatus = await this.account.connection.provider.txStatus(
-			tx.hash,
-			listener.contractId,
-			"EXECUTED",
-		);
-
-		for (const { outcome } of txStatus.receipts_outcome) {
-			for (const log of outcome.logs) {
-				const event = this.parseEventLog(log, listener.eventName, tx.signer_id);
-				if (event) events.push(event);
-			}
-		}
-
-		return events;
-	}
-
+	/**
+	 * Extracts events from a receipt using NearBlocks API to get the transaction hash
+	 * @param receipt - The receipt object.
+	 * @param listener - The listener object.
+	 * @returns An array of events.
+	 */
 	private async extractEventsFromReceipt(
 		receipt: any,
 		listener: NearEventListener,
 	) {
 		const events = [];
-		try {
-			// Using the transaction status functionality to access the receipt outcome
-			const txResult = await this.account.connection.provider.txStatus(
-				receipt.receipt_id,
-				receipt.receiver_id,
-				"EXECUTED",
-			);
 
-			// Process any logs from the receipt outcomes
-			if (txResult?.receipts_outcome) {
-				for (const { outcome } of txResult.receipts_outcome) {
-					for (const log of outcome.logs) {
-						const event = this.parseEventLog(
-							log,
-							listener.eventName,
-							receipt.predecessor_id,
-						);
-						if (event) events.push(event);
+		try {
+			// Use NearBlocks API to get the transaction hash from receipt ID
+			const networkId =
+				this.opts.networkConfig?.networkId || NearAgent.DEFAULT_NETWORK_ID;
+			const apiUrl =
+				networkId === "mainnet"
+					? "https://api.nearblocks.io/v1/search"
+					: "https://api-testnet.nearblocks.io/v1/search";
+
+			const response = await fetch(`${apiUrl}?keyword=${receipt.receipt_id}`);
+			const data = await response.json();
+
+			if (data.receipts && data.receipts.length > 0) {
+				const txHash = data.receipts[0].originated_from_transaction_hash;
+
+				if (txHash) {
+					// Get transaction details and extract logs
+					const txStatus = await this.account.connection.provider.txStatus(
+						txHash,
+						listener.contractId,
+						"EXECUTED",
+					);
+
+					for (const { outcome } of txStatus.receipts_outcome) {
+						for (const log of outcome.logs) {
+							const event = this.parseEventLog(
+								log,
+								listener.eventName,
+								receipt.predecessor_id,
+							);
+							if (event) events.push(event);
+						}
 					}
 				}
 			}
 		} catch (error) {
-			elizaLogger.info(
-				`Could not process receipt ${receipt.receipt_id} - it may be a different type of receipt`,
+			elizaLogger.error(
+				`Failed to extract events from receipt ${receipt.receipt_id}`,
+				{ error },
 			);
 		}
+
 		return events;
 	}
 
