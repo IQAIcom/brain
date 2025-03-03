@@ -20,6 +20,7 @@ export class NearAgent extends Service {
 	private account: Account;
 	private lastBlockHeight = 0;
 	private isProcessing = false;
+	private processedTransactionIds = new Set<string>();
 
 	constructor(private readonly opts: NearAgentConfig) {
 		super();
@@ -249,7 +250,8 @@ export class NearAgent extends Service {
 			if (data.receipts && data.receipts.length > 0) {
 				const txHash = data.receipts[0].originated_from_transaction_hash;
 
-				if (txHash) {
+				if (txHash && !this.processedTransactionIds.has(txHash)) {
+					this.processedTransactionIds.add(txHash);
 					// Get transaction details and extract logs
 					const txStatus = await this.account.connection.provider.txStatus(
 						txHash,
