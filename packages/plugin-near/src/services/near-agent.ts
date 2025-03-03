@@ -26,6 +26,16 @@ export class NearAgent extends Service {
 		);
 	}
 
+	/**
+	 * Initializes the NEAR Agent service by setting up the key store, connecting to the NEAR network, and scheduling event listeners with cron jobs.
+	 *
+	 * This method is called during the initialization of the NearAgent service. It performs the following steps:
+	 * 1. Sets up an in-memory key store and adds the account key provided in the configuration.
+	 * 2. Establishes a connection to the NEAR network using the provided network configuration or default values.
+	 * 3. Retrieves the account object for the configured account ID.
+	 * 4. Schedules event listeners with cron jobs using the configured listeners or default cron expression.
+	 * 5. Logs information about the initialization process.
+	 */
 	async initialize(_runtime: IAgentRuntime) {
 		elizaLogger.info("🔑 Setting up key store and connecting to NEAR network");
 		const keyStore = new keyStores.InMemoryKeyStore();
@@ -57,19 +67,25 @@ export class NearAgent extends Service {
 		elizaLogger.info("🤖 NEAR Agent service initialized with polling");
 	}
 
+	/**
+	 * Polls for events from the NEAR network and processes them.
+	 * This method is called periodically by a cron job to check for new events.
+	 * It retrieves the current block, finds any relevant receipts for the configured contract ID,
+	 * and then processes those receipts using the provided listener.
+	 * If any errors occur during the polling process, they are logged to the elizaLogger.
+	 * @param listener - The NearEventListener instance to use for processing the events.
+	 */
 	private async pollEvents(listener: NearEventListener) {
 		elizaLogger.info("🔄 Polling for events");
 		try {
 			const currentBlock = await this.getCurrentBlock();
 			if (!currentBlock) return;
 
-			const relevantItems = await this.getRelevantItems(
+			const relevantItems = await this.getRelevantReceipts(
 				currentBlock,
 				listener.contractId,
 			);
-			elizaLogger.info(
-				`🌟 Found ${relevantItems.length} relevant items (receipts/transactions)`,
-			);
+
 			await this.processItems(relevantItems, listener);
 
 			this.lastBlockHeight = currentBlock.header.height;
@@ -78,6 +94,11 @@ export class NearAgent extends Service {
 		}
 	}
 
+	/**
+	 * Retrieves the current block from the NEAR network.
+	 * If this is the first time calling this method, it sets the `lastBlockHeight` to the previous block height.
+	 * @returns The current block object.
+	 */
 	private async getCurrentBlock() {
 		const currentBlock = await this.account.connection.provider.block({
 			finality: "final",
@@ -88,8 +109,14 @@ export class NearAgent extends Service {
 		return currentBlock;
 	}
 
-	private async getRelevantItems(block: any, contractId: string) {
-		const relevantItems = [];
+	/**
+	 * Retrieves the relevant receipts for a given block and contract ID.
+	 * @param block - The block object to search for relevant receipts.
+	 * @param contractId - The contract ID to filter the receipts by.
+	 * @returns An array of relevant receipt objects.
+	 */
+	private async getRelevantReceipts(block: any, contractId: string) {
+		const relevantReceipts = [];
 		const blockDetails = await this.account.connection.provider.block({
 			blockId: block.header.height,
 		});
@@ -99,11 +126,9 @@ export class NearAgent extends Service {
 				chunk.chunk_hash,
 			);
 
-			// Process receipts
 			for (const receipt of chunkDetails.receipts) {
 				if (receipt.receiver_id === contractId) {
-					relevantItems.push({
-						type: "receipt",
+					relevantReceipts.push({
 						data: receipt,
 						receiver_id: receipt.receiver_id,
 						receipt_id: receipt.receipt_id,
@@ -111,14 +136,10 @@ export class NearAgent extends Service {
 					});
 				}
 			}
-
-			// We no longer process transactions directly
 		}
 
-		elizaLogger.info(
-			`🌟 Found ${relevantItems.length} relevant items (receipts)`,
-		);
-		return relevantItems;
+		elizaLogger.info(`🌟 Found ${relevantReceipts.length} relevant receipts`);
+		return relevantReceipts;
 	}
 
 	private async processItems(items: any[], listener: NearEventListener) {
@@ -145,7 +166,6 @@ export class NearAgent extends Service {
 		const events = [];
 
 		try {
-			// Use NearBlocks API to get the transaction hash from receipt ID
 			const networkId =
 				this.opts.networkConfig?.networkId || NearAgent.DEFAULT_NETWORK_ID;
 			const apiUrl =
@@ -189,6 +209,14 @@ export class NearAgent extends Service {
 		return events;
 	}
 
+	/**
+	 * Parses an event log and returns an `AgentEvent` object if the log matches the specified event name.
+	 *
+	 * @param log - The log string to parse.
+	 * @param eventName - The name of the event to look for.
+	 * @param signerId - The ID of the signer of the event.
+	 * @returns An `AgentEvent` object if the log matches the event name, or `null` if it does not.
+	 */
 	private parseEventLog(
 		log: string,
 		eventName: string,
@@ -204,10 +232,9 @@ export class NearAgent extends Service {
 					Array.isArray(eventData.data) &&
 					eventData.data.length > 0
 				) {
-					// Keep request_id in its original format without transformation
 					return {
 						eventType: eventData.event,
-						requestId: eventData.data[0].request_id, // Preserve original format
+						requestId: eventData.data[0].request_id,
 						payload: eventData.data[0],
 						sender: signerId,
 						timestamp: Date.now(),
@@ -220,6 +247,13 @@ export class NearAgent extends Service {
 		return null;
 	}
 
+	/**
+	 * Handles an event received from the NEAR blockchain, processes it, and sends a response back to the contract.
+	 *
+	 * @param event - The `AgentEvent` object containing the event details.
+	 * @param listener - The `NearEventListener` object that contains the event handler and other configuration.
+	 * @returns - A Promise that resolves when the event has been processed and the response has been sent.
+	 */
 	private async handleEvent(event: AgentEvent, listener: NearEventListener) {
 		try {
 			elizaLogger.info(`🔄 Processing event with ID: ${event.requestId}`);
@@ -236,6 +270,14 @@ export class NearAgent extends Service {
 		}
 	}
 
+	/**
+	 * Sends a response back to the NEAR contract after processing an event.
+	 *
+	 * @param requestId - The ID of the request that triggered the event.
+	 * @param result - The result of processing the event.
+	 * @param listener - The `NearEventListener` object that contains the event handler and other configuration.
+	 * @returns - A Promise that resolves when the response has been sent.
+	 */
 	private async sendResponse(
 		requestId: any,
 		result: string,
