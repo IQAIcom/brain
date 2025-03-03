@@ -15,9 +15,11 @@ export class NearAgent extends Service {
 	private static readonly DEFAULT_GAS_LIMIT = "300000000000000";
 	private static readonly DEFAULT_CRON_EXPRESSION = "*/10 * * * * *";
 	private static readonly DEFAULT_RESPONSE_METHOD = "agent_response";
+	private static readonly BATCH_SIZE = 5;
 
 	private account: Account;
 	private lastBlockHeight = 0;
+	private isProcessing = false;
 
 	constructor(private readonly opts: NearAgentConfig) {
 		super();
@@ -60,7 +62,15 @@ export class NearAgent extends Service {
 		for (const listener of this.opts.listeners) {
 			cron.schedule(
 				listener.cronExpression || NearAgent.DEFAULT_CRON_EXPRESSION,
-				() => this.pollEvents(listener),
+				() => {
+					if (!this.isProcessing) {
+						this.pollEvents(listener);
+					} else {
+						elizaLogger.info(
+							"⏳ Previous polling cycle still running, skipping this cycle",
+						);
+					}
+				},
 			);
 		}
 
@@ -68,14 +78,19 @@ export class NearAgent extends Service {
 	}
 
 	/**
-	 * Polls for events from the NEAR network and processes them.
-	 * This method is called periodically by a cron job to check for new events.
-	 * It retrieves the current block, finds any relevant receipts for the configured contract ID,
-	 * and then processes those receipts using the provided listener.
-	 * If any errors occur during the polling process, they are logged to the elizaLogger.
-	 * @param listener - The NearEventListener instance to use for processing the events.
+	 * Polls for events from the NEAR network and processes them in batches.
+	 * This method is responsible for the following:
+	 * 1. Retrieving the current block height from the NEAR network.
+	 * 2. Iterating through the blocks from the last processed block to the current block.
+	 * 3. Processing each block in batches, calling `processBlock` for each batch.
+	 * 4. Updating the `lastBlockHeight` to the last processed block.
+	 * 5. Handling errors and logging the polling cycle status.
+	 *
+	 * @param listener - The `NearEventListener` instance to use for processing the events.
 	 */
 	private async pollEvents(listener: NearEventListener) {
+		this.isProcessing = true;
+
 		elizaLogger.info("🔄 Polling for events");
 		try {
 			const currentBlock = await this.getCurrentBlock();
@@ -88,20 +103,19 @@ export class NearAgent extends Service {
 				`📊 Current block height: ${currentHeight}, processing from: ${startHeight}`,
 			);
 
-			// Process blocks in batches to avoid rate limiting
-			const BATCH_SIZE = 5; // Adjust based on RPC limits
-
 			for (
 				let blockHeight = startHeight;
 				blockHeight <= currentHeight;
-				blockHeight += BATCH_SIZE
+				blockHeight += NearAgent.BATCH_SIZE
 			) {
-				const endBatch = Math.min(blockHeight + BATCH_SIZE - 1, currentHeight);
+				const endBatch = Math.min(
+					blockHeight + NearAgent.BATCH_SIZE - 1,
+					currentHeight,
+				);
 				elizaLogger.info(
 					`📦 Processing block batch: ${blockHeight} to ${endBatch}`,
 				);
 
-				// Process blocks in parallel within the batch
 				const promises = [];
 				for (let height = blockHeight; height <= endBatch; height++) {
 					promises.push(this.processBlock(height, listener));
@@ -109,19 +123,26 @@ export class NearAgent extends Service {
 
 				await Promise.all(promises);
 
-				// Update last height after each successful batch
 				this.lastBlockHeight = endBatch;
 
-				// Add delay between batches to avoid rate limiting
 				if (endBatch < currentHeight) {
 					await new Promise((resolve) => setTimeout(resolve, 500));
 				}
 			}
 		} catch (error) {
 			elizaLogger.error("❌ Event polling failed", { error });
+		} finally {
+			this.isProcessing = false;
+			elizaLogger.info("✅ Polling cycle completed");
 		}
 	}
 
+	/**
+	 * Processes a block of NEAR network data, retrieving relevant receipts and processing them.
+	 * @param blockHeight - The height of the block to process.
+	 * @param listener - The NearEventListener instance to use for processing the receipts.
+	 * @returns `true` if the block was processed successfully, `false` otherwise.
+	 */
 	private async processBlock(blockHeight: number, listener: NearEventListener) {
 		try {
 			elizaLogger.info(`🧱 Processing block ${blockHeight}`);
