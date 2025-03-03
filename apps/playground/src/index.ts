@@ -34,13 +34,13 @@ async function main() {
 		listeners: [
 			{
 				eventName: "run_agent",
-				contractId: "iqai.testnet",
+				contractId: "amm-iqai.testnet",
 				responseMethodName: "agent_response",
 				handler: async (payload, { account }) => {
 					const request = JSON.parse(payload.message);
 
 					const balances = await account.viewFunction({
-						contractId: "iqai.testnet",
+						contractId: "amm-iqai.testnet",
 						methodName: "get_swap_balances",
 						args: {
 							token_in: request.token_in,
@@ -72,11 +72,6 @@ async function main() {
 	});
 
 	const sequencerPlugin = await createSequencerPlugin();
-
-	const bammPlugin = await createBAMMPlugin({
-		walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
-		chain: fraxtal,
-	});
 
 	// Setup database
 	const dataDir = path.join(process.cwd(), "./data");

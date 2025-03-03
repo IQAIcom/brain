@@ -12,14 +12,12 @@ export class NearAgent extends Service {
 	static serviceType: ServiceType = ServiceType.TRANSCRIPTION;
 	private static readonly DEFAULT_NETWORK_ID = "mainnet";
 	private static readonly DEFAULT_NODE_URL = "https://1rpc.io/near";
-	private static readonly DEFAULT_GAS_LIMIT = "200000000000000";
+	private static readonly DEFAULT_GAS_LIMIT = "300000000000000";
 	private static readonly DEFAULT_CRON_EXPRESSION = "*/10 * * * * *";
 	private static readonly DEFAULT_RESPONSE_METHOD = "agent_response";
 
 	private account: Account;
 	private lastBlockHeight = 0;
-
-	private BLOCK_TO_CHECK = 189_074_446;
 
 	constructor(private readonly opts: NearAgentConfig) {
 		super();
@@ -81,15 +79,13 @@ export class NearAgent extends Service {
 	}
 
 	private async getCurrentBlock() {
-		// const currentBlock = await this.account.connection.provider.block({
-		//     finality: "final",
-		// });
-		// if (this.lastBlockHeight === 0) {
-		//     this.lastBlockHeight = currentBlock.header.height - 1;
-		// }
-		// return currentBlock;
-
-		return { header: { height: this.BLOCK_TO_CHECK } };
+		const currentBlock = await this.account.connection.provider.block({
+			finality: "final",
+		});
+		if (this.lastBlockHeight === 0) {
+			this.lastBlockHeight = currentBlock.header.height - 1;
+		}
+		return currentBlock;
 	}
 
 	private async getRelevantItems(block: any, contractId: string) {
@@ -199,15 +195,24 @@ export class NearAgent extends Service {
 		signerId: string,
 	): AgentEvent | null {
 		try {
-			const eventData = JSON.parse(log);
-			if (eventData.event === eventName) {
-				return {
-					eventType: eventData.event,
-					requestId: eventData.request_id,
-					payload: eventData.data,
-					sender: signerId,
-					timestamp: Date.now(),
-				};
+			if (log.startsWith("EVENT_JSON:")) {
+				const jsonStr = log.slice("EVENT_JSON:".length);
+				const eventData = JSON.parse(jsonStr);
+
+				if (
+					eventData.event === eventName &&
+					Array.isArray(eventData.data) &&
+					eventData.data.length > 0
+				) {
+					// Keep request_id in its original format without transformation
+					return {
+						eventType: eventData.event,
+						requestId: eventData.data[0].request_id, // Preserve original format
+						payload: eventData.data[0],
+						sender: signerId,
+						timestamp: Date.now(),
+					};
+				}
 			}
 		} catch (error) {
 			elizaLogger.error("Failed to parse log", { log, error });
@@ -222,6 +227,8 @@ export class NearAgent extends Service {
 				account: this.account,
 			});
 
+			console.log("ℹ️ Obtained this result", result);
+
 			await this.sendResponse(event.requestId, result, listener);
 			elizaLogger.info(`✅ Event ${event.requestId} processed successfully`);
 		} catch (error) {
@@ -230,17 +237,34 @@ export class NearAgent extends Service {
 	}
 
 	private async sendResponse(
-		requestId: string,
-		result: any,
+		requestId: any,
+		result: string,
 		listener: NearEventListener,
 	) {
 		elizaLogger.info("📤 Sending response back to contract");
+
+		console.log("ℹ️ function call with these params: ", {
+			contractId: listener.contractId,
+			methodName:
+				listener.responseMethodName || NearAgent.DEFAULT_RESPONSE_METHOD,
+			args: {
+				data_id: requestId,
+				amount_out: result,
+			},
+			gas: BigInt(this.opts.gasLimit || NearAgent.DEFAULT_GAS_LIMIT),
+		});
+
 		await this.account.functionCall({
 			contractId: listener.contractId,
 			methodName:
 				listener.responseMethodName || NearAgent.DEFAULT_RESPONSE_METHOD,
-			args: { request_id: requestId, result },
+			args: {
+				data_id: requestId,
+				amount_out: result,
+			},
 			gas: BigInt(this.opts.gasLimit || NearAgent.DEFAULT_GAS_LIMIT),
 		});
+
+		throw Error("✅ Transaction Successful");
 	}
 }
