@@ -82,32 +82,63 @@ export class NearAgent extends Service {
 			if (!currentBlock) return;
 
 			const currentHeight = currentBlock.header.height;
+			const startHeight = this.lastBlockHeight + 1;
+
 			elizaLogger.info(
-				`Current block height: ${currentHeight}, last processed: ${this.lastBlockHeight}`,
+				`📊 Current block height: ${currentHeight}, processing from: ${startHeight}`,
 			);
 
-			// Process all blocks between last processed and current
-			for (
-				let blockHeight = this.lastBlockHeight + 1;
-				blockHeight <= currentHeight;
-				blockHeight++
-			) {
-				elizaLogger.info(`Processing block ${blockHeight}`);
-				const block = await this.account.connection.provider.block({
-					blockId: blockHeight,
-				});
+			// Process blocks in batches to avoid rate limiting
+			const BATCH_SIZE = 5; // Adjust based on RPC limits
 
-				const relevantItems = await this.getRelevantReceipts(
-					block,
-					listener.contractId,
+			for (
+				let blockHeight = startHeight;
+				blockHeight <= currentHeight;
+				blockHeight += BATCH_SIZE
+			) {
+				const endBatch = Math.min(blockHeight + BATCH_SIZE - 1, currentHeight);
+				elizaLogger.info(
+					`📦 Processing block batch: ${blockHeight} to ${endBatch}`,
 				);
 
-				await this.processItems(relevantItems, listener);
-			}
+				// Process blocks in parallel within the batch
+				const promises = [];
+				for (let height = blockHeight; height <= endBatch; height++) {
+					promises.push(this.processBlock(height, listener));
+				}
 
-			this.lastBlockHeight = currentHeight;
+				await Promise.all(promises);
+
+				// Update last height after each successful batch
+				this.lastBlockHeight = endBatch;
+
+				// Add delay between batches to avoid rate limiting
+				if (endBatch < currentHeight) {
+					await new Promise((resolve) => setTimeout(resolve, 500));
+				}
+			}
 		} catch (error) {
-			elizaLogger.error("Event polling failed", { error });
+			elizaLogger.error("❌ Event polling failed", { error });
+		}
+	}
+
+	private async processBlock(blockHeight: number, listener: NearEventListener) {
+		try {
+			elizaLogger.info(`🧱 Processing block ${blockHeight}`);
+			const block = await this.account.connection.provider.block({
+				blockId: blockHeight,
+			});
+
+			const relevantItems = await this.getRelevantReceipts(
+				block,
+				listener.contractId,
+			);
+
+			await this.processItems(relevantItems, listener);
+			return true;
+		} catch (error) {
+			elizaLogger.error(`❌ Failed to process block ${blockHeight}`, { error });
+			return false;
 		}
 	}
 
