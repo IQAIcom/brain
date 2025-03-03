@@ -81,14 +81,31 @@ export class NearAgent extends Service {
 			const currentBlock = await this.getCurrentBlock();
 			if (!currentBlock) return;
 
-			const relevantItems = await this.getRelevantReceipts(
-				currentBlock,
-				listener.contractId,
+			const currentHeight = currentBlock.header.height;
+			elizaLogger.info(
+				`Current block height: ${currentHeight}, last processed: ${this.lastBlockHeight}`,
 			);
 
-			await this.processItems(relevantItems, listener);
+			// Process all blocks between last processed and current
+			for (
+				let blockHeight = this.lastBlockHeight + 1;
+				blockHeight <= currentHeight;
+				blockHeight++
+			) {
+				elizaLogger.info(`Processing block ${blockHeight}`);
+				const block = await this.account.connection.provider.block({
+					blockId: blockHeight,
+				});
 
-			this.lastBlockHeight = currentBlock.header.height;
+				const relevantItems = await this.getRelevantReceipts(
+					block,
+					listener.contractId,
+				);
+
+				await this.processItems(relevantItems, listener);
+			}
+
+			this.lastBlockHeight = currentHeight;
 		} catch (error) {
 			elizaLogger.error("Event polling failed", { error });
 		}
@@ -138,7 +155,9 @@ export class NearAgent extends Service {
 			}
 		}
 
-		elizaLogger.info(`🌟 Found ${relevantReceipts.length} relevant receipts`);
+		elizaLogger.info(
+			`🌟 Found ${relevantReceipts.length} relevant receipts from ${block.header.height}`,
+		);
 		return relevantReceipts;
 	}
 
