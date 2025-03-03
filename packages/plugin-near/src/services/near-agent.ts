@@ -215,11 +215,10 @@ export class NearAgent extends Service {
 
 	private async processItems(items: any[], listener: NearEventListener) {
 		for (const item of items) {
-			if (item.type === "receipt") {
-				const events = await this.extractEventsFromReceipt(item.data, listener);
-				for (const event of events) {
-					await this.handleEvent(event, listener);
-				}
+			// Process all items or check for a different property
+			const events = await this.extractEventsFromReceipt(item.data, listener);
+			for (const event of events) {
+				await this.handleEvent(event, listener);
 			}
 		}
 	}
