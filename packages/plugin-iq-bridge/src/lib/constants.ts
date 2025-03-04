@@ -14,17 +14,47 @@ export const BRIDGE_EVENT_ABI = [
 	{
 		anonymous: false,
 		inputs: [
-			{ indexed: true, name: "l1Token", type: "address" },
-			{ indexed: true, name: "l2Token", type: "address" },
-			{ indexed: true, name: "from", type: "address" },
-			{ indexed: false, name: "to", type: "address" },
-			{ indexed: false, name: "amount", type: "uint256" },
-			{ indexed: false, name: "extraData", type: "bytes" },
+			{
+				indexed: true,
+				internalType: "address",
+				name: "localToken",
+				type: "address",
+			},
+			{
+				indexed: true,
+				internalType: "address",
+				name: "remoteToken",
+				type: "address",
+			},
+			{
+				indexed: true,
+				internalType: "address",
+				name: "from",
+				type: "address",
+			},
+			{
+				indexed: false,
+				internalType: "address",
+				name: "to",
+				type: "address",
+			},
+			{
+				indexed: false,
+				internalType: "uint256",
+				name: "amount",
+				type: "uint256",
+			},
+			{
+				indexed: false,
+				internalType: "bytes",
+				name: "extraData",
+				type: "bytes",
+			},
 		],
-		name: "ERC20DepositInitiated",
+		name: "ERC20BridgeInitiated",
 		type: "event",
 	},
-];
+] as const;
 
 // Method ID for depositERC20 function depositERC20(address,address,uint256,uint32,bytes)
 export const DEPOSIT_ERC20_METHOD_ID = "0x58a997f6";

@@ -1,101 +1,93 @@
 import {
-	createPublicClient,
-	createWalletClient,
-	http,
 	type Address,
-	type Hash,
-	parseEther,
 	formatEther,
-	decodeAbiParameters,
-	parseAbiParameters,
-	type Log,
 	type PublicClient,
 	type WalletClient,
 } from "viem";
 import { WalletService } from "./wallet";
-import { mainnet, fraxtal } from "viem/chains";
+import { fraxtal } from "viem/chains";
 import { elizaLogger } from "@elizaos/core";
 import {
 	BRIDGE_ADDRESS,
 	IQ_ADDRESSES,
 	BRIDGE_EVENT_ABI,
-	DEPOSIT_ERC20_METHOD_ID,
 	FUNDING_AMOUNT,
 	MIN_IQ_THRESHOLD,
 } from "../lib/constants";
 
 export class BridgeMonitorService {
-	private iqAddresses: {
-		ethereum: Address;
-		fraxtal: Address;
-	};
-	private fundingAmount: bigint;
-	private minIQThreshold: bigint;
-	private bridgeAddress: Address;
+	private ethClient: PublicClient;
+	private fraxtalClient: PublicClient;
+	private walletClient: WalletClient | undefined;
+	private iqAddresses = IQ_ADDRESSES;
+	private fundingAmount: bigint = FUNDING_AMOUNT;
+	private minIQThreshold: bigint = MIN_IQ_THRESHOLD;
+	private bridgeAddress: Address = BRIDGE_ADDRESS as Address;
 	private isMonitoring = false;
 	private walletService: WalletService;
 
 	constructor(funderPrivateKey: string) {
-		this.fundingAmount = FUNDING_AMOUNT;
-		this.minIQThreshold = MIN_IQ_THRESHOLD;
-		this.bridgeAddress = BRIDGE_ADDRESS as Address;
-		this.walletService = new WalletService(funderPrivateKey, fraxtal);
+		this.walletService = new WalletService(funderPrivateKey);
+
+		this.ethClient = this.walletService.getEthClient();
+		this.fraxtalClient = this.walletService.getFraxtalClient();
+		this.walletClient = this.walletService.getWalletClient();
+
+		if (!this.walletClient) {
+			throw new Error(
+				"Failed to initialize wallet client. Please check your private key.",
+			);
+		}
 
 		elizaLogger.info(`IQ Bridge Monitor initialized with:
-            - Bridge address: ${this.bridgeAddress}
-            - IQ token (L1): ${IQ_ADDRESSES.ethereum}
-            - IQ token (L2): ${IQ_ADDRESSES.fraxtal}
-            - Funding amount: ${formatEther(this.fundingAmount)} ETH
-            - Min IQ threshold: ${formatEther(this.minIQThreshold)} IQ`);
+- Bridge address: ${this.bridgeAddress}
+- IQ token (L1): ${this.iqAddresses.ethereum}
+- IQ token (L2): ${this.iqAddresses.fraxtal}
+- Funding amount: ${formatEther(this.fundingAmount)} ETH
+- Min IQ threshold: ${formatEther(this.minIQThreshold)} IQ`);
 	}
 
-	async startMonitoring(): Promise<void> {
+	async startMonitoring() {
 		if (this.isMonitoring) {
 			return;
 		}
 
 		this.isMonitoring = true;
 
-		// Check the funding account balance first
+		if (!this.walletClient || !this.walletClient.account) {
+			throw new Error(
+				"Wallet client not initialized. Cannot start monitoring.",
+			);
+		}
+
 		const funderBalance = await this.fraxtalClient.getBalance({
-			address: this.fraxtalWallet.account.address,
+			address: this.walletClient.account.address,
 		});
 
 		elizaLogger.info(
 			`Bridge monitor started. Funder balance: ${formatEther(funderBalance)} ETH`,
 		);
 
-		// Monitor for ERC20DepositInitiated events
 		this.ethClient.watchContractEvent({
 			address: this.bridgeAddress,
 			abi: BRIDGE_EVENT_ABI,
-			eventName: "ERC20DepositInitiated",
-			onLogs: async (logs: Log[]) => {
+			args: { localToken: this.iqAddresses.ethereum },
+			eventName: "ERC20BridgeInitiated",
+			onLogs: async (logs) => {
 				for (const log of logs) {
 					try {
-						// Extract parameters from the event
-						const l1Token = log.args.l1Token as Address;
+						const l1Token = log.args.localToken as Address;
 						const from = log.args.from as Address;
 						const to = log.args.to as Address;
 						const amount = log.args.amount as bigint;
 
-						// Skip if not IQ token
-						if (
-							l1Token.toLowerCase() !== this.iqAddresses.ethereum.toLowerCase()
-						) {
-							continue;
-						}
-
 						elizaLogger.info(`Detected IQ bridge deposit:
 - From: ${from}
-- To: ${to}
+- Token: ${l1Token}
 - Amount: ${formatEther(amount)} IQ
 - Transaction: ${log.transactionHash}`);
 
-						// Only process transactions above the threshold
 						if (amount >= this.minIQThreshold) {
-							// We use the "to" address for funding (where tokens will arrive on L2)
-							// If "to" is not specified (zero address), use the "from" address
 							const recipientAddress =
 								to === "0x0000000000000000000000000000000000000000" ? from : to;
 							await this.processBridgeTransaction(recipientAddress, amount);
@@ -105,91 +97,25 @@ export class BridgeMonitorService {
 							);
 						}
 					} catch (error) {
-						elizaLogger.error(`Error processing event log: ${error.message}`);
-					}
-				}
-			},
-		});
-
-		// Also watch for transactions to the bridge directly
-		this.ethClient.watchContractEvent({
-			address: this.bridgeAddress,
-			abi: [], // Empty ABI for raw transactions
-			onLogs: async (logs) => {
-				for (const log of logs) {
-					try {
-						const transaction = await this.ethClient.getTransaction({
-							hash: log.transactionHash,
-						});
-
-						// Skip if not a transaction to the bridge
-						if (
-							transaction.to?.toLowerCase() !== this.bridgeAddress.toLowerCase()
-						) {
-							continue;
-						}
-
-						// Check if it's a depositERC20 call
-						if (transaction.input.startsWith(`0x${DEPOSIT_ERC20_METHOD_ID}`)) {
-							// Decode the input data
-							const inputData = transaction.input.slice(10); // Remove the method ID
-
-							const parameters = decodeAbiParameters(
-								parseAbiParameters(
-									"address l1Token, address l2Token, uint256 amount, uint32 minGasLimit, bytes extraData",
-								),
-								`0x${inputData}`,
-							);
-
-							const [l1Token, l2Token, amount] = parameters;
-
-							// Skip if not IQ token
-							if (
-								(l1Token as Address).toLowerCase() !==
-								this.iqAddresses.ethereum.toLowerCase()
-							) {
-								continue;
-							}
-
-							elizaLogger.info(`Detected depositERC20 for IQ:
-- From: ${transaction.from}
-- Amount: ${formatEther(amount as bigint)} IQ
-- Transaction: ${transaction.hash}`);
-
-							// Only process transactions above the threshold
-							if ((amount as bigint) >= this.minIQThreshold) {
-								await this.processBridgeTransaction(
-									transaction.from,
-									amount as bigint,
-								);
-							} else {
-								elizaLogger.info(
-									`Skipping funding: Amount ${formatEther(amount as bigint)} IQ is below threshold of ${formatEther(this.minIQThreshold)} IQ`,
-								);
-							}
-						}
-					} catch (error) {
-						elizaLogger.error(`Error processing transaction: ${error.message}`);
+						elizaLogger.error(
+							`Error processing event log: ${(error as Error).message}`,
+						);
 					}
 				}
 			},
 		});
 
 		elizaLogger.info(
-			"Bridge monitoring active for both ERC20DepositInitiated events and depositERC20 function calls",
+			"Bridge monitoring active for ERC20DepositInitiated events",
 		);
 	}
 
-	private async processBridgeTransaction(
-		userAddress: string,
-		amount: bigint,
-	): Promise<void> {
+	private async processBridgeTransaction(userAddress: string, amount: bigint) {
 		try {
 			elizaLogger.info(
 				`Processing bridge transaction for ${userAddress} with ${formatEther(amount)} IQ`,
 			);
 
-			// Check if the user has ETH on Fraxtal already
 			const ethBalance = await this.fraxtalClient.getBalance({
 				address: userAddress as Address,
 			});
@@ -198,8 +124,7 @@ export class BridgeMonitorService {
 				`User ${userAddress} has ${formatEther(ethBalance)} ETH on Fraxtal`,
 			);
 
-			// If they don't have enough ETH, fund them
-			if (ethBalance < parseEther("0.0001")) {
+			if (ethBalance < this.minIQThreshold) {
 				await this.fundUserAddress(userAddress);
 			} else {
 				elizaLogger.info(
@@ -208,19 +133,21 @@ export class BridgeMonitorService {
 			}
 		} catch (error) {
 			elizaLogger.error(
-				`Error processing bridge transaction: ${error.message}`,
+				`Error processing bridge transaction: ${(error as Error).message}`,
 			);
 		}
 	}
 
-	private async fundUserAddress(userAddress: string): Promise<void> {
+	private async fundUserAddress(userAddress: string) {
 		try {
-			// Check funder balance
+			if (!this.walletClient || !this.walletClient.account) {
+				throw new Error("Wallet client not initialized. Cannot fund address.");
+			}
+
 			const funderBalance = await this.fraxtalClient.getBalance({
-				address: this.fraxtalWallet.account.address,
+				address: this.walletClient.account.address,
 			});
 
-			// Make sure we have enough funds
 			if (funderBalance < this.fundingAmount) {
 				elizaLogger.error(
 					`Funding wallet balance too low: ${formatEther(funderBalance)} ETH. Skipping funding.`,
@@ -228,16 +155,15 @@ export class BridgeMonitorService {
 				return;
 			}
 
-			// Send ETH to the user
-			const hash = await this.fraxtalWallet.sendTransaction({
+			const hash = await this.walletClient.sendTransaction({
 				to: userAddress as Address,
 				value: this.fundingAmount,
 				chain: fraxtal,
+				account: this.walletClient.account,
 			});
 
 			elizaLogger.info(`Funding transaction initiated: ${hash}`);
 
-			// Wait for confirmation
 			const receipt = await this.fraxtalClient.waitForTransactionReceipt({
 				hash,
 			});
@@ -250,7 +176,9 @@ export class BridgeMonitorService {
 				elizaLogger.error(`Funding transaction failed: ${hash}`);
 			}
 		} catch (error) {
-			elizaLogger.error(`Error funding user address: ${error.message}`);
+			elizaLogger.error(
+				`Error funding user address: ${(error as Error).message}`,
+			);
 		}
 	}
 }
