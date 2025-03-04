@@ -11,6 +11,15 @@ This plugin provides seamless integration with the NEAR Protocol blockchain.
 - ✅ View contract data and account information
 - ✅ Handle custom logic through event listeners
 
+## 🔄 Blockchain Event-Driven Workflow
+
+The plugin enables an "AI in the loop" workflow:
+
+1. 🔗 Smart contract transaction triggers an event and pauses execution
+2. 🤖 Agent detects the event and performs AI computation
+3. ↩️ Agent returns results via blockchain transaction
+4. ✅ Original smart contract resumes with the AI-provided data
+
 ## 🛠 Installation
 
 Install the plugin using **pnpm**:
