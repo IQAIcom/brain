@@ -92,7 +92,6 @@ export class NearAgent extends Service {
 	private async pollEvents(listener: NearEventListener) {
 		this.isProcessing = true;
 
-		elizaLogger.info("🔄 Polling for events");
 		try {
 			const currentBlock = await this.getCurrentBlock();
 			if (!currentBlock) return;
@@ -101,7 +100,7 @@ export class NearAgent extends Service {
 			const startHeight = this.lastBlockHeight + 1;
 
 			elizaLogger.info(
-				`📊 Current block height: ${currentHeight}, processing from: ${startHeight}`,
+				`📊 Processing blocks from ${startHeight} to ${currentHeight}`,
 			);
 
 			for (
@@ -112,9 +111,6 @@ export class NearAgent extends Service {
 				const endBatch = Math.min(
 					blockHeight + NearAgent.BATCH_SIZE - 1,
 					currentHeight,
-				);
-				elizaLogger.info(
-					`📦 Processing block batch: ${blockHeight} to ${endBatch}`,
 				);
 
 				const promises = [];
@@ -134,7 +130,6 @@ export class NearAgent extends Service {
 			elizaLogger.error("❌ Event polling failed", { error });
 		} finally {
 			this.isProcessing = false;
-			elizaLogger.info("✅ Polling cycle completed");
 		}
 	}
 
@@ -144,9 +139,9 @@ export class NearAgent extends Service {
 	 * @param listener - The NearEventListener instance to use for processing the receipts.
 	 * @returns `true` if the block was processed successfully, `false` otherwise.
 	 */
+
 	private async processBlock(blockHeight: number, listener: NearEventListener) {
 		try {
-			elizaLogger.info(`🧱 Processing block ${blockHeight}`);
 			const block = await this.account.connection.provider.block({
 				blockId: blockHeight,
 			});
@@ -156,7 +151,12 @@ export class NearAgent extends Service {
 				listener.contractId,
 			);
 
-			await this.processItems(relevantItems, listener);
+			if (relevantItems.length > 0) {
+				elizaLogger.info(
+					`🧱 Found ${relevantItems.length} relevant receipts in block ${blockHeight}`,
+				);
+				await this.processItems(relevantItems, listener);
+			}
 			return true;
 		} catch (error) {
 			elizaLogger.error(`❌ Failed to process block ${blockHeight}`, { error });
@@ -208,9 +208,6 @@ export class NearAgent extends Service {
 			}
 		}
 
-		elizaLogger.info(
-			`🌟 Found ${relevantReceipts.length} relevant receipts from ${block.header.height}`,
-		);
 		return relevantReceipts;
 	}
 
@@ -333,8 +330,6 @@ export class NearAgent extends Service {
 				account: this.account,
 			});
 
-			console.log("ℹ️ Obtained this result", result);
-
 			await this.sendResponse(event.requestId, result, listener);
 			elizaLogger.info(`✅ Event ${event.requestId} processed successfully`);
 		} catch (error) {
@@ -357,17 +352,6 @@ export class NearAgent extends Service {
 	) {
 		elizaLogger.info("📤 Sending response back to contract");
 
-		console.log("ℹ️ function call with these params: ", {
-			contractId: listener.contractId,
-			methodName:
-				listener.responseMethodName || NearAgent.DEFAULT_RESPONSE_METHOD,
-			args: {
-				data_id: requestId,
-				amount_out: result,
-			},
-			gas: BigInt(this.opts.gasLimit || NearAgent.DEFAULT_GAS_LIMIT),
-		});
-
 		await this.account.functionCall({
 			contractId: listener.contractId,
 			methodName:
@@ -378,7 +362,5 @@ export class NearAgent extends Service {
 			},
 			gas: BigInt(this.opts.gasLimit || NearAgent.DEFAULT_GAS_LIMIT),
 		});
-
-		throw Error("✅ Transaction Successful");
 	}
 }
