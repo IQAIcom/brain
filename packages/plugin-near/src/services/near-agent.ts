@@ -11,7 +11,8 @@ import type { AgentEvent, NearAgentConfig, NearEventListener } from "../types";
 export class NearAgent extends Service {
 	static serviceType: ServiceType = ServiceType.TRANSCRIPTION;
 	private static readonly DEFAULT_NETWORK_ID = "mainnet";
-	private static readonly DEFAULT_NODE_URL = "https://1rpc.io/near";
+	private static readonly DEFAULT_NODE_URL =
+		"https://rpc.web4.near.page/account/near";
 	private static readonly DEFAULT_GAS_LIMIT = "300000000000000";
 	private static readonly DEFAULT_CRON_EXPRESSION = "*/10 * * * * *";
 	private static readonly DEFAULT_RESPONSE_METHOD = "agent_response";
