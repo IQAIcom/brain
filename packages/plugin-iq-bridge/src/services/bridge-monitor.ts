@@ -116,16 +116,16 @@ export class BridgeMonitorService {
 				`Processing bridge transaction for ${userAddress} with ${formatEther(amount)} IQ`,
 			);
 
-			const ethBalance = await this.fraxtalClient.getBalance({
+			const frxEthBalance = await this.fraxtalClient.getBalance({
 				address: userAddress as Address,
 			});
 
 			elizaLogger.info(
-				`User ${userAddress} has ${formatEther(ethBalance)} ETH on Fraxtal`,
+				`User ${userAddress} has ${formatEther(frxEthBalance)} ETH on Fraxtal`,
 			);
 
-			if (ethBalance < this.minIQThreshold) {
-				await this.fundUserAddress(userAddress);
+			if (frxEthBalance < this.minIQThreshold) {
+				await this.fundUserAddress(userAddress, frxEthBalance);
 			} else {
 				elizaLogger.info(
 					`User ${userAddress} already has sufficient ETH on Fraxtal. No funding needed.`,
@@ -138,7 +138,7 @@ export class BridgeMonitorService {
 		}
 	}
 
-	private async fundUserAddress(userAddress: string) {
+	private async fundUserAddress(userAddress: string, frxEthBalance: bigint) {
 		try {
 			if (!this.walletClient || !this.walletClient.account) {
 				throw new Error("Wallet client not initialized. Cannot fund address.");
@@ -157,7 +157,7 @@ export class BridgeMonitorService {
 
 			const hash = await this.walletClient.sendTransaction({
 				to: userAddress as Address,
-				value: this.fundingAmount,
+				value: this.fundingAmount - frxEthBalance,
 				chain: fraxtal,
 				account: this.walletClient.account,
 			});
