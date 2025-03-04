@@ -16,7 +16,6 @@ export const ROUTER_ABI = [
 		inputs: [
 			{ internalType: "address", name: "_agentToken", type: "address" },
 			{ internalType: "uint256", name: "_amountIn", type: "uint256" },
-			{ internalType: "uint256", name: "_minAmountOut", type: "uint256" },
 		],
 		name: "buy",
 		outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
@@ -27,7 +26,6 @@ export const ROUTER_ABI = [
 		inputs: [
 			{ internalType: "address", name: "_agentToken", type: "address" },
 			{ internalType: "uint256", name: "_amountIn", type: "uint256" },
-			{ internalType: "uint256", name: "_minAmountOut", type: "uint256" },
 			{ internalType: "address", name: "_recipient", type: "address" },
 		],
 		name: "buy",
@@ -75,7 +73,6 @@ export const ROUTER_ABI = [
 		inputs: [
 			{ internalType: "address", name: "_agentToken", type: "address" },
 			{ internalType: "uint256", name: "_amountIn", type: "uint256" },
-			{ internalType: "uint256", name: "_minAmountOut", type: "uint256" },
 			{ internalType: "address", name: "_recipient", type: "address" },
 		],
 		name: "sell",
@@ -87,7 +84,6 @@ export const ROUTER_ABI = [
 		inputs: [
 			{ internalType: "address", name: "_agentToken", type: "address" },
 			{ internalType: "uint256", name: "_amountIn", type: "uint256" },
-			{ internalType: "uint256", name: "_minAmountOut", type: "uint256" },
 		],
 		name: "sell",
 		outputs: [{ internalType: "uint256", name: "", type: "uint256" }],

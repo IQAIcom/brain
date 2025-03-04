@@ -39,7 +39,7 @@ export class SwapService {
 			address: this.routerAddress,
 			abi: ROUTER_ABI,
 			functionName: "buy",
-			args: [tokenContract, amountInWei, 0n],
+			args: [tokenContract, amountInWei],
 			chain: fraxtal,
 			account: walletClient.account,
 		});
@@ -71,7 +71,7 @@ export class SwapService {
 			address: this.routerAddress,
 			abi: ROUTER_ABI,
 			functionName: "sell",
-			args: [tokenContract, amountInWei, 0n],
+			args: [tokenContract, amountInWei],
 			chain: fraxtal,
 			account: walletClient.account,
 		});
