@@ -15,20 +15,20 @@ This plugin provides seamless integration with the NEAR Protocol blockchain.
 
 Install the plugin using **pnpm**:
 
-***bash
+```bash
 pnpm add @iqai/plugin-near
-***
+```
 
 After installation, you can use the plugin like this:
 
-***typescript
+```typescript
 import createNearPlugin from "@iqai/plugin-near";
 const nearPlugin = await createNearPlugin(options);
 
 const agent = new AgentBuilder()
   ...
   .withPlugin(nearPlugin)
-***
+```
 
 ## ⚙ Configuration
 
@@ -39,7 +39,7 @@ const agent = new AgentBuilder()
 
 ## 🚀 Usage
 
-***typescript
+```typescript
 import createNearPlugin from "@iqai/plugin-near";
 
 // Initialize the plugin
@@ -62,33 +62,7 @@ const nearPlugin = await createNearPlugin({
     nodeUrl: "https://test.rpc.fastnear.com",
   },
 });
-***
-
-## 🎯 Actions
-
-### 🔄 `NEAR_CALL_CONTRACT`
-
-Execute a function on a NEAR smart contract.
-
-💬 **Examples:**
-- "Call the 'swap' function on contract 'swap.testnet' with 10 tokens"
-- "Execute 'stake' on 'staking.near' with 50 NEAR"
-
-### 👁️ `NEAR_VIEW_CONTRACT`
-
-View data from a NEAR smart contract without modifying state.
-
-💬 **Examples:**
-- "Check the balance of account 'alice.near' on token contract"
-- "View total supply of 'token.testnet'"
-
-### 📡 `NEAR_LISTEN_EVENTS`
-
-Configure listeners for specific contract events.
-
-💬 **Examples:**
-- "Listen for 'deposit' events on 'bank.near'"
-- "Set up a listener for 'transfer' events"
+```
 
 ## 🌜 Response Format
 
