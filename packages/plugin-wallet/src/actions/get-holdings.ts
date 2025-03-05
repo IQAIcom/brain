@@ -72,7 +72,7 @@ const handler: (opts: WalletActionParams) => Handler =
 			const holdingsService = new GetHoldingsService(opts.covalentApiKey);
 			const holdings = await holdingsService.getHoldings({
 				chain: chainName,
-				address,
+				address: address ?? opts.walletAddress,
 			});
 
 			const formattedHoldings = holdingsService.formatHoldings(holdings, chain);

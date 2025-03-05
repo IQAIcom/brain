@@ -8,6 +8,9 @@ export async function createWalletPlugin(
 	if (!opts.covalentApiKey) {
 		throw new Error("Covalent API key is required");
 	}
+	if (!opts.walletAddress) {
+		throw new Error("Wallet address is required");
+	}
 	const actions = [getHoldingsAction(opts)];
 
 	return {

@@ -12,10 +12,11 @@ try to match the extracted chain name the most relevant chain name in the valid 
 for example if the extracted chain name is fraxtal, the response should be fraxtal-mainnet.
 
 The response must include:
-- chain: The blockchain chain name exactly as listed above (e.g., "eth-mainnet", "fraxtal-mainnet"). this is optional if the chain is not provided in the message
+- chain: The blockchain chain name exactly as listed above (e.g., "eth-mainnet", "fraxtal-mainnet"). this is optional and default to fraxtal-mainnet if not provided.
 - address: The wallet address to check (optional)
 - error: An error message if a valid chain/address cannot be determined from the given message (optional)
-NOTE: the error should only be thrown if the given message contains an invalid chain name or address. if either is not provided, the error is not required.
+NOTE: the error should only be thrown if the given message contains an invalid chain name or address. these are optional and user is not required to provide a chain or address.
+NOTE: if address is not provided, do not return the address field. same applies to the chain field.
 Example response:
 \`\`\`json
 {

@@ -8,11 +8,11 @@ import {
 } from "@covalenthq/client-sdk";
 import dedent from "dedent";
 import { elizaLogger } from "@elizaos/core";
-import formatNumber from "../lib/format-number";
+import formatNumber, { formatWeiToNumber } from "../lib/format-number";
 
 export interface GetHoldingsParams {
 	chain: ChainName;
-	address?: string;
+	address: string;
 }
 
 export class GetHoldingsService {
@@ -27,7 +27,7 @@ export class GetHoldingsService {
 
 	async getHoldings({ chain, address }: GetHoldingsParams) {
 		try {
-			const walletAddress = address || process.env.WALLET_ADDRESS;
+			const walletAddress = address;
 
 			if (!walletAddress) {
 				throw new Error("No wallet address provided");
@@ -65,32 +65,23 @@ export class GetHoldingsService {
 			return `📊 No holdings found for the address on ${chain}`;
 		}
 
-		const totalValue = holdings.items.reduce(
-			(sum: number, holding: BalanceItem) => {
-				return sum + holding.quote;
-			},
-			0,
-		);
-
 		const formattedHoldings = holdings.items
-			.filter((token: BalanceItem) => token.quote > 0)
 			.map((token: BalanceItem) => {
-				const percentOfPortfolio = (token.quote / totalValue) * 100;
 				return dedent`
-          💰 *${token.contract_name}* (${token.contract_ticker_symbol})
-          💵 Value: $${formatNumber(token.quote)}
-          🔢 Balance: ${token.balance}
-          📊 % of Portfolio: ${percentOfPortfolio.toFixed(2)}%
+          💰 *${token.contract_display_name}* (${token.contract_ticker_symbol})
+          💵 Value: ${token.pretty_quote_24h}
+          🔢 Balance: ${formatWeiToNumber(token.balance)}
+					📩 Address ${token.contract_address}
         `;
-			});
+			})
+			.join("\n\n\n");
 
 		return dedent`
       🏦 *Wallet Holdings on ${chain}*
-      💵 Total Portfolio Value: $${formatNumber(totalValue)}
+			🧮 *Total holdings: ${holdings.items.length}*
 
       ${formattedHoldings}
 
-      ${holdings.items.length > 10 ? `\n_Showing top 10 of ${holdings.items.length} tokens_` : ""}
     `;
 	}
 }

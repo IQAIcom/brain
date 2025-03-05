@@ -36,6 +36,7 @@ async function main() {
 
 	const walletPlugin = await createWalletPlugin({
 		covalentApiKey: process.env.COVALENT_API_KEY,
+		walletAddress: process.env.WALLET_ADDRESS,
 	});
 	// Setup database
 	const dataDir = path.join(process.cwd(), "./data");

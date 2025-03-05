@@ -1,5 +1,6 @@
 export interface WalletActionParams {
 	covalentApiKey: string | undefined;
+	walletAddress: string | undefined;
 }
 
 export interface TokenHolding {
