@@ -243,6 +243,9 @@ importers:
       '@iqai/plugin-sequencer':
         specifier: workspace:*
         version: link:../../packages/plugin-sequencer
+      '@iqai/plugin-wallet':
+        specifier: workspace:*
+        version: link:../../packages/plugin-wallet
       '@tavily/core':
         specifier: ^0.0.2
         version: 0.0.2
@@ -483,6 +486,34 @@ importers:
       zod:
         specifier: ^3.24.2
         version: 3.24.2
+    devDependencies:
+      '@0no-co/graphqlsp':
+        specifier: ^1.8.0
+        version: 1.12.16(graphql@16.10.0)(typescript@5.7.3)
+      '@iqai/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node-cron':
+        specifier: ^3.0.11
+        version: 3.0.11
+
+  packages/plugin-wallet:
+    dependencies:
+      '@covalenthq/client-sdk':
+        specifier: ^2.2.4
+        version: 2.2.4
+      '@elizaos/core':
+        specifier: 0.1.9
+        version: 0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38(openai@4.73.0(zod@3.23.8)))(axios@1.7.9)(react@19.0.0)(sswr@2.1.0(svelte@5.19.8))(svelte@5.19.8)(vue@3.5.13(typescript@5.7.3))(ws@8.18.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))
+      dedent:
+        specifier: ^1.5.3
+        version: 1.5.3
+      tsup:
+        specifier: 8.3.6
+        version: 8.3.6(@swc/core@1.10.14(@swc/helpers@0.5.15))(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0)
+      viem:
+        specifier: ^2.22.15
+        version: 2.22.22(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.23.8)
     devDependencies:
       '@0no-co/graphqlsp':
         specifier: ^1.8.0
@@ -1196,6 +1227,9 @@ packages:
     engines: {node: '>=10'}
     peerDependencies:
       '@solana/web3.js': ^1.68.0
+
+  '@covalenthq/client-sdk@2.2.4':
+    resolution: {integrity: sha512-aDzKBz75S6DyAaxDEEO7orMNvJ9N4ojO2aKJVdaF/B9o6KM7bKgler4E/XB+uyZ0VC2WtE2pXDICB0R2Rr3kYA==}
 
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
@@ -3849,6 +3883,9 @@ packages:
 
   better-sqlite3@11.8.1:
     resolution: {integrity: sha512-9BxNaBkblMjhJW8sMRZxnxVTRgbRmssZW0Oxc1MPBTfiR+WW21e2Mk4qu8CzrcZb1LwPCnFsfDEzq+SNcBU8eg==}
+
+  big.js@6.2.2:
+    resolution: {integrity: sha512-y/ie+Faknx7sZA5MfGA2xKlu0GDv8RWrXGsmlteyJQ2lvoKv9GBK/fpRMc2qlSoBAgNxrixICFCBefIq8WCQpQ==}
 
   bigint-buffer@1.1.5:
     resolution: {integrity: sha512-trfYco6AoZ+rKhKnxA0hgX0HAbVP/s808/EuDSe2JDzUnCp/xAsli35Orvk67UrTEcwuxZqYZDmfA2RXJgxVvA==}
@@ -9765,6 +9802,10 @@ snapshots:
       bn.js: 5.2.1
       buffer-layout: 1.2.2
 
+  '@covalenthq/client-sdk@2.2.4':
+    dependencies:
+      big.js: 6.2.2
+
   '@cspotcode/source-map-support@0.8.1':
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
@@ -13284,6 +13325,8 @@ snapshots:
     dependencies:
       bindings: 1.5.0
       prebuild-install: 7.1.3
+
+  big.js@6.2.2: {}
 
   bigint-buffer@1.1.5:
     dependencies:

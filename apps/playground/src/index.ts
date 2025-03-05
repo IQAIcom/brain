@@ -7,6 +7,7 @@ import { createAtpPlugin } from "@iqai/plugin-atp";
 import { createBAMMPlugin } from "@iqai/plugin-bamm";
 import { createFraxlendPlugin } from "@iqai/plugin-fraxlend";
 import { createOdosPlugin } from "@iqai/plugin-odos";
+import { createWalletPlugin } from "@iqai/plugin-wallet";
 import createSequencerPlugin from "@iqai/plugin-sequencer";
 import Database from "better-sqlite3";
 import { fraxtal } from "viem/chains";
@@ -33,6 +34,9 @@ async function main() {
 		chain: fraxtal,
 	});
 
+	const walletPlugin = await createWalletPlugin({
+		covalentApiKey: process.env.COVALENT_API_KEY,
+	});
 	// Setup database
 	const dataDir = path.join(process.cwd(), "./data");
 	fs.mkdirSync(dataDir, { recursive: true });
@@ -53,6 +57,7 @@ async function main() {
 			atpPlugin,
 			sequencerPlugin,
 			bammPlugin,
+			walletPlugin,
 		])
 		.withCharacter({
 			name: "BrainBot",
