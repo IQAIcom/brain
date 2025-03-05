@@ -68,20 +68,15 @@ main().catch(console.error);
 
 ---
 
-## Task Configuration
+## ⚙ Configuration
 
-Each heartbeat task requires the following parameters:
+The plugin requires configuration for clients. currently heartbeat plugin only supports twitter, telegram and webhook
 
-```typescript
-interface HeartbeatTask {
-  period: string;     // Cron expression for scheduling
-  input: string;      // Message prompt for the agent
-  client: "telegram" | "twitter";  // Target platform
-  config?: {          // Platform-specific configuration
-    chatId?: string;  // Required for Telegram
-  };
-}
-```
+| 🔧 Platform | 📜 Configuration Needed |
+|------------|------------------------|
+| **Twitter**  | N/A |
+| **Telegram** | `{chatId: string}` |
+| **Webhook**  | `{url: string}` |
 
 ---
 

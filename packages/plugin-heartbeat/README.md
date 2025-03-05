@@ -27,12 +27,13 @@ pnpm add @iqai/plugin-heartbeat
 
 ## ⚙ Configuration
 
-The plugin requires configuration for social media clients:
+The plugin requires configuration for clients. currently heartbeat plugin only supports twitter, telegram and webhook
 
 | 🔧 Platform | 📜 Configuration Needed |
 |------------|------------------------|
 | **Twitter**  | N/A |
 | **Telegram** | {chatId: string} |
+| **Webhook**  | {url: string} |
 
 ---
 
@@ -64,7 +65,7 @@ Each heartbeat task requires:
 
 ✔ **period**: Cron expression for scheduling  
 ✔ **input**: Message prompt for the agent  
-✔ **client**: Target platform (**"telegram"** or **"twitter"**)  
+✔ **client**: Target platform (**"telegram"**,  **"twitter"**, **"webhook"**)  
 ✔ **config**: Platform-specific configuration  
 
 ### 💬 Example Tasks
