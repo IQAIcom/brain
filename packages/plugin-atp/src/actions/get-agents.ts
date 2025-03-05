@@ -1,9 +1,9 @@
 import type { Action, Handler } from "@elizaos/core";
+import { elizaLogger } from "@elizaos/core";
+import { GET_AGENTS_TEMPLATE } from "../lib/templates";
 import { GetAgentsService } from "../services/get-agents";
 import { InputParserService } from "../services/input-parser";
 import type { ATPActionParams } from "../types";
-import { GET_AGENTS_TEMPLATE } from "../lib/templates";
-import { elizaLogger } from "@elizaos/core";
 
 export const getAgentsAction = (opts: ATPActionParams): Action => {
 	return {
