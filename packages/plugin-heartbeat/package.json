@@ -16,7 +16,7 @@
 	},
 	"devDependencies": {
 		"@0no-co/graphqlsp": "^1.8.0",
-		"@types/node-cron": "^3.0.11",
-		"@iqai/tsconfig": "workspace:*"
+		"@iqai/tsconfig": "workspace:*",
+		"@types/node-cron": "^3.0.11"
 	}
 }
