@@ -76,7 +76,7 @@ The plugin requires configuration for clients. currently heartbeat plugin only s
 |------------|------------------------|
 | **Twitter**  | N/A |
 | **Telegram** | `{chatId: string}` |
-| **Webhook**  | `{url: string}` |
+| **Callback**  |`{callback: (message: string) => Promise<void>}` |
 
 ---
 
@@ -111,6 +111,17 @@ The plugin requires configuration for clients. currently heartbeat plugin only s
   "input": "Create a daily crypto news summary",
   "client": "telegram",
   "config": { "chatId": "-1234567890" }
+}
+```
+
+### Custom Callback
+
+```json
+{
+  "period": "*/30 * * * * *",    // Every 30 seconds
+  "input": "Post a crypto market update",
+  "client": "callback",
+  "config": { "callback": (message) => console.log(message) }
 }
 ```
 

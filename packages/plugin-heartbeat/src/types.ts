@@ -14,16 +14,16 @@ export interface TelegramHeartbeatTask extends BaseHeartbeatTask {
 	};
 }
 
-export interface WebhookHeartbeatTask extends BaseHeartbeatTask {
-	client: "webhook";
+export interface CallbackHeartbeatTask extends BaseHeartbeatTask {
+	client: "callback";
 	config: {
-		url: string;
+		callback: (content: string, roomId: string) => Promise<void>;
 	};
 }
 
 export type HeartbeatTask =
 	| TwitterHeartbeatTask
 	| TelegramHeartbeatTask
-	| WebhookHeartbeatTask;
+	| CallbackHeartbeatTask;
 
 export type HeartbeatPluginParams = HeartbeatTask[];

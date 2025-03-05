@@ -27,13 +27,15 @@ pnpm add @iqai/plugin-heartbeat
 
 ## ⚙ Configuration
 
-The plugin requires configuration for clients. currently heartbeat plugin only supports twitter, telegram and webhook
+The plugin requires configuration for clients. currently heartbeat plugin only supports twitter, telegram and callback.
 
 | 🔧 Platform | 📜 Configuration Needed |
 |------------|------------------------|
 | **Twitter**  | N/A |
 | **Telegram** | {chatId: string} |
-| **Webhook**  | {url: string} |
+| **Callback**  | {callback: (message: string) => Promise<void>} |
+
+Use callback to handle the message with your own logic.
 
 ---
 
