@@ -163,6 +163,25 @@ export class Heartbeat extends Service {
 				);
 				break;
 			}
+			case "webhook": {
+				try {
+					await fetch(task.config.url, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							content: responseContent,
+							roomId,
+							timestamp: Date.now(),
+						}),
+					});
+					elizaLogger.info(`✅ Webhook sent to ${task.config.url}`);
+				} catch (error) {
+					elizaLogger.error(`❌ Failed to send webhook: ${error}`);
+				}
+				break;
+			}
 		}
 	}
 }
