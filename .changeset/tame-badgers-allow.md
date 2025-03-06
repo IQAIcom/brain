@@ -1,5 +1,4 @@
 ---
-"@iqai/docs": patch
 "@iqai/plugin-heartbeat": patch
 ---
 
