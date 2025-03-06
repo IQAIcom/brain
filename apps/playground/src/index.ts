@@ -80,7 +80,7 @@ async function main() {
 	// Build agent using builder pattern
 	const agent = new AgentBuilder()
 		.withDatabase(databaseAdapter)
-		.withClient("direct", DirectClientInterface as any)
+		.withClient("direct", DirectClientInterface)
 		.withModelProvider(
 			ModelProviderName.OPENAI,
 			process.env.OPENAI_API_KEY as string,
