@@ -117,7 +117,7 @@ const handler: (opts: YourPluginParams) => Handler =
 	"type": "module",
 	"types": "dist/index.d.ts",
 	"dependencies": {
-		"@elizaos/core": "0.25.6-alpha.1",
+		"@elizaos/core": "0.25.9",
 		"tsup": "8.3.6",
 		"dedent": "^1.5.3"
 	},

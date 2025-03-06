@@ -17,12 +17,12 @@ export class AgentBuilder {
 		return this;
 	}
 
-	public withClient(name: string, client: Client) {
-		this.options.clients = [...(this.options.clients || []), { name, client }];
+	public withClient(client: Client) {
+		this.options.clients = [...(this.options.clients || []), client];
 		return this;
 	}
 
-	public withClients(clients: { name: string; client: Client }[]) {
+	public withClients(clients: Client[]) {
 		this.options.clients = [...(this.options.clients || []), ...clients];
 		return this;
 	}

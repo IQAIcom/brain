@@ -1,13 +1,10 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
-import DirectClientInterface from "@elizaos/client-direct";
-import TelegramClientInterface from "@elizaos/client-telegram";
+import { DirectClientInterface } from "@elizaos/client-direct";
 import { AgentBuilder, ModelProviderName } from "@iqai/agent";
 import { createAtpPlugin } from "@iqai/plugin-atp";
 import { createFraxlendPlugin } from "@iqai/plugin-fraxlend";
-import createHeartbeatPlugin from "@iqai/plugin-heartbeat";
-import createNearPlugin from "@iqai/plugin-near";
 import { createOdosPlugin } from "@iqai/plugin-odos";
 import createSequencerPlugin from "@iqai/plugin-sequencer";
 import Database from "better-sqlite3";
@@ -74,17 +71,6 @@ async function main() {
 
 	const sequencerPlugin = await createSequencerPlugin();
 
-	const heartbeatPlugin = await createHeartbeatPlugin([
-		{
-			client: "telegram",
-			config: {
-				chatId: "@brainheartbeats1",
-			},
-			period: "*/30 * * * * *", // every 30 seconds
-			input: "Show my fraxlend positions",
-		},
-	]);
-
 	// Setup database
 	const dataDir = path.join(process.cwd(), "./data");
 	fs.mkdirSync(dataDir, { recursive: true });
@@ -94,8 +80,7 @@ async function main() {
 	// Build agent using builder pattern
 	const agent = new AgentBuilder()
 		.withDatabase(databaseAdapter)
-		.withClient("direct", DirectClientInterface)
-		.withClient("telegram", TelegramClientInterface)
+		.withClient("direct", DirectClientInterface as any)
 		.withModelProvider(
 			ModelProviderName.OPENAI,
 			process.env.OPENAI_API_KEY as string,
@@ -106,7 +91,6 @@ async function main() {
 			atpPlugin,
 			// nearPlugin,
 			sequencerPlugin,
-			heartbeatPlugin,
 		])
 		.withCharacter({
 			name: "BrainBot",
