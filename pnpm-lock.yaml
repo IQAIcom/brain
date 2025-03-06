@@ -234,6 +234,9 @@ importers:
       '@iqai/plugin-heartbeat':
         specifier: workspace:*
         version: link:../../packages/plugin-heartbeat
+      '@iqai/plugin-js':
+        specifier: workspace:*
+        version: link:../../packages/plugin-js
       '@iqai/plugin-mcp':
         specifier: workspace:*
         version: link:../../packages/plugin-mcp
@@ -427,6 +430,25 @@ importers:
       '@types/node-cron':
         specifier: ^3.0.11
         version: 3.0.11
+
+  packages/plugin-js:
+    dependencies:
+      '@elizaos/core':
+        specifier: 0.1.9
+        version: 0.1.9(@google-cloud/vertexai@1.9.3)(@langchain/core@0.3.38(openai@4.73.0(zod@3.23.8)))(axios@1.7.9)(react@19.0.0)(sswr@2.1.0(svelte@5.19.8))(svelte@5.19.8)(vue@3.5.13(typescript@5.7.3))(ws@8.18.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))
+      dedent:
+        specifier: ^1.5.3
+        version: 1.5.3
+      isolated-vm:
+        specifier: 5.0.3
+        version: 5.0.3
+      tsup:
+        specifier: 8.3.6
+        version: 8.3.6(@swc/core@1.10.14(@swc/helpers@0.5.15))(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0)
+    devDependencies:
+      '@iqai/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
 
   packages/plugin-mcp:
     dependencies:
@@ -5584,6 +5606,10 @@ packages:
 
   isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
+
+  isolated-vm@5.0.3:
+    resolution: {integrity: sha512-GNqX0j7dkwdaNQfFogLLb/tSuPZbXtKlk5ldaJ084ngjaW9/bn34x9FQFL856p20KSZoubIIummmiJf+2hzhCw==}
+    engines: {node: '>=18.0.0'}
 
   isomorphic-ws@4.0.1:
     resolution: {integrity: sha512-BhBvN2MBpWTaSHdWRb/bwdZJ1WaehQ2L1KngkCkfLUGF0mAWAT1sQUQacEmQ0jXkFw/czDXPNQSL5u2/Krsz1w==}
@@ -15375,6 +15401,10 @@ snapshots:
   isarray@2.0.5: {}
 
   isexe@2.0.0: {}
+
+  isolated-vm@5.0.3:
+    dependencies:
+      prebuild-install: 7.1.3
 
   isomorphic-ws@4.0.1(ws@7.5.10(bufferutil@4.0.9)(utf-8-validate@5.0.10)):
     dependencies:

@@ -1,0 +1,111 @@
+---
+title: "Plugin JS"
+description: "Secure JavaScript Execution in an Isolated Environment for the Brain Framework."
+---
+
+import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+import { PackageManagers } from 'starlight-package-managers'
+
+The **Plugin JS** provides a secure, sandboxed environment for executing JavaScript code within the Brain Framework. It offers a robust solution to run arbitrary JavaScript snippets safely.
+
+---
+
+## Installation
+  <Steps>
+  1. Install the required package:
+     <PackageManagers pkg="@iqai/plugin-js" />
+  2. Ensure you meet all the [requirements here](https://github.com/laverdet/isolated-vm?tab=readme-ov-file#requirements) before using the plugin.
+  </Steps>
+
+---
+## Overview
+
+The Plugin JS comprises two primary components:
+
+- **Execution Service:** Securely executes JavaScript code in an isolated virtual machine.
+- **Action Handler:** Extracts code from messages and formats responses, enabling safe testing and experimentation with JavaScript snippets.
+
+---
+
+## Configuration
+
+Configure the plugin with the following parameters:
+
+| Param Name   | Description                                             | Default Value |
+| ------------ | ------------------------------------------------------- | ------------- |
+| memoryLimit  | Maximum memory available to JavaScript execution (MB) | 128           |
+| timeout      | Maximum execution time allowed (ms)                   | 5000          |
+
+## Usage
+
+### Basic Setup
+
+```typescript
+import { createJsPlugin } from "@iqai/plugin-js";
+
+// Initialize the plugin with default settings
+const plugin = await createJsPlugin();
+```
+
+### Custom Setup
+
+```typescript
+import { createJsPlugin } from "@iqai/plugin-js";
+
+// Initialize the plugin with custom memory and timeout settings
+const plugin = await createJsPlugin({
+  memoryLimit: 256,  // 256MB memory limit
+  timeout: 10000     // 10-second timeout
+});
+```
+
+Once initialized, the plugin adds the `JS_EXECUTE` action to your agent, which can be triggered with commands like "run this JavaScript" or "execute this code".
+
+---
+
+## Error Handling
+
+The plugin handles various error scenarios, including:
+
+- **Syntax Errors:** Detected during code compilation.
+- **Runtime Errors:** Caught during code execution.
+- **Timeout Errors:** Occur when execution exceeds the configured time limit.
+- **Memory Errors:** Triggered when code exceeds the allocated memory.
+- **Catastrophic Errors:** Severe VM failures that require environment recreation.
+
+---
+
+## Security Considerations
+
+The Plugin JS incorporates several security measures:
+
+- **Isolation:** Code runs in a fully isolated virtual machine.
+- **Resource Limiting:** Strict limits on memory and execution time.
+- **Console Access Only:** No access to Node.js modules, filesystem, or network.
+- **Error Containment:** Prevents errors from escaping the sandbox environment.
+- **Automatic Resource Cleanup:** VM resources are disposed of after execution.
+
+*Always review your code before deploying in production environments.*
+
+---
+
+## Example Interaction
+
+```javascript
+// Example: Run this JavaScript
+const numbers = [1, 2, 3, 4, 5];
+console.log(numbers.map(n => n * 2));
+return numbers.reduce((sum, n) => sum + n, 0);
+
+// Expected Output:
+// Console: [2, 4, 6, 8, 10]
+// Result: 15
+```
+
+---
+
+## Learn More
+
+For additional details on secure JavaScript execution in isolated environments, visit:
+
+- [isolated-vm on GitHub](https://github.com/laverdet/isolated-vm)
