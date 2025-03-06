@@ -163,6 +163,14 @@ export class Heartbeat extends Service {
 				);
 				break;
 			}
+			case "callback": {
+				try {
+					await task.config.callback(responseContent, roomId);
+				} catch (error) {
+					elizaLogger.error(`❌ Failed to send callback: ${error}`);
+				}
+				break;
+			}
 		}
 	}
 }
