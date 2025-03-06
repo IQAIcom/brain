@@ -7,7 +7,6 @@ import { AgentBuilder, ModelProviderName } from "@iqai/agent";
 import { createAtpPlugin } from "@iqai/plugin-atp";
 import { createFraxlendPlugin } from "@iqai/plugin-fraxlend";
 import createHeartbeatPlugin from "@iqai/plugin-heartbeat";
-import createNearPlugin from "@iqai/plugin-near";
 import { createOdosPlugin } from "@iqai/plugin-odos";
 import { createWalletPlugin } from "@iqai/plugin-wallet";
 import createSequencerPlugin from "@iqai/plugin-sequencer";
@@ -75,11 +74,6 @@ async function main() {
 
 	const sequencerPlugin = await createSequencerPlugin();
 
-	const bammPlugin = await createBAMMPlugin({
-		walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
-		chain: fraxtal,
-	});
-
 	const walletPlugin = await createWalletPlugin({
 		covalentApiKey: process.env.COVALENT_API_KEY,
 		walletAddress: process.env.WALLET_ADDRESS,
@@ -105,7 +99,6 @@ async function main() {
 			atpPlugin,
 			// nearPlugin,
 			sequencerPlugin,
-			bammPlugin,
 			walletPlugin,
 		])
 		.withCharacter({
