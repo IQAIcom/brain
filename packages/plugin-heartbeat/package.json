@@ -5,7 +5,7 @@
 	"type": "module",
 	"types": "dist/index.d.ts",
 	"dependencies": {
-		"@elizaos/core": "0.1.9",
+		"@elizaos/core": "0.25.9",
 		"dedent": "^1.5.3",
 		"node-cron": "^3.0.3",
 		"tsup": "8.3.6"

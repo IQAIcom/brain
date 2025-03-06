@@ -5,6 +5,7 @@ import {
 	CacheStore,
 	type Character,
 	type Client,
+	type ClientInstance,
 	DbCacheAdapter,
 	FsCacheAdapter,
 	type ICacheManager,
@@ -20,7 +21,7 @@ import { defaultCharacter } from "./default-charecter";
 
 export interface AgentOptions {
 	databaseAdapter?: IDatabaseAdapter & IDatabaseCacheAdapter;
-	clients?: { name: string; client: Client }[];
+	clients?: Client[];
 	plugins?: Plugin[];
 	modelProvider?: ModelProviderName;
 	modelKey?: string;
@@ -31,7 +32,7 @@ export interface AgentOptions {
 export class Agent {
 	private cacheManager: ICacheManager;
 	private runtime: AgentRuntime;
-	private clients: Record<string, Client> = {};
+	private clients: ClientInstance[] = [];
 	private readonly options: AgentOptions;
 
 	constructor(options: AgentOptions) {
@@ -52,13 +53,13 @@ export class Agent {
 			const runtime = await this.initializeRuntime();
 
 			elizaLogger.info("🔌 Starting client initialization...");
-			for (const { name, client } of this.options.clients || []) {
+			for (const client of this.options.clients || []) {
 				const clientInstance = await client.start(runtime);
 				if (clientInstance) {
-					this.clients[name] = clientInstance as Client;
+					this.clients[client.name] = clientInstance;
 				}
-				if (name === "direct") {
-					const instance = clientInstance as {
+				if (client.name === "direct") {
+					const instance = clientInstance as unknown as {
 						registerAgent: (runtime: AgentRuntime) => void;
 					};
 					instance.registerAgent(this.runtime as AgentRuntime);
