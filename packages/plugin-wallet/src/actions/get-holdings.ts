@@ -1,4 +1,3 @@
-import { fraxtal } from "viem/chains";
 import type { Action, Handler } from "@elizaos/core";
 import { GetHoldingsService } from "../services/get-holdings";
 import { GET_HOLDINGS_TEMPLATE } from "../lib/templates";
