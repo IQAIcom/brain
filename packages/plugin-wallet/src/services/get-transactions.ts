@@ -1,7 +1,6 @@
 import {
 	GoldRushClient,
 	type ChainName,
-	type TransactionsResponse,
 	type GoldRushResponse,
 	type MultiChainMultiAddressTransactionsResponse,
 	type MultiChainTransaction,
