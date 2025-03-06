@@ -30,6 +30,14 @@ export const getHoldingsAction = (opts: WalletActionParams): Action => {
 					},
 				},
 			],
+			[
+				{
+					user: "user",
+					content: {
+						text: "get holdings of 0x1231241241212... on polygon",
+					},
+				},
+			],
 		],
 	};
 };

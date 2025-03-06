@@ -1,6 +1,8 @@
 import type { Plugin } from "@elizaos/core";
 import { getHoldingsAction } from "./actions/get-holdings";
 import type { WalletActionParams } from "./types";
+import { getTransaction } from "viem/actions";
+import { getTransactionsAction } from "./actions/get-transactions";
 
 export async function createWalletPlugin(
 	opts: WalletActionParams,
@@ -11,7 +13,7 @@ export async function createWalletPlugin(
 	if (!opts.walletAddress) {
 		throw new Error("Wallet address is required");
 	}
-	const actions = [getHoldingsAction(opts)];
+	const actions = [getHoldingsAction(opts), getTransactionsAction(opts)];
 
 	return {
 		name: "Wallet Integration",
