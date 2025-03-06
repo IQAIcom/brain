@@ -81,6 +81,7 @@ export default defineConfig({
 						{ label: "📦 Node", link: "/plugins/node" },
 						{ label: "⛓️ Solana", link: "/plugins/solana" },
 						{ label: "🔌 MCP", link: "/plugins/mcp" },
+						{ label: "💰 Wallet", link: "/plugins/wallet" },
 					],
 				},
 				{
