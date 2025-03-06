@@ -123,7 +123,16 @@ export class Heartbeat extends Service {
 				memory,
 				[responseMessage],
 				state,
-				async () => [memory],
+				async (ctx) => {
+					if (ctx.text)
+						await this.handleSocialPost(
+							runtime,
+							heartbeatTask,
+							ctx.text,
+							roomId,
+						);
+					return [memory];
+				},
 			);
 
 			await runtime.evaluate(memory, state);
@@ -161,6 +170,14 @@ export class Heartbeat extends Service {
 					task.config.chatId,
 					responseContent,
 				);
+				break;
+			}
+			case "callback": {
+				try {
+					await task.config.callback(responseContent, roomId);
+				} catch (error) {
+					elizaLogger.error(`❌ Failed to send callback: ${error}`);
+				}
 				break;
 			}
 		}
