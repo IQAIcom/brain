@@ -123,7 +123,16 @@ export class Heartbeat extends Service {
 				memory,
 				[responseMessage],
 				state,
-				async () => [memory],
+				async (ctx) => {
+					if (ctx.text)
+						await this.handleSocialPost(
+							runtime,
+							heartbeatTask,
+							ctx.text,
+							roomId,
+						);
+					return [memory];
+				},
 			);
 
 			await runtime.evaluate(memory, state);
