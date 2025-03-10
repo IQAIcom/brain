@@ -49,9 +49,8 @@ async function main() {
   });
 
   // Integrate walletPlugin with your agent or system
-  // For example:
-  // const agent = new AgentBuilder().withPlugin(walletPlugin).build();
-  // await agent.start();
+  const agent = new AgentBuilder().withPlugin(walletPlugin).build();
+  await agent.start();
 }
 
 main().catch(console.error);
