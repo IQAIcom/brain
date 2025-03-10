@@ -8,7 +8,7 @@ import {
 } from "@covalenthq/client-sdk";
 import dedent from "dedent";
 import { elizaLogger } from "@elizaos/core";
-import formatNumber, { formatWeiToNumber } from "../lib/format-number";
+import { formatWeiToNumber } from "../lib/format-number";
 
 export interface GetHoldingsParams {
 	chain: ChainName;
