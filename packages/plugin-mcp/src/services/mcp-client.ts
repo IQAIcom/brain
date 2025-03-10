@@ -24,11 +24,7 @@ export class McpClientService {
 					"🚀 Initializing MCP client in SSE mode",
 					this.config.serverUrl,
 				);
-				transport = new SSEClientTransport(new URL(this.config.serverUrl), {
-					requestInit: {
-						headers: this.config.headers,
-					},
-				});
+				transport = new SSEClientTransport(new URL(this.config.serverUrl));
 			} else {
 				transport = new StdioClientTransport({
 					command: this.config.command,
@@ -39,6 +35,7 @@ export class McpClientService {
 			const client = new Client(
 				{
 					name: "McpPluginClient",
+					version: "0.0.2",
 				},
 				{
 					capabilities: {
