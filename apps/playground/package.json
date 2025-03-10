@@ -25,6 +25,8 @@
 		"@iqai/plugin-heartbeat": "workspace:*",
 		"@iqai/plugin-sequencer": "workspace:*",
 		"@iqai/plugin-odos": "workspace:*",
+		"@iqai/plugin-wallet": "workspace:*",
+		"@iqai/plugin-near": "workspace:*",
 		"@tavily/core": "^0.0.2",
 		"@types/better-sqlite3": "^7.6.12",
 		"better-sqlite3": "11.8.1",

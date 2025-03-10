@@ -1,14 +1,15 @@
 {
-	"name": "@iqai/plugin-heartbeat",
-	"version": "0.1.11",
+	"name": "@iqai/plugin-wallet",
+	"version": "0.0.1",
 	"main": "dist/index.js",
 	"type": "module",
 	"types": "dist/index.d.ts",
 	"dependencies": {
+		"@covalenthq/client-sdk": "^2.2.4",
 		"@elizaos/core": "0.1.9",
 		"dedent": "^1.5.3",
-		"node-cron": "^3.0.3",
-		"tsup": "8.3.6"
+		"tsup": "8.3.6",
+		"viem": "^2.22.15"
 	},
 	"scripts": {
 		"build": "tsup --format esm",
@@ -16,7 +17,7 @@
 	},
 	"devDependencies": {
 		"@0no-co/graphqlsp": "^1.8.0",
-		"@types/node-cron": "^3.0.11",
-		"@iqai/tsconfig": "workspace:*"
+		"@iqai/tsconfig": "workspace:*",
+		"@types/node-cron": "^3.0.11"
 	}
 }
