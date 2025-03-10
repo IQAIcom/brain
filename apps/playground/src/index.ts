@@ -7,8 +7,8 @@ import { AgentBuilder, ModelProviderName } from "@iqai/agent";
 import { createAtpPlugin } from "@iqai/plugin-atp";
 import { createFraxlendPlugin } from "@iqai/plugin-fraxlend";
 import createHeartbeatPlugin from "@iqai/plugin-heartbeat";
-import createNearPlugin from "@iqai/plugin-near";
 import { createOdosPlugin } from "@iqai/plugin-odos";
+import { createWalletPlugin } from "@iqai/plugin-wallet";
 import createSequencerPlugin from "@iqai/plugin-sequencer";
 import Database from "better-sqlite3";
 import { fraxtal } from "viem/chains";
@@ -74,17 +74,10 @@ async function main() {
 
 	const sequencerPlugin = await createSequencerPlugin();
 
-	const heartbeatPlugin = await createHeartbeatPlugin([
-		{
-			client: "telegram",
-			config: {
-				chatId: "@brainheartbeats1",
-			},
-			period: "*/30 * * * * *", // every 30 seconds
-			input: "Show my fraxlend positions",
-		},
-	]);
-
+	const walletPlugin = await createWalletPlugin({
+		covalentApiKey: process.env.COVALENT_API_KEY,
+		walletAddress: process.env.WALLET_ADDRESS,
+	});
 	// Setup database
 	const dataDir = path.join(process.cwd(), "./data");
 	fs.mkdirSync(dataDir, { recursive: true });
@@ -106,7 +99,7 @@ async function main() {
 			atpPlugin,
 			// nearPlugin,
 			sequencerPlugin,
-			heartbeatPlugin,
+			walletPlugin,
 		])
 		.withCharacter({
 			name: "BrainBot",
