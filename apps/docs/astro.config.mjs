@@ -100,6 +100,13 @@ export default defineConfig({
 						{ label: "🐘 Postgres", link: "/adapters/postgres" },
 					],
 				},
+				{
+					label: "Example Agents",
+					items: [
+						{ label: "📚 Overview", link: "/example-agents/overview" },
+						{ label: "⚡ ATP", link: "/example-agents/atp" },
+					],
+				},
 			],
 		}),
 	],
