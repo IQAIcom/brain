@@ -1,4 +1,4 @@
-# 🤖 @iqai/agent
+# 🤖 Brain Agent
 
 A powerful and flexible AI agent setup package that allows you to quickly create and configure AI agents with various capabilities using a TypeScript-first approach.
 
