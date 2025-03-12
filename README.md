@@ -18,8 +18,6 @@ Visit [https://brain.iqai.com](https://brain.iqai.com) to view the full document
 
 The Brain Framework community thrives on [GitHub Discussions](https://github.com/IQAIcom/brain/discussions) where you can ask questions, share ideas, and showcase your projects.
 
-To connect with other developers and our team, join the [Brain Framework Discord server](https://discord.gg/brainframework).
-
 Our [Code of Conduct](https://github.com/IQAIcom/brain/blob/main/CODE_OF_CONDUCT.md) applies to all Brain Framework community channels to ensure a welcoming environment for everyone.
 
 ## 💻 Contributing
