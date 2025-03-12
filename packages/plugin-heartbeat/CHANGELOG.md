@@ -1,5 +1,12 @@
 # @iqai/plugin-heartbeat
 
+## 0.1.11
+
+### Patch Changes
+
+- b731cb3: fixes callbacks not being shown on tg/twitter client from heartbeat plugin
+- f59e3f3: Add support for callback in Heartbeat service
+
 ## 0.1.10
 
 ### Patch Changes

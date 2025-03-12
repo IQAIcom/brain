@@ -12,7 +12,8 @@
 		"changeset": "changeset",
 		"version-packages": "changeset version",
 		"publish-packages": "turbo run build lint && changeset version && changeset publish",
-		"prepare": "husky"
+		"prepare": "husky",
+		"test:plugins": "bash ./test-plugins.sh"
 	},
 	"devDependencies": {
 		"@changesets/cli": "^2.27.1",

@@ -21,7 +21,48 @@
 	"organizeImports": { "enabled": true },
 	"linter": {
 		"enabled": true,
-		"rules": { "recommended": true }
+		"rules": {
+			"recommended": true,
+			"suspicious": {
+				"noExplicitAny": "warn"
+			}
+		}
 	},
-	"javascript": { "formatter": { "quoteStyle": "double" } }
+	"javascript": { "formatter": { "quoteStyle": "double" } },
+	"overrides": [
+		{
+			"include": [
+				"**/*.test.ts",
+				"**/*.test.tsx",
+				"**/*.spec.ts",
+				"**/*.spec.tsx",
+				"**/tests/**/*.ts",
+				"**/tests/**/*.tsx",
+				"**/test/**/*.ts",
+				"**/test/**/*.tsx",
+				"**/vitest/**/*.ts"
+			],
+			"linter": {
+				"enabled": true,
+				"rules": {
+					"suspicious": {
+						"noExplicitAny": "off",
+						"noImplicitAnyLet": "off"
+					},
+					"correctness": {
+						"useExhaustiveDependencies": "off"
+					},
+					"style": {
+						"noNonNullAssertion": "off"
+					},
+					"complexity": {
+						"noExcessiveCognitiveComplexity": "off"
+					},
+					"a11y": {
+						"useKeyWithClickEvents": "off"
+					}
+				}
+			}
+		}
+	]
 }

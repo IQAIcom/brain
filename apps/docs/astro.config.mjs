@@ -70,6 +70,7 @@ export default defineConfig({
 					label: "Plugins",
 					items: [
 						{ label: "📚 Overview", link: "/plugins/overview" },
+						{ label: "💫 Near", link: "/plugins/near" },
 						{ label: "💰 Fraxlend", link: "/plugins/fraxlend" },
 						{ label: "🔄 Odos", link: "/plugins/odos" },
 						{ label: "⚡ ATP", link: "/plugins/atp" },
@@ -82,6 +83,7 @@ export default defineConfig({
 						{ label: "⛓️ Solana", link: "/plugins/solana" },
 						{ label: "🔌 MCP", link: "/plugins/mcp" },
 						{ label: "🦾 JS", link: "/plugins/js" },
+						{ label: "💰 Wallet", link: "/plugins/wallet" },
 					],
 				},
 				{

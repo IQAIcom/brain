@@ -8,19 +8,6 @@ Brain Framework provides a comprehensive suite of tools and packages for develop
 
 For detailed information on using the Brain Framework, visit our [documentation](https://brain.iqai.com).
 
-## 📦 Packages
-
-| Package | Description |
-|---------|------------|
-| [@iqai/agent](./packages/agent) | 🤖 Core agent setup and configuration package |
-| [@iqai/plugin-heartbeat](./packages/plugin-heartbeat) | ⏰ Schedule automated messages and social media posts |
-| [@iqai/plugin-sequencer](./packages/plugin-sequencer) | 📋 Chain multiple actions with state management between operations |
-| [@iqai/plugin-atp](./packages/plugin-atp) | 🔌 Interact with IQ's Agent Tokenization Platform |
-| [@iqai/plugin-fraxlend](./packages/plugin-fraxlend) | 💰 Enable lending and borrowing operations on Fraxtal network |
-| [@iqai/plugin-odos](./packages/plugin-odos) | 🔄 Execute optimized token swaps with quote retrieval |
-| [@iqai/plugin-bamm](./packages/plugin-bamm) | 📊 Enable borrowing and lending operations on Frax BAMM pools |
-| [@iqai/plugin-agentkit](./packages/plugin-agentkit) | 🛠️ AgentKit integration plugin |
-
 ## 🚀 Quick Start
 
 ```bash
@@ -54,7 +41,7 @@ pnpm dev
 pnpm build
 
 # Run tests
-pnpm test
+pnpm test:plugins
 
 # Create a new version
 pnpm changeset

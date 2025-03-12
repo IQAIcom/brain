@@ -1,0 +1,123 @@
+---
+title: "Wallet Plugin"
+description: "Plugin for interacting with blockchain wallets to fetch holdings and transaction history across multiple chains"
+---
+
+import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+import { PackageManagers } from 'starlight-package-managers';
+
+The **Plugin Wallet** enables your agent to interact with blockchain wallets. It provides functionality for:
+
+- **Fetching token holdings** across multiple chains
+- **Retrieving transaction history** for specified wallets
+- **Supporting multiple blockchain networks** via the Covalent API
+
+---
+
+## Installation
+
+<Steps>
+1. **Install the required package:**
+   <PackageManagers pkg="@iqai/plugin-wallet" />
+
+2. **Create a `.env` file with the required configuration:**
+
+   ```bash
+   COVALENT_API_KEY=your-covalent-api-key
+   WALLET_ADDRESS=your-wallet-address
+   ```
+
+   <Aside type="danger" title="Security Warning">
+   Never commit your `.env` file or share your API key. Keep your credentials secure to prevent unauthorized access.
+   </Aside>
+</Steps>
+
+---
+
+## Basic Setup
+
+Here's a complete example of setting up your agent with the Wallet Plugin:
+
+```typescript
+import { createWalletPlugin } from "@iqai/plugin-wallet";
+
+async function main() {
+  // Initialize Wallet Plugin
+  const walletPlugin = await createWalletPlugin({
+    covalentApiKey: process.env.COVALENT_API_KEY,
+    walletAddress: process.env.WALLET_ADDRESS,
+  });
+
+  // Integrate walletPlugin with your agent or system
+  const agent = new AgentBuilder().withPlugin(walletPlugin).build();
+  await agent.start();
+}
+
+main().catch(console.error);
+```
+
+---
+
+## Available Operations
+
+- **Holdings Retrieval**: Fetch token balances for a wallet
+- **Transaction History**: Retrieve transaction details including timestamps, status, and gas information
+
+---
+
+## Usage Examples
+
+| Operation            | Example Query                                      |
+| -------------------- | -------------------------------------------------- |
+| **Check Holdings**   | `get my holdings on fraxtal`                       |
+| **Check Holdings**   | `show my tokens on eth-mainnet`                    |
+| **Check Transactions** | `get my transactions on fraxtal`                |
+| **Check Transactions** | `view transaction history of 0x1234...5678 on polygon` |
+
+---
+
+## Configuration Options
+
+The Wallet Plugin accepts the following configuration parameters:
+
+```typescript
+interface WalletPluginConfig {
+  covalentApiKey: string;    // Covalent API key for blockchain data access
+  walletAddress: string;   // Default wallet address
+}
+```
+
+---
+
+## Error Handling
+
+Always implement proper error handling when using the plugin:
+
+```typescript
+try {
+  const walletPlugin = await createWalletPlugin({
+    covalentApiKey: process.env.COVALENT_API_KEY,
+    walletAddress: process.env.WALLET_ADDRESS,
+  });
+} catch (error) {
+  console.error('Failed to initialize Wallet Plugin:', error);
+}
+```
+
+---
+
+## Best Practices
+
+- ✔ **Chain Validation**: Verify supported chain names before making requests
+- ✔ **Address Verification**: Ensure wallet addresses are correct and valid
+- ✔ **Rate Limit Awareness**: Handle API rate limits according to Covalent guidelines
+- ✔ **Security Measures**: Keep your API key secure and never expose it publicly
+
+---
+
+## Common Issues and Troubleshooting
+
+- **Invalid Chain Name**: Ensure you're using supported chain names as per the Covalent API documentation.
+- **Missing Wallet Address**: If required, provide a valid wallet address.
+- **API Connection Errors**: Check your network connectivity and API key validity.
+- **Rate Limiting**: Be aware of the API rate limits and implement retries or backoff mechanisms.

@@ -6,12 +6,13 @@
 	"types": "dist/index.d.ts",
 	"dependencies": {
 		"@elizaos/core": "0.1.9",
+		"dedent": "^1.5.3",
 		"gql.tada": "^1.4.3",
 		"graphql": "^16.8.1",
 		"graphql-request": "^6.1.0",
 		"tsup": "8.3.6",
 		"viem": "^2.22.15",
-		"dedent": "^1.5.3"
+		"vitest": "^3.0.7"
 	},
 	"scripts": {
 		"build": "tsup --format esm",
