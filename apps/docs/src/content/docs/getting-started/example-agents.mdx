@@ -1,0 +1,48 @@
+---
+title: Example Agents
+description: Explore example agents built using brain framework
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import { LinkCard, CardGrid } from '@astrojs/starlight/components';
+import ExternalLink from "../../../components/ExternalLink.astro"
+
+The below are some of the example agents built using Brain Framework from the <ExternalLink href="https://github.com/IQAIcom/brain-examples">examples repository</ExternalLink>. These AI Agents are designed to demonstrate the capabilities of available plugins and provide inspiration for building your own AI Agents.
+
+## Available Example Agents
+
+---
+
+
+<CardGrid>
+ <LinkCard
+    title="⚡ ATP agent"
+    description="The ATP Agent uses heartbeat plugin to check top agents daily and buy tokens using 1% of his IQ holdings on fraxtal"
+    href="https://github.com/IQAIcom/brain-examples/tree/main/apps/atp-agent-example"
+    target="_blank"
+  />
+   <LinkCard
+    title="🤖 AMM Near Agent"
+    description="The AMM Near Agent is a specialized AI agent that facilitates trading between two assets on the NEAR Protocol. It works with the AMM Near Contract to provide automated price calculations for token swaps."
+    href="https://github.com/IQAIcom/brain-examples/tree/main/apps/amm-near-agent"
+    target="_blank"
+  />
+   <LinkCard
+    title="💰 Fraxlend agent"
+    description="The FraxLend Agent Example allows your agent to check his positions every 24hrs and decide to withdraw and lend if APR of new pools are > 3% of his current positions on fraxtal then post on telegram"
+    href="https://github.com/IQAIcom/brain-examples/tree/main/apps/fraxlend-agent-example"
+    target="_blank"
+  />
+  <LinkCard
+    title="🎨 ImageLoad agent"
+    description="The ImageLoad Agent integrates multiple plugins to enable your agent generate images and captions, and post them on a daily basis."
+    href="https://github.com/IQAIcom/brain-examples/tree/main/apps/imageload-agent-example"
+    target="_blank"
+  />
+    <LinkCard
+    title="🔄 OdosBAMM agent"
+    description="This agent combines the capabilities of the Odos, BAMM, Sequencer, and Telegram/Discord plugins to facilitate token swaps, borrowing, lending, and complex multi-step operations."
+    href="https://github.com/IQAIcom/brain-examples/tree/main/apps/odosbamm-agent-example"
+    target="_blank"
+  />
+</CardGrid>

@@ -64,6 +64,10 @@ export default defineConfig({
 							label: "🚀 Deploy your agent",
 							link: "/getting-started/deployment",
 						},
+						{
+							label: "🤖 Example agents",
+							link: "/getting-started/example-agents",
+						},
 					],
 				},
 				{
