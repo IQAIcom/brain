@@ -64,6 +64,10 @@ export default defineConfig({
 							label: "🚀 Deploy your agent",
 							link: "/getting-started/deployment",
 						},
+						{
+							label: "🤖 Example agents",
+							link: "/getting-started/example-agents",
+						},
 					],
 				},
 				{
@@ -98,13 +102,6 @@ export default defineConfig({
 					items: [
 						{ label: "🗃️ SQLite", link: "/adapters/sqlite" },
 						{ label: "🐘 Postgres", link: "/adapters/postgres" },
-					],
-				},
-				{
-					label: "Example Agents",
-					items: [
-						{ label: "📚 Overview", link: "/example-agents/overview" },
-						{ label: "⚡ ATP", link: "/example-agents/atp" },
 					],
 				},
 			],
