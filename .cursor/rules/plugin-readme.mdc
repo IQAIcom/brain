@@ -1,6 +1,6 @@
 ---
 description: Plugin README Guide
-globs: 
+globs:
 ---
 # 📝 Plugin README Guide
 
@@ -136,3 +136,6 @@ Fetch **statistics** for a specific entity.
 When generating a new README, replace `<PLUGIN_NAME>` with the actual name of the plugin. Ensure that each section is **structured, informative, and concise**.
 
 This template ensures **consistency** across all plugin documentation while making it **easy to understand and navigate**.
+
+
+for code blocks please use *** instead of ```, But use ``` for the whole file output so i can easily copy

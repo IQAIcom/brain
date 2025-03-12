@@ -1,51 +1,29 @@
 <img src="./brain-framework-cover.png" />
 
-## 🌟 Overview
+## 🧠 Brain Framework
 
-Brain Framework provides a comprehensive suite of tools and packages for developers to create, customize, and deploy AI agents. Built on the robust Eliza framework, it simplifies the complex process of AI agent development.
+Brain Framework is a developer-first toolkit for building AI agents with enhanced flexibility and type safety. It provides a TypeScript-first approach to agent configuration and development, enabling you to create sophisticated AI agents with robust, maintainable code.
+
+## 🚀 Getting Started
+
+Visit our [Quick Start Guide](https://brain.iqai.com/quick-start) to build your first AI agent with Brain Framework.
+
+Explore our [Example Repo](https://github.com/IQAIcom/brain-examples) to see example agents built with Brain Framework.
 
 ## 📚 Documentation
 
-For detailed information on using the Brain Framework, visit our [documentation](https://brain.iqai.com).
+Visit [https://brain.iqai.com](https://brain.iqai.com) to view the full documentation, including tutorials, API references, and best practices.
 
-## 🚀 Quick Start
+## 👥 Community
 
-```bash
-# Clone the repository
-git clone https://github.com/IQAIcom/brain
+The Brain Framework community thrives on [GitHub Discussions](https://github.com/IQAIcom/brain/discussions) where you can ask questions, share ideas, and showcase your projects.
 
-# Install dependencies
-pnpm install
+Our [Code of Conduct](https://github.com/IQAIcom/brain/blob/main/CODE_OF_CONDUCT.md) applies to all Brain Framework community channels to ensure a welcoming environment for everyone.
 
-# Build all packages
-pnpm build
-```
+## 💻 Contributing
 
-## 💻 Development
+Contributions to Brain Framework are welcome and highly appreciated! Before getting started, please review our [Contribution Guidelines](https://github.com/IQAIcom/brain/blob/main/CONTRIBUTING.md) to ensure a smooth experience.
 
-This monorepo uses:
+### ✨ Beginner-Friendly Issues
 
-- 🏗️ PNPM Workspaces for package management
-- 🔧 Turborepo for build system
-- 📦 Changesets for versioning and publishing
-- 🔍 TypeScript for type safety
-- 🌐 Documentation site at [brain.iqai.com](https://brain.iqai.com)
-
-### ⚡ Common Commands
-
-```bash
-# Development mode
-pnpm dev
-
-# Build all packages
-pnpm build
-
-# Run tests
-pnpm test:plugins
-
-# Create a new version
-pnpm changeset
-
-# Publish packages
-pnpm publish-packages
-```
+We maintain a list of [good first issues](https://github.com/IQAIcom/brain/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) that address bugs with relatively limited scope. This is a great place to start contributing to Brain Framework.
