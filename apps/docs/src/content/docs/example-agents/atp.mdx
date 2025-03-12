@@ -6,59 +6,105 @@ description: An agent that interacts with IQ's Agent Tokenization Platform
 import { Tabs, TabItem, Aside } from '@astrojs/starlight/components';
 import ExternalLink from "../../../components/ExternalLink.astro"
 
-The ATP Agent is designed to interact with IQ's Agent Tokenization Platform. This agent provides a comprehensive set of features to manage tokens, including buying, selling, and managing tokens.
+The ATP Agent is designed to interact with IQ's Agent Tokenization Platform. This agent uses the atp plugin to interact with the IQ's Agent Tokenization Platform. View the <ExternalLink href="https://github.com/IQAIcom/brain-examples/tree/main/apps/atp-agent-example">repo</ExternalLink> for the source code.
 
-## Repository Location
+## Plugins used
 
-This example is available in the <ExternalLink href="https://github.com/IQAIcom/brain-examples/tree/main/apps/atp-agent-example">brain-examples repository</ExternalLink>.
+- <a href="/plugins/atp">ATP</a>
+- <a href="/plugins/heartbeat">Heartbeat</a>
+- <a href="/plugins/sequencer">Sequencer</a>
 
-## Features
+Apart from these, additional iq-balance-plugin is used to get the iq balance of the given wallet address, which is created using <a href="/getting-started/creating-plugins/#quick-plugin-creation">create simple plugin</a>
 
-- Key feature 1
-- Key feature 2
-- Key feature 3
+## Functionality
 
-## Technologies Used
+The ATP Agent uses the heartbeat plugin to run periodically and buys the top atp agent with some iq.
+Below is the heartbeat configuration:
 
-- **Plugins**: List of plugins used (with links to their docs)
-- **Client Interface**: Which client interface is used
-- **Model Provider**: Which AI model is used
+```typescript
+	const heartbeatPlugin = await createHeartbeatPlugin([
+		{
+			period: "0 0 * * *",
+			input:
+				"Get the top agent from atp, calculate 1% of my iq balance and buy that agent with this iq amount. go through sequencer first.",
+			client: "telegram",
+			config: {
+				chatId: process.env.TELEGRAM_CHAT_ID as string,
+			},
+		},
+	]);
+```
 
-## Code Highlights
+## Setup
 
-<Tabs>
-  <TabItem label="Agent Configuration">
-    ```typescript
-    // Show the key setup and configuration code
-    const agent = new AgentBuilder()
-      .withPlugin(...)
-      .withClient(...)
-      .build();
-    ```
-  </TabItem>
+To get started, clone this repository and navigate to the project folder:
 
-  <TabItem label="Plugin Integration">
-    ```typescript
-    // Show how plugins are initialized and configured
-    ```
-  </TabItem>
+```bash
+git clone https://github.com/IQAIcom/brain-examples.git
+cd brain-examples/apps/atp-agent-example
+```
 
-  <TabItem label="Core Functionality">
-    ```typescript
-    // Show the most interesting functional aspects
-    ```
-  </TabItem>
-</Tabs>
+Then, follow the installation instructions below.
 
-## Setup Instructions
+### Installation
 
-1. Clone the repository
-2. Copy `.env.example` to `.env`
-3. Configure the required environment variables:
-   - `OPENAI_API_KEY`: Your OpenAI API key
-   - Additional variables as needed
+Ensure all required packages are installed by running:
 
-## Usage Examples
+```bash
+pnpm install
+```
 
-Show common interactions with the agent, for example:
+To run the agent, open a terminal in your project directory and execute:
 
+```bash
+pnpm dev
+```
+<Aside type="caution">
+Ensure you have the following environment variables set in your .env file:
+
+```shell
+WALLET_PRIVATE_KEY=your-wallet-private-key
+SERVER_PORT="3000"
+USE_OPENAI_EMBEDDING="TRUE"
+OPENAI_API_KEY="sk-openai-api-key"
+TELEGRAM_CHAT_ID="bot-token"
+```
+</Aside>
+
+## Deployment
+
+This example agent provides both a Dockerfile and docker-compose.yml file for flexible deployment options.
+
+### Using Docker Compose (Recommended)
+
+To build and run the agent using Docker Compose, navigate to the project directory and run:
+
+```bash
+docker compose up -d
+```
+This will build the image and start the container in detached mode.
+
+### Using Docker Directly
+
+Alternatively, you can use Docker commands directly:
+
+To build the image:
+
+```bash
+docker build -t atp-agent .
+```
+To run the container:
+
+```bash
+docker run -d -p 3000:3000 --env-file .env -v ./data:/app/apps/atp-agent-example/data atp-agent
+```
+### Deployment Options
+
+You can deploy this agent in several ways:
+
+1. Local Deployment: Run the Docker container on your local machine for testing and development.
+2. Cloud Deployment: Deploy to any cloud service provider such as:
+  - Digital Ocean (using their App Platform or Droplets)
+  - AWS
+  - Google Cloud Platform
+  - Microsoft Azure
