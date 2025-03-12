@@ -1,4 +1,4 @@
-# 🎛 Plugin Heartbeat
+# 💓 Plugin Heartbeat
 
 A **plugin** for scheduling automated messages and social media posts using cron-based timing.
 
