@@ -8,6 +8,7 @@
 		"@elizaos/core": "0.1.9",
 		"dedent": "^1.5.3",
 		"tsup": "8.3.6",
+		"vitest": "^3.0.7",
 		"zod": "^3.24.2"
 	},
 	"scripts": {
