@@ -5,6 +5,7 @@ import DirectClientInterface from "@elizaos/client-direct";
 import TelegramClientInterface from "@elizaos/client-telegram";
 import { AgentBuilder, ModelProviderName } from "@iqai/agent";
 import { createAtpPlugin } from "@iqai/plugin-atp";
+import { createJsPlugin } from "@iqai/plugin-js";
 import { createFraxlendPlugin } from "@iqai/plugin-fraxlend";
 import createHeartbeatPlugin from "@iqai/plugin-heartbeat";
 import { createOdosPlugin } from "@iqai/plugin-odos";
@@ -78,6 +79,8 @@ async function main() {
 		covalentApiKey: process.env.COVALENT_API_KEY,
 		walletAddress: process.env.WALLET_ADDRESS,
 	});
+
+	const jsPlugin = await createJsPlugin();
 	// Setup database
 	const dataDir = path.join(process.cwd(), "./data");
 	fs.mkdirSync(dataDir, { recursive: true });
@@ -99,7 +102,6 @@ async function main() {
 			atpPlugin,
 			// nearPlugin,
 			sequencerPlugin,
-			walletPlugin,
 		])
 		.withCharacter({
 			name: "BrainBot",
