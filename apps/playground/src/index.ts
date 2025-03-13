@@ -1,20 +1,16 @@
-import * as fs from "node:fs";
-import * as path from "node:path";
-import { SqliteDatabaseAdapter } from "@iqai/adapter-sqlite";
 import DirectClientInterface from "@elizaos/client-direct";
 import TelegramClientInterface from "@elizaos/client-telegram";
+import { SqliteDatabaseAdapter } from "@iqai/adapter-sqlite";
 import { AgentBuilder, ModelProviderName } from "@iqai/agent";
 import { createAtpPlugin } from "@iqai/plugin-atp";
-import { createJsPlugin } from "@iqai/plugin-js";
-import { createFraxlendPlugin } from "@iqai/plugin-fraxlend";
-import createHeartbeatPlugin from "@iqai/plugin-heartbeat";
-import { createOdosPlugin } from "@iqai/plugin-odos";
-import { createWalletPlugin } from "@iqai/plugin-wallet";
-import createSequencerPlugin from "@iqai/plugin-sequencer";
-import { createMcpPlugin } from "@iqai/plugin-mcp";
-import Database from "better-sqlite3";
-import { fraxtal } from "viem/chains";
 import createBAMMPlugin from "@iqai/plugin-bamm";
+import { createFraxlendPlugin } from "@iqai/plugin-fraxlend";
+import { createJsPlugin } from "@iqai/plugin-js";
+import { createMcpPlugin } from "@iqai/plugin-mcp";
+import { createOdosPlugin } from "@iqai/plugin-odos";
+import createSequencerPlugin from "@iqai/plugin-sequencer";
+import { createWalletPlugin } from "@iqai/plugin-wallet";
+import { fraxtal } from "viem/chains";
 
 async function main() {
 	// Initialize plugins
@@ -43,15 +39,14 @@ async function main() {
 	const bammPlugin = await createBAMMPlugin({
 		walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
 	});
+
 	const mcpPlugin = await createMcpPlugin({
 		mode: "sse",
 		serverUrl: "http://localhost:6969/sse",
 	});
+
 	// Setup database
-	const dataDir = path.join(process.cwd(), "./data");
-	fs.mkdirSync(dataDir, { recursive: true });
-	const dbPath = path.join(dataDir, "db.sqlite");
-	const databaseAdapter = new SqliteDatabaseAdapter(new Database(dbPath));
+	const databaseAdapter = new SqliteDatabaseAdapter();
 
 	// Build agent using builder pattern
 	const agent = new AgentBuilder()
