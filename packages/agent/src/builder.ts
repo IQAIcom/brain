@@ -1,11 +1,12 @@
-import type {
-	CacheStore,
-	Character,
-	Client,
-	IDatabaseAdapter,
-	IDatabaseCacheAdapter,
-	ModelProviderName,
-	Plugin,
+import {
+	type CacheStore,
+	type Character,
+	type Client,
+	type IDatabaseAdapter,
+	type IDatabaseCacheAdapter,
+	type ModelProviderName,
+	type Plugin,
+	elizaLogger,
 } from "@elizaos/core";
 import { Agent, type AgentOptions } from "./agent";
 
@@ -55,7 +56,9 @@ export class AgentBuilder {
 
 	public build(): Agent {
 		if (!this.options.databaseAdapter) {
-			throw new Error("Database adapter is required");
+			elizaLogger.warn(
+				"ℹ️ Database adapter not provided. This may cause unexpected behavior.",
+			);
 		}
 		return new Agent(this.options as AgentOptions);
 	}
