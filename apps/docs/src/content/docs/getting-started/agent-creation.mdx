@@ -13,15 +13,13 @@ Before diving into individual configuration options, here's how all the pieces c
 
 ```typescript
 import { AgentBuilder, ModelProviderName } from "@iqai/agent";
-import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
+import { SqliteDatabaseAdapter } from "@iqai/adapter-sqlite";
 import DirectClientInterface from "@elizaos/client-direct";
-import Database from "better-sqlite3";
+
 
 async function main() {
   // Setup database
-  const databaseAdapter = new SqliteDatabaseAdapter(
-    new Database("./data/db.sqlite")
-  );
+  const databaseAdapter = new SqliteDatabaseAdapter();
 
   const agent = new AgentBuilder()
     .withDatabase(databaseAdapter)
@@ -56,8 +54,8 @@ The database adapter provides persistence for the agent. Available options:
 <Tabs>
   <TabItem label="SQLite">
     ```typescript
-    import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
-    import Database from "better-sqlite3";
+    import { SqliteDatabaseAdapter } from "@iqai/adapter-sqlite";
+
 
     const sqliteAdapter = new SqliteDatabaseAdapter(
       new Database("./data/db.sqlite")

@@ -12,13 +12,11 @@
 	},
 	"dependencies": {
 		"@elizaos/core": "0.1.9",
-		"better-sqlite3": "11.8.1",
 		"dedent": "^1.5.3",
 		"zod": "^3.24.2"
 	},
 	"devDependencies": {
 		"@iqai/tsconfig": "workspace:*",
-		"@types/better-sqlite3": "^7.6.12",
 		"tsup": "8.3.6"
 	},
 	"engines": {
