@@ -44,15 +44,13 @@ Basic usage with builder pattern:
 
 ```typescript
 import { AgentBuilder, ModelProviderName } from "@iqai/agent";
-import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
+import { SqliteDatabaseAdapter } from "@iqai/adapter-sqlite";
 import DirectClientInterface from "@elizaos/client-direct";
 import Database from "better-sqlite3";
 
 async function main() {
   // Setup database
-  const databaseAdapter = new SqliteDatabaseAdapter(
-    new Database("./data/db.sqlite")
-  );
+  const databaseAdapter = new SqliteDatabaseAdapter();
 
   const agent = new AgentBuilder()
     .withDatabase(databaseAdapter)
@@ -86,7 +84,7 @@ Configure a database adapter for the agent.
 
 ```typescript
 // SQLite
-import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
+import { SqliteDatabaseAdapter } from "@iqai/adapter-sqlite";
 import Database from "better-sqlite3";
 
 const sqliteAdapter = new SqliteDatabaseAdapter(

@@ -25,13 +25,11 @@ The **Telegram Client** enables your agent to interact through Telegram, support
 ```typescript
 import { AgentBuilder, ModelProviderName } from "@iqai/agent";
 import { TelegramClientInterface } from "@elizaos/client-telegram";
-import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
+import { SqliteDatabaseAdapter } from "@iqai/adapter-sqlite";
 import Database from "better-sqlite3";
 
 async function main() {
-  const databaseAdapter = new SqliteDatabaseAdapter(
-    new Database("./data/db.sqlite")
-  );
+  const databaseAdapter = new SqliteDatabaseAdapter();
 
   const agent = new AgentBuilder()
     .withDatabase(databaseAdapter)

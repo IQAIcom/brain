@@ -1,6 +1,6 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
+import { SqliteDatabaseAdapter } from "@iqai/adapter-sqlite";
 import DirectClientInterface from "@elizaos/client-direct";
 import TelegramClientInterface from "@elizaos/client-telegram";
 import { AgentBuilder, ModelProviderName } from "@iqai/agent";

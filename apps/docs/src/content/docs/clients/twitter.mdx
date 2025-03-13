@@ -25,13 +25,11 @@ The **Twitter Client** enables your agent to interact through Twitter, supportin
 ```typescript
 import { AgentBuilder, ModelProviderName } from "@iqai/agent";
 import { TwitterClientInterface } from "@elizaos/client-twitter";
-import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
+import { SqliteDatabaseAdapter } from "@iqai/adapter-sqlite";
 import Database from "better-sqlite3";
 
 async function main() {
-  const databaseAdapter = new SqliteDatabaseAdapter(
-    new Database("./data/db.sqlite")
-  );
+  const databaseAdapter = new SqliteDatabaseAdapter();
 
   const agent = new AgentBuilder()
     .withDatabase(databaseAdapter)
