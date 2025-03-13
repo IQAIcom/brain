@@ -12,7 +12,7 @@ The **SQLite Adapter** provides embedded database functionality, ideal for devel
 
 <Steps>
 1. Install required packages:
-   <PackageManagers pkg="@iqai/adapter-sqlite better-sqlite3" />
+   <PackageManagers pkg="@iqai/adapter-sqlite" />
 </Steps>
 
 ## Basic Setup
@@ -20,7 +20,7 @@ The **SQLite Adapter** provides embedded database functionality, ideal for devel
 ```typescript
 import { AgentBuilder } from "@iqai/agent";
 import { SqliteDatabaseAdapter } from "@iqai/adapter-sqlite";
-import Database from "better-sqlite3";
+
 
 const databaseAdapter = new SqliteDatabaseAdapter();
 
@@ -39,7 +39,7 @@ const agent = new AgentBuilder()
 ## Storage Configuration
 
 ```typescript
-import Database from "better-sqlite3";
+
 
 // Basic configuration
 const adapter = new SqliteDatabaseAdapter({
