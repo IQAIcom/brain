@@ -1,5 +1,11 @@
 # @iqai/agent
 
+## 0.0.7
+
+### Patch Changes
+
+- 07bca1e: Fixes agent to not error when no database is provided, instead now it logs warning message
+
 ## 0.0.6
 
 ### Patch Changes
