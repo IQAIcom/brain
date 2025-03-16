@@ -22,6 +22,11 @@ export class InputParserService {
 			modelClass: ModelClass.SMALL,
 		});
 
-		return content as any;
+		if (content?.error) {
+			const result = { error: content.error as string };
+			return result;
+		}
+
+		return content;
 	}
 }

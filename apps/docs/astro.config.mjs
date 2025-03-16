@@ -77,6 +77,7 @@ export default defineConfig({
 						{ label: "💫 Near", link: "/plugins/near" },
 						{ label: "💰 Fraxlend", link: "/plugins/fraxlend" },
 						{ label: "🔄 Odos", link: "/plugins/odos" },
+						{ label: "📜 Wiki", link: "/plugins/wiki" },
 						{ label: "⚡ ATP", link: "/plugins/atp" },
 						{ label: "💰 BAMM", link: "/plugins/bamm" },
 						{ label: "💓 Heartbeat", link: "/plugins/heartbeat" },

@@ -16,22 +16,22 @@ const handler: () => Handler =
 	() => async (runtime, message, state, _options, callback) => {
 		try {
 			const service = new GetWikiService();
-			const quote = await service.execute(runtime, message, state);
+			const response = await service.execute(runtime, message, state);
 
-			if (quote instanceof Error) {
+			if (response instanceof Error) {
 				callback?.({
-					text: `Error fetching quote: ${quote.message}`,
+					text: response.message,
 				});
 				return false;
 			}
 			callback?.({
-				text: service.format(quote),
+				text: service.format(response),
 			});
 
 			return true;
 		} catch (error) {
 			callback?.({
-				text: `Error fetching quote: ${error.message}`,
+				text: `Error: ${error.message.split(":")[0] || error.message}`,
 			});
 			return false;
 		}

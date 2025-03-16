@@ -1,0 +1,90 @@
+---
+title: Wiki Plugin
+description: Plugin for retieving blockchain knowledege from IQ.wiki
+---
+import {Steps, Tabs, TabItem, Aside} from '@astrojs/starlight/components';
+import { PackageManagers } from 'starlight-package-managers'
+
+The Wiki plugin enables your agent to retrieve blockchain knowledge from IQ.Wiki.
+
+## Installation
+
+<Steps>
+1. Install the required packages:
+   <PackageManagers pkg="@iqai/plugin-wiki" />
+
+
+2. Create a `.env` file with required configuration:
+   ```env
+   OPENAI_API_KEY=your-openai-api-key
+   ```
+   <Aside type="danger" title="Security Warning">
+   Never commit your `.env` file or share your private key. Anyone with access to your private key can control your wallet and funds. Make sure to:
+   - Add `.env` to your `.gitignore` file
+   - Never share your private key in any form
+   - Use a dedicated development wallet with limited funds
+   </Aside>
+
+</Steps>
+
+## Basic Setup
+
+Here's how to set up an agent with the Odos plugin:
+
+```typescript
+import { AgentBuilder, ModelProviderName } from "@iqai/agent";
+import { createWikiPlugin } from "@iqai/plugin-wiki";
+
+async function main() {
+  // Initialize Wiki plugin
+  const wikiPlugin = await createWikiPlugin();
+
+  // Create agent with plugin
+  const agent = new AgentBuilder()
+    .withModelProvider(
+      ModelProviderName.OPENAI,
+      process.env.OPENAI_API_KEY
+    )
+    .withPlugin(wikiPlugin)
+    .build();
+
+  await agent.start();
+}
+
+main().catch(console.error);
+```
+
+## Available Operations
+
+The plugin provides the following operations:
+- Retrieves a summarized text on a specific wiki
+
+## Usage Examples
+
+Here's how to interact with your Wiki-enabled agent:
+
+### Getting a Quote
+
+Query:
+```
+Get me iq wiki
+```
+
+The agent will process this to:
+```json
+{
+    "wikiId": "iq",
+}
+```
+
+## Error Handling
+
+Implement proper error handling when using the plugin:
+
+```typescript
+try {
+  const wikiPlugin = await createWikiPlugin();
+} catch (error) {
+  console.error('Failed to initialize Wiki plugin:', error);
+}
+```

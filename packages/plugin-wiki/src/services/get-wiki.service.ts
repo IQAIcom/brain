@@ -1,8 +1,10 @@
 import type { IAgentRuntime, Memory, State } from "@elizaos/core";
 import dedent from "dedent";
 import { InputParserService } from "./input-parser";
-import { EXCHANGE_TEMPLATE } from "../lib/templates";
+import { WIKI_TEMPLATE } from "../lib/templates";
 import { Wiki, type Wiki as WikiType } from "@everipedia/iq-utils";
+import { gql, request } from "graphql-request";
+import type { IQWikiResponse } from "../lib/types";
 
 export class GetWikiService {
 	private readonly API_URL = "https://graph.everipedia.org/graphql";
@@ -14,74 +16,45 @@ export class GetWikiService {
 			runtime,
 			message,
 			state,
-			template: EXCHANGE_TEMPLATE,
+			template: WIKI_TEMPLATE,
 		});
+
+		const { wikiId } = parsedOutput;
 
 		if ("error" in parsedOutput) {
 			return new Error(parsedOutput.error);
 		}
 
-		const query = {
-			query: `
-                {
-                    wiki(id: "bitcoin") {
+		const query = gql`
+            {
+                wiki(id: "${wikiId}") {
                     id
                     ipfs
                     title
-                    author
-                    events
-                    created
-                    updated
-                    content
                     summary
-                    founderWikis
-                    speakerWikis
-                    blockchainWikis
-                    transactionHash
-                    }
                 }
-                `,
-		};
+            }
+        `;
 
 		try {
-			const response = await fetch(this.API_URL, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(query),
-			});
+			const response: IQWikiResponse = await request(this.API_URL, query);
 
-			if (!response.ok) {
-				throw new Error(`HTTP error! Status: ${response.status}`);
+			if (!response.wiki) {
+				throw new Error("Wiki Not found");
 			}
-
-			const data = await response.json();
-
-			if (!response.ok) {
-				throw new Error(`Failed to fetch wiki: ${response.statusText}`);
-			}
-
-			return data as WikiType;
+			return response.wiki as WikiType;
 		} catch (error) {
-			throw new Error(`Failed to fetch wiki: ${error.message}`);
+			throw new Error(error.message);
 		}
 	}
 
-	format(quote: WikiType) {
+	format(wiki: WikiType) {
 		const formattedWiki = dedent`
-			📜 WIki Details
-		`;
-		// const formattedQuote = dedent`
-		// 	💱 Quote Details
-		// 	- Input: ${formatUnits(BigInt(quote.inAmounts[0]), 18)} ${quote.inTokens[0]}
-		// 	- Output: ${formatUnits(BigInt(quote.outAmounts[0]), 18)} ${quote.outTokens[0]}
-		// 	- Price Impact: ${
-		//         quote.priceImpact ? `${quote.priceImpact.toFixed(2)}%` : 'N/A'
-		//     }
-		// 	- Gas Estimate: ${quote.gasEstimate} (${quote.gasEstimateValue.toFixed(2)} USD)
-		// 	- Net Output Value: $${quote.netOutValue.toFixed(2)}
-		// `
+        	📜 Wiki Details
+        	- Here's a summary of ${wiki.title} \n
+            - ${wiki.summary} \n\n
+            🔗 souce: https://iq.wiki/wiki/${wiki.id}
+        `;
 
 		return formattedWiki;
 	}

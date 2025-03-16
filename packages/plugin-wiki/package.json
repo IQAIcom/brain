@@ -7,6 +7,7 @@
 	"dependencies": {
 		"@elizaos/core": "0.1.9",
 		"dedent": "^1.5.3",
+		"graphql-request": "^6.1.0",
 		"tsup": "8.3.6",
 		"viem": "^2.22.15",
 		"vitest": "^3.0.7"
@@ -17,7 +18,7 @@
 	},
 	"devDependencies": {
 		"@0no-co/graphqlsp": "^1.8.0",
-		"@iqai/tsconfig": "workspace:*",
-		"@everipedia/iq-utils": "2.4.0"
+		"@everipedia/iq-utils": "2.4.0",
+		"@iqai/tsconfig": "workspace:*"
 	}
 }
