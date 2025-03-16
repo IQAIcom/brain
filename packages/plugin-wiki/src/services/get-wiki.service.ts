@@ -19,11 +19,11 @@ export class GetWikiService {
 			template: WIKI_TEMPLATE,
 		});
 
-		const { wikiId } = parsedOutput;
-
 		if ("error" in parsedOutput) {
 			return new Error(parsedOutput.error);
 		}
+
+		const { wikiId } = parsedOutput;
 
 		const query = gql`
             {

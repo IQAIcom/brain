@@ -3,7 +3,6 @@ import {
 	composeContext,
 	generateMessageResponse,
 } from "@elizaos/core";
-import type { Address } from "viem";
 
 export class InputParserService {
 	async parseInputs({ runtime, message, state, template }) {
@@ -26,7 +25,8 @@ export class InputParserService {
 			const result = { error: content.error as string };
 			return result;
 		}
+		const result = { wikiId: content.wikiId as string };
 
-		return content;
+		return result;
 	}
 }
