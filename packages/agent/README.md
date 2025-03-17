@@ -44,16 +44,14 @@ Basic usage with builder pattern:
 
 ```typescript
 import { AgentBuilder, ModelProviderName } from "@iqai/agent";
-import { SqliteDatabaseAdapter } from "@iqai/adapter-sqlite";
+import SqliteAdapter from "@elizaos/adapter-sqlite";
 import DirectClient from "@elizaos/client-direct";
 
 
 async function main() {
-  // Setup database
-  const databaseAdapter = new SqliteDatabaseAdapter();
 
   const agent = new AgentBuilder()
-    .withDatabase(databaseAdapter)
+    .withDatabase(SqliteAdapter)
     .withClient(DirectClient)
     .withModelProvider(ModelProviderName.OPENAI, process.env.OPENAI_API_KEY)
     .withCharacter({
@@ -84,7 +82,7 @@ Configure a database adapter for the agent.
 
 ```typescript
 // SQLite
-import { SqliteDatabaseAdapter } from "@iqai/adapter-sqlite";
+import SqliteAdapter from "@elizaos/adapter-sqlite";
 
 
 const sqliteAdapter = new SqliteDatabaseAdapter(
