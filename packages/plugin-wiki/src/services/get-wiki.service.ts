@@ -5,10 +5,10 @@ import { WIKI_TEMPLATE } from "../lib/templates";
 import { Wiki, type Wiki as WikiType } from "@everipedia/iq-utils";
 import { gql, request } from "graphql-request";
 import type { IQWikiResponse } from "../lib/types";
+import { WIKI_QUERY } from "../lib/queries";
+import { IQ_API_URL, IQ_BASE_URL } from "../lib/constants";
 
 export class GetWikiService {
-	private readonly API_URL = "https://graph.everipedia.org/graphql";
-
 	async execute(runtime: IAgentRuntime, message: Memory, state: State) {
 		const inputParser = new InputParserService();
 
@@ -23,21 +23,12 @@ export class GetWikiService {
 			return new Error(parsedOutput.error);
 		}
 
-		const { wikiId } = parsedOutput;
+		const { id } = parsedOutput;
 
-		const query = gql`
-            {
-                wiki(id: "${wikiId}") {
-                    id
-                    ipfs
-                    title
-                    summary
-                }
-            }
-        `;
+		const query = WIKI_QUERY(id);
 
 		try {
-			const response: IQWikiResponse = await request(this.API_URL, query);
+			const response: IQWikiResponse = await request(IQ_API_URL, query);
 
 			if (!response.wiki) {
 				throw new Error("Wiki Not found");
@@ -53,7 +44,7 @@ export class GetWikiService {
         	📜 Wiki Details
         	- Here's a summary of ${wiki.title} \n
             - ${wiki.summary} \n\n
-            🔗 souce: https://iq.wiki/wiki/${wiki.id}
+            🔗 souce: ${IQ_BASE_URL}/${wiki.id}
         `;
 
 		return formattedWiki;

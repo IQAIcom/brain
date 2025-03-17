@@ -25,7 +25,8 @@ export class InputParserService {
 			const result = { error: content.error as string };
 			return result;
 		}
-		const result = { wikiId: content.wikiId as string };
+		console.log(content);
+		const result = { id: content.id as string };
 
 		return result;
 	}

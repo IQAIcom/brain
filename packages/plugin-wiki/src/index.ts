@@ -1,8 +1,9 @@
 import type { Plugin } from "@elizaos/core";
 import { getWikiAction } from "./actions/get-wiki";
+import { getUserWikisAction } from "./actions/get-latest-wikis";
 
 export async function createWikiPlugin(): Promise<Plugin> {
-	const actions = [getWikiAction()];
+	const actions = [getWikiAction(), getUserWikisAction()];
 
 	return {
 		name: "IQ Wiki Integration",
