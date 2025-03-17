@@ -15,8 +15,7 @@ async function main() {
 	// Build agent using builder pattern
 	const agent = new AgentBuilder()
 		.withDatabase(SqliteAdapter)
-		.withClient(DirectClient)
-		.withClient(TelegramClient)
+		.withClients([DirectClient, TelegramClient])
 		.withModelProvider(
 			ModelProviderName.OPENAI,
 			process.env.OPENAI_API_KEY as string,
