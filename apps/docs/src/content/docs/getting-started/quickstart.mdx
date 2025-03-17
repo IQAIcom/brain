@@ -57,7 +57,7 @@ If you prefer to set up your project from scratch, you can follow these steps:
    ```
 
 4. Install the required Brain Framework packages:
-   <PackageManagers pkg="@iqai/agent @elizaos/client-direct@0.1.9 @elizaos/adapter-sqlite@0.1.9 better-sqlite3 @types/better-sqlite3 sharp dotenv" />
+   <PackageManagers pkg="@iqai/agent @iqai/adapter-sqlite @elizaos/client-direct@0.1.9 sharp dotenv" />
 
 5. Add your OpenAI API key to the `.env` file:
    ```javascript
@@ -77,10 +77,10 @@ To create an agent, you'll need three key components:
 <Steps>
 1. Open `src/index.ts` in your favorite code editor and add the following code:
    ```javascript
-   import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
+   import { SqliteDatabaseAdapter } from "@iqai/adapter-sqlite";
    import DirectClientInterface from "@elizaos/client-direct";
    import { AgentBuilder, ModelProviderName } from "@iqai/agent";
-   import Database from "better-sqlite3";
+
    import dotenv from "dotenv";
 
    // Load environment variables
