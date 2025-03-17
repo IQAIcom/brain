@@ -1,9 +1,8 @@
 import type {
+	Adapter,
 	CacheStore,
 	Character,
 	Client,
-	IDatabaseAdapter,
-	IDatabaseCacheAdapter,
 	ModelProviderName,
 	Plugin,
 } from "@elizaos/core";
@@ -12,13 +11,17 @@ import { Agent, type AgentOptions } from "./agent";
 export class AgentBuilder {
 	private options: Partial<AgentOptions> = {};
 
-	public withDatabase(adapter: IDatabaseAdapter & IDatabaseCacheAdapter) {
-		this.options.databaseAdapter = adapter;
+	public withDatabase(adapter: Adapter | Plugin) {
+		if (this.isAdapterPlugin(adapter)) {
+			this.options.adapter = adapter.adapters[0];
+		} else {
+			this.options.adapter = adapter as Adapter;
+		}
 		return this;
 	}
 
 	public withClient(client: Client | Plugin) {
-		if ("clients" in client) {
+		if (this.isClientPlugin(client)) {
 			this.options.clients = [
 				...(this.options.clients || []),
 				...client.clients,
@@ -34,7 +37,7 @@ export class AgentBuilder {
 
 	public withClients(clients: (Client | Plugin)[]) {
 		const passedClients = clients?.flatMap((client) => {
-			if ("clients" in client) {
+			if (this.isClientPlugin(client)) {
 				return client.clients as Client[];
 			}
 			return client as Client;
@@ -71,9 +74,17 @@ export class AgentBuilder {
 	}
 
 	public build(): Agent {
-		if (!this.options.databaseAdapter) {
+		if (!this.options.adapter) {
 			throw new Error("Database adapter is required");
 		}
 		return new Agent(this.options as AgentOptions);
+	}
+
+	private isClientPlugin(obj: Client | Plugin): obj is Plugin {
+		return "clients" in obj;
+	}
+
+	private isAdapterPlugin(obj: Adapter | Plugin): obj is Plugin {
+		return "adapters" in obj;
 	}
 }
