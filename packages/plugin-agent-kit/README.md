@@ -46,20 +46,6 @@ const agent = new AgentBuilder()
 | `CDP_API_KEY_PRIVATE_KEY` | Your private key for transactions 🛡️ |
 | `CDP_AGENT_KIT_NETWORK` | Network to use (defaults to base-sepolia) 🌐 |
 
-You can also add the plugin to your character configuration:
-
-```json
-{
-    "plugins": ["@elizaos/plugin-agentkit"],
-    "settings": {
-        "secrets": {
-            "CDP_API_KEY_NAME": "your_key_name",
-            "CDP_API_KEY_PRIVATE_KEY": "your_private_key"
-        }
-    }
-}
-```
-
 ## 🎯 Actions
 
 ### 💼 `GET_WALLET_DETAILS`
