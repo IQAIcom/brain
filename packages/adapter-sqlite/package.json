@@ -13,7 +13,7 @@
 	"dependencies": {
 		"@elizaos/core": "0.25.9",
 		"better-sqlite3": "11.8.1",
-		"@elizaos/adapter-sqlite": "0.25.9",
+		"@elizaos/adapter-sqlite": "github:elizaos-plugins/adapter-sqlite",
 		"dedent": "^1.5.3",
 		"zod": "^3.24.2"
 	},
