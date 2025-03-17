@@ -1,5 +1,11 @@
 # @iqai/plugin-odos
 
+## 0.26.0
+
+### Minor Changes
+
+- b9407e5: Update Eliza packages to 0.25.9
+
 ## 0.1.9
 
 ### Patch Changes
