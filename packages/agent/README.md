@@ -45,7 +45,7 @@ Basic usage with builder pattern:
 ```typescript
 import { AgentBuilder, ModelProviderName } from "@iqai/agent";
 import { SqliteDatabaseAdapter } from "@iqai/adapter-sqlite";
-import DirectClientInterface from "@elizaos/client-direct";
+import DirectClient from "@elizaos/client-direct";
 
 
 async function main() {
@@ -54,7 +54,7 @@ async function main() {
 
   const agent = new AgentBuilder()
     .withDatabase(databaseAdapter)
-    .withClient("direct", DirectClientInterface)
+    .withClient(DirectClient)
     .withModelProvider(ModelProviderName.OPENAI, process.env.OPENAI_API_KEY)
     .withCharacter({
       name: "MyBot",
@@ -123,14 +123,14 @@ Add a client interface for the agent to communicate through.
 
 ```typescript
 // Direct chat
-.withClient("direct", DirectClientInterface)
+.withClient(DirectClient)
 
 // Telegram bot
-.withClient("telegram", TelegramClientInterface) 
+.withClient(TelegramClient) 
 // Requires TELEGRAM_BOT_TOKEN env variable
 
 // Twitter bot
-.withClient("twitter", TwitterClientInterface)   
+.withClient(TwitterClient)   
 // Requires Twitter API credentials
 ```
 

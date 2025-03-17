@@ -54,7 +54,7 @@ async function main() {
 
   // Create agent with plugin
   const agent = new AgentBuilder()
-    .withClient("direct", DirectClientInterface)
+    .withClient(DirectClient)
     .withModelProvider(
       ModelProviderName.OPENAI,
       process.env.OPENAI_API_KEY
