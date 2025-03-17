@@ -11,9 +11,9 @@
 		"check-types": "tsc --noEmit"
 	},
 	"dependencies": {
-		"@elizaos/core": "0.25.9",
+		"@elizaos/core": "0.1.9",
 		"better-sqlite3": "11.8.1",
-		"@elizaos/adapter-sqlite": "github:elizaos-plugins/adapter-sqlite",
+		"@elizaos/adapter-sqlite": "0.25.6-alpha.1",
 		"dedent": "^1.5.3",
 		"zod": "^3.24.2"
 	},

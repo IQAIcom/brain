@@ -15,7 +15,7 @@
 		"@elizaos/client-telegram": "github:elizaos-plugins/client-telegram",
 		"@elizaos/core": "0.25.9",
 		"@elizaos/plugin-bootstrap": "0.25.9",
-		"@iqai/adapter-sqlite": "0.1.0",
+		"@iqai/adapter-sqlite": "0.0.1",
 		"@iqai/agent": "workspace:*",
 		"@iqai/plugin-atp": "workspace:*",
 		"@iqai/plugin-sequencer": "workspace:*",
