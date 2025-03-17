@@ -11,11 +11,11 @@
 		"test": "jest"
 	},
 	"dependencies": {
-		"@iqai/adapter-sqlite": "0.0.1",
-		"@elizaos/client-direct": "github:elizaos-plugins/client-direct",
+		"@elizaos/client-direct": "0.25.9",
 		"@elizaos/client-telegram": "github:elizaos-plugins/client-telegram",
 		"@elizaos/core": "0.25.9",
 		"@elizaos/plugin-bootstrap": "0.25.9",
+		"@iqai/adapter-sqlite": "0.0.1",
 		"@iqai/agent": "workspace:*",
 		"@iqai/plugin-atp": "workspace:*",
 		"@iqai/plugin-sequencer": "workspace:*",
