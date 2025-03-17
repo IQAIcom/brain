@@ -24,7 +24,7 @@ The **Telegram Client** enables your agent to interact through Telegram, support
 
 ```typescript
 import { AgentBuilder, ModelProviderName } from "@iqai/agent";
-import { TelegramClientInterface } from "@elizaos/client-telegram";
+import TelegramClient from "@elizaos/client-telegram";
 import { SqliteDatabaseAdapter } from "@iqai/adapter-sqlite";
 
 
@@ -33,7 +33,7 @@ async function main() {
 
   const agent = new AgentBuilder()
     .withDatabase(databaseAdapter)
-    .withClient("telegram", TelegramClientInterface)
+    .withClient(TelegramClient)
     .withModelProvider(
       ModelProviderName.OPENAI,
       process.env.OPENAI_API_KEY
