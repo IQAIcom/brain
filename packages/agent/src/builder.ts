@@ -17,13 +17,30 @@ export class AgentBuilder {
 		return this;
 	}
 
-	public withClient(client: Client) {
-		this.options.clients = [...(this.options.clients || []), client];
+	public withClient(client: Client | Plugin) {
+		if ("clients" in client) {
+			this.options.clients = [
+				...(this.options.clients || []),
+				...client.clients,
+			];
+		} else {
+			this.options.clients = [
+				...(this.options.clients || []),
+				client as Client,
+			];
+		}
 		return this;
 	}
 
-	public withClients(clients: Client[]) {
-		this.options.clients = [...(this.options.clients || []), ...clients];
+	public withClients(clients: (Client | Plugin)[]) {
+		const passedClients = clients?.flatMap((client) => {
+			if ("clients" in client) {
+				return client.clients as Client[];
+			}
+			return client as Client;
+		});
+
+		this.options.clients = [...(this.options.clients || []), ...passedClients];
 		return this;
 	}
 

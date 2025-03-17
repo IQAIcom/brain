@@ -21,7 +21,7 @@ import { defaultCharacter } from "./default-charecter";
 
 export interface AgentOptions {
 	databaseAdapter?: IDatabaseAdapter & IDatabaseCacheAdapter;
-	clients?: (Client | Plugin)[];
+	clients?: Client[];
 	plugins?: Plugin[];
 	modelProvider?: ModelProviderName;
 	modelKey?: string;
@@ -52,15 +52,8 @@ export class Agent {
 			this.cacheManager = this.initializeCache();
 			const runtime = await this.initializeRuntime();
 
-			const passedClients = this.options.clients?.flatMap((client) => {
-				if ("clients" in client) {
-					return client.clients as Client[];
-				}
-				return client as Client;
-			});
-
 			elizaLogger.info("🔌 Starting client initialization...");
-			for (const client of passedClients || []) {
+			for (const client of this.options.clients || []) {
 				const clientInstance = await client.start(runtime);
 				if (clientInstance) {
 					this.clients[client.name] = clientInstance;
