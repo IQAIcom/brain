@@ -121,6 +121,15 @@ export class Agent {
 				...defaultCharacter,
 				...this.options.character,
 				modelProvider,
+				settings: {
+					...(defaultCharacter.settings || {}),
+					...(this.options.character?.settings || {}),
+					secrets: {
+						...(defaultCharacter.settings?.secrets || {}),
+						...(this.options.character?.settings?.secrets || {}),
+						...process.env,
+					},
+				},
 			},
 			fetch: async (url: string, options: RequestInit) => {
 				return fetch(url, options);

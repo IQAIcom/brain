@@ -13,16 +13,14 @@ Before diving into individual configuration options, here's how all the pieces c
 
 ```typescript
 import { AgentBuilder, ModelProviderName } from "@iqai/agent";
-import { SqliteDatabaseAdapter } from "@iqai/adapter-sqlite";
+import SqliteAdapter from "@elizaos/adapter-sqlite";
 import DirectClient from "@elizaos/client-direct";
 
 
 async function main() {
-  // Setup database
-  const databaseAdapter = new SqliteDatabaseAdapter();
 
   const agent = new AgentBuilder()
-    .withDatabase(databaseAdapter)
+    .withDatabase(SqliteAdapter)
     .withClient(DirectClient)
     .withModelProvider(ModelProviderName.OPENAI, process.env.OPENAI_API_KEY)
     .withCharacter({
@@ -54,7 +52,7 @@ The database adapter provides persistence for the agent. Available options:
 <Tabs>
   <TabItem label="SQLite">
     ```typescript
-    import { SqliteDatabaseAdapter } from "@iqai/adapter-sqlite";
+    import SqliteAdapter from "@elizaos/adapter-sqlite";
 
 
     const sqliteAdapter = new SqliteDatabaseAdapter(

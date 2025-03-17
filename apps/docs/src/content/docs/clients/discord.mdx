@@ -26,16 +26,12 @@ The **Discord Client** enables your agent to interact with Discord servers, supp
 ```typescript
 import { AgentBuilder, ModelProviderName } from "@iqai/agent";
 import DiscordClient from "@elizaos/client-discord";
-import { SqliteDatabaseAdapter } from "@iqai/adapter-sqlite";
+import SqliteAdapter from "@elizaos/adapter-sqlite";
 
 
 async function main() {
-  // Initialize database adapter
-  const databaseAdapter = new SqliteDatabaseAdapter();
-
-  // Create agent with Discord client
   const agent = new AgentBuilder()
-    .withDatabase(databaseAdapter)
+    .withDatabase(SqliteAdapter)
     .withClient(DiscordClient)
     .withModelProvider(
       ModelProviderName.OPENAI,
