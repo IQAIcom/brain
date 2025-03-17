@@ -4,7 +4,6 @@ export const defaultCharacter: Character = {
 	name: "BrainBot",
 	username: "brain",
 	plugins: [],
-	clients: [],
 	modelProvider: ModelProviderName.LLAMALOCAL,
 	settings: {
 		secrets: {},

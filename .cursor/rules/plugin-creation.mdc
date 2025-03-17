@@ -1,6 +1,6 @@
 ---
 description: creation of new plugins for brain framework
-globs: 
+globs:
 ---
 
 # Brain Framework Plugin Creation Guide
@@ -112,12 +112,12 @@ const handler: (opts: YourPluginParams) => Handler =
 ```json
 {
 	"name": "@iqai/plugin-example",
-	"version": "0.1.9",
+	"version": "0.25.9",
 	"main": "dist/index.js",
 	"type": "module",
 	"types": "dist/index.d.ts",
 	"dependencies": {
-		"@elizaos/core": "0.1.9",
+		"@elizaos/core": "0.25.9",
 		"tsup": "8.3.6",
 		"dedent": "^1.5.3"
 	},

@@ -1,12 +1,11 @@
-import {
-	type CacheStore,
-	type Character,
-	type Client,
-	type IDatabaseAdapter,
-	type IDatabaseCacheAdapter,
-	type ModelProviderName,
-	type Plugin,
-	elizaLogger,
+import type {
+	CacheStore,
+	Character,
+	Client,
+	IDatabaseAdapter,
+	IDatabaseCacheAdapter,
+	ModelProviderName,
+	Plugin,
 } from "@elizaos/core";
 import { Agent, type AgentOptions } from "./agent";
 
@@ -18,13 +17,30 @@ export class AgentBuilder {
 		return this;
 	}
 
-	public withClient(name: string, client: Client) {
-		this.options.clients = [...(this.options.clients || []), { name, client }];
+	public withClient(client: Client | Plugin) {
+		if ("clients" in client) {
+			this.options.clients = [
+				...(this.options.clients || []),
+				...client.clients,
+			];
+		} else {
+			this.options.clients = [
+				...(this.options.clients || []),
+				client as Client,
+			];
+		}
 		return this;
 	}
 
-	public withClients(clients: { name: string; client: Client }[]) {
-		this.options.clients = [...(this.options.clients || []), ...clients];
+	public withClients(clients: (Client | Plugin)[]) {
+		const passedClients = clients?.flatMap((client) => {
+			if ("clients" in client) {
+				return client.clients as Client[];
+			}
+			return client as Client;
+		});
+
+		this.options.clients = [...(this.options.clients || []), ...passedClients];
 		return this;
 	}
 
@@ -56,9 +72,7 @@ export class AgentBuilder {
 
 	public build(): Agent {
 		if (!this.options.databaseAdapter) {
-			elizaLogger.warn(
-				"ℹ️ Database adapter not provided. This may cause unexpected behavior.",
-			);
+			throw new Error("Database adapter is required");
 		}
 		return new Agent(this.options as AgentOptions);
 	}
