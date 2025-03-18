@@ -60,10 +60,10 @@ Retrieve wikis created by a specific user, with optional time filtering.
 
 Actions return structured responses including:
 
-✔ Wiki titles and summaries 📝
-✔ Source links to the original content 🔗
-✔ Formatted timestamps 🕒
-✔ Error messages when applicable ⚠️
+- ✔ Wiki titles and summaries 📝
+- ✔ Source links to the original content 🔗
+- ✔ Formatted timestamps 🕒
+- ✔ Error messages when applicable ⚠️
 
 ## ❌ Error Handling
 
