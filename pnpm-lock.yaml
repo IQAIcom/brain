@@ -225,6 +225,9 @@ importers:
       '@iqai/plugin-sequencer':
         specifier: workspace:*
         version: link:../../packages/plugin-sequencer
+      '@iqai/plugin-wiki':
+        specifier: workspace:*
+        version: link:../../packages/plugin-wiki
       dotenv:
         specifier: ^16.4.7
         version: 16.4.7
