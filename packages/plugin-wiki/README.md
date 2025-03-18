@@ -6,9 +6,9 @@ A plugin for interacting with IQ.Wiki to retrieve and explore wiki content from 
 
 The Plugin Wiki provides an interface to interact with IQ.Wiki's content. It enables users to:
 
-✅ Retrieve specific wiki articles by ID 📄
-✅ View user-created wikis 👤
-✅ Filter wikis by time period ⏱️
+- ✅ Retrieve specific wiki articles by ID 📄
+- ✅ View user-created wikis 👤
+- ✅ Filter wikis by time period ⏱️
 
 All data is fetched directly from the IQ.Wiki GraphQL API.
 
