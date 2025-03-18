@@ -1,35 +1,25 @@
 ---
 title: Wiki Plugin
-description: Plugin for retieving blockchain knowledege from IQ.wiki
+description: Plugin for retrieving blockchain knowledge from IQ.Wiki
 ---
+
 import {Steps, Tabs, TabItem, Aside} from '@astrojs/starlight/components';
 import { PackageManagers } from 'starlight-package-managers'
 
-The Wiki plugin enables your agent to retrieve blockchain knowledge from IQ.Wiki.
+
+The Wiki Plugin enables your agent to retrieve blockchain knowledge from IQ.Wiki
+
 
 ## Installation
 
-<Steps>
-1. Install the required packages:
-   <PackageManagers pkg="@iqai/plugin-wiki" />
+<PackageManagers pkg="@iqai/agent @iqai/plugin-wiki" />
 
-
-2. Create a `.env` file with required configuration:
-   ```env
-   OPENAI_API_KEY=your-openai-api-key
-   ```
-   <Aside type="danger" title="Security Warning">
-   Never commit your `.env` file or share your private key. Anyone with access to your private key can control your wallet and funds. Make sure to:
-   - Add `.env` to your `.gitignore` file
-   - Never share your private key in any form
-   - Use a dedicated development wallet with limited funds
-   </Aside>
-
-</Steps>
+---
 
 ## Basic Setup
 
-Here's how to set up an agent with the Odos plugin:
+Here's a complete example of setting up an agent with the Wiki plugin:
+
 
 ```typescript
 import { AgentBuilder, ModelProviderName } from "@iqai/agent";
@@ -52,39 +42,95 @@ async function main() {
 }
 
 main().catch(console.error);
-```
 
+```
 ## Available Operations
 
-The plugin provides the following operations:
-- Retrieves a summarized text on a specific wiki
+- **Wiki Retrieval**: Get specific wiki articles by ID
+- **Latest User Wiki**: Get latest wiki created by user
+- **Time-Filtered User Wikis**: Get wikis created by user ID within a time range
 
 ## Usage Examples
 
-Here's how to interact with your Wiki-enabled agent:
+| Operation | Example Query |
+|-----------|--------------|
+| Get Wiki | Show me the wiki for bitcoin |
+| Latest User Wiki | Get latest wiki of user 0x8AF7a19a26d8FBC48dEfB35AEfb15Ec8c407f889 |
+| Latest User Wiki (added timeframe) | Get wiki of user 0x8AF7a19a26d8FBC48dEfB35AEfb15Ec8c407f889 in last 24 hours |
 
-### Getting a Quote
+### Getting a wiki
 
 Query:
+
 ```
-Get me iq wiki
+Get me wiki on ai meme hub
 ```
 
+
 The agent will process this to:
-```json
+
+```typescript
 {
-    "wikiId": "iq",
+    "id": "ai-meme-hub",
+}
+```
+
+### Getting latest user wiki
+
+Query:
+
+```
+Get me latest wiki by 0x9130241234123434
+```
+
+
+The agent will process this to:
+
+```typescript
+{
+  "id": "0x9130241234123434"
+}
+```
+
+### Getting time-filtered user wikis
+
+Query:
+
+Get me wikis by 0x9130241234123434 in last 24 hours
+
+
+The agent will process this to:
+
+```typescript
+{
+  "id": "0x9130241234123434",
+  "timeFrameSeconds": "86400"
 }
 ```
 
 ## Error Handling
 
-Implement proper error handling when using the plugin:
+Always implement proper error handling when using the plugin:
+
 
 ```typescript
 try {
-  const wikiPlugin = await createWikiPlugin();
-} catch (error) {
-  console.error('Failed to initialize Wiki plugin:', error);
-}
+    const wikiPlugin = await createWikiPlugin();
+  } catch (error) {
+    console.error('Failed to initialize Wiki plugin:', error);
+  }
 ```
+
+## Best Practices
+
+✔ ID Validation: Ensure wiki IDs are correctly formatted
+✔ User Address Format: Use complete Ethereum addresses
+✔ Time Filtering: Specify clear time periods for filtered results
+✔ Error Handling: Implement robust error handling for all operations
+
+## Common Issues and Troubleshooting
+
+- **Wiki Not Found**: Verify the wiki ID exists on IQ.Wiki
+- **User Not Found**: Ensure the Ethereum address is correct
+- **No Recent Wikis**: The user may not have created wikis in the specified time period
+- **API Connection**: Check your network connection if requests fail
