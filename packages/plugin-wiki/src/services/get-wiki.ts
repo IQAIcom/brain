@@ -4,7 +4,6 @@ import { request } from "graphql-request";
 import type { IQWikiResponse } from "../types";
 import { WIKI_QUERY } from "../lib/queries";
 import { IQ_API_URL, IQ_BASE_URL } from "../lib/constants";
-import { elizaLogger } from "@elizaos/core";
 
 export class GetWikiService {
 	async execute(id: string) {
