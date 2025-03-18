@@ -1,5 +1,23 @@
 # @iqai/agent
 
+## 0.2.0
+
+### Minor Changes
+
+- f409de5: enables the withDatabase method on agent builder to take either plugin directly or adapter
+
+## 0.1.0
+
+### Minor Changes
+
+- b9407e5: Update Eliza packages to 0.25.9
+
+## 0.0.7
+
+### Patch Changes
+
+- 07bca1e: Fixes agent to not error when no database is provided, instead now it logs warning message
+
 ## 0.0.6
 
 ### Patch Changes

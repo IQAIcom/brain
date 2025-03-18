@@ -146,7 +146,7 @@ export class Heartbeat extends Service {
 		roomId: string,
 	) {
 		const client = runtime.clients?.[task.client];
-		if (!client) {
+		if (!client && task.client !== "callback") {
 			elizaLogger.warn(
 				`❌ No client found for task: ${task.client}, skipping...`,
 			);

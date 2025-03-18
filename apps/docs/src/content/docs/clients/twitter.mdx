@@ -12,7 +12,7 @@ The **Twitter Client** enables your agent to interact through Twitter, supportin
 
 <Steps>
 1. Install required packages:
-   <PackageManagers pkg="@elizaos/client-twitter@0.1.9 @elizaos/core@0.1.9" />
+   <PackageManagers pkg="github:elizaos-plugins/client-twitter @elizaos/core@0.25.9" />
 
 2. Configure environment variables:
    ```bash
@@ -24,18 +24,14 @@ The **Twitter Client** enables your agent to interact through Twitter, supportin
 
 ```typescript
 import { AgentBuilder, ModelProviderName } from "@iqai/agent";
-import { TwitterClientInterface } from "@elizaos/client-twitter";
-import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
-import Database from "better-sqlite3";
+import TwitterClient from "@elizaos/client-twitter";
+import SqliteAdapter from "@elizaos/adapter-sqlite";
+
 
 async function main() {
-  const databaseAdapter = new SqliteDatabaseAdapter(
-    new Database("./data/db.sqlite")
-  );
-
   const agent = new AgentBuilder()
-    .withDatabase(databaseAdapter)
-    .withClient("twitter", TwitterClientInterface)
+    .withDatabase(SqliteAdapter)
+    .withClient(TwitterClient)
     .withModelProvider(
       ModelProviderName.OPENAI,
       process.env.OPENAI_API_KEY

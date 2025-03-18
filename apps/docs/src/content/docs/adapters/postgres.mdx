@@ -12,11 +12,15 @@ The **PostgreSQL Adapter** provides robust database functionality with vector se
 
 <Steps>
 1. Install required packages:
-   <PackageManagers pkg="@elizaos/adapter-postgres@0.1.9 pg" />
+   <PackageManagers pkg="github:elizaos-plugins/adapter-postgres" />
 
-2. Install PostgreSQL extension:
+2. Setup env variable:
    ```bash
-   CREATE EXTENSION pgvector;
+   POSTGRES_URL=postgresql://user:pass@localhost:5432/db
+   ```
+3. Enable vector search extension:
+   ```bash
+   CREATE EXTENSION vector;
    ```
 </Steps>
 
@@ -24,20 +28,10 @@ The **PostgreSQL Adapter** provides robust database functionality with vector se
 
 ```typescript
 import { AgentBuilder } from "@iqai/agent";
-import { PostgresDatabaseAdapter } from "@elizaos/adapter-postgres";
-
-const databaseAdapter = new PostgresDatabaseAdapter({
-  connectionString: "postgresql://user:pass@localhost:5432/db",
-  // or individual connection parameters
-  host: 'localhost',
-  port: 5432,
-  database: 'brain_agent',
-  user: 'postgres',
-  password: 'your_password'
-});
+import PostgresAdapter from "@elizaos/adapter-postgres";
 
 const agent = new AgentBuilder()
-  .withDatabase(databaseAdapter)
+  .withDatabase(PostgresAdapter)
   // ... other configuration
   .build();
 ```

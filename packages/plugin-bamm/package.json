@@ -1,11 +1,11 @@
 {
 	"name": "@iqai/plugin-bamm",
-	"version": "0.0.3",
+	"version": "0.1.0",
 	"main": "dist/index.js",
 	"type": "module",
 	"types": "dist/index.d.ts",
 	"dependencies": {
-		"@elizaos/core": "0.1.9",
+		"@elizaos/core": "0.25.9",
 		"tsup": "8.3.6",
 		"viem": "^2.22.15",
 		"dedent": "^1.5.3"

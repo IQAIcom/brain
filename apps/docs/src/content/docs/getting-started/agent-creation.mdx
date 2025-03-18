@@ -13,19 +13,14 @@ Before diving into individual configuration options, here's how all the pieces c
 
 ```typescript
 import { AgentBuilder, ModelProviderName } from "@iqai/agent";
-import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
-import DirectClientInterface from "@elizaos/client-direct";
-import Database from "better-sqlite3";
+import SqliteAdapter from "@elizaos/adapter-sqlite";
+import DirectClient from "@elizaos/client-direct";
+
 
 async function main() {
-  // Setup database
-  const databaseAdapter = new SqliteDatabaseAdapter(
-    new Database("./data/db.sqlite")
-  );
-
   const agent = new AgentBuilder()
-    .withDatabase(databaseAdapter)
-    .withClient("direct", DirectClientInterface)
+    .withDatabase(SqliteAdapter)
+    .withClient(DirectClient)
     .withModelProvider(ModelProviderName.OPENAI, process.env.OPENAI_API_KEY)
     .withCharacter({
       name: "MyBot",
@@ -56,8 +51,8 @@ The database adapter provides persistence for the agent. Available options:
 <Tabs>
   <TabItem label="SQLite">
     ```typescript
-    import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
-    import Database from "better-sqlite3";
+    import SqliteAdapter from "@elizaos/adapter-sqlite";
+
 
     const sqliteAdapter = new SqliteDatabaseAdapter(
       new Database("./data/db.sqlite")
@@ -97,15 +92,15 @@ The database adapter provides persistence for the agent. Available options:
 For more database adapters, visit <a href="https://elizaos.github.io/eliza/docs/packages/adapters/" target="_blank">ElizaOS Database Adapters</a>
 
 
-## Client Interfaces
+## Clients
 
-Client interfaces determine how your agent can communicate:
+Clients determine how your agent can communicate:
 
 ```typescript
 // Available clients
-.withClient("direct", DirectClientInterface)    // Direct chat
-.withClient("telegram", TelegramClientInterface) // Telegram bot
-.withClient("twitter", TwitterClientInterface)   // Twitter bot
+.withClient(DirectClient)    // Direct chat
+.withClient(TelegramClient) // Telegram bot
+.withClient(TwitterClient)   // Twitter bot
 ```
 
 Each client may require specific environment variables. Example:

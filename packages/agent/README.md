@@ -44,19 +44,15 @@ Basic usage with builder pattern:
 
 ```typescript
 import { AgentBuilder, ModelProviderName } from "@iqai/agent";
-import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
-import DirectClientInterface from "@elizaos/client-direct";
-import Database from "better-sqlite3";
+import SqliteAdapter from "@elizaos/adapter-sqlite";
+import DirectClient from "@elizaos/client-direct";
+
 
 async function main() {
-  // Setup database
-  const databaseAdapter = new SqliteDatabaseAdapter(
-    new Database("./data/db.sqlite")
-  );
 
   const agent = new AgentBuilder()
-    .withDatabase(databaseAdapter)
-    .withClient("direct", DirectClientInterface)
+    .withDatabase(SqliteAdapter)
+    .withClient(DirectClient)
     .withModelProvider(ModelProviderName.OPENAI, process.env.OPENAI_API_KEY)
     .withCharacter({
       name: "MyBot",
@@ -86,8 +82,8 @@ Configure a database adapter for the agent.
 
 ```typescript
 // SQLite
-import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
-import Database from "better-sqlite3";
+import SqliteAdapter from "@elizaos/adapter-sqlite";
+
 
 const sqliteAdapter = new SqliteDatabaseAdapter(
   new Database("./data/db.sqlite")
@@ -125,14 +121,14 @@ Add a client interface for the agent to communicate through.
 
 ```typescript
 // Direct chat
-.withClient("direct", DirectClientInterface)
+.withClient(DirectClient)
 
 // Telegram bot
-.withClient("telegram", TelegramClientInterface) 
+.withClient(TelegramClient) 
 // Requires TELEGRAM_BOT_TOKEN env variable
 
 // Twitter bot
-.withClient("twitter", TwitterClientInterface)   
+.withClient(TwitterClient)   
 // Requires Twitter API credentials
 ```
 

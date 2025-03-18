@@ -12,7 +12,7 @@ The **Discord Client** enables your agent to interact with Discord servers, supp
 
 <Steps>
 1. Install required packages:
-   <PackageManagers pkg="@elizaos/client-discord@0.1.9 @elizaos/core@0.1.9" />
+   <PackageManagers pkg="github:elizaos-plugins/client-discord @elizaos/core@0.25.9" />
 
 2. Configure environment variables:
    ```bash
@@ -25,20 +25,14 @@ The **Discord Client** enables your agent to interact with Discord servers, supp
 
 ```typescript
 import { AgentBuilder, ModelProviderName } from "@iqai/agent";
-import { DiscordClientInterface } from "@elizaos/client-discord";
-import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
-import Database from "better-sqlite3";
+import DiscordClient from "@elizaos/client-discord";
+import SqliteAdapter from "@elizaos/adapter-sqlite";
+
 
 async function main() {
-  // Initialize database adapter
-  const databaseAdapter = new SqliteDatabaseAdapter(
-    new Database("./data/db.sqlite")
-  );
-
-  // Create agent with Discord client
   const agent = new AgentBuilder()
-    .withDatabase(databaseAdapter)
-    .withClient("discord", DiscordClientInterface)
+    .withDatabase(SqliteAdapter)
+    .withClient(DiscordClient)
     .withModelProvider(
       ModelProviderName.OPENAI,
       process.env.OPENAI_API_KEY

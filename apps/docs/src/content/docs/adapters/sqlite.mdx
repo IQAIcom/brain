@@ -12,19 +12,17 @@ The **SQLite Adapter** provides embedded database functionality, ideal for devel
 
 <Steps>
 1. Install required packages:
-   <PackageManagers pkg="@elizaos/adapter-sqlite@0.1.9 better-sqlite3" />
+   <PackageManagers pkg="github:elizaos-plugins/adapter-sqlite" />
 </Steps>
 
 ## Basic Setup
 
 ```typescript
 import { AgentBuilder } from "@iqai/agent";
-import { SqliteDatabaseAdapter } from "@elizaos/adapter-sqlite";
-import Database from "better-sqlite3";
+import SqliteAdapter from "@elizaos/adapter-sqlite";
 
-const databaseAdapter = new SqliteDatabaseAdapter(
-  new Database("./data/db.sqlite")
-);
+
+const databaseAdapter = new SqliteDatabaseAdapter();
 
 const agent = new AgentBuilder()
   .withDatabase(databaseAdapter)
@@ -37,17 +35,6 @@ const agent = new AgentBuilder()
 - ✔️ Built-in caching
 - ✔️ BLOB storage support
 - ✔️ Zero setup requirements
-
-## Storage Configuration
-
-```typescript
-import Database from "better-sqlite3";
-
-// Basic configuration
-const db = new Database("./data/db.sqlite");
-
-const adapter = new SqliteDatabaseAdapter(db);
-```
 
 ## Collections Structure
 

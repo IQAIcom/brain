@@ -1,10 +1,12 @@
 import path from "node:path";
 import {
+	type Adapter,
 	AgentRuntime,
 	CacheManager,
 	CacheStore,
 	type Character,
 	type Client,
+	type ClientInstance,
 	DbCacheAdapter,
 	FsCacheAdapter,
 	type ICacheManager,
@@ -19,8 +21,8 @@ import dedent from "dedent";
 import { defaultCharacter } from "./default-charecter";
 
 export interface AgentOptions {
-	databaseAdapter?: IDatabaseAdapter & IDatabaseCacheAdapter;
-	clients?: { name: string; client: Client }[];
+	adapter?: Adapter;
+	clients?: Client[];
 	plugins?: Plugin[];
 	modelProvider?: ModelProviderName;
 	modelKey?: string;
@@ -31,8 +33,9 @@ export interface AgentOptions {
 export class Agent {
 	private cacheManager: ICacheManager;
 	private runtime: AgentRuntime;
-	private clients: Record<string, Client> = {};
+	private clients: ClientInstance[] = [];
 	private readonly options: AgentOptions;
+	private db: IDatabaseAdapter & IDatabaseCacheAdapter;
 
 	constructor(options: AgentOptions) {
 		this.options = {
@@ -44,24 +47,29 @@ export class Agent {
 	public async start() {
 		elizaLogger.info("🚀 Starting Agent initialization...");
 		try {
-			if (this.options.databaseAdapter) {
-				await this.options.databaseAdapter.init();
+			const runtime = await this.createRuntime();
+
+			if (this.options.adapter) {
+				this.db = this.options.adapter.init(runtime);
+				runtime.databaseAdapter = this.db;
 			}
 
 			this.cacheManager = this.initializeCache();
-			const runtime = await this.initializeRuntime();
+			runtime.cacheManager = this.cacheManager;
+
+			await runtime.initialize();
 
 			elizaLogger.info("🔌 Starting client initialization...");
-			for (const { name, client } of this.options.clients || []) {
+			for (const client of this.options.clients || []) {
 				const clientInstance = await client.start(runtime);
 				if (clientInstance) {
-					this.clients[name] = clientInstance as Client;
+					this.clients[client.name] = clientInstance;
 				}
-				if (name === "direct") {
-					const instance = clientInstance as {
+				if (client.name === "direct") {
+					const instance = clientInstance as unknown as {
 						registerAgent: (runtime: AgentRuntime) => void;
 					};
-					instance.registerAgent(this.runtime as AgentRuntime);
+					instance.registerAgent(runtime);
 					elizaLogger.info(dedent`\n
 						╔════════════════════════════════════════════╗
 						║       *~* Direct client initialized *~*    ║
@@ -74,6 +82,7 @@ export class Agent {
 			}
 
 			runtime.clients = this.clients;
+
 			elizaLogger.info("✨ Agent initialization completed successfully");
 		} catch (error) {
 			elizaLogger.info("❌ Error during agent initialization:", error);
@@ -87,21 +96,17 @@ export class Agent {
 
 		switch (this.options.cacheStore) {
 			case CacheStore.DATABASE:
-				return new CacheManager(
-					new DbCacheAdapter(this.options.databaseAdapter, cacheId),
-				);
+				return new CacheManager(new DbCacheAdapter(this.db, cacheId));
 			case CacheStore.FILESYSTEM: {
 				const cacheDir = path.resolve(process.cwd(), "cache");
 				return new CacheManager(new FsCacheAdapter(cacheDir));
 			}
 			default:
-				return new CacheManager(
-					new DbCacheAdapter(this.options.databaseAdapter, cacheId),
-				);
+				return new CacheManager(new DbCacheAdapter(this.db, cacheId));
 		}
 	}
 
-	private async initializeRuntime() {
+	private async createRuntime() {
 		const plugins = [...(this.options.plugins || [])];
 		const modelProvider =
 			this.options.modelProvider ||
@@ -109,7 +114,6 @@ export class Agent {
 			ModelProviderName.OPENAI;
 
 		this.runtime = new AgentRuntime({
-			databaseAdapter: this.options.databaseAdapter,
 			token: this.options.modelKey,
 			modelProvider,
 			plugins,
@@ -117,8 +121,16 @@ export class Agent {
 				...defaultCharacter,
 				...this.options.character,
 				modelProvider,
+				settings: {
+					...(defaultCharacter.settings || {}),
+					...(this.options.character?.settings || {}),
+					secrets: {
+						...(defaultCharacter.settings?.secrets || {}),
+						...(this.options.character?.settings?.secrets || {}),
+						...process.env,
+					},
+				},
 			},
-			cacheManager: this.cacheManager,
 			fetch: async (url: string, options: RequestInit) => {
 				return fetch(url, options);
 			},
@@ -129,14 +141,13 @@ export class Agent {
 			managers: [],
 		});
 
-		await this.runtime.initialize();
 		return this.runtime;
 	}
 
 	public async stop() {
 		elizaLogger.info("🛑 Stopping agent...");
 		await this.runtime?.stop();
-		await this.options.databaseAdapter?.close();
+		await this.db?.close();
 	}
 
 	public getClients() {
