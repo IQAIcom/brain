@@ -1,5 +1,7 @@
 import type { Action, Handler } from "@elizaos/core";
-import { GetWikiService } from "../services/get-wiki.service";
+import { GetWikiService } from "../services/get-wiki";
+import { InputParserService } from "../services/input-parser";
+import { WIKI_TEMPLATE } from "../lib/templates";
 
 export const getWikiAction = (): Action => {
 	return {
@@ -15,15 +17,24 @@ export const getWikiAction = (): Action => {
 const handler: () => Handler =
 	() => async (runtime, message, state, _options, callback) => {
 		try {
-			const service = new GetWikiService();
-			const response = await service.execute(runtime, message, state);
+			const inputParser = new InputParserService();
+			const { id, error } = await inputParser.parseInputs({
+				runtime,
+				message,
+				state,
+				template: WIKI_TEMPLATE,
+			});
 
-			if (response instanceof Error) {
+			if (error) {
 				callback?.({
-					text: response.message,
+					text: `❌ ${error}`,
 				});
 				return false;
 			}
+
+			const service = new GetWikiService();
+			const response = await service.execute(id);
+
 			callback?.({
 				text: service.format(response),
 			});

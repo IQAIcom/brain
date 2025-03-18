@@ -1,6 +1,8 @@
 import type { Action, Handler } from "@elizaos/core";
-import { GetUserWikiService } from "../services/get-user-wikis.service";
+import { GetLatestWikisService } from "../services/get-latest-wikis";
 import type { Wiki } from "@everipedia/iq-utils";
+import { InputParserService } from "../services/input-parser";
+import { USER_WIKIS_TEMPLATE } from "../lib/templates";
 
 export const getUserWikisAction = (): Action => {
 	return {
@@ -16,16 +18,24 @@ export const getUserWikisAction = (): Action => {
 const handler: () => Handler =
 	() => async (runtime, message, state, _options, callback) => {
 		try {
-			const service = new GetUserWikiService();
-			const response = await service.execute(runtime, message, state);
+			const inputParser = new InputParserService();
+			const { id, timeFrameSeconds, error } = await inputParser.parseInputs({
+				runtime,
+				message,
+				state,
+				template: USER_WIKIS_TEMPLATE,
+			});
 
-			if (response instanceof Error) {
+			if (error) {
 				callback?.({
-					text: response.message,
+					text: `❌ ${error}`,
 				});
 				return false;
 			}
-			// console.log(response)
+
+			const service = new GetLatestWikisService();
+			const response = await service.execute(id, timeFrameSeconds);
+
 			callback?.({
 				text: service.format(response as Partial<Wiki[]>),
 			});
