@@ -1,26 +1,32 @@
-import SqliteAdapter from "@elizaos/adapter-sqlite";
-import DirectClient from "@elizaos/client-direct";
-import TelegramClient from "@elizaos/client-telegram";
+import DirectClientInterface from "@elizaos/client-direct";
 import { AgentBuilder, ModelProviderName } from "@iqai/agent";
-import { createAtpPlugin } from "@iqai/plugin-atp";
-import createSequencerPlugin from "@iqai/plugin-sequencer";
+import createWikiPlugin from "@iqai/plugin-wiki";
+import SqliteAdapter from "@elizaos/adapter-sqlite";
 
 async function main() {
 	// Initialize plugins
-	const atpPlugin = await createAtpPlugin({
-		walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
-	});
-	const sequencerPlugin = await createSequencerPlugin();
-
+	const pluginWiki = await createWikiPlugin();
 	// Build agent using builder pattern
 	const agent = new AgentBuilder()
 		.withDatabase(SqliteAdapter)
-		.withClients([DirectClient, TelegramClient])
+		.withClient(DirectClientInterface)
 		.withModelProvider(
 			ModelProviderName.OPENAI,
 			process.env.OPENAI_API_KEY as string,
 		)
-		.withPlugins([atpPlugin, sequencerPlugin])
+		.withPlugin(pluginWiki)
+		.withCharacter({
+			name: "BrainBot",
+			bio: "You are BrainBot, a helpful assistant.",
+			username: "brainbot",
+			messageExamples: [],
+			lore: [],
+			style: {
+				all: [],
+				chat: [],
+				post: [],
+			},
+		})
 		.build();
 
 	await agent.start();

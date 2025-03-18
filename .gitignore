@@ -13,3 +13,4 @@ public/dist
 .turbo
 .vercel
 
+apps/console/src/lib/info.json
