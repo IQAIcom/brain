@@ -99,12 +99,20 @@ export class Heartbeat extends Service {
 
 			// Only send the initial response if we're not waiting for final output
 			if (!heartbeatTask.onlyFinalOutput) {
-				await this.handleSocialPost(
-					runtime,
-					heartbeatTask,
-					response.text,
-					roomId,
-				);
+				// Early return if shouldPost exists and returns false
+				if (
+					heartbeatTask.shouldPost &&
+					!heartbeatTask.shouldPost(response.text)
+				) {
+					elizaLogger.info("🚫 Skipping post based on shouldPost condition");
+				} else {
+					await this.handleSocialPost(
+						runtime,
+						heartbeatTask,
+						response.text,
+						roomId,
+					);
+				}
 			}
 
 			const responseMessage: Memory = {
@@ -129,13 +137,23 @@ export class Heartbeat extends Service {
 				state,
 				async (ctx) => {
 					if (ctx.text) {
-						// If we're using onlyFinalOutput, this is where we send the message
-						await this.handleSocialPost(
-							runtime,
-							heartbeatTask,
-							ctx.text,
-							roomId,
-						);
+						// Early return for the final output as well
+						if (
+							heartbeatTask.shouldPost &&
+							!heartbeatTask.shouldPost(ctx.text)
+						) {
+							elizaLogger.info(
+								"🚫 Skipping final post based on shouldPost condition",
+							);
+						} else {
+							// If we're using onlyFinalOutput, this is where we send the message
+							await this.handleSocialPost(
+								runtime,
+								heartbeatTask,
+								ctx.text,
+								roomId,
+							);
+						}
 					}
 					return [memory];
 				},

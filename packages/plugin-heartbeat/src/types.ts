@@ -4,6 +4,7 @@ export interface BaseHeartbeatTask {
 	period: string;
 	input: string;
 	onlyFinalOutput?: boolean;
+	shouldPost?: (response: string) => boolean;
 	formatResponse?: (
 		response: string,
 		runtime: IAgentRuntime,
