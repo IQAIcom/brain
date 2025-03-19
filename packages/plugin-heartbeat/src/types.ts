@@ -4,11 +4,12 @@ export interface HeartbeatTask {
 	period: string;
 	input: string;
 	onlyFinalOutput?: boolean;
+	shouldPost?: (response: string) => boolean;
 	formatResponse?: (
 		response: string,
 		runtime: IAgentRuntime,
 	) => Promise<string>;
-	clients: HeartbeatClient[]; // Array of clients to send responses to
+	clients: HeartbeatClient[];
 }
 
 // Define client configurations
