@@ -178,7 +178,6 @@ export class Heartbeat extends Service {
 		content: string,
 		roomId: string,
 	) {
-		console.log(JSON.stringify(runtime.clients, null, 4));
 		try {
 			switch (clientConfig.type) {
 				case "twitter": {
