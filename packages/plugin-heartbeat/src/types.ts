@@ -9,7 +9,7 @@ export interface HeartbeatTask {
 		response: string,
 		runtime: IAgentRuntime,
 	) => Promise<string>;
-	clients: HeartbeatClient[]; // Array of clients to send responses to
+	clients: HeartbeatClient[];
 }
 
 // Define client configurations
