@@ -1,8 +1,13 @@
+import type { IAgentRuntime } from "@elizaos/core";
+
 export interface BaseHeartbeatTask {
 	period: string;
 	input: string;
 	onlyFinalOutput?: boolean;
-	formatResponse?: (response: string) => string;
+	formatResponse?: (
+		response: string,
+		runtime: IAgentRuntime,
+	) => Promise<string>;
 }
 
 export interface TwitterHeartbeatTask extends BaseHeartbeatTask {

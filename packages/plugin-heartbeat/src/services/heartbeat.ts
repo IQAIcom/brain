@@ -159,10 +159,12 @@ export class Heartbeat extends Service {
 			return;
 		}
 
-		// Apply format function if provided
-		const formattedContent = task.formatResponse
-			? task.formatResponse(responseContent)
-			: responseContent;
+		let formattedContent: string;
+		if (task.formatResponse) {
+			formattedContent = await task.formatResponse(responseContent, runtime);
+		} else {
+			formattedContent = responseContent;
+		}
 
 		switch (task.client) {
 			case "twitter": {
