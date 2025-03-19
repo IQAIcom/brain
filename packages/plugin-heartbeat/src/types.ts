@@ -1,6 +1,8 @@
 export interface BaseHeartbeatTask {
 	period: string;
 	input: string;
+	onlyFinalOutput?: boolean;
+	formatResponse?: (response: string) => string;
 }
 
 export interface TwitterHeartbeatTask extends BaseHeartbeatTask {
