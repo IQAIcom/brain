@@ -96,12 +96,16 @@ export class Heartbeat extends Service {
 
 		if (response) {
 			elizaLogger.info("📤 Heartbeat response generated:", response);
-			await this.handleSocialPost(
-				runtime,
-				heartbeatTask,
-				response.text,
-				roomId,
-			);
+
+			// Only send the initial response if we're not waiting for final output
+			if (!heartbeatTask.onlyFinalOutput) {
+				await this.handleSocialPost(
+					runtime,
+					heartbeatTask,
+					response.text,
+					roomId,
+				);
+			}
 
 			const responseMessage: Memory = {
 				id: stringToUuid(`${messageId}-${runtime.agentId}`),
@@ -124,13 +128,15 @@ export class Heartbeat extends Service {
 				[responseMessage],
 				state,
 				async (ctx) => {
-					if (ctx.text)
+					if (ctx.text) {
+						// If we're using onlyFinalOutput, this is where we send the message
 						await this.handleSocialPost(
 							runtime,
 							heartbeatTask,
 							ctx.text,
 							roomId,
 						);
+					}
 					return [memory];
 				},
 			);
@@ -153,14 +159,21 @@ export class Heartbeat extends Service {
 			return;
 		}
 
+		let formattedContent: string;
+		if (task.formatResponse) {
+			formattedContent = await task.formatResponse(responseContent, runtime);
+		} else {
+			formattedContent = responseContent;
+		}
+
 		switch (task.client) {
 			case "twitter": {
 				await client.post.postTweet(
 					runtime,
 					client.post.client,
-					responseContent,
+					formattedContent,
 					roomId,
-					responseContent,
+					formattedContent,
 					client.post.twitterUsername,
 				);
 				break;
@@ -168,13 +181,13 @@ export class Heartbeat extends Service {
 			case "telegram": {
 				await client.messageManager.bot.telegram.sendMessage(
 					task.config.chatId,
-					responseContent,
+					formattedContent,
 				);
 				break;
 			}
 			case "callback": {
 				try {
-					await task.config.callback(responseContent, roomId);
+					await task.config.callback(formattedContent, roomId);
 				} catch (error) {
 					elizaLogger.error(`❌ Failed to send callback: ${error}`);
 				}
