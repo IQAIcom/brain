@@ -12,8 +12,15 @@ import {
 	stringToUuid,
 } from "@elizaos/core";
 import * as cron from "node-cron";
-import { messageHandlerTemplate } from "../lib/template";
-import type { HeartbeatPluginParams, HeartbeatTask } from "../types";
+import {
+	heartbeatContextTemplate,
+	messageHandlerTemplate,
+} from "../lib/template";
+import type {
+	HeartbeatClient,
+	HeartbeatPluginParams,
+	HeartbeatTask,
+} from "../types";
 
 export class Heartbeat extends Service {
 	static serviceType: ServiceType = ServiceType.TRANSCRIPTION;
@@ -51,7 +58,7 @@ export class Heartbeat extends Service {
 		const messageId = stringToUuid(Date.now().toString());
 
 		const content: Content = {
-			text: heartbeatTask.input,
+			text: heartbeatContextTemplate(heartbeatTask.input),
 			attachments: [],
 			source: "heartbeat",
 			inReplyTo: undefined,
@@ -99,7 +106,7 @@ export class Heartbeat extends Service {
 
 			// Only send the initial response if we're not waiting for final output
 			if (!heartbeatTask.onlyFinalOutput) {
-				await this.handleSocialPost(
+				await this.handleSocialPosts(
 					runtime,
 					heartbeatTask,
 					response.text,
@@ -130,7 +137,7 @@ export class Heartbeat extends Service {
 				async (ctx) => {
 					if (ctx.text) {
 						// If we're using onlyFinalOutput, this is where we send the message
-						await this.handleSocialPost(
+						await this.handleSocialPosts(
 							runtime,
 							heartbeatTask,
 							ctx.text,
@@ -145,20 +152,13 @@ export class Heartbeat extends Service {
 		}
 	}
 
-	private async handleSocialPost(
+	private async handleSocialPosts(
 		runtime: IAgentRuntime,
 		task: HeartbeatTask,
 		responseContent: string,
 		roomId: string,
 	) {
-		const client = runtime.clients?.[task.client];
-		if (!client && task.client !== "callback") {
-			elizaLogger.warn(
-				`❌ No client found for task: ${task.client}, skipping...`,
-			);
-			return;
-		}
-
+		// Format the content once if a formatter is provided
 		let formattedContent: string;
 		if (task.formatResponse) {
 			formattedContent = await task.formatResponse(responseContent, runtime);
@@ -166,33 +166,67 @@ export class Heartbeat extends Service {
 			formattedContent = responseContent;
 		}
 
-		switch (task.client) {
-			case "twitter": {
-				await client.post.postTweet(
-					runtime,
-					client.post.client,
-					formattedContent,
-					roomId,
-					formattedContent,
-					client.post.twitterUsername,
-				);
-				break;
-			}
-			case "telegram": {
-				await client.messageManager.bot.telegram.sendMessage(
-					task.config.chatId,
-					formattedContent,
-				);
-				break;
-			}
-			case "callback": {
-				try {
-					await task.config.callback(formattedContent, roomId);
-				} catch (error) {
-					elizaLogger.error(`❌ Failed to send callback: ${error}`);
+		// Process each client in the clients array
+		for (const client of task.clients) {
+			await this.sendToClient(runtime, client, formattedContent, roomId);
+		}
+	}
+
+	private async sendToClient(
+		runtime: IAgentRuntime,
+		clientConfig: HeartbeatClient,
+		content: string,
+		roomId: string,
+	) {
+		console.log(JSON.stringify(runtime.clients, null, 4));
+		try {
+			switch (clientConfig.type) {
+				case "twitter": {
+					const twitterClient = (runtime.clients as any)?.twitter;
+					if (!twitterClient) {
+						elizaLogger.warn("❌ No Twitter client found, skipping...");
+						return;
+					}
+					await twitterClient.post.postTweet(
+						runtime,
+						twitterClient.post.client,
+						content,
+						roomId,
+						content,
+						twitterClient.post.twitterUsername,
+					);
+					break;
 				}
-				break;
+				case "telegram": {
+					const telegramClient = (runtime.clients as any)?.telegram;
+					if (!telegramClient) {
+						elizaLogger.warn("❌ No Telegram client found, skipping...");
+						return;
+					}
+					await telegramClient.messageManager.bot.telegram.sendMessage(
+						clientConfig.chatId,
+						content,
+					);
+					break;
+				}
+				case "callback": {
+					try {
+						await clientConfig.callback(content, roomId);
+					} catch (error) {
+						elizaLogger.error(`❌ Failed to send callback: ${error}`);
+					}
+					break;
+				}
+				default: {
+					elizaLogger.warn(
+						`❌ Unknown client type: ${(clientConfig as any).type}`,
+					);
+				}
 			}
+		} catch (error) {
+			elizaLogger.error(
+				`❌ Failed to send to client ${clientConfig.type}: ${error}`,
+			);
 		}
 	}
 }
