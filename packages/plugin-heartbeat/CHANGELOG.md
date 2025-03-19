@@ -1,5 +1,11 @@
 # @iqai/plugin-heartbeat
 
+## 0.3.0
+
+### Minor Changes
+
+- 0c28cb9: Enables heartbeat to output to multiple clients ands context to ai that it is in a cron
+
 ## 0.2.0
 
 ### Minor Changes
