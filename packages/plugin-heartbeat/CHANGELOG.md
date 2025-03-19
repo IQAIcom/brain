@@ -1,5 +1,12 @@
 # @iqai/plugin-heartbeat
 
+## 0.3.1
+
+### Patch Changes
+
+- a59c70d: adds shouldPost opt
+- de539be: Removes redundant console log
+
 ## 0.3.0
 
 ### Minor Changes
