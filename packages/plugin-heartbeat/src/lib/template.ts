@@ -38,3 +38,12 @@ export const messageHandlerTemplate = dedent`
 
   # Instructions: Write the next message for {{agentName}}
 ${messageCompletionFooter}`;
+
+export const heartbeatContextTemplate = (userInput: string) =>
+	dedent`
+  # Context
+  You are in a cron job where you are supposed to perform the given user task multiple times periodically.
+
+  # User input
+  ${userInput}
+`;

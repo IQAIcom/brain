@@ -1,6 +1,6 @@
 import type { IAgentRuntime } from "@elizaos/core";
 
-export interface BaseHeartbeatTask {
+export interface HeartbeatTask {
 	period: string;
 	input: string;
 	onlyFinalOutput?: boolean;
@@ -9,29 +9,27 @@ export interface BaseHeartbeatTask {
 		response: string,
 		runtime: IAgentRuntime,
 	) => Promise<string>;
+	clients: HeartbeatClient[]; // Array of clients to send responses to
 }
 
-export interface TwitterHeartbeatTask extends BaseHeartbeatTask {
-	client: "twitter";
+// Define client configurations
+export interface TwitterClientConfig {
+	type: "twitter";
 }
 
-export interface TelegramHeartbeatTask extends BaseHeartbeatTask {
-	client: "telegram";
-	config: {
-		chatId: string;
-	};
+export interface TelegramClientConfig {
+	type: "telegram";
+	chatId: string;
 }
 
-export interface CallbackHeartbeatTask extends BaseHeartbeatTask {
-	client: "callback";
-	config: {
-		callback: (content: string, roomId: string) => Promise<void>;
-	};
+export interface CallbackClientConfig {
+	type: "callback";
+	callback: (content: string, roomId: string) => Promise<void>;
 }
 
-export type HeartbeatTask =
-	| TwitterHeartbeatTask
-	| TelegramHeartbeatTask
-	| CallbackHeartbeatTask;
+export type HeartbeatClient =
+	| TwitterClientConfig
+	| TelegramClientConfig
+	| CallbackClientConfig;
 
 export type HeartbeatPluginParams = HeartbeatTask[];
