@@ -4,9 +4,8 @@
 	"sideEffects": false,
 	"type": "module",
 	"scripts": {
-		"extract-version": "bash ./version.sh",
-		"dev": "pnpm run extract-version && vite",
-		"build": "pnpm run extract-version && tsc -b && vite build",
+		"dev": "vite",
+		"build": "tsc -b && vite build",
 		"preview": "vite preview"
 	},
 	"dependencies": {

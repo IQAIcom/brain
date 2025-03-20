@@ -5,7 +5,6 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import { AppSidebar } from "./components/app-sidebar";
 import { Toaster } from "./components/ui/toaster";
 import { TooltipProvider } from "./components/ui/tooltip";
-import useVersion from "./hooks/use-version";
 import Chat from "./routes/chat";
 import Home from "./routes/home";
 import Overview from "./routes/overview";
@@ -19,7 +18,6 @@ const queryClient = new QueryClient({
 });
 
 function App() {
-	useVersion();
 	return (
 		<QueryClientProvider client={queryClient}>
 			<div

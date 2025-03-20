@@ -12,7 +12,6 @@ import {
 	SidebarMenuSkeleton,
 } from "@/components/ui/sidebar";
 import { apiClient } from "@/lib/api";
-import info from "@/lib/info.json";
 import { range } from "@/lib/range";
 import type { UUID } from "@elizaos/core";
 import { useQuery } from "@tanstack/react-query";
@@ -46,7 +45,6 @@ export function AppSidebar() {
 								/>
 								<div className="flex flex-col gap-0.5 leading-none">
 									<span className="font-semibold">Brain Console</span>
-									<span className="">v{info?.version}</span>
 								</div>
 							</NavLink>
 						</SidebarMenuButton>
