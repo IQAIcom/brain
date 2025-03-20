@@ -45,10 +45,12 @@ async function main() {
     {
       period: "*/30 * * * * *",  // Every 30 seconds
       input: "Post a crypto market update",
-      client: "telegram",
-      config: {
-        chatId: process.env.TELEGRAM_CHAT_ID
-      }
+      clients: [
+        {
+          type: "telegram",
+          chatId: process.env.TELEGRAM_CHAT_ID
+        }
+      ]
     }
   ]);
 
@@ -70,13 +72,13 @@ main().catch(console.error);
 
 ## ⚙ Configuration
 
-The plugin requires configuration for clients. currently heartbeat plugin only supports twitter, telegram and callback
+The plugin requires configuration for clients. Currently heartbeat plugin supports Twitter, Telegram, and callback functions.
 
 | 🔧 Platform | 📜 Configuration Needed |
 |------------|------------------------|
-| **Twitter**  | N/A |
-| **Telegram** | `{chatId: string}` |
-| **Callback**  |`{callback: (message: string) => Promise<void>}` |
+| **Twitter**  | `{ type: "twitter" }` |
+| **Telegram** | `{ type: "telegram", chatId: string }` |
+| **Callback**  | `{ type: "callback", callback: (content: string, roomId: string) => Promise<void> }` |
 
 ---
 
@@ -88,8 +90,12 @@ The plugin requires configuration for clients. currently heartbeat plugin only s
 {
   "period": "*/30 * * * * *",    // Every 30 seconds
   "input": "Post a crypto joke",
-  "client": "telegram",
-  "config": { "chatId": "-1234567890" }
+  "clients": [
+    {
+      "type": "telegram",
+      "chatId": "-1234567890"
+    }
+  ]
 }
 ```
 
@@ -99,7 +105,11 @@ The plugin requires configuration for clients. currently heartbeat plugin only s
 {
   "period": "0 */1 * * *",       // Every hour
   "input": "Market update post",
-  "client": "twitter"
+  "clients": [
+    {
+      "type": "twitter"
+    }
+  ]
 }
 ```
 
@@ -109,8 +119,12 @@ The plugin requires configuration for clients. currently heartbeat plugin only s
 {
   "period": "0 0 * * *",         // Once per day at midnight
   "input": "Create a daily crypto news summary",
-  "client": "telegram",
-  "config": { "chatId": "-1234567890" }
+  "clients": [
+    {
+      "type": "telegram",
+      "chatId": "-1234567890"
+    }
+  ]
 }
 ```
 
@@ -120,8 +134,35 @@ The plugin requires configuration for clients. currently heartbeat plugin only s
 {
   "period": "*/30 * * * * *",    // Every 30 seconds
   "input": "Post a crypto market update",
-  "client": "callback",
-  "config": { "callback": (message) => console.log(message) }
+  "clients": [
+    {
+      "type": "callback",
+      "callback": (content, roomId) => console.log(`Message for ${roomId}: ${content}`)
+    }
+  ]
+}
+```
+
+### Multiple Clients Example
+
+```json
+{
+  "period": "0 12 * * *",         // Every day at noon
+  "input": "Generate daily market report",
+  "clients": [
+    {
+      "type": "twitter"
+    },
+    {
+      "type": "telegram",
+      "chatId": "-1234567890"
+    }
+  ],
+  "onlyFinalOutput": true,
+  "shouldPost": (response) => response.length > 100,
+  "formatResponse": async (response, runtime) => {
+    return `📊 DAILY REPORT 📊\n\n${response}`;
+  }
 }
 ```
 
@@ -142,4 +183,3 @@ The plugin requires configuration for clients. currently heartbeat plugin only s
 - **Missing Configuration**: Ensure platform-specific configs are provided
 - **Rate Limiting**: Monitor and adjust posting frequencies
 - **Network Issues**: Implement retry logic for failed requests
-
