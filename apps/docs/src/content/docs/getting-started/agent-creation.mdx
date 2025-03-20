@@ -120,9 +120,29 @@ Configure the AI model powering your agent:
   process.env.OPENAI_API_KEY
 )
 ```
+For available model providers, visit <ExternalLink href="https://github.com/elizaOS/eliza/blob/908fff3a14bb2c0c12bc34b9946477cda8de48e4/packages/core/src/types.ts#L203">ElizaOS Models</ExternalLink>
 
-For available model providers, visit <ExternalLink href="https://elizaos.github.io/eliza/docs/quickstart/#choose-your-model">ElizaOS Model Providers</ExternalLink>
+## Configuring model names
 
+Default model names are set for each model provider. You can check them out here <ExternalLink href="https://github.com/elizaOS/eliza/blob/908fff3a14bb2c0c12bc34b9946477cda8de48e4/packages/core/src/models.ts">ElizaOS model settings</ExternalLink>
+
+You can also set your own model names in the .env file:
+
+```bash
+# OpenAI
+OPENAI_API_KEY= # OpenAI API key
+OPENAI_API_URL= # OpenAI API URL
+SMALL_OPENAI_MODEL= # OpenAI model name
+MEDIUM_OPENAI_MODEL=
+LARGE_OPENAI_MODEL=
+EMBEDDING_OPENAI_MODEL=
+# Anthropic
+ANTHROPIC_API_KEY= # Anthropic API key
+SMALL_ANTHROPIC_MODEL=
+MEDIUM_ANTHROPIC_MODEL=
+LARGE_ANTHROPIC_MODEL=
+...
+```
 ## Plugins
 
 Brain Framework supports both its native plugins and ElizaOS plugins. Here's how to add plugins to your agent:
