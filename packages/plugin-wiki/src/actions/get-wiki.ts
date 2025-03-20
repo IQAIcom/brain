@@ -5,9 +5,26 @@ import { WIKI_TEMPLATE } from "../lib/templates";
 
 export const getWikiAction = (): Action => {
 	return {
-		name: "IQ_WIKI",
+		name: "GET_WIKI",
 		description: "Get a wiki from the IQ.Wiki platform",
-		similes: ["GET_WIKI", "CHECK_WIKI"],
+		similes: [
+			"WIKI_DETAILS",
+			"CHECK_WIKI",
+			"FETCH_WIKI",
+			"RETRIEVE_WIKI",
+			"VIEW_WIKI",
+			"WIKI_INFO",
+			"GET_WIKI_PAGE",
+			"FIND_WIKI",
+			"LOOK_UP_WIKI",
+			"SEARCH_WIKI",
+			"WIKI_LOOKUP",
+			"ACCESS_WIKI",
+			"READ_WIKI",
+			"SHOW_WIKI",
+			"DISPLAY_WIKI",
+		],
+
 		validate: async () => true,
 		handler: handler(),
 		examples: [],
