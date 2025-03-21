@@ -17,8 +17,14 @@ import {
 	elizaLogger,
 	stringToUuid,
 } from "@elizaos/core";
+import type { NodeSDK } from "@opentelemetry/sdk-node";
 import dedent from "dedent";
 import { defaultCharacter } from "./default-charecter";
+
+export interface TelemetryOptions {
+	sdk: NodeSDK;
+	flushIntervalMs: number;
+}
 
 export interface AgentOptions {
 	adapter?: Adapter;
@@ -28,6 +34,7 @@ export interface AgentOptions {
 	modelKey?: string;
 	character?: Partial<Character>;
 	cacheStore?: CacheStore;
+	telemetry?: TelemetryOptions;
 }
 
 export class Agent {
@@ -36,6 +43,7 @@ export class Agent {
 	private clients: ClientInstance[] = [];
 	private readonly options: AgentOptions;
 	private db: IDatabaseAdapter & IDatabaseCacheAdapter;
+	private telemetryFlushInterval: NodeJS.Timeout | null = null;
 
 	constructor(options: AgentOptions) {
 		this.options = {
@@ -47,6 +55,11 @@ export class Agent {
 	public async start() {
 		elizaLogger.info("🚀 Starting Agent initialization...");
 		try {
+			// Initialize telemetry if configured
+			if (this.options.telemetry) {
+				this.initializeTelemetry();
+			}
+
 			const runtime = await this.createRuntime();
 
 			if (this.options.adapter) {
@@ -91,6 +104,26 @@ export class Agent {
 		}
 	}
 
+	private initializeTelemetry() {
+		const { sdk, flushIntervalMs } = this.options.telemetry;
+
+		// Start the SDK
+		sdk.start();
+		elizaLogger.info("📊 Telemetry initialized");
+
+		// Set up periodic flushing by restarting the SDK
+		this.telemetryFlushInterval = setInterval(async () => {
+			try {
+				elizaLogger.debug("Flushing telemetry data...");
+				await sdk.shutdown();
+				sdk.start();
+				elizaLogger.debug("Telemetry data flushed successfully");
+			} catch (error) {
+				elizaLogger.error("Error flushing telemetry:", error);
+			}
+		}, flushIntervalMs);
+	}
+
 	private initializeCache() {
 		const cacheId = stringToUuid("default");
 
@@ -129,6 +162,11 @@ export class Agent {
 						...(this.options.character?.settings?.secrets || {}),
 						...process.env,
 					},
+					modelConfig: {
+						experimental_telemetry: {
+							isEnabled: true,
+						},
+					},
 				},
 			},
 			fetch: async (url: string, options: RequestInit) => {
@@ -146,6 +184,23 @@ export class Agent {
 
 	public async stop() {
 		elizaLogger.info("🛑 Stopping agent...");
+
+		// Clean up telemetry
+		if (this.options.telemetry) {
+			if (this.telemetryFlushInterval) {
+				clearInterval(this.telemetryFlushInterval);
+				this.telemetryFlushInterval = null;
+			}
+
+			try {
+				elizaLogger.info("📊 Shutting down telemetry...");
+				await this.options.telemetry.sdk.shutdown();
+				elizaLogger.info("📊 Telemetry shutdown complete");
+			} catch (error) {
+				elizaLogger.error("Error shutting down telemetry:", error);
+			}
+		}
+
 		await this.runtime?.stop();
 		await this.db?.close();
 	}

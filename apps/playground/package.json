@@ -11,16 +11,19 @@
 		"test": "jest"
 	},
 	"dependencies": {
-		"@iqai/agent": "workspace:*",
-		"@iqai/plugin-atp": "workspace:*",
-		"@iqai/plugin-wiki": "workspace:*",
-		"@iqai/plugin-sequencer": "workspace:*",
-		"@elizaos/core": "0.25.9",
-		"@elizaos/plugin-bootstrap": "0.25.9",
+		"@elizaos/adapter-sqlite": "github:elizaos-plugins/adapter-sqlite",
 		"@elizaos/client-direct": "0.25.9",
 		"@elizaos/client-telegram": "github:elizaos-plugins/client-telegram",
-		"@elizaos/adapter-sqlite": "github:elizaos-plugins/adapter-sqlite",
+		"@elizaos/core": "0.25.9",
+		"@elizaos/plugin-bootstrap": "0.25.9",
+		"@iqai/agent": "workspace:*",
+		"@iqai/plugin-atp": "workspace:*",
+		"@iqai/plugin-sequencer": "workspace:*",
+		"@iqai/plugin-wiki": "workspace:*",
+		"@opentelemetry/auto-instrumentations-node": "^0.57.0",
+		"@opentelemetry/sdk-node": "^0.200.0",
 		"dotenv": "^16.4.7",
+		"langfuse-vercel": "^3.37.0",
 		"viem": "^2.22.15"
 	},
 	"devDependencies": {
