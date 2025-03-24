@@ -56,16 +56,10 @@ export class Agent {
 		this.initializeTelemetry();
 		try {
 			const runtime = await this.createRuntime();
-
-			if (this.options.adapter) {
-				this.db = this.options.adapter.init(runtime);
-				runtime.databaseAdapter = this.db;
-			}
-
+			this.initializeDatabase(runtime);
 			this.initializeCache(runtime);
 			await runtime.initialize();
 			await this.initializeClients(runtime);
-
 			elizaLogger.info("✨ Agent initialization completed successfully");
 		} catch (error) {
 			elizaLogger.info("❌ Error during agent initialization:", error);
@@ -148,6 +142,23 @@ export class Agent {
 		});
 
 		return this.runtime;
+	}
+
+	/**
+	 * Initializes the database for the agent runtime.
+	 *
+	 * Validates the presence of a database adapter, initializes the database,
+	 * and sets the database adapter on the runtime instance.
+	 *
+	 * @param runtime The AgentRuntime instance to attach the database adapter to
+	 * @throws {Error} If no database adapter is provided
+	 */
+	private initializeDatabase(runtime: AgentRuntime) {
+		if (!this.options.adapter) {
+			throw new Error("Database adapter is required");
+		}
+		this.db = this.options.adapter.init(runtime);
+		runtime.databaseAdapter = this.db;
 	}
 
 	/**
