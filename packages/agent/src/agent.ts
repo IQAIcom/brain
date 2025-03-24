@@ -17,14 +17,11 @@ import {
 	elizaLogger,
 	stringToUuid,
 } from "@elizaos/core";
-import type { NodeSDK } from "@opentelemetry/sdk-node";
+import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node";
+import { NodeSDK } from "@opentelemetry/sdk-node";
+import type { SpanExporter } from "@opentelemetry/sdk-trace-base";
 import dedent from "dedent";
 import { defaultCharacter } from "./default-charecter";
-
-export interface TelemetryOptions {
-	sdk: NodeSDK;
-	flushIntervalMs: number;
-}
 
 export interface AgentOptions {
 	adapter?: Adapter;
@@ -34,7 +31,7 @@ export interface AgentOptions {
 	modelKey?: string;
 	character?: Partial<Character>;
 	cacheStore?: CacheStore;
-	telemetry?: TelemetryOptions;
+	telemetryExporter?: SpanExporter;
 }
 
 export class Agent {
@@ -43,7 +40,7 @@ export class Agent {
 	private clients: ClientInstance[] = [];
 	private readonly options: AgentOptions;
 	private db: IDatabaseAdapter & IDatabaseCacheAdapter;
-	private telemetryFlushInterval: NodeJS.Timeout | null = null;
+	private telemetrySdk: NodeSDK;
 
 	constructor(options: AgentOptions) {
 		this.options = {
@@ -56,7 +53,7 @@ export class Agent {
 		elizaLogger.info("🚀 Starting Agent initialization...");
 		try {
 			// Initialize telemetry if configured
-			if (this.options.telemetry) {
+			if (this.options.telemetryExporter) {
 				this.initializeTelemetry();
 			}
 
@@ -105,22 +102,12 @@ export class Agent {
 	}
 
 	private initializeTelemetry() {
-		const { sdk, flushIntervalMs } = this.options.telemetry;
-
-		// Start the SDK
+		const sdk = new NodeSDK({
+			traceExporter: this.options.telemetryExporter,
+			instrumentations: [getNodeAutoInstrumentations()],
+		});
 		sdk.start();
 		elizaLogger.info("📊 Telemetry initialized");
-
-		// Set up periodic flushing by restarting the SDK
-		this.telemetryFlushInterval = setInterval(async () => {
-			try {
-				elizaLogger.info("🗑️ Flushing telemetry data...");
-				await sdk.shutdown();
-				sdk.start();
-			} catch (error) {
-				elizaLogger.warn("🚧 Error flushing telemetry:", error);
-			}
-		}, flushIntervalMs);
 	}
 
 	private initializeCache() {
@@ -185,18 +172,12 @@ export class Agent {
 		elizaLogger.info("🛑 Stopping agent...");
 
 		// Clean up telemetry
-		if (this.options.telemetry) {
-			if (this.telemetryFlushInterval) {
-				clearInterval(this.telemetryFlushInterval);
-				this.telemetryFlushInterval = null;
-			}
-
+		if (this.telemetrySdk) {
 			try {
-				elizaLogger.info("📊 Shutting down telemetry...");
-				await this.options.telemetry.sdk.shutdown();
+				await this.telemetrySdk.shutdown();
 				elizaLogger.info("📊 Telemetry shutdown complete");
 			} catch (error) {
-				elizaLogger.error("Error shutting down telemetry:", error);
+				elizaLogger.error("🚨 Error shutting down telemetry:", error);
 			}
 		}
 

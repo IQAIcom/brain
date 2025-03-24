@@ -8,12 +8,12 @@ import type {
 } from "@elizaos/core";
 import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node";
 import { NodeSDK } from "@opentelemetry/sdk-node";
+import type { SpanExporter } from "@opentelemetry/sdk-trace-base";
 import { Agent, type AgentOptions } from "./agent";
 
 export class AgentBuilder {
 	private options: Partial<AgentOptions> = {};
-	private telemetryExporter: any = null;
-	private telemetryFlushInterval: number = 1 * 60 * 1000; // 1 minute default
+	private telemetryExporter: SpanExporter | null = null;
 
 	/**
 	 * Configure the database adapter for the agent
@@ -121,12 +121,10 @@ export class AgentBuilder {
 	/**
 	 * Configure telemetry with a custom exporter
 	 * @param exporter The OpenTelemetry exporter to use
-	 * @param flushIntervalMs How often to flush telemetry data (default: 5 minutes)
 	 * @returns The builder instance for chaining
 	 */
-	public withTelemetry(exporter: any, flushIntervalMs: number = 5 * 60 * 1000) {
+	public withTelemetry(exporter: SpanExporter) {
 		this.telemetryExporter = exporter;
-		this.telemetryFlushInterval = flushIntervalMs;
 		return this;
 	}
 
@@ -138,19 +136,6 @@ export class AgentBuilder {
 	public build(): Agent {
 		if (!this.options.adapter) {
 			throw new Error("Database adapter is required");
-		}
-
-		// Set up telemetry if configured
-		if (this.telemetryExporter) {
-			const sdk = new NodeSDK({
-				traceExporter: this.telemetryExporter,
-				instrumentations: [getNodeAutoInstrumentations()],
-			});
-
-			this.options.telemetry = {
-				sdk,
-				flushIntervalMs: this.telemetryFlushInterval,
-			};
 		}
 
 		return new Agent(this.options as AgentOptions);
