@@ -2,11 +2,15 @@ import SqliteAdapter from "@elizaos/adapter-sqlite";
 import DirectClientInterface from "@elizaos/client-direct";
 import { AgentBuilder, ModelProviderName } from "@iqai/agent";
 import createWikiPlugin from "@iqai/plugin-wiki";
-import { LangfuseExporter } from "langfuse-vercel";
+import { Client } from "langsmith";
+import { AISDKExporter } from "langsmith/vercel";
 
 async function main() {
 	// Initialize plugins
 	const pluginWiki = await createWikiPlugin();
+
+	// Initialize telemetry
+	const telemetryExporter = new AISDKExporter({ client: new Client() });
 
 	// Build agent using builder pattern with telemetry
 	const agent = new AgentBuilder()
@@ -21,21 +25,8 @@ async function main() {
 			name: "BrainBot",
 			bio: "You are BrainBot, a helpful assistant.",
 			username: "brainbot",
-			messageExamples: [],
-			lore: [],
-			style: {
-				all: [],
-				chat: [],
-				post: [],
-			},
 		})
-		.withTelemetry(
-			new LangfuseExporter({
-				secretKey: process.env.LANGFUSE_SECRET_KEY,
-				publicKey: process.env.LANGFUSE_PUBLIC_KEY,
-				baseUrl: process.env.LANGFUSE_BASEURL,
-			}),
-		)
+		.withTelemetry(telemetryExporter)
 		.build();
 
 	await agent.start();

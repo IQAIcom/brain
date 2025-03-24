@@ -24,6 +24,7 @@
 		"@opentelemetry/sdk-node": "^0.200.0",
 		"dotenv": "^16.4.7",
 		"langfuse-vercel": "^3.37.0",
+		"langsmith": "^0.3.14",
 		"viem": "^2.22.15"
 	},
 	"devDependencies": {
