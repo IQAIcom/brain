@@ -6,14 +6,11 @@ import type {
 	ModelProviderName,
 	Plugin,
 } from "@elizaos/core";
-import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node";
-import { NodeSDK } from "@opentelemetry/sdk-node";
 import type { SpanExporter } from "@opentelemetry/sdk-trace-base";
 import { Agent, type AgentOptions } from "./agent";
 
 export class AgentBuilder {
 	private options: Partial<AgentOptions> = {};
-	private telemetryExporter: SpanExporter | null = null;
 
 	/**
 	 * Configure the database adapter for the agent
@@ -124,7 +121,7 @@ export class AgentBuilder {
 	 * @returns The builder instance for chaining
 	 */
 	public withTelemetry(exporter: SpanExporter) {
-		this.telemetryExporter = exporter;
+		this.options.telemetryExporter = exporter;
 		return this;
 	}
 
