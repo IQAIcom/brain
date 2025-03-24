@@ -240,6 +240,9 @@ importers:
       langfuse-vercel:
         specifier: ^3.37.0
         version: 3.37.0(ai@4.1.16(react@19.0.0)(zod@3.24.2))
+      langsmith:
+        specifier: ^0.3.14
+        version: 0.3.14(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.2))
       viem:
         specifier: ^2.22.15
         version: 2.22.22(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
@@ -5370,6 +5373,14 @@ packages:
   langfuse@3.37.0:
     resolution: {integrity: sha512-NpemB+5i6VT9CXmBwQTE4q1DPOY/DH7OMxBJn8Rcirw+z2HYJpTRH8j48cBjzwqmYtqLdqyJMzAALa2ReQ50hQ==}
     engines: {node: '>=18'}
+
+  langsmith@0.3.14:
+    resolution: {integrity: sha512-MzoxdRkFFV/6140vpP5V2e2fkTG6x/0zIjw77bsRwAXEMjPRTUyDazfXeSyrS5uJvbLgxAXc+MF1h6vPWe6SXQ==}
+    peerDependencies:
+      openai: '*'
+    peerDependenciesMeta:
+      openai:
+        optional: true
 
   langsmith@0.3.6:
     resolution: {integrity: sha512-FXWbZOZPZsjNfY5DKOO0ORlPhBdysj11cHpO13qf94+R022Rkt+h5YPmiEDqrBI62X4j0mvjLrJ6VN6/HSbPig==}
@@ -13931,6 +13942,18 @@ snapshots:
   langfuse@3.37.0:
     dependencies:
       langfuse-core: 3.37.0
+
+  langsmith@0.3.14(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.2)):
+    dependencies:
+      '@types/uuid': 10.0.0
+      chalk: 4.1.2
+      console-table-printer: 2.12.1
+      p-queue: 6.6.2
+      p-retry: 4.6.2
+      semver: 7.7.1
+      uuid: 10.0.0
+    optionalDependencies:
+      openai: 4.83.0(ws@8.18.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.2)
 
   langsmith@0.3.6(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.2)):
     dependencies:
