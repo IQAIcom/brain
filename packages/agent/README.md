@@ -199,18 +199,18 @@ Configure the cache storage method.
 
 Enables LLM request/response telemetry with Open Telemetry via Vercel AI SDK.
 
-For example, here is how you can enable telemetry with langsmith:
+For example, here is how you can enable [telemetry with langsmith](https://docs.smith.langchain.com/observability/how_to_guides/trace_with_vercel_ai_sdk):
 
 ```typescript
 import { Client } from "langsmith";
 import { AISDKExporter } from "langsmith/vercel";
 
-// Initialize Langfuse tracer
-const tracer = new AISDKExporter({ client: new Client() })
+// Initialize Langsmith exporter
+const traceExporter = new AISDKExporter({ client: new Client() })
 
-// Enable telemetry with Langfuse tracer
+// Enable telemetry with Langsmith exporter
 const agent = new AgentBuilder()
-  .withTelemetry(tracer)
+  .withTelemetry(traceExporter)
   //... other configurations ...
   .build();
 ```

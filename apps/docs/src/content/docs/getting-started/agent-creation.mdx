@@ -205,18 +205,18 @@ For detailed character configuration options, visit <ExternalLink  href="https:/
 
 Enables LLM request/response telemetry with Open Telemetry via Vercel AI SDK.
 
-For example, here is how you can enable telemetry with langsmith:
+For example, here is how you can enable <ExternalLink href="https://docs.smith.langchain.com/observability/how_to_guides/trace_with_vercel_ai_sdk">telemetry with Langsmith</ExternalLink>:
 
 ```typescript
 import { Client } from "langsmith";
 import { AISDKExporter } from "langsmith/vercel";
 
-// Initialize Langfuse tracer
-const tracer = new AISDKExporter({ client: new Client() })
+// Initialize Langsmith exporter
+const exporter = new AISDKExporter({ client: new Client() })
 
-// Enable telemetry with Langfuse tracer
+// Enable telemetry with Langsmith exporter
 const agent = new AgentBuilder()
-  .withTelemetry(tracer)
+  .withTelemetry(exporter)
   //... other configurations ...
   .build();
 ```
