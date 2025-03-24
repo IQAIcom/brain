@@ -35,6 +35,7 @@ async function main() {
 				publicKey: process.env.LANGFUSE_PUBLIC_KEY,
 				baseUrl: process.env.LANGFUSE_BASEURL,
 			}),
+			2000,
 		)
 		.build();
 

@@ -114,12 +114,11 @@ export class Agent {
 		// Set up periodic flushing by restarting the SDK
 		this.telemetryFlushInterval = setInterval(async () => {
 			try {
-				elizaLogger.debug("Flushing telemetry data...");
+				elizaLogger.info("🗑️ Flushing telemetry data...");
 				await sdk.shutdown();
 				sdk.start();
-				elizaLogger.debug("Telemetry data flushed successfully");
 			} catch (error) {
-				elizaLogger.error("Error flushing telemetry:", error);
+				elizaLogger.warn("🚧 Error flushing telemetry:", error);
 			}
 		}, flushIntervalMs);
 	}
