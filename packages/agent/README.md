@@ -73,11 +73,6 @@ main().catch(console.error);
 
 Configure a database adapter for the agent.
 
-💬 **Examples:**
-
-- "Add SQLite database to my agent"
-- "Configure PostgreSQL connection"
-
 **Available options:**
 
 ```typescript
@@ -112,11 +107,6 @@ const supabaseAdapter = new SupabaseDatabaseAdapter({
 
 Add a client interface for the agent to communicate through.
 
-💬 **Examples:**
-
-- "Add Telegram interface to my agent"
-- "Configure Direct client for my bot"
-
 **Available clients:**
 
 ```typescript
@@ -135,11 +125,6 @@ Add a client interface for the agent to communicate through.
 ### 🧩 `WITH_PLUGIN`
 
 Add plugins to extend the agent's capabilities. Supports both Brain Framework and ElizaOS plugins.
-
-💬 **Examples:**
-
-- "Add a fraxlend plugin to my agent"
-- "Extend agent with odos capabilities"
 
 ```typescript
 // Initialize plugins
@@ -164,11 +149,6 @@ const odosPlugin = await createOdosPlugin({
 
 Configure the AI model provider powering your agent.
 
-💬 **Examples:**
-
-- "Use OpenAI for my agent"
-- "Configure model with API key"
-
 ```typescript
 .withModelProvider(
   ModelProviderName.OPENAI,
@@ -179,11 +159,6 @@ Configure the AI model provider powering your agent.
 ### 🎭 `WITH_CHARACTER`
 
 Set the personality and character of the agent with detailed configuration.
-
-💬 **Examples:**
-
-- "Give my agent a professional personality"
-- "Configure agent character with example messages"
 
 ```typescript
 .withCharacter({
@@ -216,14 +191,34 @@ Set the personality and character of the agent with detailed configuration.
 
 Configure the cache storage method.
 
-💬 **Examples:**
-
-- "Use database for caching"
-- "Set up filesystem cache"
-
 ```typescript
 .withCacheStore(CacheStore.DATABASE)
 ```
+
+### 📊 `WITH_TELEMETRY`
+
+Enables LLM request/response telemetry with Open Telemetry via Vercel AI SDK.
+
+For example, here is how you can enable telemetry with langsmith:
+
+```typescript
+import { Client } from "langsmith";
+import { AISDKExporter } from "langsmith/vercel";
+
+// Initialize Langfuse tracer
+const tracer = new AISDKExporter({ client: new Client() })
+
+// Enable telemetry with Langfuse tracer
+const agent = new AgentBuilder()
+  .withTelemetry(tracer)
+  //... other configurations ...
+  .build();
+```
+
+Similar, you can enable telemetry with other providers like Langfuse, Honeycomb, laminar etc.
+
+for more information on observability integrations, see the [Vercel AI SDK documentation](https://sdk.vercel.ai/providers/observability).
+
 
 ## 🌜 Response Format
 
