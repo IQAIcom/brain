@@ -200,6 +200,31 @@ Define your agent's personality and behavior:
 
 For detailed character configuration options, visit <ExternalLink  href="https://elizaos.github.io/eliza/docs/core/characterfile/">ElizaOS Character Configuration</ExternalLink>
 
+
+## Telemetry Integration
+
+Enables LLM request/response telemetry with Open Telemetry via Vercel AI SDK.
+
+For example, here is how you can enable telemetry with langsmith:
+
+```typescript
+import { Client } from "langsmith";
+import { AISDKExporter } from "langsmith/vercel";
+
+// Initialize Langfuse tracer
+const tracer = new AISDKExporter({ client: new Client() })
+
+// Enable telemetry with Langfuse tracer
+const agent = new AgentBuilder()
+  .withTelemetry(tracer)
+  //... other configurations ...
+  .build();
+```
+
+Similar, you can enable telemetry with other providers like Langfuse, Honeycomb, laminar etc.
+
+for more information on observability integrations, see the <ExternalLink href="https://sdk.vercel.ai/providers/observability">Vercel AI SDK documentation</ExternalLink>.
+
 ## Error Handling
 
 Implement proper error handling for production:
