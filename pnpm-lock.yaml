@@ -207,42 +207,18 @@ importers:
       '@elizaos/client-direct':
         specifier: 0.25.9
         version: 0.25.9(@types/debug@4.1.12)(@types/node@22.13.1)(bufferutil@4.0.9)(jiti@1.21.7)(react@19.0.0)(tsx@4.19.2)(typescript@5.7.3)(utf-8-validate@5.0.10)(whatwg-url@7.1.0)(ws@8.18.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(yaml@2.7.0)
-      '@elizaos/client-telegram':
-        specifier: github:elizaos-plugins/client-telegram
-        version: '@elizaos-plugins/client-telegram@https://codeload.github.com/elizaos-plugins/client-telegram/tar.gz/bb3a5422f18a27f222871ac8e695516ed266efec'
       '@elizaos/core':
         specifier: 0.25.9
         version: 0.25.9(@types/debug@4.1.12)(@types/node@22.13.1)(bufferutil@4.0.9)(jiti@1.21.7)(react@19.0.0)(tsx@4.19.2)(typescript@5.7.3)(utf-8-validate@5.0.10)(ws@8.18.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(yaml@2.7.0)
-      '@elizaos/plugin-bootstrap':
-        specifier: 0.25.9
-        version: 0.25.9(@types/debug@4.1.12)(@types/node@22.13.1)(bufferutil@4.0.9)(jiti@1.21.7)(react@19.0.0)(tsx@4.19.2)(typescript@5.7.3)(utf-8-validate@5.0.10)(whatwg-url@7.1.0)(ws@8.18.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(yaml@2.7.0)
       '@iqai/agent':
         specifier: workspace:*
         version: link:../../packages/agent
-      '@iqai/plugin-atp':
-        specifier: workspace:*
-        version: link:../../packages/plugin-atp
-      '@iqai/plugin-sequencer':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sequencer
       '@iqai/plugin-wiki':
         specifier: workspace:*
         version: link:../../packages/plugin-wiki
-      '@opentelemetry/auto-instrumentations-node':
-        specifier: ^0.57.0
-        version: 0.57.0(@opentelemetry/api@1.9.0)
-      '@opentelemetry/sdk-node':
-        specifier: ^0.200.0
-        version: 0.200.0(@opentelemetry/api@1.9.0)
       dotenv:
         specifier: ^16.4.7
         version: 16.4.7
-      langfuse-vercel:
-        specifier: ^3.37.0
-        version: 3.37.0(ai@4.1.16(react@19.0.0)(zod@3.24.2))
-      langsmith:
-        specifier: ^0.3.14
-        version: 0.3.14(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.2))
       viem:
         specifier: ^2.22.15
         version: 2.22.22(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
@@ -1069,10 +1045,6 @@ packages:
     peerDependencies:
       whatwg-url: 7.1.0
 
-  '@elizaos-plugins/client-telegram@https://codeload.github.com/elizaos-plugins/client-telegram/tar.gz/bb3a5422f18a27f222871ac8e695516ed266efec':
-    resolution: {tarball: https://codeload.github.com/elizaos-plugins/client-telegram/tar.gz/bb3a5422f18a27f222871ac8e695516ed266efec}
-    version: 0.25.6-alpha.1
-
   '@elizaos/client-direct@0.25.9':
     resolution: {integrity: sha512-WxXZVujOPfllaOCxD6Oi7FLv8TRq2ukNFnrAurFSXNx5zAef5y6JdDETBoKPkHocdNhRKiwFtrlmgN2AO0AvPg==}
     peerDependencies:
@@ -1080,11 +1052,6 @@ packages:
 
   '@elizaos/core@0.25.9':
     resolution: {integrity: sha512-4ze8DhTLxqLMRDEu3eODMxUjj7XK+CehC8El6HbW+/WXGBknCgeZMP+SH6Y93JtFDnIJFU+Ndzx3W2+E8e/GGg==}
-
-  '@elizaos/plugin-bootstrap@0.25.9':
-    resolution: {integrity: sha512-HBk/5E79IJ9B6XFGg8rzMrXDfEctP+IcWYE5SqhqgxgfeEe4YFHpFRzmNlLanpU9zEqFTfxep4N/TCvTgyus2Q==}
-    peerDependencies:
-      whatwg-url: 7.1.0
 
   '@emnapi/runtime@1.3.1':
     resolution: {integrity: sha512-kEBmG8KyqtxJZv+ygbEim+KCGtIq1fC22Ms3S4ziXmYKm8uyoLX0MHONVKwp+9opg390VaKRNt4a7A9NwmpNhw==}
@@ -3079,9 +3046,6 @@ packages:
     peerDependencies:
       react: ^18 || ^19
 
-  '@telegraf/types@7.1.0':
-    resolution: {integrity: sha512-kGevOIbpMcIlCDeorKGpwZmdH7kHbqlk/Yj6dEpJMKEQw5lk0KVQY0OLXaCswy8GqlIVLd5625OB+rAntP9xVw==}
-
   '@tsconfig/node10@1.0.11':
     resolution: {integrity: sha512-DcRjDCujK/kCk/cUe8Xz8ZSpm8mS3mNNpta+jGCA6USEDfktlNvm1+IuZ9eTcDbNk41BHwpHHeW+N1lKCz4zOw==}
 
@@ -3773,15 +3737,6 @@ packages:
 
   bs58check@2.1.2:
     resolution: {integrity: sha512-0TS1jicxdU09dwJMNZtVAfzPi6Q6QeN0pM1Fkzrjn+XYHvzMKPU3pHVpva+769iNVSfIYWf7LJ6WR+BuuMf8cA==}
-
-  buffer-alloc-unsafe@1.1.0:
-    resolution: {integrity: sha512-TEM2iMIEQdJ2yjPJoSIsldnleVaAk1oW3DBVUykyOLsEsFmEc9kn+SFFPz+gl54KQNxlDnAwCXosOS9Okx2xAg==}
-
-  buffer-alloc@1.2.0:
-    resolution: {integrity: sha512-CFsHQgjtW1UChdXgbyJGtnm+O/uLQeZdtbDo8mfUgYXCHSM1wgrVxXm6bSyrUuErEb+4sYVGCzASBRot7zyrow==}
-
-  buffer-fill@1.0.0:
-    resolution: {integrity: sha512-T7zexNBwiiaCOGDg9xNX9PBmjrubblRkENuptryuI64URkXDFum9il/JGL8Lm8wYfAXpredVXXZz7eMHilimiQ==}
 
   buffer-from@1.1.2:
     resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
@@ -5360,28 +5315,6 @@ packages:
     resolution: {integrity: sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==}
     engines: {node: '>=6'}
 
-  langfuse-core@3.37.0:
-    resolution: {integrity: sha512-7ZOFJ51u4dOeCpsQ8otNuNYeMb7xsExVQcOIBOByPFKjjd1mjf/03xF907F44dRzgf7n1U8ZYa0XgMSRgxKNoA==}
-    engines: {node: '>=18'}
-
-  langfuse-vercel@3.37.0:
-    resolution: {integrity: sha512-whRqHtKPK0icQ24cQCkmOSwaGjA0glSFJWvoQkAYnDpjV+BlVVZysvk9zcqsU7cOM62Z5tx9WJOGzYM4p1/gyw==}
-    engines: {node: '>=18'}
-    peerDependencies:
-      ai: '>=3.2.44'
-
-  langfuse@3.37.0:
-    resolution: {integrity: sha512-NpemB+5i6VT9CXmBwQTE4q1DPOY/DH7OMxBJn8Rcirw+z2HYJpTRH8j48cBjzwqmYtqLdqyJMzAALa2ReQ50hQ==}
-    engines: {node: '>=18'}
-
-  langsmith@0.3.14:
-    resolution: {integrity: sha512-MzoxdRkFFV/6140vpP5V2e2fkTG6x/0zIjw77bsRwAXEMjPRTUyDazfXeSyrS5uJvbLgxAXc+MF1h6vPWe6SXQ==}
-    peerDependencies:
-      openai: '*'
-    peerDependenciesMeta:
-      openai:
-        optional: true
-
   langsmith@0.3.6:
     resolution: {integrity: sha512-FXWbZOZPZsjNfY5DKOO0ORlPhBdysj11cHpO13qf94+R022Rkt+h5YPmiEDqrBI62X4j0mvjLrJ6VN6/HSbPig==}
     peerDependencies:
@@ -6113,10 +6046,6 @@ packages:
     resolution: {integrity: sha512-rhIwUycgwwKcP9yTOOFK/AKsAopjjCakVqLHePO3CC6Mir1Z99xT+R63jZxAT5lFZLa2inS5h+ZS2GvR99/FBg==}
     engines: {node: '>=8'}
 
-  p-timeout@4.1.0:
-    resolution: {integrity: sha512-+/wmHtzJuWii1sXn3HCuH/FTwGhrp4tmJTxSKJbfS+vkipci6osxXM5mY0jUiRzWKMTgUT8l7HFbeSwZAynqHw==}
-    engines: {node: '>=10'}
-
   p-timeout@6.1.4:
     resolution: {integrity: sha512-MyIV3ZA/PmyBN/ud8vV9XzwTrNtR4jFrObymZYnZqMmW0zA8Z17vnT0rBgFE/TlohB+YCHqXMgZzb3Csp49vqg==}
     engines: {node: '>=14.16'}
@@ -6716,9 +6645,6 @@ packages:
   safe-buffer@5.2.1:
     resolution: {integrity: sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==}
 
-  safe-compare@1.1.4:
-    resolution: {integrity: sha512-b9wZ986HHCo/HbKrRpBJb2kqXMK9CEWIE1egeEvZsYn69ay3kdfl9nG3RyOcR+jInTDf7a86WQ1d4VJX7goSSQ==}
-
   safe-push-apply@1.0.0:
     resolution: {integrity: sha512-iKE9w/Z7xCzUMIZqdBsp6pEQvwuEebH4vdpjcDWnyzaI6yl6O9FHvVpmGelvEHNsoY6wGblkxR6Zty/h00WiSA==}
     engines: {node: '>= 0.4'}
@@ -6733,10 +6659,6 @@ packages:
 
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
-
-  sandwich-stream@2.0.2:
-    resolution: {integrity: sha512-jLYV0DORrzY3xaz/S9ydJL6Iz7essZeAfnAavsJ+zsJGZ1MOnsS52yRjU3uF3pJa/lla7+wisp//fxOwOH8SKQ==}
-    engines: {node: '>= 0.10'}
 
   sax@1.4.1:
     resolution: {integrity: sha512-+aWOz7yVScEGoKNd4PA10LZ8sk0A/z5+nXQG5giUO5rprX9jgYsTdov9qCchZiPIZezbZH+jRut8nPodFAX4Jg==}
@@ -7106,11 +7028,6 @@ packages:
   tar@7.4.3:
     resolution: {integrity: sha512-5S7Va8hKfV7W5U6g3aYxXmlPoZVAwUMy9AOKyF2fVuZa2UD3qZjg578OrLRt8PcNN1PleVaL/5/yYATNL0ICUw==}
     engines: {node: '>=18'}
-
-  telegraf@4.16.3:
-    resolution: {integrity: sha512-yjEu2NwkHlXu0OARWoNhJlIjX09dRktiMQFsM678BAH/PEPVwctzL67+tvXqLCRQQvm3SDtki2saGO9hLlz68w==}
-    engines: {node: ^12.20.0 || >=14.13.1}
-    hasBin: true
 
   term-size@2.2.1:
     resolution: {integrity: sha512-wK0Ri4fOGjv/XPy8SBHZChl8CM7uMc5VML7SqiQ0zG7+J5Vr+RMQDoHa2CNT6KHUnTGIXH34UDMkPzAUyapBZg==}
@@ -8770,14 +8687,6 @@ snapshots:
       sqlite-vec: 0.1.6
       whatwg-url: 7.1.0
 
-  '@elizaos-plugins/client-telegram@https://codeload.github.com/elizaos-plugins/client-telegram/tar.gz/bb3a5422f18a27f222871ac8e695516ed266efec':
-    dependencies:
-      '@telegraf/types': 7.1.0
-      telegraf: 4.16.3
-    transitivePeerDependencies:
-      - encoding
-      - supports-color
-
   '@elizaos/client-direct@0.25.9(@types/debug@4.1.12)(@types/node@22.13.1)(bufferutil@4.0.9)(jiti@1.21.7)(react@19.0.0)(tsx@4.19.2)(typescript@5.7.3)(utf-8-validate@5.0.10)(whatwg-url@7.1.0)(ws@8.18.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(yaml@2.7.0)':
     dependencies:
       '@elizaos/core': 0.25.9(@types/debug@4.1.12)(@types/node@22.13.1)(bufferutil@4.0.9)(jiti@1.21.7)(react@19.0.0)(tsx@4.19.2)(typescript@5.7.3)(utf-8-validate@5.0.10)(ws@8.18.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(yaml@2.7.0)
@@ -8851,38 +8760,6 @@ snapshots:
       viem: 2.21.58(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
       vitest: 3.0.7(@types/debug@4.1.12)(@types/node@22.13.1)(jiti@1.21.7)(tsx@4.19.2)(yaml@2.7.0)
       zod: 3.24.2
-    transitivePeerDependencies:
-      - '@edge-runtime/vm'
-      - '@types/debug'
-      - '@types/node'
-      - '@vitest/browser'
-      - '@vitest/ui'
-      - aws-crt
-      - bufferutil
-      - encoding
-      - happy-dom
-      - jiti
-      - jsdom
-      - less
-      - lightningcss
-      - msw
-      - react
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-      - tsx
-      - typescript
-      - utf-8-validate
-      - ws
-      - yaml
-
-  '@elizaos/plugin-bootstrap@0.25.9(@types/debug@4.1.12)(@types/node@22.13.1)(bufferutil@4.0.9)(jiti@1.21.7)(react@19.0.0)(tsx@4.19.2)(typescript@5.7.3)(utf-8-validate@5.0.10)(whatwg-url@7.1.0)(ws@8.18.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(yaml@2.7.0)':
-    dependencies:
-      '@elizaos/core': 0.25.9(@types/debug@4.1.12)(@types/node@22.13.1)(bufferutil@4.0.9)(jiti@1.21.7)(react@19.0.0)(tsx@4.19.2)(typescript@5.7.3)(utf-8-validate@5.0.10)(ws@8.18.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(yaml@2.7.0)
-      whatwg-url: 7.1.0
     transitivePeerDependencies:
       - '@edge-runtime/vm'
       - '@types/debug'
@@ -11143,8 +11020,6 @@ snapshots:
       '@tanstack/query-core': 5.66.0
       react: 19.0.0
 
-  '@telegraf/types@7.1.0': {}
-
   '@tsconfig/node10@1.0.11': {}
 
   '@tsconfig/node12@1.0.11': {}
@@ -12020,15 +11895,6 @@ snapshots:
       bs58: 4.0.1
       create-hash: 1.2.0
       safe-buffer: 5.2.1
-
-  buffer-alloc-unsafe@1.1.0: {}
-
-  buffer-alloc@1.2.0:
-    dependencies:
-      buffer-alloc-unsafe: 1.1.0
-      buffer-fill: 1.0.0
-
-  buffer-fill@1.0.0: {}
 
   buffer-from@1.1.2: {}
 
@@ -13929,32 +13795,6 @@ snapshots:
 
   kleur@4.1.5: {}
 
-  langfuse-core@3.37.0:
-    dependencies:
-      mustache: 4.2.0
-
-  langfuse-vercel@3.37.0(ai@4.1.16(react@19.0.0)(zod@3.24.2)):
-    dependencies:
-      ai: 4.1.16(react@19.0.0)(zod@3.24.2)
-      langfuse: 3.37.0
-      langfuse-core: 3.37.0
-
-  langfuse@3.37.0:
-    dependencies:
-      langfuse-core: 3.37.0
-
-  langsmith@0.3.14(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.2)):
-    dependencies:
-      '@types/uuid': 10.0.0
-      chalk: 4.1.2
-      console-table-printer: 2.12.1
-      p-queue: 6.6.2
-      p-retry: 4.6.2
-      semver: 7.7.1
-      uuid: 10.0.0
-    optionalDependencies:
-      openai: 4.83.0(ws@8.18.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.2)
-
   langsmith@0.3.6(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(zod@3.24.2)):
     dependencies:
       '@types/uuid': 10.0.0
@@ -14990,8 +14830,6 @@ snapshots:
     dependencies:
       p-finally: 1.0.0
 
-  p-timeout@4.1.0: {}
-
   p-timeout@6.1.4: {}
 
   p-try@2.2.0: {}
@@ -15720,10 +15558,6 @@ snapshots:
 
   safe-buffer@5.2.1: {}
 
-  safe-compare@1.1.4:
-    dependencies:
-      buffer-alloc: 1.2.0
-
   safe-push-apply@1.0.0:
     dependencies:
       es-errors: 1.3.0
@@ -15738,8 +15572,6 @@ snapshots:
   safe-stable-stringify@2.5.0: {}
 
   safer-buffer@2.1.2: {}
-
-  sandwich-stream@2.0.2: {}
 
   sax@1.4.1: {}
 
@@ -16250,20 +16082,6 @@ snapshots:
       minizlib: 3.0.1
       mkdirp: 3.0.1
       yallist: 5.0.0
-
-  telegraf@4.16.3:
-    dependencies:
-      '@telegraf/types': 7.1.0
-      abort-controller: 3.0.0
-      debug: 4.4.0
-      mri: 1.2.0
-      node-fetch: 2.7.0
-      p-timeout: 4.1.0
-      safe-compare: 1.1.4
-      sandwich-stream: 2.0.2
-    transitivePeerDependencies:
-      - encoding
-      - supports-color
 
   term-size@2.2.1: {}
 
