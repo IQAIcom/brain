@@ -9,7 +9,6 @@ import {
 	type ClientInstance,
 	DbCacheAdapter,
 	FsCacheAdapter,
-	type ICacheManager,
 	type IDatabaseAdapter,
 	type IDatabaseCacheAdapter,
 	ModelProviderName,
@@ -35,10 +34,8 @@ export interface AgentOptions {
 }
 
 export class Agent {
-	private cacheManager: ICacheManager;
-	private runtime: AgentRuntime;
-	private clients: ClientInstance[] = [];
 	private readonly options: AgentOptions;
+	private runtime: AgentRuntime;
 	private db: IDatabaseAdapter & IDatabaseCacheAdapter;
 	private telemetrySdk: NodeSDK;
 
@@ -49,14 +46,15 @@ export class Agent {
 		};
 	}
 
+	/**
+	 * Initializes and starts the Agent, setting up telemetry, runtime, database, cache, and clients.
+	 *
+	 * @throws {Error} If any initialization step fails, the method will stop the agent and rethrow the error.
+	 */
 	public async start() {
 		elizaLogger.info("🚀 Starting Agent initialization...");
+		this.initializeTelemetry();
 		try {
-			// Initialize telemetry if configured
-			if (this.options.telemetryExporter) {
-				this.initializeTelemetry();
-			}
-
 			const runtime = await this.createRuntime();
 
 			if (this.options.adapter) {
@@ -64,34 +62,9 @@ export class Agent {
 				runtime.databaseAdapter = this.db;
 			}
 
-			this.cacheManager = this.initializeCache();
-			runtime.cacheManager = this.cacheManager;
-
+			this.initializeCache(runtime);
 			await runtime.initialize();
-
-			elizaLogger.info("🔌 Starting client initialization...");
-			for (const client of this.options.clients || []) {
-				const clientInstance = await client.start(runtime);
-				if (clientInstance) {
-					this.clients[client.name] = clientInstance;
-				}
-				if (client.name === "direct") {
-					const instance = clientInstance as unknown as {
-						registerAgent: (runtime: AgentRuntime) => void;
-					};
-					instance.registerAgent(runtime);
-					elizaLogger.info(dedent`\n
-						╔════════════════════════════════════════════╗
-						║       *~* Direct client initialized *~*    ║
-						║       you can test out your agents in:     ║
-						║           https://console.iqai.com         ║
-						╚════════════════════════════════════════════╝
-						\n
-				 `);
-				}
-			}
-
-			runtime.clients = this.clients;
+			await this.initializeClients(runtime);
 
 			elizaLogger.info("✨ Agent initialization completed successfully");
 		} catch (error) {
@@ -101,30 +74,39 @@ export class Agent {
 		}
 	}
 
+	/**
+	 * Initializes telemetry for the agent using the provided telemetry exporter.
+	 *
+	 * If no telemetry exporter is configured, the method will silently return.
+	 * Starts the NodeSDK with auto-instrumentations and logs the initialization status.
+	 *
+	 * @private
+	 * @throws {Error} If telemetry initialization fails, logs the error.
+	 */
 	private initializeTelemetry() {
-		const sdk = new NodeSDK({
-			traceExporter: this.options.telemetryExporter,
-			instrumentations: [getNodeAutoInstrumentations()],
-		});
-		sdk.start();
-		elizaLogger.info("📊 Telemetry initialized");
-	}
-
-	private initializeCache() {
-		const cacheId = stringToUuid("default");
-
-		switch (this.options.cacheStore) {
-			case CacheStore.DATABASE:
-				return new CacheManager(new DbCacheAdapter(this.db, cacheId));
-			case CacheStore.FILESYSTEM: {
-				const cacheDir = path.resolve(process.cwd(), "cache");
-				return new CacheManager(new FsCacheAdapter(cacheDir));
-			}
-			default:
-				return new CacheManager(new DbCacheAdapter(this.db, cacheId));
+		if (!this.options.telemetryExporter) {
+			return;
+		}
+		try {
+			this.telemetrySdk = new NodeSDK({
+				traceExporter: this.options.telemetryExporter,
+				instrumentations: [getNodeAutoInstrumentations()],
+			});
+			this.telemetrySdk.start();
+			elizaLogger.info("📊 Telemetry initialized");
+		} catch (error) {
+			elizaLogger.error("🚨 Error initializing telemetry:", error);
 		}
 	}
 
+	/**
+	 * Creates and configures an AgentRuntime instance with default and custom settings.
+	 *
+	 * Initializes the runtime with model provider, plugins, character configuration,
+	 * and default empty collections for evaluators, providers, actions, services, and managers.
+	 *
+	 * @returns The configured AgentRuntime instance
+	 */
 	private async createRuntime() {
 		const plugins = [...(this.options.plugins || [])];
 		const modelProvider =
@@ -168,10 +150,83 @@ export class Agent {
 		return this.runtime;
 	}
 
+	/**
+	 * Initializes the cache manager for the agent runtime based on the specified cache store type.
+	 *
+	 * Supports database and filesystem cache storage, with database as the default fallback.
+	 * Sets the initialized cache manager on the provided runtime instance.
+	 *
+	 * @param runtime The AgentRuntime instance to attach the cache manager to
+	 */
+	private initializeCache(runtime: AgentRuntime) {
+		const cacheId = stringToUuid("default");
+		let cacheManager: CacheManager;
+		switch (this.options.cacheStore) {
+			case CacheStore.DATABASE:
+				cacheManager = new CacheManager(new DbCacheAdapter(this.db, cacheId));
+				break;
+			case CacheStore.FILESYSTEM: {
+				const cacheDir = path.resolve(process.cwd(), "cache");
+				cacheManager = new CacheManager(new FsCacheAdapter(cacheDir));
+				break;
+			}
+			default:
+				cacheManager = new CacheManager(new DbCacheAdapter(this.db, cacheId));
+				break;
+		}
+		runtime.cacheManager = cacheManager;
+	}
+
+	/**
+	 * Initializes and starts client instances for the agent runtime.
+	 *
+	 * Iterates through configured clients, starts each client, and registers them
+	 * with the runtime. Provides special handling for the "direct" client, which
+	 * includes a console log with connection information.
+	 *
+	 * @param runtime The AgentRuntime instance to initialize clients for
+	 * @private
+	 */
+	private async initializeClients(runtime: AgentRuntime) {
+		elizaLogger.info("🔌 Starting client initialization...");
+		const clients: ClientInstance[] = [];
+
+		for (const client of this.options.clients || []) {
+			const clientInstance = await client.start(runtime);
+			if (clientInstance) {
+				clients[client.name] = clientInstance;
+			}
+			if (client.name === "direct") {
+				const instance = clientInstance as unknown as {
+					registerAgent: (runtime: AgentRuntime) => void;
+				};
+				instance.registerAgent(runtime);
+				elizaLogger.info(dedent`\n
+					╔════════════════════════════════════════════╗
+					║       *~* Direct client initialized *~*    ║
+					║       you can test out your agents in:     ║
+					║           https://console.iqai.com         ║
+					╚════════════════════════════════════════════╝
+					\n
+			 `);
+			}
+		}
+		runtime.clients = clients;
+	}
+
+	/**
+	 * Gracefully stops the agent by shutting down telemetry, runtime, and database connections.
+	 *
+	 * This method performs cleanup operations including:
+	 * - Logging the agent stop process
+	 * - Shutting down telemetry SDK if available
+	 * - Stopping the agent runtime
+	 * - Closing the database connection
+	 *
+	 * @async
+	 */
 	public async stop() {
 		elizaLogger.info("🛑 Stopping agent...");
-
-		// Clean up telemetry
 		if (this.telemetrySdk) {
 			try {
 				await this.telemetrySdk.shutdown();
@@ -180,12 +235,7 @@ export class Agent {
 				elizaLogger.error("🚨 Error shutting down telemetry:", error);
 			}
 		}
-
 		await this.runtime?.stop();
 		await this.db?.close();
-	}
-
-	public getClients() {
-		return this.clients;
 	}
 }
