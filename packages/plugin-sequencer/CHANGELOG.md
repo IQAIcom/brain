@@ -1,5 +1,11 @@
 # @iqai/plugin-heartbeat
 
+## 0.2.1
+
+### Patch Changes
+
+- fb3f873: Fixes embedding missmatch error
+
 ## 0.2.0
 
 ### Minor Changes
