@@ -1,5 +1,11 @@
 # @iqai/agent
 
+## 0.2.1
+
+### Patch Changes
+
+- 7517e54: Add telemetry support
+
 ## 0.2.0
 
 ### Minor Changes
