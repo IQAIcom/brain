@@ -2,6 +2,7 @@ import starlight from "@astrojs/starlight";
 import vercel from "@astrojs/vercel";
 // @ts-check
 import { defineConfig } from "astro/config";
+import starlightLinksValidator from "starlight-links-validator";
 
 export default defineConfig({
 	adapter: vercel({
@@ -10,6 +11,7 @@ export default defineConfig({
 	integrations: [
 		starlight({
 			title: "Brain Framework",
+			plugins: [starlightLinksValidator()],
 			head: [
 				{
 					tag: "script",
