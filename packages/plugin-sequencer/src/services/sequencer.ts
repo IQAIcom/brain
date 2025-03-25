@@ -8,6 +8,7 @@ import {
 	type State,
 	elizaLogger,
 	generateText,
+	getEmbeddingZeroVector,
 	stringToUuid,
 } from "@elizaos/core";
 import { z } from "zod";
@@ -76,6 +77,7 @@ export class SequencerService {
 			roomId: this.state.roomId,
 			agentId: this.runtime.agentId,
 			createdAt: Date.now(),
+			embedding: getEmbeddingZeroVector(),
 		});
 		return text;
 	}
