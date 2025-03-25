@@ -11,15 +11,11 @@
 		"test": "jest"
 	},
 	"dependencies": {
-		"@iqai/agent": "workspace:*",
-		"@iqai/plugin-atp": "workspace:*",
-		"@iqai/plugin-wiki": "workspace:*",
-		"@iqai/plugin-sequencer": "workspace:*",
-		"@elizaos/core": "0.25.9",
-		"@elizaos/plugin-bootstrap": "0.25.9",
-		"@elizaos/client-direct": "0.25.9",
-		"@elizaos/client-telegram": "github:elizaos-plugins/client-telegram",
 		"@elizaos/adapter-sqlite": "github:elizaos-plugins/adapter-sqlite",
+		"@elizaos/client-direct": "0.25.9",
+		"@elizaos/core": "0.25.9",
+		"@iqai/agent": "workspace:*",
+		"@iqai/plugin-wiki": "workspace:*",
 		"dotenv": "^16.4.7",
 		"viem": "^2.22.15"
 	},

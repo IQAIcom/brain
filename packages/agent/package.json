@@ -12,7 +12,11 @@
 	},
 	"dependencies": {
 		"@elizaos/core": "0.25.9",
+		"@opentelemetry/auto-instrumentations-node": "^0.57.0",
+		"@opentelemetry/sdk-node": "^0.200.0",
+		"@opentelemetry/sdk-trace-base": "^2.0.0",
 		"dedent": "^1.5.3",
+		"node-cron": "^3.0.3",
 		"zod": "^3.24.2"
 	},
 	"devDependencies": {
