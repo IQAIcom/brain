@@ -14,22 +14,12 @@ import {
 import { z } from "zod";
 
 export class SequencerService {
-	private runtime: IAgentRuntime;
-	private memory: Memory;
-	private state: State;
-	private callback: HandlerCallback;
-
 	constructor(
-		runtime: IAgentRuntime,
-		message: Memory,
-		state: State,
-		callback: HandlerCallback,
-	) {
-		this.runtime = runtime;
-		this.memory = message;
-		this.state = state;
-		this.callback = callback;
-	}
+		private runtime: IAgentRuntime,
+		private memory: Memory,
+		private state: State,
+		private callback: HandlerCallback,
+	) {}
 
 	async execute() {
 		const actions = this.runtime.actions.filter((a) => a.name !== "SEQUENCER");
@@ -40,7 +30,7 @@ export class SequencerService {
 			modelClass: ModelClass.LARGE,
 			context: this.memory.content.text,
 			customSystemPrompt:
-				"You are a Sequencer. You will execute the following actions in order to achieve the goal. Never give up without completing the goal.",
+				"You are a Sequencer. Understand the user's request and answer with help of available tools at your disposal.",
 			maxSteps: 10,
 			tools: Object.fromEntries(
 				actions.map((a) => [
@@ -70,6 +60,7 @@ export class SequencerService {
 				resolve as HandlerCallback,
 			),
 		);
+		elizaLogger.info(`✅ Handler executed: ${name}`, { text });
 		await this.runtime.messageManager.createMemory({
 			id: stringToUuid(`${this.memory.id}-${text}`),
 			content: { text },
