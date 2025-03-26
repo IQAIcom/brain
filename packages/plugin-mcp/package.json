@@ -6,9 +6,10 @@
 	"types": "dist/index.d.ts",
 	"dependencies": {
 		"@elizaos/core": "0.25.9",
-		"tsup": "8.3.6",
+		"@modelcontextprotocol/sdk": "1.5.0",
 		"dedent": "^1.5.3",
-		"@modelcontextprotocol/sdk": "1.5.0"
+		"tsup": "8.3.6",
+		"zod": "^3.24.2"
 	},
 	"scripts": {
 		"build": "tsup --format esm",
