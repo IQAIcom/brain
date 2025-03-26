@@ -6,7 +6,7 @@ Brain Framework is a developer-first toolkit for building AI agents with enhance
 
 ## 🚀 Getting Started
 
-Visit our [Quick Start Guide](https://brain.iqai.com/quick-start) to build your first AI agent with Brain Framework.
+Visit our [Quick Start Guide](https://brain.iqai.com/getting-started/quickstart) to build your first AI agent with Brain Framework.
 
 Explore our [Example Repo](https://github.com/IQAIcom/brain-examples) to see example agents built with Brain Framework.
 
