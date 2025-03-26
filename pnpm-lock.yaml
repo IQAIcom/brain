@@ -216,6 +216,9 @@ importers:
       '@iqai/agent':
         specifier: workspace:*
         version: link:../../packages/agent
+      '@iqai/plugin-atp':
+        specifier: workspace:*
+        version: link:../../packages/plugin-atp
       '@iqai/plugin-sequencer':
         specifier: workspace:*
         version: link:../../packages/plugin-sequencer

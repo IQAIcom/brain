@@ -1,6 +1,7 @@
 import SqliteAdapter from "@elizaos/adapter-sqlite";
 import DirectClientInterface from "@elizaos/client-direct";
 import { AgentBuilder, ModelProviderName } from "@iqai/agent";
+import createAtpPlugin from "@iqai/plugin-atp";
 import createSequencerPlugin from "@iqai/plugin-sequencer";
 import createWikiPlugin from "@iqai/plugin-wiki";
 import { Laminar } from "@lmnr-ai/lmnr";
@@ -8,6 +9,7 @@ import { Laminar } from "@lmnr-ai/lmnr";
 async function main() {
 	// Initialize plugins
 	const pluginWiki = await createWikiPlugin();
+	const pluginAtp = await createAtpPlugin();
 	const pluginSequencer = await createSequencerPlugin();
 
 	// Initialize laminar
@@ -23,7 +25,7 @@ async function main() {
 			ModelProviderName.OPENAI,
 			process.env.OPENAI_API_KEY as string,
 		)
-		.withPlugins([pluginWiki, pluginSequencer])
+		.withPlugins([pluginWiki, pluginAtp, pluginSequencer])
 		.withCharacter({
 			name: "BrainBot",
 			bio: "You are BrainBot, a helpful assistant.",

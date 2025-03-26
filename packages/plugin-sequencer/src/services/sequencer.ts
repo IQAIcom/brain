@@ -30,7 +30,7 @@ export class SequencerService {
 			modelClass: ModelClass.LARGE,
 			context: this.memory.content.text,
 			customSystemPrompt:
-				"You are a Sequencer. Understand the user's request and answer with help of available tools at your disposal.",
+				"You are a Sequencer. Understand the user's request and answer with help of available tools at your disposal. Continue querying tools until you have a complete answer.",
 			maxSteps: 10,
 			tools: Object.fromEntries(
 				actions.map((a) => [
