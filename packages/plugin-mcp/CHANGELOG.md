@@ -1,5 +1,11 @@
 # @iqai/plugin-mcp
 
+## 0.2.1
+
+### Patch Changes
+
+- 450d1d3: updated post process tool chaning method & prompt improvements
+
 ## 0.2.0
 
 ### Minor Changes
