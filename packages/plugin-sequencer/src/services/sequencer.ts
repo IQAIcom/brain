@@ -11,6 +11,7 @@ import {
 	getEmbeddingZeroVector,
 	stringToUuid,
 } from "@elizaos/core";
+import dedent from "dedent";
 import { z } from "zod";
 
 export class SequencerService {
@@ -25,6 +26,10 @@ export class SequencerService {
 		const actions = this.runtime.actions.filter((a) => a.name !== "SEQUENCER");
 		elizaLogger.info(`ℹ️ All Actions names: ${actions.map((a) => a?.name)}`);
 
+		this.saveToMemory(
+			"We decided to call series of actions based on user request",
+		);
+
 		const output = await generateText({
 			runtime: this.runtime,
 			modelClass: ModelClass.LARGE,
@@ -36,9 +41,16 @@ export class SequencerService {
 				actions.map((a) => [
 					a.name,
 					{
-						parameters: z.object({}),
+						parameters: z.object({
+							reason: z
+								.string()
+								.describe(
+									"Reason for using this tool. If there is any error from previous action, provide the error message.",
+								),
+						}),
 						description: a.description,
-						execute: () => this.handlerWrapper(a.name, a.handler),
+						execute: ({ reason }) =>
+							this.handlerWrapper(a.name, a.handler, reason),
 					},
 				]),
 			),
@@ -49,8 +61,16 @@ export class SequencerService {
 		});
 	}
 
-	private async handlerWrapper(name: string, handler: Handler) {
+	private async handlerWrapper(name: string, handler: Handler, reason: string) {
 		elizaLogger.info(`\n🔄 Executing handler: ${name}...`);
+
+		// Save action execution to memory using the helper method
+		await this.saveToMemory(
+			dedent`## Action Execution
+							**Action:** ${name}
+							**Reason:** ${reason}`,
+			`action-${name}-start`,
+		);
 		const { text } = await new Promise<Content>((resolve) =>
 			handler(
 				this.runtime,
@@ -61,15 +81,33 @@ export class SequencerService {
 			),
 		);
 		elizaLogger.info(`✅ Handler executed: ${name}`, { text });
+
+		// Save action result to memory using the helper method
+		await this.saveToMemory(
+			dedent`## Action Result
+							**Action:** ${name}
+							**Status:** Completed
+							**Result:**
+							\`\`\`
+							${text}
+							\`\`\``,
+			`action-${name}-result`,
+		);
+
+		return text;
+	}
+
+	private async saveToMemory(text: string, suffix = "memory") {
+		const memoryId = stringToUuid(`${this.memory.id}-${suffix}`);
 		await this.runtime.messageManager.createMemory({
-			id: stringToUuid(`${this.memory.id}-${text}`),
+			id: memoryId,
 			content: { text },
-			userId: this.memory.userId,
+			userId: this.runtime.agentId,
 			roomId: this.state.roomId,
 			agentId: this.runtime.agentId,
 			createdAt: Date.now(),
 			embedding: getEmbeddingZeroVector(),
 		});
-		return text;
+		return memoryId;
 	}
 }
