@@ -1,4 +1,9 @@
-import { ModelClass, elizaLogger, generateText } from "@elizaos/core";
+import {
+	ModelClass,
+	elizaLogger,
+	generateText,
+	getEmbeddingZeroVector,
+} from "@elizaos/core";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { SequencerService } from "../services/sequencer";
 
@@ -15,6 +20,7 @@ const mockMemory = {
 	id: "memory-123",
 	content: { text: "Test input" },
 	userId: "user-123",
+	embedding: getEmbeddingZeroVector(),
 } as any;
 
 const mockState = { roomId: "room-123" } as any;
