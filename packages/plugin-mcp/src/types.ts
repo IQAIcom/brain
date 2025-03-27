@@ -1,4 +1,10 @@
-export type McpPluginConfig =
+export type McpPluginConfig = {
+	name: string;
+	description: string;
+	transport: McpTransportType;
+};
+
+export type McpTransportType =
 	| {
 			mode: "stdio";
 			command: string;

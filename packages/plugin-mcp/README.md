@@ -6,7 +6,7 @@ A **plugin** for interacting with **Model Context Protocol (MCP) servers** to me
 
 ## 📌 Overview
 
-The **Plugin MCP** acts as a mediator between Brain framework and an MCP server. It connects to an MCP server—either locally via stdio or remotely via SSE—retrieves available tools and converts them into actions that the Brain Framework can execute. The actions are generated dynamically based on the MCP server’s capabilities.
+The **Plugin MCP** acts as a mediator between Brain framework and an MCP server. It connects to an MCP server—either locally via stdio or remotely via SSE—retrieves available tools and converts them into actions that the Brain Framework can execute. The actions are generated dynamically based on the MCP server's capabilities.
 
 There are two ways to configure the plugin:
 
@@ -27,25 +27,35 @@ pnpm add @iqai/plugin-mcp
 
 ## ⚙ Configuration
 
-Configure the plugin for either **stdio** or **sse** modes.
+Configure the plugin with the following parameters:
 
-### Stdio Mode
+| 🔧 Param Name     | 📜 Description                                                | Required | Default |
+|-------------------|--------------------------------------------------------------|----------|---------|
+| `name`            | Name of the MCP plugin                                       | Yes      | -       |
+| `description`     | Description of the plugin                                    | Yes      | -       |
+| `transport`       | Transport configuration object (see below)                   | Yes      | -       |
+
+### Transport Configuration
+
+#### Stdio Mode
 
 Use **stdio** mode when you want to run a local MCP server as a separate process.
 
-| 🔧 Param Name      | 📜 Description                                                     |
-|-----------------------|---------------------------------------------------------------------|
-| `command`   | Command to run the local MCP server process                         |
-| `args`      | Arguments for the local MCP server process (string list)   |
+| 🔧 Param Name      | 📜 Description                                           |
+|--------------------|-----------------------------------------------------------|
+| `mode`             | Must be set to `"stdio"`                                  |
+| `command`          | Command to run the local MCP server process               |
+| `args`             | Arguments for the local MCP server process (string list)  |
 
-### SSE Mode
+#### SSE Mode
 
 Use **sse** mode to connect to a remote MCP server via Server-Sent Events. *(Note: Authentication is not supported for SSE mode at this time.)*
 
-| 🔧 Param Name    | 📜 Description                              |
-|---------------------|----------------------------------------------|
-| `serverUrl`    | The base URL of the remote MCP server        |
-| `headers`    | Headers to include (if any) in the request to the remote server |
+| 🔧 Param Name      | 📜 Description                                           |
+|--------------------|-----------------------------------------------------------|
+| `mode`             | Must be set to `"sse"`                                    |
+| `serverUrl`        | The base URL of the remote MCP server                     |
+| `headers`          | Headers to include (if any) in the request to the remote server |
 
 ---
 
@@ -59,10 +69,19 @@ Import and initialize the plugin using the `createMcpPlugin` method.
 import { createMcpPlugin } from "@iqai/plugin-mcp";
 
 // Initialize the plugin with stdio configuration
-const plugin = await createMcpPlugin({
-  mode: "stdio",
-  command: "node",
-  args: ["server.js"]
+const pluginFs = await createMcpPlugin({
+  name: "file-system",
+  description: "File system MCP server",
+  transport: {
+    mode: "stdio",
+    command: "npx",
+    args: [
+      "-y",
+      "@modelcontextprotocol/server-filesystem",
+      "/home/user/",
+      "/home/user/Desktop",
+    ],
+  }
 });
 ```
 
@@ -73,13 +92,33 @@ import { createMcpPlugin } from "@iqai/plugin-mcp";
 
 // Initialize the plugin with sse configuration
 const plugin = await createMcpPlugin({
-  mode: "sse",
-  serverUrl: "YOUR_SERVER_URL",
-  headers: {}
+  name: "remote-mcp-tools",
+  description: "Remote MCP server tools",
+  transport: {
+    mode: "sse",
+    serverUrl: "YOUR_SERVER_URL",
+    headers: {}
+  }
 });
 ```
 
 Once initialized, the plugin dynamically generates actions based on the MCP server's available tools, prompts, and resources.
+
+---
+
+## 🔄 Automatic Tool Chaining
+
+The plugin features automatic tool chaining, which enables more powerful interactions between tools:
+
+- When a tool returns a file path, the system can automatically use filesystem tools if available to read the content
+- Structured data outputs from one tool can serve as inputs to another tool
+- Complex workflows can be automated without requiring explicit tool invocation for each step
+
+For example, if a tool generates a code file and returns its path, the system will automatically detect this and can:
+
+1. Read the file content using filesystem tools if available by a plugin or via filesystem mcp server.
+2. Present the code with proper formatting
+3. Suggest further actions based on the file type
 
 ---
 
@@ -102,6 +141,11 @@ For SSE mode:
 - Ensure you are connecting to a trusted MCP server.
 - Use HTTPS endpoints for secure communication.
 - Validate all configuration parameters to avoid misconfigurations.
+
+For tool chaining:
+
+- Be aware that tools will have access to the outputs of other tools
+- Consider potential security implications when chaining tools that access sensitive data
 
 ---
 

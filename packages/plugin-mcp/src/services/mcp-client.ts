@@ -19,27 +19,30 @@ export class McpClientService {
 		try {
 			let transport: Transport;
 
-			if (this.config.mode === "sse") {
+			if (this.config.transport.mode === "sse") {
 				elizaLogger.log(
 					"🚀 Initializing MCP client in SSE mode",
-					this.config.serverUrl,
+					this.config.transport.serverUrl,
 				);
-				transport = new SSEClientTransport(new URL(this.config.serverUrl), {
-					requestInit: {
-						headers: this.config.headers,
+				transport = new SSEClientTransport(
+					new URL(this.config.transport.serverUrl),
+					{
+						requestInit: {
+							headers: this.config.transport.headers,
+						},
 					},
-				});
+				);
 			} else {
 				transport = new StdioClientTransport({
-					command: this.config.command,
-					args: this.config.args,
+					command: this.config.transport.command,
+					args: this.config.transport.args,
 				});
 			}
 
 			const client = new Client(
 				{
-					name: "McpPluginClient",
-					version: "0.0.2",
+					name: this.config.name,
+					version: "0.0.1",
 				},
 				{
 					capabilities: {

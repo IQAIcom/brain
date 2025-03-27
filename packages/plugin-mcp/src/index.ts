@@ -32,8 +32,8 @@ export async function createMcpPlugin(
 
 		// Step 4: Package actions into a Plugin object.
 		const plugin: Plugin = {
-			name: "mcp",
-			description: "MCP Plugin",
+			name: config.name,
+			description: config.description,
 			actions,
 		};
 
