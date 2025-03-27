@@ -1,5 +1,11 @@
 # @iqai/plugin-mcp
 
+## 0.2.0
+
+### Minor Changes
+
+- f4ccbc2: Added tool chaining, updated config type
+
 ## 0.1.0
 
 ### Minor Changes
