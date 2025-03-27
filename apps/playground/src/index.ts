@@ -28,7 +28,7 @@ async function main() {
 		.withPlugins([pluginWiki, pluginAtp, pluginSequencer])
 		.withCharacter({
 			name: "BrainBot",
-			bio: "You are BrainBot, a helpful assistant.",
+			bio: ["You are BrainBot, a helpful assistant."],
 			username: "brainbot",
 		})
 		.build();
