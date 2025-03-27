@@ -17,7 +17,6 @@
 		"@iqai/agent": "workspace:*",
 		"@iqai/plugin-sequencer": "workspace:*",
 		"@iqai/plugin-wiki": "workspace:*",
-		"@iqai/plugin-mcp": "workspace:*",
 		"@lmnr-ai/lmnr": "^0.4.42",
 		"dotenv": "^16.4.7",
 		"viem": "^2.22.15"
