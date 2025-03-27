@@ -66,8 +66,13 @@ export async function createAction(
 			}
 			// 5. Check result content, if any file paths or other data apart from plain text is present
 			// call the runtime to handle it if it can with available actions (eg. fs), else make the content readable/pretty
-			await postProcessResponse(runtime, result, state, message, callback);
-			return true;
+			return await postProcessResponse(
+				runtime,
+				result,
+				state,
+				message,
+				callback,
+			);
 		} catch (error) {
 			callback?.({
 				text: `
@@ -101,58 +106,139 @@ async function postProcessResponse(
 	memory: Memory,
 	callback: HandlerCallback,
 ) {
-	try {
-		const actions = runtime.actions.filter((a) => a.name !== "SEQUENCER");
+	const actions = runtime.actions.filter((a) => a.name !== "SEQUENCER");
+	elizaLogger.info(
+		`ℹ️ Available actions for post-processing: ${actions.map((a) => a?.name)}`,
+	);
 
-		const output = await generateText({
-			runtime: runtime,
-			modelClass: ModelClass.LARGE,
-			context: `Tool output: ${JSON.stringify(response, null, 2)}`,
-			customSystemPrompt: PROCESS_TEMPLATE,
+	// Save initial tool result to memory
+	await saveToMemory(
+		runtime,
+		memory,
+		state,
+		`Processing tool result: ${JSON.stringify(response, null, 2)}`,
+		"post-process-start",
+	);
+	elizaLogger.info("memory content", memory.content.text);
 
-			maxSteps: 10,
-			tools: Object.fromEntries(
-				actions.map((a) => [
-					a.name,
-					{
-						parameters: z.object({}),
-						description: a.description,
-						execute: () =>
-							handlerWrapper(a.name, a.handler, runtime, state, memory),
-					},
-				]),
-			),
-		});
-		callback?.({
-			text: output,
-		});
-	} catch (error) {
-		elizaLogger.error(error);
-	}
+	const output = await generateText({
+		runtime: runtime,
+		modelClass: ModelClass.LARGE,
+		context: `Tool output to process: ${JSON.stringify(response, null, 2)}`,
+		customSystemPrompt: PROCESS_TEMPLATE,
+		maxSteps: 10,
+		tools: Object.fromEntries(
+			actions.map((a) => [
+				a.name,
+				{
+					parameters: z.object({
+						reason: z
+							.string()
+							.describe(
+								"Reason for using this tool. Explain why this tool is needed to process the current output.",
+							),
+					}),
+					description: a.description,
+					execute: async ({ reason }) =>
+						await handlerWrapper(
+							a.name,
+							a.handler,
+							reason,
+							runtime,
+							state,
+							memory,
+						),
+				},
+			]),
+		),
+	});
+
+	return callback?.({
+		text: output,
+	});
 }
 async function handlerWrapper(
 	name: string,
 	handler: Handler,
+	reason: string,
 	runtime: IAgentRuntime,
 	state: State,
 	memory: Memory,
 ) {
+	elizaLogger.info(`\n🔄 Executing handler: ${name}...`);
+
+	// Save action execution to memory
+	await saveToMemory(
+		runtime,
+		memory,
+		state,
+		`## Action Execution
+**Action:** ${name}
+**Reason:** ${reason}`,
+		`action-${name}-start`,
+	);
+
 	try {
-		elizaLogger.info(`\n🔄 Executing handler: ${name}...`);
 		const { text } = await new Promise<Content>((resolve) =>
 			handler(runtime, memory, state, null, resolve as HandlerCallback),
 		);
-		await runtime.messageManager.createMemory({
-			id: stringToUuid(`${memory.id}-${text}`),
-			content: { text },
-			userId: memory.userId,
-			roomId: state.roomId,
-			agentId: runtime.agentId,
-			createdAt: Date.now(),
-			embedding: getEmbeddingZeroVector(),
-		});
+		elizaLogger.info(`✅ Handler executed: ${name}`, { text });
+
+		// Save action result to memory
+		await saveToMemory(
+			runtime,
+			memory,
+			state,
+			`## Action Result
+**Action:** ${name}
+**Status:** Completed
+**Result:**
+\`\`\`
+${text}
+\`\`\``,
+			`action-${name}-result`,
+		);
+
 		return text;
 	} catch (error) {
-		elizaLogger.error(error);
+		elizaLogger.error(`❌ Error executing handler ${name}:`, error);
+
+		// Save error to memory
+		await saveToMemory(
+			runtime,
+			memory,
+			state,
+			`## Action Error
+**Action:** ${name}
+**Status:** Failed
+**Error:**
+\`\`\`
+${error.message}
+\`\`\``,
+			`action-${name}-error`,
+		);
+
+		return `Error executing ${name}: ${error.message}`;
 	}
+}
+
+async function saveToMemory(
+	runtime: IAgentRuntime,
+	memory: Memory,
+	state: State,
+	text: string,
+	suffix = "memory",
+) {
+	3;
+	const memoryId = stringToUuid(`${memory.id}-${suffix}`);
+	await runtime.messageManager.createMemory({
+		id: memoryId,
+		content: { text },
+		userId: memory.userId,
+		roomId: state.roomId,
+		agentId: runtime.agentId,
+		createdAt: Date.now(),
+		embedding: getEmbeddingZeroVector(),
+	});
+	return memoryId;
 }
