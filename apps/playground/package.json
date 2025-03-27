@@ -16,7 +16,6 @@
 		"@elizaos/core": "0.25.9",
 		"@iqai/agent": "workspace:*",
 		"@iqai/plugin-sequencer": "workspace:*",
-		"@iqai/plugin-atp": "workspace:*",
 		"@iqai/plugin-wiki": "workspace:*",
 		"@lmnr-ai/lmnr": "^0.4.42",
 		"dotenv": "^16.4.7",
