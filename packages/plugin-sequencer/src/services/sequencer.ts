@@ -15,6 +15,15 @@ import dedent from "dedent";
 import { z } from "zod";
 
 export class SequencerService {
+	private handlerLock: Promise<void> = Promise.resolve();
+	private handlerQueue: Array<{
+		name: string;
+		handler: Handler;
+		reason: string;
+		resolve: (result: string) => void;
+	}> = [];
+	private isProcessingQueue = false;
+
 	constructor(
 		private runtime: IAgentRuntime,
 		private memory: Memory,
@@ -49,16 +58,68 @@ export class SequencerService {
 								),
 						}),
 						description: a.description,
-						execute: ({ reason }) =>
-							this.handlerWrapper(a.name, a.handler, reason),
+						execute: async ({ reason }) => {
+							return await this.queueHandler(a.name, a.handler, reason);
+						},
 					},
 				]),
 			),
 		});
 
+		// Make sure all handlers have completed before returning the final output
+		await this.handlerLock;
+
 		this.callback({
 			text: output,
 		});
+	}
+
+	private async queueHandler(
+		name: string,
+		handler: Handler,
+		reason: string,
+	): Promise<string> {
+		return new Promise<string>((resolve) => {
+			// Add the handler to the queue
+			this.handlerQueue.push({ name, handler, reason, resolve });
+			elizaLogger.info(`\n📋 Queued handler: ${name}`);
+
+			// Start processing the queue if not already processing
+			if (!this.isProcessingQueue) {
+				this.processQueue();
+			}
+		});
+	}
+
+	private async processQueue() {
+		if (this.isProcessingQueue || this.handlerQueue.length === 0) {
+			return;
+		}
+
+		this.isProcessingQueue = true;
+
+		while (this.handlerQueue.length > 0) {
+			const { name, handler, reason, resolve } = this.handlerQueue.shift();
+
+			// Create a new lock
+			let releaseLock: () => void;
+			this.handlerLock = new Promise<void>((r) => {
+				releaseLock = r;
+			});
+
+			try {
+				elizaLogger.info(`\n🔒 Processing queued handler: ${name}`);
+				const result = await this.handlerWrapper(name, handler, reason);
+				resolve(result);
+			} catch (error) {
+				elizaLogger.error(`Error executing handler ${name}:`, error);
+				resolve(`Error executing ${name}: ${error.message || "Unknown error"}`);
+			} finally {
+				releaseLock();
+			}
+		}
+
+		this.isProcessingQueue = false;
 	}
 
 	private async handlerWrapper(name: string, handler: Handler, reason: string) {
@@ -98,7 +159,8 @@ export class SequencerService {
 	}
 
 	private async saveToMemory(text: string, suffix = "memory") {
-		const memoryId = stringToUuid(`${this.memory.id}-${suffix}`);
+		const random = Date.now() + Math.random() * 1000;
+		const memoryId = stringToUuid(`${this.memory.id}-${suffix}-${random}`);
 		await this.runtime.messageManager.createMemory({
 			id: memoryId,
 			content: { text },
