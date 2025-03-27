@@ -1,21 +1,39 @@
 import SqliteAdapter from "@elizaos/adapter-sqlite";
-import DirectClientInterface from "@elizaos/client-direct";
+import { DirectClientInterface } from "@elizaos/client-direct";
 import { AgentBuilder, ModelProviderName } from "@iqai/agent";
+import { createMcpPlugin } from "@iqai/plugin-mcp";
 import createSequencerPlugin from "@iqai/plugin-sequencer";
-import createWikiPlugin from "@iqai/plugin-wiki";
 import { Laminar } from "@lmnr-ai/lmnr";
 
 async function main() {
-	// Initialize plugins
-	const pluginWiki = await createWikiPlugin();
-	const pluginSequencer = await createSequencerPlugin();
-
-	// Initialize laminar
+	const pluginCryo = await createMcpPlugin({
+		name: "Cryo-mcp",
+		description: "mcp server for cryo",
+		transport: {
+			mode: "stdio",
+			command: "uvx",
+			args: ["cryo-mcp", "--rpc-url", "http://localhost:8545"],
+		},
+	});
+	const pluginFs = await createMcpPlugin({
+		name: "file-system",
+		description: "file system mcp server",
+		transport: {
+			mode: "stdio",
+			command: "npx",
+			args: [
+				"-y",
+				"@modelcontextprotocol/server-filesystem",
+				"/Users/prudhvisuraaj/",
+			],
+		},
+	});
+	const sequencer = await createSequencerPlugin();
 	Laminar.initialize({
-		projectApiKey: process.env.LMNR_API_KEY,
+		projectApiKey: process.env.LAMINAR_API_KEY,
 	});
 
-	// Initialize agent
+	// Create agent with plugin
 	const agent = new AgentBuilder()
 		.withDatabase(SqliteAdapter)
 		.withClient(DirectClientInterface)
@@ -23,26 +41,24 @@ async function main() {
 			ModelProviderName.OPENAI,
 			process.env.OPENAI_API_KEY as string,
 		)
-		.withPlugins([pluginWiki, pluginSequencer])
+		.withPlugins([pluginCryo, pluginFs])
 		.withCharacter({
-			name: "BrainBot",
-			bio: "You are BrainBot, a helpful assistant.",
+			name: "BrainBot mcp",
+			bio: "You are BrainBot, a bot that can use mcp servers",
+			system:
+				"Make use of all the mcp servers available to you to achieve the goal",
 			username: "brainbot",
+			messageExamples: [],
+			lore: ["Created to assist users with mcp server"],
+			style: {
+				all: ["Professional"],
+				chat: ["Friendly"],
+				post: ["Clear"],
+			},
 		})
 		.build();
 
 	await agent.start();
-
-	// Handle process termination
-	process.on("SIGINT", async () => {
-		await agent.stop();
-		process.exit(0);
-	});
-
-	process.on("SIGTERM", async () => {
-		await agent.stop();
-		process.exit(0);
-	});
 }
 
 main().catch(console.error);
