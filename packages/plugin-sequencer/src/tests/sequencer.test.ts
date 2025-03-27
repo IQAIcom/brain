@@ -1,9 +1,4 @@
-import {
-	ModelClass,
-	elizaLogger,
-	generateText,
-	getEmbeddingZeroVector,
-} from "@elizaos/core";
+import { ModelClass, elizaLogger, generateText } from "@elizaos/core";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { SequencerService } from "../services/sequencer";
 

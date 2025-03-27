@@ -66,7 +66,6 @@ export class SequencerService {
 			),
 		});
 
-		// Make sure all handlers have completed before returning the final output
 		await this.handlerLock;
 
 		this.callback({
@@ -80,11 +79,9 @@ export class SequencerService {
 		reason: string,
 	): Promise<string> {
 		return new Promise<string>((resolve) => {
-			// Add the handler to the queue
 			this.handlerQueue.push({ name, handler, reason, resolve });
 			elizaLogger.info(`\n📋 Queued handler: ${name}`);
 
-			// Start processing the queue if not already processing
 			if (!this.isProcessingQueue) {
 				this.processQueue();
 			}
@@ -101,7 +98,6 @@ export class SequencerService {
 		while (this.handlerQueue.length > 0) {
 			const { name, handler, reason, resolve } = this.handlerQueue.shift();
 
-			// Create a new lock
 			let releaseLock: () => void;
 			this.handlerLock = new Promise<void>((r) => {
 				releaseLock = r;
@@ -125,7 +121,6 @@ export class SequencerService {
 	private async handlerWrapper(name: string, handler: Handler, reason: string) {
 		elizaLogger.info(`\n🔄 Executing handler: ${name}...`);
 
-		// Save action execution to memory using the helper method
 		await this.saveToMemory(
 			dedent`## Action Execution
 							**Action:** ${name}
@@ -143,7 +138,6 @@ export class SequencerService {
 		);
 		elizaLogger.info(`✅ Handler executed: ${name}`, { text });
 
-		// Save action result to memory using the helper method
 		await this.saveToMemory(
 			dedent`## Action Result
 							**Action:** ${name}
