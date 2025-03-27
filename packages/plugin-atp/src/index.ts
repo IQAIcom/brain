@@ -6,9 +6,7 @@ import { getAgentsAction } from "./actions/get-agents";
 import { getSellAction } from "./actions/sell";
 import type { ATPActionParams } from "./types";
 
-export async function createAtpPlugin(
-	opts: ATPActionParams = {},
-): Promise<Plugin> {
+export async function createAtpPlugin(opts: ATPActionParams): Promise<Plugin> {
 	const actions = [
 		getAgentsAction(opts),
 		getAgentPositionsAction(opts),
