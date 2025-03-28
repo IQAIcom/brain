@@ -33,6 +33,12 @@ export const messageHandlerTemplate = dedent`
   {{messageDirections}}
   {{recentMessages}}
 
+  {{#if previousResponses}}
+  # Previous Responses - DO NOT REPEAT THESE
+  These are your previous responses. Generate new content that doesn't repeat these facts:
+  {{previousResponses}}
+  {{/if}}
+
   # Available Actions
   {{actions}}
 

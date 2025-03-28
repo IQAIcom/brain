@@ -42,10 +42,9 @@ export class Heartbeat extends Service {
 		heartbeatTask: HeartbeatTask,
 		runtime: IAgentRuntime,
 	) {
-		elizaLogger.info(`🫀 Heartbeat triggered with: ${heartbeatTask.input}`);
-
 		const userId = stringToUuid("system");
 		const roomId = stringToUuid(`heartbeat-room-${heartbeatTask.input}`);
+		elizaLogger.info("🔔 Heartbeat triggered for room id:", roomId);
 
 		await runtime.ensureConnection(
 			userId,
@@ -57,14 +56,27 @@ export class Heartbeat extends Service {
 
 		const messageId = stringToUuid(Date.now().toString());
 
+		// Get all previous messages from this room
+		const allRoomMessages = await runtime.messageManager.getMemories({
+			roomId: roomId,
+		});
+
+		// Filter to get only the agent's responses
+		const previousAgentResponses = allRoomMessages.filter(
+			(memory) => memory.userId === runtime.agentId,
+		);
+
+		// Format the previous responses for the template
+		const formattedPreviousResponses = previousAgentResponses
+			.map((m) => m.content.text)
+			.join("\n\n");
+
 		const content: Content = {
 			text: heartbeatContextTemplate(heartbeatTask.input),
 			attachments: [],
 			source: "heartbeat",
 			inReplyTo: undefined,
 		};
-
-		elizaLogger.info("📥 Processing heartbeat message:", content);
 
 		const userMessage = {
 			content,
@@ -73,27 +85,52 @@ export class Heartbeat extends Service {
 			agentId: runtime.agentId,
 		};
 
-		const memory: Memory = {
+		// Create user memory using the helper method
+		const memory = await this.createMemory({
 			id: stringToUuid(`${messageId}-${userId}`),
 			...userMessage,
 			agentId: runtime.agentId,
-			userId,
-			roomId,
-			content,
 			createdAt: Date.now(),
-		};
+			runtime,
+		});
 
-		await runtime.messageManager.addEmbeddingToMemory(memory);
-		await runtime.messageManager.createMemory(memory);
+		// Fetch previous room messages if preventRepetition is enabled
+		let previousMessages: string[] = [];
+		if (heartbeatTask.preventRepetition) {
+			const roomContent = await runtime.messageManager.getMemories({
+				roomId: roomId,
+			});
+
+			// Extract agent responses only (excluding system messages)
+			previousMessages = roomContent
+				.filter((m) => m.userId === runtime.agentId)
+				.map((m) => m.content.text);
+
+			elizaLogger.info(
+				"📚 Previous messages loaded for repetition prevention:",
+				previousMessages.length,
+			);
+		}
 
 		let state = await runtime.composeState(userMessage, {
 			agentName: runtime.character.name,
 		});
 
+		// Add previous responses to state
+		if (previousAgentResponses.length > 0) {
+			state = {
+				...state,
+				previousResponses: formattedPreviousResponses,
+			};
+		}
+
 		const context = composeContext({
 			state,
 			template: messageHandlerTemplate,
+			templatingEngine: "handlebars",
 		});
+
+		elizaLogger.info("🧠 Context generated:", context);
 
 		const response = await generateMessageResponse({
 			runtime: runtime,
@@ -103,6 +140,22 @@ export class Heartbeat extends Service {
 
 		if (response) {
 			elizaLogger.info("📤 Heartbeat response generated:", response);
+
+			// Display room content for debugging
+			const roomContent = await runtime.messageManager.getMemories({
+				roomId: roomId,
+			});
+			elizaLogger.info(
+				"Existing room messages: ",
+				roomContent
+					.map(
+						(m) => `
+					Message: ${JSON.stringify(m.content, null, 2)}
+					User:  ${m.userId}
+				`,
+					)
+					.join("\n\n"),
+			);
 
 			// Only send the initial response if we're not waiting for final output
 			if (!heartbeatTask.onlyFinalOutput) {
@@ -122,21 +175,19 @@ export class Heartbeat extends Service {
 				}
 			}
 
-			const responseMessage: Memory = {
+			// Create response memory using the helper method
+			const responseMessage = await this.createMemory({
 				id: stringToUuid(`${messageId}-${runtime.agentId}`),
 				...userMessage,
 				userId: runtime.agentId,
 				content: response,
 				embedding: getEmbeddingZeroVector(),
 				createdAt: Date.now(),
-			};
+				skipEmbedding: true, // Skip embedding since we're setting it directly
+				runtime,
+			});
 
-			await runtime.messageManager.createMemory(responseMessage);
 			state = await runtime.updateRecentMessageState(state);
-
-			elizaLogger.info(
-				`✅ Heartbeat cycle completed for trigger: ${heartbeatTask.input}`,
-			);
 
 			await runtime.processActions(
 				memory,
@@ -168,6 +219,49 @@ export class Heartbeat extends Service {
 
 			await runtime.evaluate(memory, state);
 		}
+	}
+
+	/**
+	 * Helper method to create and store memory objects
+	 */
+	private async createMemory({
+		id,
+		content,
+		userId,
+		roomId,
+		agentId,
+		createdAt,
+		embedding,
+		skipEmbedding = false,
+		runtime,
+	}: {
+		// Use proper UUID types
+		id: `${string}-${string}-${string}-${string}-${string}`;
+		content: Content;
+		userId: `${string}-${string}-${string}-${string}-${string}`;
+		roomId: `${string}-${string}-${string}-${string}-${string}`;
+		agentId: `${string}-${string}-${string}-${string}-${string}`;
+		createdAt: number;
+		embedding?: number[];
+		skipEmbedding?: boolean;
+		runtime: IAgentRuntime;
+	}): Promise<Memory> {
+		const memory: Memory = {
+			id,
+			content,
+			userId,
+			roomId,
+			agentId,
+			createdAt,
+			embedding,
+		};
+
+		if (!skipEmbedding) {
+			await runtime.messageManager.addEmbeddingToMemory(memory);
+		}
+
+		await runtime.messageManager.createMemory(memory);
+		return memory;
 	}
 
 	private async handleSocialPosts(

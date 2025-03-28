@@ -5,6 +5,7 @@ export interface HeartbeatTask {
 	input: string;
 	onlyFinalOutput?: boolean;
 	shouldPost?: (response: string) => boolean;
+	preventRepetition?: boolean;
 	formatResponse?: (
 		response: string,
 		runtime: IAgentRuntime,
