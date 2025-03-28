@@ -22,8 +22,5 @@
 	"devDependencies": {
 		"@iqai/tsconfig": "workspace:*",
 		"tsup": "8.3.6"
-	},
-	"engines": {
-		"node": ">=22"
 	}
 }
