@@ -20,11 +20,13 @@ const mockMemory = {
 const mockState = { roomId: "room-123" } as any;
 const mockCallback = vi.fn();
 
+const mockEmbeddingVector = [0, 0, 0];
 vi.mock("@elizaos/core", () => ({
 	elizaLogger: { info: vi.fn() },
 	generateText: vi.fn(),
 	stringToUuid: vi.fn(() => "mock-uuid"),
 	ModelClass: { LARGE: "LARGE" },
+	getEmbeddingZeroVector: vi.fn(() => mockEmbeddingVector),
 }));
 
 describe("SequencerService", () => {
