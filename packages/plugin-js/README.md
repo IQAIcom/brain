@@ -1,4 +1,16 @@
-# 🔄 Plugin JS
+# 🔄 Plugin JS [DEPRECATED]
+
+> ⚠️ **DEPRECATED**: This plugin has been deprecated and is no longer maintained.
+>
+> **Reasons for deprecation:**
+>
+> - This plugin uses isolated-vm which requires Node.js v22, while the rest of the Brain Framework plugins run on Node.js v23
+> - Maintaining this plugin would require downgrading the entire system to Node.js v22
+>
+> **Recommended Alternative:**
+>
+> - Use [plugin-mcp](../plugin-mcp) with [mcp-server-code-runner](https://github.com/formulahendry/mcp-server-code-runner) to run JavaScript code
+> - This solution provides similar functionality without the Node.js version constraints
 
 A plugin for securely executing JavaScript code within the Brain Framework, providing a sandboxed environment for running arbitrary JavaScript snippets.
 
