@@ -216,6 +216,9 @@ importers:
       '@iqai/agent':
         specifier: workspace:*
         version: link:../../packages/agent
+      '@iqai/plugin-abi':
+        specifier: workspace:*
+        version: link:../../packages/plugin-abi
       '@iqai/plugin-sequencer':
         specifier: workspace:*
         version: link:../../packages/plugin-sequencer
@@ -275,6 +278,28 @@ importers:
       tsup:
         specifier: 8.3.6
         version: 8.3.6(@swc/core@1.10.14(@swc/helpers@0.5.15))(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0)
+
+  packages/plugin-abi:
+    dependencies:
+      '@elizaos/core':
+        specifier: 0.25.9
+        version: 0.25.9(@types/debug@4.1.12)(@types/node@22.13.1)(bufferutil@4.0.9)(jiti@1.21.7)(react@19.0.0)(tsx@4.19.2)(typescript@5.7.3)(utf-8-validate@5.0.10)(ws@8.18.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(yaml@2.7.0)
+      dedent:
+        specifier: ^1.5.3
+        version: 1.5.3
+      tsup:
+        specifier: 8.3.6
+        version: 8.3.6(@swc/core@1.10.14(@swc/helpers@0.5.15))(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0)
+      viem:
+        specifier: ^2.22.15
+        version: 2.22.22(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
+      zod:
+        specifier: ^3.24.2
+        version: 3.24.2
+    devDependencies:
+      '@iqai/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
 
   packages/plugin-agent-kit:
     dependencies:

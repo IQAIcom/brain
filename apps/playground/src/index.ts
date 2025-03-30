@@ -1,18 +1,17 @@
 import SqliteAdapter from "@elizaos/adapter-sqlite";
 import DirectClientInterface from "@elizaos/client-direct";
 import { AgentBuilder, ModelProviderName } from "@iqai/agent";
-import createSequencerPlugin from "@iqai/plugin-sequencer";
-import createWikiPlugin from "@iqai/plugin-wiki";
-import { Laminar } from "@lmnr-ai/lmnr";
+import { createAbiPlugin } from "@iqai/Plugin-abi";
+import { erc20Abi } from "viem";
 
 async function main() {
 	// Initialize plugins
-	const pluginWiki = await createWikiPlugin();
-	const pluginSequencer = await createSequencerPlugin();
-
-	// Initialize laminar
-	Laminar.initialize({
-		projectApiKey: process.env.LMNR_API_KEY,
+	const abiPlugin = await createAbiPlugin({
+		abi: erc20Abi as any,
+		contractName: "ERC20",
+		contractAddress: "0xaB195B090Cc60C1EFd4d1cEE94Bf441F5931C01b",
+		description: "ERC20 token contract",
+		privateKey: process.env.WALLET_PRIVATE_KEY as string,
 	});
 
 	// Initialize agent
@@ -23,11 +22,11 @@ async function main() {
 			ModelProviderName.OPENAI,
 			process.env.OPENAI_API_KEY as string,
 		)
-		.withPlugins([pluginWiki, pluginSequencer])
+		.withPlugins([abiPlugin])
 		.withCharacter({
-			name: "BrainBot",
-			bio: "You are BrainBot, a helpful assistant.",
-			username: "brainbot",
+			name: "AbiBot",
+			bio: "You are BrainBot, a helpful ABI assistant.",
+			username: "AbiBot",
 		})
 		.build();
 
