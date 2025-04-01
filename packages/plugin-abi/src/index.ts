@@ -1,10 +1,10 @@
 import type { Plugin } from "@elizaos/core";
 import { elizaLogger } from "@elizaos/core";
-import { ContractService } from "./services/contract.js";
-import { generateActionsFromAbi } from "./actions/generate-actions.js";
-import { extractFunctionsFromAbi } from "./lib/helpers.js";
-import { DEFAULT_CHAIN } from "./lib/constants.js";
-import type { AbiPluginOptions } from "./types.js";
+import { ContractService } from "./services/contract";
+import { generateActionsFromAbi } from "./actions/generate-actions";
+import { extractFunctionsFromAbi } from "./lib/helpers";
+import { DEFAULT_CHAIN } from "./lib/constants";
+import type { AbiPluginOptions } from "./types";
 
 export async function createAbiPlugin(
 	options: AbiPluginOptions,
@@ -31,7 +31,6 @@ export async function createAbiPlugin(
 	}
 
 	try {
-		// Initialize contract service
 		const contractService = new ContractService(
 			abi,
 			contractAddress,
@@ -39,14 +38,12 @@ export async function createAbiPlugin(
 			chain,
 		);
 
-		// Extract function information from ABI
 		const functions = extractFunctionsFromAbi(abi);
 
 		if (functions.length === 0) {
 			throw new Error("No callable functions found in the provided ABI");
 		}
 
-		// Generate actions for each function
 		const actions = generateActionsFromAbi(
 			contractService,
 			contractName,

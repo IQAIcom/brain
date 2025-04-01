@@ -49,3 +49,23 @@ export async function withRetry<T>(
 		}
 	}
 }
+
+export function formatResult(result: any) {
+	if (typeof result === "bigint") {
+		return result.toString();
+	}
+
+	if (Array.isArray(result)) {
+		return result.map((item) => formatResult(item));
+	}
+
+	if (result && typeof result === "object") {
+		const formatted = {};
+		for (const key in result) {
+			formatted[key] = formatResult(result[key]);
+		}
+		return formatted;
+	}
+
+	return result;
+}
