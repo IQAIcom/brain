@@ -20,7 +20,7 @@
 		"zod": "^3.24.2"
 	},
 	"engines": {
-		"node": "23.x"
+		"node": ">=22.0"
 	},
 	"devDependencies": {
 		"@iqai/tsconfig": "workspace:*",
