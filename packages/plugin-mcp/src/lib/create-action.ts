@@ -17,10 +17,12 @@ import type { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import type { Tool, CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 import { generateToolTemplate, PROCESS_TEMPLATE } from "./templates";
+import type { McpPluginConfig } from "../types";
 
 export async function createAction(
 	tool: Tool,
 	client: Client,
+	config: McpPluginConfig,
 ): Promise<Action> {
 	// Create handler function for the action
 	const handler: Handler = async (
@@ -54,24 +56,38 @@ export async function createAction(
 				arguments: parsedInputs,
 			});
 
+			if (config.handleResponse) {
+				return await config.handleResponse(result, runtime, state, message);
+			}
+
 			// 4. Check for tool execution errors
 			if (result.isError) {
 				callback?.({
 					text: `
 					❌ Tool Execution Failed
-					Error: ${result.error}
+					Error: ${JSON.stringify(result.error, null, 2)}
 					`,
 				});
 				return false;
 			}
 			// 5. Check result content, if any file paths or other data apart from plain text is present
 			// call the runtime to handle it if it can with available actions (eg. fs), else make the content readable/pretty
+			if (config.disableToolChaining === true) {
+				callback?.({
+					text: `
+					✅ Tool Execution Completed
+					Result: ${JSON.stringify(result.content, null, 2)}
+					`,
+				});
+				return true;
+			}
 			return await postProcessResponse(
 				runtime,
 				result,
 				state,
 				message,
 				callback,
+				config.toolChainingTemplate,
 			);
 		} catch (error) {
 			callback?.({
@@ -105,6 +121,7 @@ async function postProcessResponse(
 	state: State,
 	memory: Memory,
 	callback: HandlerCallback,
+	template?: string,
 ) {
 	const actions = runtime.actions.filter((a) => a.name !== "SEQUENCER");
 	elizaLogger.info(
@@ -125,7 +142,7 @@ async function postProcessResponse(
 		runtime: runtime,
 		modelClass: ModelClass.LARGE,
 		context: `Tool output to process: ${JSON.stringify(response, null, 2)}`,
-		customSystemPrompt: PROCESS_TEMPLATE,
+		customSystemPrompt: template ?? PROCESS_TEMPLATE,
 		maxSteps: 10,
 		tools: Object.fromEntries(
 			actions.map((a) => [

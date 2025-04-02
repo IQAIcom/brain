@@ -34,6 +34,9 @@ Configure the plugin with the following parameters:
 | `name`            | Name of the MCP plugin                                       | Yes      | -       |
 | `description`     | Description of the plugin                                    | Yes      | -       |
 | `transport`       | Transport configuration object (see below)                   | Yes      | -       |
+| `handleResponse`  | Custom handler for processing tool call results              | No       | -       |
+| `disableToolChaining` | Disable automatic tool chaining                         | No       | false   |
+| `toolChainingTemplate` | Custom template for tool chaining                      | No       | -       |
 
 ### Transport Configuration
 
