@@ -19,11 +19,11 @@
 		"node-cron": "^3.0.3",
 		"zod": "^3.24.2"
 	},
-	"engines": {
-		"node": ">=22.0"
-	},
 	"devDependencies": {
 		"@iqai/tsconfig": "workspace:*",
 		"tsup": "8.3.6"
+	},
+	"engines": {
+		"node": ">=22"
 	}
 }
