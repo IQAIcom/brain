@@ -1,5 +1,11 @@
 # @iqai/plugin-mcp
 
+## 0.2.2
+
+### Patch Changes
+
+- ff2aca0: Updated action creation method to include optional config options
+
 ## 0.2.1
 
 ### Patch Changes
