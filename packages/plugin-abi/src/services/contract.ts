@@ -1,5 +1,5 @@
 import { elizaLogger } from "@elizaos/core";
-import type { Abi, Account, Address, PublicClient, WalletClient } from "viem";
+import type { Abi, PublicClient, WalletClient } from "viem";
 import { WalletService } from "./wallet.js";
 import { withRetry, formatResult } from "../lib/helpers.js";
 import type { Chain } from "viem/chains";
