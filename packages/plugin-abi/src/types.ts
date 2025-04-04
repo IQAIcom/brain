@@ -1,7 +1,7 @@
-import type { Chain } from "viem";
+import type { Abi, Chain } from "viem";
 
 export interface AbiPluginOptions {
-	abi: any[];
+	abi: Abi;
 	contractName: string;
 	contractAddress: `0x${string}`;
 	description: string;
