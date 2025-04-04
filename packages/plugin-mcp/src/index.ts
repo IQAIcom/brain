@@ -26,7 +26,7 @@ export async function createMcpPlugin(
 		const actions: Action[] = [];
 
 		for (const tool of toolsResponse.tools) {
-			const action: Action = await createAction(tool, client);
+			const action: Action = await createAction(tool, client, config);
 			actions.push(action);
 		}
 
