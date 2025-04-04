@@ -1,5 +1,5 @@
 import { elizaLogger } from "@elizaos/core";
-import type { Account, Address, PublicClient, WalletClient } from "viem";
+import type { Abi, Account, Address, PublicClient, WalletClient } from "viem";
 import { WalletService } from "./wallet.js";
 import { withRetry, formatResult } from "../lib/helpers.js";
 import type { Chain } from "viem/chains";
@@ -7,12 +7,12 @@ import type { Chain } from "viem/chains";
 export class ContractService {
 	private publicClient: PublicClient;
 	private walletClient: WalletClient | undefined;
-	private abi: any[];
+	private abi: Abi;
 	private contractAddress: `0x${string}`;
 	private walletService: WalletService;
 
 	constructor(
-		abi: any[],
+		abi: Abi,
 		contractAddress: `0x${string}`,
 		privateKey: string,
 		chain: Chain,
@@ -34,6 +34,7 @@ export class ContractService {
 	}
 
 	async callReadFunction(functionName: string, args: any[] = []) {
+		console.log("Calling read function:", functionName, args);
 		return await withRetry(
 			async () => {
 				const res = await this.publicClient.readContract({
@@ -49,6 +50,7 @@ export class ContractService {
 	}
 
 	async callWriteFunction(functionName: string, args: any[] = []) {
+		console.log("Calling write function:", functionName, args);
 		if (!this.walletClient || !this.walletClient.account) {
 			throw new Error("Wallet client not initialized.");
 		}

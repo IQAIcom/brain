@@ -1,14 +1,15 @@
 import { elizaLogger } from "@elizaos/core";
 import type { FunctionMetadata } from "../types";
+import type { Abi } from "viem";
 
-export function extractFunctionsFromAbi(abi: any[]): FunctionMetadata[] {
+export function extractFunctionsFromAbi(abi: Abi): FunctionMetadata[] {
 	return abi
 		.filter((item) => item.type === "function")
 		.map((item) => ({
 			name: item.name,
 			stateMutability: item.stateMutability,
-			inputs: item.inputs || [],
-			outputs: item.outputs || [],
+			inputs: [...(item.inputs || [])],
+			outputs: [...(item.outputs || [])],
 			isReadFunction:
 				item.stateMutability === "view" || item.stateMutability === "pure",
 		}));
