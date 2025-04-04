@@ -34,7 +34,7 @@ Configure the plugin with the following parameters:
 | `transport`     | Transport configuration object (see below)           | Yes          |
 | `handleResponse` | Custom handler for processing tool call results | No |
 | `disableToolChaining` | Disable automatic tool chaining behavior | No |
-| `toolChainingTemplate` | Custom template for tool chaining prompts | No |
+| `toolChainingTemplate` | Custom template for tool chaining prompt | No |
 
 ### Transport Configuration
 
@@ -52,7 +52,7 @@ Use **stdio** mode when you want to run a local MCP server as a separate process
 
 #### SSE Mode
 
-Use **sse** mode to connect to a remote MCP server via Server-Sent Events. *(Note: Authentication is not supported for SSE mode at this time.)*
+Use **sse** mode to connect to a remote MCP server via Server-Sent Events.
 
 | **Param Name** | **Description**                                             |
 |----------------|-------------------------------------------------------------|
@@ -107,7 +107,7 @@ const plugin = await createMcpPlugin({
 Once initialized, the plugin dynamically generates actions based on the MCP server's available tools, prompts, and resources.
 
 ---
-## 🔄 Automatic Tool Chaining
+## Automatic Tool Chaining
 
 The plugin features automatic tool chaining, which enables more powerful interactions between tools:
 
