@@ -25,12 +25,12 @@ After installation, you can use the plugin like this:
 ***typescript
 import { AgentBuilder } from "@iqai/agent";
 import { createAbiPlugin } from "@iqai/plugin-abi";
-import { your-abi } from "your-abi";
+import { YourABI } from "your-abi";
 import { fraxtal } from "viem/chains";
 
 // Initialize the ABI plugin
 const abiPlugin = await createAbiPlugin({
-  abi: your-abi,
+  abi: YourABI,
   contractName: "contract-name",
   contractAddress: "contract-address",
   description: "contract-description",
