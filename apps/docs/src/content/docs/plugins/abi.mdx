@@ -1,0 +1,178 @@
+---
+title: ABI Plugin
+description: Plugin for interacting with any Ethereum-compatible smart contract using its ABI
+---
+import {Steps, Tabs, TabItem, Aside} from '@astrojs/starlight/components';
+import { PackageManagers } from 'starlight-package-managers'
+
+The ABI plugin provides a dynamic way to interact with any Ethereum-compatible smart contract by generating actions from the contract's Application Binary Interface (ABI). This plugin automatically creates callable actions for both read and write functions defined in the ABI.
+
+## Installation
+
+<Steps>
+1. Install the required packages:
+   <PackageManagers pkg="@iqai/plugin-abi" />
+
+2. Create a `.env` file with required configuration:
+   ```env
+   WALLET_PRIVATE_KEY=your-wallet-private-key
+   ```
+   <Aside type="danger" title="Security Warning">
+   Never commit your `.env` file or share your private key. Anyone with access to your private key can control your wallet and funds. Make sure to:
+   - Add `.env` to your `.gitignore` file
+   - Never share your private key in any form
+   - Use a dedicated development wallet with limited funds
+   </Aside>
+</Steps>
+
+## Basic Setup
+
+Here's how to set up an agent with the ABI plugin:
+
+```typescript
+import { AgentBuilder, ModelProviderName } from "@iqai/agent";
+import { createAbiPlugin } from "@iqai/plugin-abi";
+import YourABI from "yourABI";
+import { fraxtal } from "viem/chains";
+
+async function main() {
+  // Initialize ABI plugin
+  const abiPlugin = await createAbiPlugin({
+    abi: YourABI,
+    contractName: "name-of-contract",
+    contractAddress: "address-of-contract",
+    description: "description-of-contract",
+    privateKey: process.env.WALLET_PRIVATE_KEY,
+    chain: fraxtal, // Optional, defaults to Fraxtal chain
+  });
+
+  // Create agent with plugin
+  const agent = new AgentBuilder()
+    .withModelProvider(
+      ModelProviderName.OPENAI,
+      process.env.OPENAI_API_KEY
+    )
+    .withPlugin(abiPlugin)
+    .build();
+
+  await agent.start();
+}
+
+main().catch(console.error);
+```
+
+## How It Works
+
+The ABI plugin works by:
+1. Analyzing the provided contract ABI
+2. Extracting function definitions (both read and write)
+3. Generating corresponding actions for each function
+4. Automatically handling parameter parsing and response formatting
+
+## Available Operations
+
+The plugin dynamically creates actions based on the ABI functions provided. Each function in the ABI is transformed into an action with the naming pattern `CONTRACT_NAME_FUNCTION_NAME`.
+
+### Example ERC20 Actions
+
+When using the plugin with an ERC20 contract, the following actions would be automatically created:
+
+| Action Name | Description | Function Type |
+|-------------|-------------|--------------|
+| `ERC20_BALANCE_OF` | Check token balance | Read function |
+| `ERC20_TRANSFER` | Transfer tokens | Write function |
+| `ERC20_APPROVE` | Approve token spending | Write function |
+| `ERC20_TRANSFER_FROM` | Transfer tokens from another address | Write function |
+| `ERC20_ALLOWANCE` | Check spending allowance | Read function |
+| `ERC20_TOTAL_SUPPLY` | Get total token supply | Read function |
+
+## Usage Examples
+
+Here's how to interact with your ABI-enabled agent:
+
+### Querying Token Balance
+
+Query:
+```
+What's the balance of 0x1234...5678?
+```
+
+The agent will parse this query, identify the address, and call the appropriate contract function (balanceOf).
+
+Response:
+```
+✅ Successfully called balanceOf
+
+Result: "1000000000000000000"
+```
+
+### Transferring Tokens
+
+Query:
+```
+Transfer 10 tokens to 0x1234...5678
+```
+
+The agent will parse this query, extract the amount and recipient address, and execute the transfer function.
+
+Response:
+```
+✅ Successfully executed transfer
+
+Transaction hash: 0x123abc...
+
+You can view this transaction on the blockchain explorer.
+```
+
+## Configuration Options
+
+The ABI plugin accepts these configuration parameters:
+
+```typescript
+interface AbiPluginOptions {
+  abi: any[];                           // Smart contract ABI
+  contractName: string;                 // Name for the contract (used in action names)
+  contractAddress: `0x${string}`;       // Contract address
+  description: string;                  // Description for the plugin
+  privateKey: string;                   // Private key for transactions
+  chain?: Chain;                        // Optional: blockchain network (defaults to Fraxtal)
+}
+```
+
+## Error Handling
+
+The plugin handles various error scenarios:
+
+- **Invalid function arguments**
+  ```
+  ❌ Error parsing arguments: Expected number, got string
+  ```
+
+- **Transaction execution failures**
+  ```
+  ❌ Error with transfer: execution reverted: ERC20: transfer amount exceeds balance
+  ```
+
+- **Network connection issues**
+  ```
+  ❌ Error with balanceOf: network connection failed
+  ```
+
+## Best Practices
+
+1. **Store private keys securely**: Never hardcode private keys in your application code. Always use environment variables.
+2. **Use proper error handling**: Implement try/catch blocks around plugin initialization and usage.
+3. **Test with testnets first**: Before using the plugin with mainnet contracts, test thoroughly on testnet networks.
+4. **Validate ABIs**: Ensure that the ABI you provide is valid and complete.
+5. **Handle gas efficiently**: For write functions, be aware of gas costs and implement proper error handling for insufficient gas scenarios.
+
+## Common Issues and Troubleshooting
+
+- **Invalid ABI Format**: Ensure your ABI is correctly formatted JSON
+- **Contract Address Format**: The contract address must be a valid Ethereum address starting with "0x"
+- **Function Not Found**: Verify that the function you're trying to call exists in the ABI
+- **Transaction Failures**: Check for sufficient balance and proper permissions
+
+<Aside>
+The ABI plugin is compatible with any Ethereum Virtual Machine (EVM) compatible blockchain that works with the viem library, including Ethereum, Fraxtal, Arbitrum, Optimism, Polygon, and more.
+</Aside> 

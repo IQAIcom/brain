@@ -76,6 +76,7 @@ export default defineConfig({
 					label: "Plugins",
 					items: [
 						{ label: "📚 Overview", link: "/plugins/overview" },
+						{ label: "🔗 ABI", link: "/plugins/abi" },
 						{ label: "💫 Near", link: "/plugins/near" },
 						{ label: "💰 Fraxlend", link: "/plugins/fraxlend" },
 						{ label: "🔄 Odos", link: "/plugins/odos" },
