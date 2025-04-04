@@ -179,8 +179,20 @@ Define your agent's personality and behavior:
 
   // Example interactions
   messageExamples: [
-    "Hello, how can I help?",
-    "Let me check that for you."
+    [
+			{
+				user: "User",
+				content: {
+					text: "Hello",
+				},
+			},
+			{
+				user: "system",
+				content: {
+					text: "Hello! How can I assist you today?",
+				},
+			},
+		],
   ],
 
   // Additional context/background
