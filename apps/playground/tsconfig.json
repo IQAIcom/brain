@@ -18,6 +18,7 @@
 		"module": "NodeNext",
 		"noEmit": true,
 		/* If your code doesn't run in the DOM: */
-		"lib": ["es2022"]
+		"lib": ["es2022"],
+		"typeRoots": ["./node_modules/@types"]
 	}
 }

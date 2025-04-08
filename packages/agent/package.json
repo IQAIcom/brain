@@ -11,7 +11,8 @@
 		"check-types": "tsc --noEmit"
 	},
 	"dependencies": {
-		"@elizaos/core": "0.25.9",
+		"@elizaos/core": "1.0.0-beta.27",
+		"@elizaos/plugin-sql": "1.0.0-beta.27",
 		"@opentelemetry/auto-instrumentations-node": "^0.57.0",
 		"@opentelemetry/sdk-node": "^0.200.0",
 		"@opentelemetry/sdk-trace-base": "^2.0.0",
@@ -21,7 +22,7 @@
 	},
 	"devDependencies": {
 		"@iqai/tsconfig": "workspace:*",
-		"tsup": "8.3.6"
+		"tsup": "8.4.0"
 	},
 	"engines": {
 		"node": ">=22"
