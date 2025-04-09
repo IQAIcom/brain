@@ -3,14 +3,21 @@ title: Deployment
 description: Guide for deploying Brain Framework agents on Node.js servers
 ---
 
-import { Steps, Tabs, TabItem, Aside, Card, CardGrid } from '@astrojs/starlight/components';
-import { PackageManagers } from 'starlight-package-managers'
-
+import {
+  Steps,
+  Tabs,
+  TabItem,
+  Aside,
+  Card,
+  CardGrid,
+} from "@astrojs/starlight/components";
+import { PackageManagers } from "starlight-package-managers";
 
 This guide covers deploying your Brain Framework agent on any long running Node.js server environment, including database setup considerations.
 
 <Aside type="caution">
-  Currently some plugins don't support serverless deployments. but we are planning to add support for serverless deployments in the future.
+  Currently some plugins don't support serverless deployments. but we are
+  planning to add support for serverless deployments in the future.
 </Aside>
 
 ## Database Selection
@@ -35,6 +42,7 @@ Choose the appropriate database adapter based on your deployment needs:
       - Cloud-native solution
       - Managed database service
     </Card>
+
 </CardGrid>
 
 ## Server Requirements
@@ -50,66 +58,382 @@ Choose the appropriate database adapter based on your deployment needs:
 1. Install required packages:
    <PackageManagers pkg="github:elizaos-plugins/adapter-postgres" />
 
-
-
 2. Create a PM2 ecosystem file (`ecosystem.config.js`):
-    ```typescript
-      module.exports     = {
-        apps: [{
-          name: 'brain-agent',
-          script: './dist/index.js',
-          instances: 1,
-          autorestart: true,
-          watch: false,
-          max_memory_restart: '1G',
-          env: {
-            NODE_ENV: 'production',
-            DATABASE_URL: 'postgresql://user:pass@localhost:5432/db'
-          }
-        }]
-      }
-      ```
 
+   ```typescript
+   module.exports = {
+     apps: [
+       {
+         name: "brain-agent",
+         script: "./dist/index.js",
+         instances: 1,
+         autorestart: true,
+         watch: false,
+         max_memory_restart: "1G",
+         env: {
+           NODE_ENV: "production",
+           DATABASE_URL: "postgresql://user:pass@localhost:5432/db",
+         },
+       },
+     ],
+   };
+   ```
 
 3. Configure your database adapter:
-    ```typescript
-      import { AgentBuilder } from "@iqai/agent";
-      import { PostgresDatabaseAdapter } from "@elizaos/adapter-postgres";
 
-      const agent = new AgentBuilder()
-        .withDatabase(new PostgresDatabaseAdapter({
-          connectionString: process.env.DATABASE_URL
-        }))
-        .build();
-    ```
+   ```typescript
+   import { AgentBuilder } from "@iqai/agent";
+   import { PostgresDatabaseAdapter } from "@elizaos/adapter-postgres";
 
+   const agent = new AgentBuilder()
+     .withDatabase(
+       new PostgresDatabaseAdapter({
+         connectionString: process.env.DATABASE_URL,
+       })
+     )
+     .build();
+   ```
 
 4. Build and start:
-    ```bash
+   `bash
       pnpm build
       pm2 start ecosystem.config.js
-    ```
-</Steps>
+    `
+   </Steps>
 
 ## Database-Specific Considerations
+
 <Tabs>
-    <TabItem label="PostgreSQL">
-        ```bash
-        # Required environment variables
-        DATABASE_URL=postgresql://user:pass@localhost:5432/db
-        ```
-    </TabItem>
-    <TabItem label="SQLite">
-        ```bash
-        # Set file location
-        DATABASE_PATH=./data/agent.db
-        ```
-    </TabItem>
-    <TabItem label="Supabase">
-        ```bash
-        # Required environment variables
-        SUPABASE_URL=your-project-url
-        SUPABASE_KEY=your-api-key
-        ```
-    </TabItem>
+  <TabItem label="PostgreSQL">
+    ```bash # Required environment variables
+    DATABASE_URL=postgresql://user:pass@localhost:5432/db ```
+  </TabItem>
+  <TabItem label="SQLite">
+    ```bash # Set file location DATABASE_PATH=./data/agent.db ```
+  </TabItem>
+  <TabItem label="Supabase">
+    ```bash # Required environment variables SUPABASE_URL=your-project-url
+    SUPABASE_KEY=your-api-key ```
+  </TabItem>
 </Tabs>
+
+## Digital Ocean Deployment Guide
+
+### Initial Server Setup
+
+1. Connect to your droplet:
+
+   ```bash
+   ssh root@your_droplet_ip
+   ```
+
+2. Update the system:
+
+```bash
+sudo apt update && sudo apt upgrade -y
+```
+
+### Installing and Configuring NGINX
+
+1. Install NGINX
+
+```bash
+sudo apt install nginx -y
+```
+
+2. Start and Enable NGINX
+
+```bash
+sudo systemctl start nginx
+sudo systemctl enable nginx
+```
+
+3. Verify the Installation
+
+```bash
+sudo systemctl status nginx
+```
+
+You can also open your web browser and navigate to:
+
+```
+http://your_droplet_ip
+```
+
+4. Configure Firewall for NGINX
+
+```bash
+sudo apt install ufw -y
+sudo ufw allow 'Nginx Full'
+```
+
+5. Test and Reload NGINX Configuration
+
+```bash
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+### Network Configuration
+
+1. Install Net Tools
+
+```bash
+sudo apt install net-tools -y
+netstat --version
+```
+
+2. Configure Firewall for Your Application
+
+```bash
+sudo ufw allow ssh  # or sudo ufw allow 22/tcp
+sudo ufw allow 3000/tcp  # Adjust port as needed for your application
+sudo ufw reload
+sudo ufw enable
+sudo ufw status
+```
+
+### Setting Up Git
+
+1. Install Git
+
+```bash
+sudo apt install git -y
+git --version
+```
+
+2. Configure Git (optional depending on use case)
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+```
+
+### Node.js Environment Setup
+
+1. Install Node.js
+
+```bash
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
+```
+
+2. Verify Node.js Installation
+
+```bash
+node -v
+npm -v
+```
+
+3. Install PNPM
+
+```bash
+npm install -g pnpm
+pnpm -v
+```
+
+### Clone Your Repository
+
+```bash
+sudo mkdir -p /home/ubuntu/
+cd /home/ubuntu
+git clone https://github.com/username/repository.git
+cd your-project
+pnpm install
+```
+
+<Tabs>
+    <TabItem label="PM2">
+        ### PM2 Process Manager
+
+        <Steps>
+        1. Install PM2
+
+        ```bash
+        sudo npm install -g pm2
+        ```
+
+        2. Set Up PM2 to Start on Boot (Optional)
+
+        ```bash
+        pm2 startup systemd
+        pm2 save
+        ```
+
+        3. Start Your Application with PM2
+
+        ```bash
+        pm2 start "pnpm dev" --name your-app-name
+        ```
+
+        4. Basic PM2 Commands
+
+        ```bash
+        # Restart application
+        pm2 restart your-app-name
+
+        # Stop application
+        pm2 stop your-app-name
+
+        # Delete application from PM2
+        pm2 delete your-app-name
+
+        # View running applications
+        pm2 list
+
+        # Monitor application
+        pm2 monit
+        ```
+
+    </TabItem>
+
+    <TabItem label="Docker">
+        ### Docker Deployment (Direct)
+
+        <Steps>
+        ### Install Docker
+
+        ```bash
+        sudo apt install docker.io -y
+        sudo systemctl start docker
+        sudo systemctl enable docker
+        ```
+
+        ### Deploy with Docker
+
+        ```bash
+        # Build your Docker image
+        docker build -t image_name .
+
+        # Run your container
+        docker run -d --name container_name -p host_port:container_port image_name
+
+        # Stop and remove container
+        docker stop container_name
+        docker rm container_name
+        ```
+
+        ### Sample
+        1. Create Dockerfile:
+           ```dockerfile
+           FROM node:22
+           WORKDIR /app
+           COPY . .
+           RUN npm install -g pnpm
+           RUN pnpm install
+           RUN pnpm build
+           CMD ["pnpm", "start"]
+           ```
+
+        2. Build and run:
+           ```bash
+           docker build -t brain-agent .
+           docker run -d \
+             -p 3000:3000 \
+             --name brain-agent \
+             -e DATABASE_URL=postgresql://user:pass@host:5432/db \
+             brain-agent
+           ```
+
+        3. Common commands:
+           ```bash
+           # Stop container
+           docker stop brain-agent
+
+           # Start container
+           docker start brain-agent
+
+           # View logs
+           docker logs -f brain-agent
+           ```
+        </Steps>
+    </TabItem>
+
+    <TabItem label="Docker Compose">
+        <Steps>
+        ### Docker Compose Deployment
+
+        1. Install Docker Compose
+
+        ```bash
+        sudo apt install docker-compose -y
+        ```
+
+        2. Create docker-compose.yml:
+           ```yaml
+           version: '3.8'
+           services:
+             app:
+               build: .
+               ports:
+                 - "3000:3000"
+               environment:
+                 DATABASE_URL: postgresql://user:pass@db:5432/db
+               depends_on:
+                 - db
+
+             db:
+               image: postgres:15
+               environment:
+                 POSTGRES_USER: user
+                 POSTGRES_PASSWORD: pass
+                 POSTGRES_DB: db
+               volumes:
+                 - postgres_data:/var/lib/postgresql/data
+
+           volumes:
+             postgres_data:
+           ```
+
+        3. Deploy with Docker Compose
+
+        ```bash
+        # Navigate to your project directory
+        cd /path/to/your/project
+
+        # Create or modify docker-compose.yml file
+        # Run your containers
+        docker-compose up --build -d
+
+        # Stop and remove containers
+        docker-compose down
+        ```
+
+        4. Management commands:
+           ```bash
+           # View logs
+           docker-compose logs -f
+           ```
+        </Steps>
+    </TabItem>
+
+</Tabs>
+
+### SSL Configuration (Optional)
+
+1. Install Certbot for Let's Encrypt SSL
+
+```bash
+sudo apt install certbot python3-certbot-nginx -y
+```
+
+2. Obtain SSL Certificate
+
+```bash
+sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
+```
+
+### Troubleshooting
+
+1. Check NGINX Logs
+
+```bash
+sudo tail -f /var/log/nginx/access.log
+sudo tail -f /var/log/nginx/error.log
+```
+
+2. Check System Resources
+
+```bash
+htop  # Install with: sudo apt install htop
+```
