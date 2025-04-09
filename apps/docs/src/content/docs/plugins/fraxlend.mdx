@@ -20,12 +20,6 @@ The FraxLend plugin enables your agent to interact with FraxLend protocol, provi
    WALLET_PRIVATE_KEY=your-wallet-private-key
    OPENAI_API_KEY=your-openai-api-key
    ```
-   <Aside type="danger" title="Security Warning">
-   Never commit your `.env` file or share your private key. Anyone with access to your private key can control your wallet and funds. Make sure to:
-   - Add `.env` to your `.gitignore` file
-   - Never share your private key in any form
-   - Use a dedicated development wallet with limited funds
-   </Aside>
 
 </Steps>
 
@@ -165,10 +159,10 @@ try {
 
 ## Best Practices
 
-1. **Environment Variables**: Always use environment variables for sensitive information like private keys
-2. **Transaction Validation**: Double-check amounts and addresses before confirming transactions
-3. **Error Handling**: Implement proper error handling for all operations
-4. **Gas Management**: Consider gas costs for operations on the Fraxtal network
+- **Environment Variables**: Always use environment variables for sensitive information like private keys
+- **Transaction Validation**: Double-check amounts and addresses before confirming transactions
+- **Error Handling**: Implement proper error handling for all operations
+- **Gas Management**: Consider gas costs for operations on the Fraxtal network
 
 ## Common Issues and Troubleshooting
 

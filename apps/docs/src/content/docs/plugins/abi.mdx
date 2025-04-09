@@ -17,12 +17,6 @@ The ABI plugin provides a dynamic way to interact with any Ethereum-compatible s
    ```env
    WALLET_PRIVATE_KEY=your-wallet-private-key
    ```
-   <Aside type="danger" title="Security Warning">
-   Never commit your `.env` file or share your private key. Anyone with access to your private key can control your wallet and funds. Make sure to:
-   - Add `.env` to your `.gitignore` file
-   - Never share your private key in any form
-   - Use a dedicated development wallet with limited funds
-   </Aside>
 </Steps>
 
 ## Basic Setup
@@ -160,11 +154,11 @@ The plugin handles various error scenarios:
 
 ## Best Practices
 
-1. **Store private keys securely**: Never hardcode private keys in your application code. Always use environment variables.
-2. **Use proper error handling**: Implement try/catch blocks around plugin initialization and usage.
-3. **Test with testnets first**: Before using the plugin with mainnet contracts, test thoroughly on testnet networks.
-4. **Validate ABIs**: Ensure that the ABI you provide is valid and complete.
-5. **Handle gas efficiently**: For write functions, be aware of gas costs and implement proper error handling for insufficient gas scenarios.
+- **Store private keys securely**: Never hardcode private keys in your application code. Always use environment variables.
+- **Use proper error handling**: Implement try/catch blocks around plugin initialization and usage.
+- **Test with testnets first**: Before using the plugin with mainnet contracts, test thoroughly on testnet networks.
+- **Validate ABIs**: Ensure that the ABI you provide is valid and complete.
+- **Handle gas efficiently**: For write functions, be aware of gas costs and implement proper error handling for insufficient gas scenarios.
 
 ## Common Issues and Troubleshooting
 
@@ -175,4 +169,4 @@ The plugin handles various error scenarios:
 
 <Aside>
 The ABI plugin is compatible with any Ethereum Virtual Machine (EVM) compatible blockchain that works with the viem library, including Ethereum, Fraxtal, Arbitrum, Optimism, Polygon, and more.
-</Aside> 
+</Aside>
