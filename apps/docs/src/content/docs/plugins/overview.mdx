@@ -94,6 +94,14 @@ async function main() {
 
 main().catch(console.error);
 ```
+   <Aside type="danger" title="Security Warning">
+   Never commit sensitive information like API keys, private keys, or environment variables. In particular, your wallet private key requires extra caution as anyone with access can control your funds. Make sure to:
+   - Add `.env` to your `.gitignore` file
+   - Keep all sensitive credentials and API keys secure and never share them
+   - Never commit or share your private keys under any circumstances
+   - Use dedicated development credentials and wallets with limited access/funds
+   - Regularly rotate API keys and credentials following security best practices
+   </Aside>
 
 
 
@@ -105,8 +113,3 @@ Browse the full collection of community plugins at <ExternalLink href="https://g
 - Utility plugins
 
 This compatibility ensures you have access to a wide range of tools while building your agents.
-
-
-<Aside type="note">
-On-chain plugins require chain configuration and wallet access. Store sensitive information with care.
-</Aside>
