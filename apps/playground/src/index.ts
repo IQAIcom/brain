@@ -1,7 +1,7 @@
-import { AgentBuilder } from "@iqai/agent";
-import { createWikiPlugin } from "@iqai/plugin-wiki";
 import openaiPlugin from "@elizaos/plugin-openai";
 import sqlPlugin from "@elizaos/plugin-sql";
+import { AgentBuilder } from "@iqai/agent";
+import { createWikiPlugin } from "@iqai/plugin-wiki";
 
 async function main() {
 	// Initialize plugins

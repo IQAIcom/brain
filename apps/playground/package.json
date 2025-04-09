@@ -1,9 +1,8 @@
 {
 	"name": "@iqai/playground",
 	"version": "0.1",
-	"main": "src/index.ts",
-	"type": "module",
 	"private": true,
+	"type": "module",
 	"scripts": {
 		"start": "tsx src/index.ts",
 		"dev": "tsx watch src/index.ts",
