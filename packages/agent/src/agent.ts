@@ -1,7 +1,6 @@
 import {
 	AgentRuntime,
 	type Character,
-	type IDatabaseAdapter,
 	type Plugin,
 	logger,
 } from "@elizaos/core";
@@ -12,7 +11,6 @@ import dedent from "dedent";
 import { defaultCharacter } from "./default-charecter";
 
 export interface AgentOptions {
-	adapter?: IDatabaseAdapter;
 	modelProvider?: Plugin;
 	plugins?: Plugin[];
 	character?: Partial<Character>;
@@ -22,7 +20,6 @@ export interface AgentOptions {
 export class Agent {
 	private readonly options: AgentOptions;
 	private runtime: AgentRuntime;
-	private db: IDatabaseAdapter;
 	private telemetrySdk: NodeSDK;
 
 	constructor(options: AgentOptions) {
@@ -39,7 +36,6 @@ export class Agent {
 		this.initializeTelemetry();
 		try {
 			const runtime = await this.createRuntime();
-			this.initializeDatabase(runtime);
 			await runtime.initialize();
 			logger.info("✨ Agent initialization completed successfully");
 			logger.info(dedent`\n
@@ -91,38 +87,32 @@ export class Agent {
 	 */
 	private async createRuntime() {
 		const plugins = [...(this.options.plugins || [])];
-
-		this.runtime = new AgentRuntime({
-			plugins,
-			character: {
-				...defaultCharacter,
-				...this.options.character,
-				settings: {
-					...(defaultCharacter.settings || {}),
-					...(this.options.character?.settings || {}),
-					secrets: {
-						...(defaultCharacter.settings?.secrets || {}),
-						...(this.options.character?.settings?.secrets || {}),
-						...process.env,
-					},
-					modelConfig: {
-						experimental_telemetry: {
-							isEnabled: true,
-						},
+		const character: Character = {
+			...defaultCharacter,
+			...this.options.character,
+			settings: {
+				...(defaultCharacter.settings || {}),
+				...(this.options.character?.settings || {}),
+				secrets: {
+					...(defaultCharacter.settings?.secrets || {}),
+					...(this.options.character?.settings?.secrets || {}),
+					...process.env,
+				},
+				modelConfig: {
+					experimental_telemetry: {
+						isEnabled: true,
 					},
 				},
 			},
+		};
+		this.runtime = new AgentRuntime({
+			plugins,
+			character: character,
 			fetch: async (url: string, options: RequestInit) => {
 				return fetch(url, options);
 			},
 		});
-
 		return this.runtime;
-	}
-
-	private initializeDatabase(runtime: AgentRuntime) {
-		this.db = this.options.adapter;
-		runtime.registerDatabaseAdapter(this.db);
 	}
 
 	/**
@@ -147,6 +137,5 @@ export class Agent {
 			}
 		}
 		await this.runtime?.stop();
-		await this.db?.close();
 	}
 }

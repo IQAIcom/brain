@@ -6,16 +6,6 @@ export class AgentBuilder {
 	private options: Partial<AgentOptions> = {};
 
 	/**
-	 * Configure the database adapter for the agent
-	 * @param adapter The database adapter or plugin to use
-	 * @returns The builder instance for chaining
-	 */
-	public withDatabase(adapter: IDatabaseAdapter) {
-		this.options.adapter = adapter;
-		return this;
-	}
-
-	/**
 	 * Add a plugin to the agent
 	 * @param plugin The plugin to add
 	 * @returns The builder instance for chaining
