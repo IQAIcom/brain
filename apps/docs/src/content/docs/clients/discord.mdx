@@ -5,8 +5,9 @@ description: "Integration guide for Discord bot functionality in Brain Framework
 
 import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
 import { PackageManagers } from 'starlight-package-managers'
+import ExternalLink from "../../../components/ExternalLink.astro"
 
-The **Discord Client** enables your agent to interact with Discord servers, supporting message handling, voice interactions, and slash commands.
+The **Discord Client** enables your agent to interact with Discord servers, supporting message handling, voice interactions, and slash commands. Visit Elizaos <ExternalLink href="https://eliza.how/packages/clients/discord">Discord client docs</ExternalLink> for more details.
 
 ## Installation
 
@@ -52,15 +53,7 @@ main().catch(console.error);
 
 ## Best Practices
 
-- ✔️ Always initialize with a database adapter
-- ✔️ Set appropriate character configuration for Discord context
-- ✔️ Handle client startup errors appropriately
-- ✔️ Implement proper Discord permission handling
-
-<Aside type="caution">
-Remember that `withDatabase()` is required before calling `build()`.
-</Aside>
-
-<Aside type="tip">
-You can use `withPlugins()` to add multiple plugins that enhance Discord functionality.
-</Aside>
+- Always initialize with a database adapter
+- Set appropriate character configuration for Discord context
+- Handle client startup errors appropriately
+- Implement proper Discord permission handling

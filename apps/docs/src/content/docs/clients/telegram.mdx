@@ -5,8 +5,9 @@ description: "Integration guide for Telegram bot functionality in Brain Framewor
 
 import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
 import { PackageManagers } from 'starlight-package-managers'
+import ExternalLink from "../../../components/ExternalLink.astro"
 
-The **Telegram Client** enables your agent to interact through Telegram, supporting both group chats and direct messages.
+The **Telegram Client** enables your agent to interact through Telegram, supporting both group chats and direct messages. Visit Elizaos <ExternalLink href="https://eliza.how/packages/clients/telegram">Telegram client docs</ExternalLink> for more details.
 
 ## Installation
 
@@ -48,7 +49,3 @@ async function main() {
 
 main().catch(console.error);
 ```
-
-<Aside type="caution">
-Ensure your bot token is stored securely and never committed to version control.
-</Aside>

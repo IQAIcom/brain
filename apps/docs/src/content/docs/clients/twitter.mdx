@@ -5,8 +5,9 @@ description: "Integration guide for Twitter bot functionality in Brain Framework
 
 import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
 import { PackageManagers } from 'starlight-package-managers'
+import ExternalLink from "../../../components/ExternalLink.astro"
 
-The **Twitter Client** enables your agent to interact through Twitter, supporting both group chats and direct messages.
+The **Twitter Client** enables your agent to interact through Twitter, supporting both group chats and direct messages. Visit Elizaos <ExternalLink href="https://eliza.how/packages/clients/twitter">Twitter/x client docs</ExternalLink> for more details.
 
 ## Installation
 
@@ -16,8 +17,39 @@ The **Twitter Client** enables your agent to interact through Twitter, supportin
 
 2. Configure environment variables:
    ```bash
-   TWITTER_USERNAME=your_twitter_username
-   TWITTER_PASSWORD=your_twitter_password
+    # Twitter API Credentials
+    TWITTER_USERNAME=           # Your Twitter/X username
+    TWITTER_PASSWORD=           # Your Twitter/X password
+    TWITTER_EMAIL=              # Your Twitter/X email
+    TWITTER_2FA_SECRET=         # Optional: 2FA secret for login
+
+    # Twitter Client Configuration
+    TWITTER_DRY_RUN=false      # Set to true for testing without posting
+    MAX_TWEET_LENGTH=280       # Default tweet length limit
+    TWITTER_SEARCH_ENABLE=false # Enable search functionality
+    TWITTER_RETRY_LIMIT=5      # Login retry attempts
+    TWITTER_POLL_INTERVAL=120  # Poll interval in seconds
+    TWITTER_TARGET_USERS=      # Comma-separated list of target users
+
+    # Post Generation Settings
+    TWITTER_ENABLE_POST_GENERATION=true
+    POST_INTERVAL_MIN=90       # Minimum interval between posts (minutes)
+    POST_INTERVAL_MAX=180      # Maximum interval between posts (minutes)
+    POST_IMMEDIATELY=false     # Skip approval workflow
+
+    # Action Processing
+    ENABLE_ACTION_PROCESSING=false
+    ACTION_INTERVAL=5          # Action check interval (minutes)
+    MAX_ACTIONS_PROCESSING=1   # Maximum concurrent actions
+
+    # Spaces Configuration (Optional)
+    TWITTER_SPACES_ENABLE=false
+    ELEVENLABS_XI_API_KEY=     # Required for TTS in Spaces
+
+    # Approval Workflow (Optional)
+    TWITTER_APPROVAL_DISCORD_BOT_TOKEN=
+    TWITTER_APPROVAL_DISCORD_CHANNEL_ID=
+    TWITTER_APPROVAL_CHECK_INTERVAL=300000  # 5 minutes in milliseconds
    ```
 </Steps>
 ## Basic Setup
@@ -48,7 +80,3 @@ async function main() {
 
 main().catch(console.error);
 ```
-
-<Aside type="caution">
-Ensure your bot token is stored securely and never committed to version control.
-</Aside>
