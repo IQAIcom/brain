@@ -5,7 +5,7 @@
 	"type": "module",
 	"types": "dist/index.d.ts",
 	"dependencies": {
-		"@elizaos/core": "0.25.9",
+		"@elizaos/core": "1.0.0-beta.27",
 		"@near-js/client": "0.0.2",
 		"@types/node-cron": "^3.0.11",
 		"axios": "^1.7.9",

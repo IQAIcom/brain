@@ -4,7 +4,8 @@
 		"outDir": "dist",
 		"rootDir": "./src",
 		"declaration": true,
-		"plugins": []
+		"plugins": [],
+		"typeRoots": ["./node_modules/@types"]
 	},
 	"include": ["src"]
 }
