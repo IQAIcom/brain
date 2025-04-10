@@ -10,7 +10,8 @@
 				"schema": "https://api.frax.finance/graphql/fraxtal/fraxlend",
 				"tadaOutputLocation": "./src/graphql-env.d.ts"
 			}
-		]
+		],
+		"typeRoots": ["./node_modules/@types"]
 	},
 	"include": ["src"]
 }

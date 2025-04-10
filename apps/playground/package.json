@@ -1,9 +1,8 @@
 {
 	"name": "@iqai/playground",
 	"version": "0.1",
-	"main": "src/index.ts",
-	"type": "module",
 	"private": true,
+	"type": "module",
 	"scripts": {
 		"start": "tsx src/index.ts",
 		"dev": "tsx watch src/index.ts",
@@ -11,16 +10,14 @@
 		"test": "jest"
 	},
 	"dependencies": {
-		"@elizaos/adapter-sqlite": "github:elizaos-plugins/adapter-sqlite",
-		"@elizaos/client-direct": "0.25.9",
-		"@elizaos/core": "0.25.9",
+		"@elizaos/core": "1.0.0-beta.27",
+		"@elizaos/plugin-openai": "1.0.0-beta.27",
+		"@elizaos/plugin-sql": "1.0.0-beta.27",
 		"@iqai/agent": "workspace:*",
 		"@iqai/plugin-sequencer": "workspace:*",
 		"@iqai/plugin-wiki": "workspace:*",
-		"@iqai/plugin-abi": "workspace:*",
 		"@lmnr-ai/lmnr": "^0.4.42",
-		"dotenv": "^16.4.7",
-		"viem": "^2.22.15"
+		"dotenv": "^16.4.7"
 	},
 	"devDependencies": {
 		"ts-node": "10.9.2",

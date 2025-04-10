@@ -7,7 +7,7 @@
 	"dependencies": {
 		"@coinbase/cdp-agentkit-core": "^0.0.10",
 		"@coinbase/cdp-langchain": "^0.0.11",
-		"@elizaos/core": "0.25.9",
+		"@elizaos/core": "1.0.0-beta.27",
 		"@langchain/core": "^0.3.27",
 		"dedent": "^1.5.3",
 		"tsup": "8.3.5"

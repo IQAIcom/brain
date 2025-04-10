@@ -5,7 +5,8 @@
 		"rootDir": "./src",
 		"declaration": true,
 		"plugins": [],
-		"strict": true
+		"strict": true,
+		"typeRoots": ["./node_modules/@types"]
 	},
 	"include": ["src"]
 }

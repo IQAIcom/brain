@@ -4,6 +4,7 @@
 	"compilerOptions": {
 		"outDir": "dist",
 		"rootDir": "./src",
+		"typeRoots": ["./node_modules/@types"],
 		"declaration": true
 	},
 	"include": ["src"]

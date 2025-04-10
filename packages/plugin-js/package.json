@@ -5,7 +5,7 @@
 	"type": "module",
 	"types": "dist/index.d.ts",
 	"dependencies": {
-		"@elizaos/core": "0.25.9",
+		"@elizaos/core": "1.0.0-beta.27",
 		"dedent": "^1.5.3",
 		"isolated-vm": "5.0.3",
 		"tsup": "8.3.6"
