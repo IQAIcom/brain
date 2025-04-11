@@ -248,58 +248,144 @@ Choose the appropriate database adapter based on your deployment needs:
     cd your-project
     pnpm install
     ```
-
+### Deployment Methods
+You can use the following methods to deploy your agent: PM2, Docker, and Docker Compose.
 <Tabs>
     <TabItem label="PM2">
-    ### PM2 Process Manager
+      #### PM2 Process Manager
 
-    <Steps>
-        <ol>
-            <li>
-                Install PM2
-                ```bash
-                sudo npm install -g pm2
-                ```
-            </li>
-            <li>
-                Set Up PM2 to Start on Boot (Optional)
-                ```bash
-                pm2 startup systemd
-                pm2 save
-                ```
-            </li>
-            <li>
-                Start Your Application with PM2
-                ```bash
-                pm2 start "pnpm dev" --name your-app-name
-                ```
-            </li>
-            <li>
-                Basic PM2 Commands
-                ```bash
-                # Restart application
-                pm2 restart your-app-name
+      <Steps>
+          <ol>
+              <li>
+                  Install PM2
+                  ```bash
+                  sudo npm install -g pm2
+                  ```
+              </li>
+              <li>
+                  Set Up PM2 to Start on Boot (Optional)
+                  ```bash
+                  pm2 startup systemd
+                  pm2 save
+                  ```
+              </li>
+              <li>
+                  Start Your Application with PM2
+                  ```bash
+                  pm2 start "pnpm dev" --name your-app-name
+                  ```
+              </li>
+              <li>
+                  Basic PM2 Commands
+                  ```bash
+                  # Restart application
+                  pm2 restart your-app-name
 
-                # Stop application
-                pm2 stop your-app-name
+                  # Stop application
+                  pm2 stop your-app-name
 
-                # Delete application from PM2
-                pm2 delete your-app-name
+                  # Delete application from PM2
+                  pm2 delete your-app-name
 
-                # View running applications
-                pm2 list
+                  # View running applications
+                  pm2 list
 
-                # Monitor application
-                pm2 monit
-                ```
-            </li>
-        </ol>
-    </Steps>
+                  # Monitor application
+                  pm2 monit
+                  ```
+              </li>
+          </ol>
+      </Steps>
+    </TabItem>
+
+    <TabItem label="Docker">
+  #### Docker Deployment (Direct)
+
+  <Steps>
+    <ol>
+      <li>
+        Install Docker
+        ```bash
+        sudo apt install docker.io -y
+        sudo systemctl start docker
+        sudo systemctl enable docker
+        ```
+      </li>
+
+      <li>
+        Deploy with Docker
+        ```bash
+        # Build your Docker image
+        docker build -t image_name .
+
+        # Run your container
+        docker run -d --name container_name -p host_port:container_port image_name
+
+        # Stop and remove container
+        docker stop container_name
+        docker rm container_name
+        ```
+      </li>
+
+      <li>
+        Sample Setup
+        ```dockerfile
+        FROM node:23-slim
+
+        WORKDIR /app
+
+        # Install pnpm
+        RUN npm install -g pnpm
+
+        # Copy package files and install dependencies
+        COPY package.json pnpm-lock.yaml* ./
+        RUN pnpm install
+
+        # Copy project files
+        COPY src/ ./src/
+        COPY tsconfig.json ./
+        COPY .env ./
+
+        # Create data directory for SQLite
+        RUN mkdir -p data
+
+        # Run the application
+        CMD ["pnpm", "dev"]
+        ```
+      </li>
+
+      <li>
+        Build and run:
+        ```bash
+        docker build -t brain-agent .
+        docker run -d \
+          -p 3000:3000 \
+          --name brain-agent \
+          -e DATABASE_URL=postgresql://user:pass@host:5432/db \
+          brain-agent
+        ```
+      </li>
+
+      <li>
+        Common commands:
+        ```bash
+        # Stop container
+        docker stop brain-agent
+
+        # Start container
+        docker start brain-agent
+
+        # View logs
+        docker logs -f brain-agent
+        ```
+      </li>
+    </ol>
+  </Steps>
 </TabItem>
 
 
     <TabItem label="Docker Compose">
-    ### Docker Compose Deployment
+    #### Docker Compose Deployment
 
     <Steps>
         <ol>
