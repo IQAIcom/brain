@@ -12,5 +12,6 @@ server/dist
 public/dist
 .turbo
 .vercel
+.prettierignore
 
 apps/console/src/lib/info.json
