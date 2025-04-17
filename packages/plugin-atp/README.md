@@ -11,6 +11,7 @@ The **Plugin ATP** provides an interface to interact with IQ's **Agent Tokenizat
 ✅ View **agent statistics** 📊  
 ✅ Check **token holdings** 💰  
 ✅ Execute **buy/sell trades** for AI agent tokens 🔄  
+✅ View and add **agent logs** 📝  
 
 All trades use **IQ as the base currency**.
 
@@ -33,6 +34,7 @@ Set up your environment with the required wallet configuration:
 | 🔧 Variable Name        | 📜 Description                                      |
 |------------------------|-------------------------------------------------|
 | `WALLET_PRIVATE_KEY`   | Your wallet's **private key** for transaction signing 🔑 |
+| `API_KEY`              | **API key** for adding agent logs (required for log creation only) 🔑 |
 
 ---
 
@@ -46,6 +48,7 @@ import { createATPPlugin } from "@iqai/plugin-atp";
 // Initialize the plugin
 const plugin = await createATPPlugin({
   walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
+  apiKey: process.env.API_KEY // Required only for adding logs (optional)
  });
 ```
 
@@ -100,7 +103,7 @@ Sell AI agent tokens **back to the protocol**.
 
 ---
 
-### ATP_GET_AGENTS
+### 📋 ATP_GET_AGENTS
 
 List available **AI agents** for trading.
 
@@ -112,6 +115,31 @@ List available **AI agents** for trading.
 
 ---
 
+### 📝 ATP_GET_AGENT_LOGS
+
+Retrieve **logs** for a specific AI agent.
+
+💬 **Examples:**
+
+- "Show logs for agent `0x1234...5678`"
+- "View recent activity for agent `0x1234...5678`"
+- "Get agent logs for Frax God" *(Works only if token contract found in previous messages)*
+- "Show page 2 of logs for agent `0x1234...5678`" *(For pagination)*
+
+---
+
+### ✏️ ATP_ADD_AGENT_LOG
+
+Add a new **log entry** for a specific AI agent. **Requires API key**.
+
+💬 **Examples:**
+
+- "Add log for agent `0x1234...5678`: Just executed weekly yield distribution"
+- "Create log entry for Frax God: Updated pricing model" *(Works only if token contract found in previous messages)*
+- "Log for agent `0x1234...5678` with transaction hash `0xabc...def`: Distribution complete"
+
+---
+
 ## 📜 Response Format
 
 Actions return **structured responses** including:
@@ -120,6 +148,7 @@ Actions return **structured responses** including:
 ✔ **Formatted token amounts** 💲  
 ✔ **Error messages when applicable** ⚠  
 ✔ **Agent addresses and statistics** 🏷  
+✔ **Formatted agent logs** 📄  
 
 ---
 
@@ -132,5 +161,6 @@ The plugin **handles various error scenarios**:
 🔄 **Transaction failures**  
 🌐 **Network issues**  
 🛑 **Input validation errors**  
+🔑 **Missing API key for log creation**  
 
 ---
