@@ -1,6 +1,5 @@
 import type { Action, Handler } from "@elizaos/core";
 import { GetLatestWikisService } from "../services/get-latest-wikis";
-import type { Wiki } from "@everipedia/iq-utils";
 import { InputParserService } from "../services/input-parser";
 import { USER_WIKIS_TEMPLATE } from "../lib/templates";
 
@@ -37,7 +36,7 @@ const handler: () => Handler =
 			const response = await service.execute(id, timeFrameSeconds);
 
 			callback?.({
-				text: service.format(response as Partial<Wiki[]>),
+				text: service.format(response),
 			});
 
 			return true;
