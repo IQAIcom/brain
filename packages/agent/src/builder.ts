@@ -1,67 +1,9 @@
-import type {
-	Adapter,
-	CacheStore,
-	Character,
-	Client,
-	ModelProviderName,
-	Plugin,
-} from "@elizaos/core";
+import type { Character, IDatabaseAdapter, Plugin } from "@elizaos/core";
 import type { SpanExporter } from "@opentelemetry/sdk-trace-base";
 import { Agent, type AgentOptions } from "./agent";
 
 export class AgentBuilder {
 	private options: Partial<AgentOptions> = {};
-
-	/**
-	 * Configure the database adapter for the agent
-	 * @param adapter The database adapter or plugin to use
-	 * @returns The builder instance for chaining
-	 */
-	public withDatabase(adapter: Adapter | Plugin) {
-		if (this.isAdapterPlugin(adapter)) {
-			this.options.adapter = adapter.adapters[0];
-		} else {
-			this.options.adapter = adapter as Adapter;
-		}
-		return this;
-	}
-
-	/**
-	 * Add a client to the agent
-	 * @param client The client or client plugin to add
-	 * @returns The builder instance for chaining
-	 */
-	public withClient(client: Client | Plugin) {
-		if (this.isClientPlugin(client)) {
-			this.options.clients = [
-				...(this.options.clients || []),
-				...client.clients,
-			];
-		} else {
-			this.options.clients = [
-				...(this.options.clients || []),
-				client as Client,
-			];
-		}
-		return this;
-	}
-
-	/**
-	 * Add multiple clients to the agent
-	 * @param clients An array of clients or client plugins to add
-	 * @returns The builder instance for chaining
-	 */
-	public withClients(clients: (Client | Plugin)[]) {
-		const passedClients = clients?.flatMap((client) => {
-			if (this.isClientPlugin(client)) {
-				return client.clients as Client[];
-			}
-			return client as Client;
-		});
-
-		this.options.clients = [...(this.options.clients || []), ...passedClients];
-		return this;
-	}
 
 	/**
 	 * Add a plugin to the agent
@@ -89,9 +31,8 @@ export class AgentBuilder {
 	 * @param key The API key for the model provider
 	 * @returns The builder instance for chaining
 	 */
-	public withModelProvider(provider: ModelProviderName, key: string) {
+	public withModelProvider(provider: Plugin) {
 		this.options.modelProvider = provider;
-		this.options.modelKey = key;
 		return this;
 	}
 
@@ -102,16 +43,6 @@ export class AgentBuilder {
 	 */
 	public withCharacter(character: Partial<Character>) {
 		this.options.character = character;
-		return this;
-	}
-
-	/**
-	 * Configure the cache store for the agent
-	 * @param cacheStore The cache store implementation to use
-	 * @returns The builder instance for chaining
-	 */
-	public withCacheStore(cacheStore: CacheStore) {
-		this.options.cacheStore = cacheStore;
 		return this;
 	}
 
@@ -131,28 +62,6 @@ export class AgentBuilder {
 	 * @returns A fully configured Agent instance
 	 */
 	public build(): Agent {
-		if (!this.options.adapter) {
-			throw new Error("Database adapter is required");
-		}
-
 		return new Agent(this.options as AgentOptions);
-	}
-
-	/**
-	 * Type guard to check if an object is a Client plugin
-	 * @param obj The object to check
-	 * @returns True if the object is a Client plugin
-	 */
-	private isClientPlugin(obj: Client | Plugin): obj is Plugin {
-		return "clients" in obj;
-	}
-
-	/**
-	 * Type guard to check if an object is an Adapter plugin
-	 * @param obj The object to check
-	 * @returns True if the object is an Adapter plugin
-	 */
-	private isAdapterPlugin(obj: Adapter | Plugin): obj is Plugin {
-		return "adapters" in obj;
 	}
 }
