@@ -1,5 +1,11 @@
 # @iqai/plugin-atp
 
+## 0.4.0
+
+### Minor Changes
+
+- 075dd78: Added add & get agent logs actions
+
 ## 0.3.0
 
 ### Minor Changes

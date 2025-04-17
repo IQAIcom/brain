@@ -1,5 +1,11 @@
 # @iqai/plugin-wiki
 
+## 0.0.4
+
+### Patch Changes
+
+- 92003c0: Updated action responses to include txn links
+
 ## 0.0.3
 
 ### Patch Changes
