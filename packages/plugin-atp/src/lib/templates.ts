@@ -143,14 +143,12 @@ The response must include:
 - agentTokenContract: The token contract address
 - page: Optional page number
 - limit: Optional number of logs to return per page (max is 100)
-- apiKey: API key for authentication
 - error: An error message if a valid agentTokenContract cannot be determined (optional)
 
 Example response:
 \`\`\`json
 {
     "agentTokenContract": "0x1234567890123456789012345678901234567890",
-    "apiKey": "your-api-key"
 }
 \`\`\`
 \`\`\`json
