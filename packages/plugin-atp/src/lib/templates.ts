@@ -134,3 +134,65 @@ Example response:
 {{recentMessages}}
 Extract the parameters from the most recent message.
 Respond with a JSON markdown block containing sort and/or limit.`;
+
+export const GET_AGENT_LOGS_TEMPLATE = `Respond with a JSON object containing parameters for agent logs lookup.
+Extract the agent address from the most recent message. You can also search all given messages if necessary.
+If required information is missing, respond with an error.
+
+The response must include:
+- agentTokenContract: The token contract address
+- page: Optional page number
+- limit: Optional number of logs to return per page (max is 100)
+- error: An error message if a valid agentTokenContract cannot be determined (optional)
+
+Example response:
+\`\`\`json
+{
+    "agentTokenContract": "0x1234567890123456789012345678901234567890",
+}
+\`\`\`
+\`\`\`json
+{
+    "error": "No token contract found in context"
+}
+\`\`\`
+{{recentMessages}}
+Extract the agent address and pagination details from the most recent message.
+Respond with a JSON markdown block containing the parameters.`;
+
+export const ADD_AGENT_LOG_TEMPLATE = `Respond with a JSON object containing parameters for adding an agent log.
+Extract the details from the most recent message.
+
+The response must include:
+- agentTokenContract: The token contract address
+- content: The log content
+- txHash: Optional transaction hash
+- error: An error message if required parameters are missing (optional)
+
+Example response:
+\`\`\`json
+{
+    "agentTokenContract": "0x1234567890123456789012345678901234567890",
+    "content": "This is a log message",
+}
+\`\`\`
+\`\`\`json
+{
+    "agentTokenContract": "0x1234567890123456789012345678901234567890",
+    "content": "Weekly yield distribution done. check txn",
+    "txHash": "0x1234567890123456789012345678901234567890"
+}
+\`\`\`
+\`\`\`json
+{
+    "error": "No token contract found in context"
+}
+\`\`\`
+\`\`\`json
+{
+    "error": "No log content provided"
+}
+\`\`\`
+{{recentMessages}}
+Extract the log details from the most recent message.
+Respond with a JSON markdown block containing the parameters.`;

@@ -1,6 +1,6 @@
 ---
 title: "ATP Plugin"
-description: "Plugin for interacting with IQ ATP (Agent Tokenization Platform) for managing AI agent tokens"
+description: "Plugin for interacting with IQ ATP (Agent Tokenization Platform) for managing AI agent tokens and logs"
 ---
 
 import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
@@ -12,6 +12,7 @@ The **ATP Plugin** enables your agent to interact with **IQ's Agent Tokenization
 **Buying, selling, and managing AI agent tokens** using IQ as the base currency
 **Viewing agent performance metrics and token statistics**
 **Managing token holdings and checking position values**
+**Viewing and adding agent logs for activity tracking**
 
 ---
 
@@ -26,13 +27,8 @@ The **ATP Plugin** enables your agent to interact with **IQ's Agent Tokenization
 
    ```bash
    WALLET_PRIVATE_KEY=your-wallet-private-key
+   API_KEY=your-api-key # Optional - required only for adding logs
    ```
-   <Aside type="danger" title="Security Warning">
-   Never commit your `.env` file or share your private key. Anyone with access to your private key can control your wallet and funds. Make sure to:
-   - Add `.env` to your `.gitignore` file
-   - Never share your private key in any form
-   - Use a dedicated development wallet with limited funds
-   </Aside>
 </Steps>
 
 ---
@@ -49,6 +45,7 @@ async function main() {
   // Initialize ATP plugin
  const atpPlugin = await createATPPlugin({
     walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
+    apiKey: process.env.ATP_API_KEY, // Optional - required only for adding logs
   });
 
 
@@ -77,6 +74,7 @@ main().catch(console.error);
 - **Portfolio Management**: Monitor holdings and position values
 - **Trading Operations**: Buy/sell agent tokens using IQ
 - **Agents list**: View a list of available agents
+- **Agent Logs**: View and add activity logs for agents
 
 
 ---
@@ -90,6 +88,8 @@ main().catch(console.error);
 | Buy Tokens | `Buy 1000 IQ worth of agent 0x1234...5678` |
 | Sell Tokens | `Sell 50 tokens of agent 0x1234...5678` |
 | List Agents | `Show me top agents on atp` |
+| View Logs | `Show logs for agent 0x1234...5678` |
+| Add Log | `Add log for agent 0x1234...5678: Weekly yield distribution complete` |
 
 
 ## Configuration Options
@@ -99,6 +99,7 @@ The ATP plugin accepts the following configuration parameters:
 ```typescript
 interface ATPPluginConfig {
   walletPrivateKey: string;  // Private key for transactions
+  apiKey?: string;           // API key for adding logs (optional)
 }
 ```
 
@@ -112,6 +113,7 @@ Always implement proper error handling when using the plugin:
 try {
   const atpPlugin = await createATPPlugin({
     walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
+    apiKey: process.env.API_KEY,
   });
 } catch (error) {
   console.error('Failed to initialize ATP plugin:', error);
@@ -126,6 +128,7 @@ try {
 - **Amount Verification**: Double-check token amounts and IQ values
 - **Transaction Monitoring**: Track transaction status and confirmations
 - **Balance Management**: Ensure sufficient IQ balance for purchases
+- **Log Management**: Keep logs concise and informative for better tracking
 
 ---
 
@@ -135,3 +138,4 @@ try {
 - **Insufficient IQ Balance**: Verify you have enough IQ tokens for purchases
 - **Transaction Failures**: Check transaction parameters and network status
 - **Token Approval**: Ensure proper token approvals before selling
+- **Missing API Key**: An API key is required for adding logs (but not for viewing them)

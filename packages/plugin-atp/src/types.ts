@@ -1,5 +1,6 @@
 export interface ATPActionParams {
 	walletPrivateKey?: string;
+	apiKey?: string;
 }
 
 export interface AgentHolding {

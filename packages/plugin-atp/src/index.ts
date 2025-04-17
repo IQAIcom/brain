@@ -4,6 +4,8 @@ import { getAgentStatsAction } from "./actions/agent-stats";
 import { getBuyAction } from "./actions/buy";
 import { getAgentsAction } from "./actions/get-agents";
 import { getSellAction } from "./actions/sell";
+import { getAgentLogsAction } from "./actions/get-agent-logs";
+import { addAgentLogAction } from "./actions/add-agent-log";
 import type { ATPActionParams } from "./types";
 
 export async function createAtpPlugin(opts: ATPActionParams): Promise<Plugin> {
@@ -13,6 +15,8 @@ export async function createAtpPlugin(opts: ATPActionParams): Promise<Plugin> {
 		getBuyAction(opts),
 		getSellAction(opts),
 		getAgentStatsAction(opts),
+		getAgentLogsAction(opts),
+		addAgentLogAction(opts),
 	];
 
 	return {

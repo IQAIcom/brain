@@ -3,6 +3,7 @@ export const API_URLS = {
 	AGENTS_STATS: "https://app.iqai.com/api/agents/stats",
 	HOLDINGS: "https://app.iqai.com/api/holdings",
 	AGENTS: "https://app.iqai.com/api/agents/top",
+	LOGS: "https://app.iqai.com/api/logs",
 } as const;
 
 export const AGENT_ROUTER_ADDRESS =
