@@ -1,7 +1,7 @@
 import type { Action, Handler } from "@elizaos/core";
 import { elizaLogger } from "@elizaos/core";
 import { ADD_AGENT_LOG_TEMPLATE } from "../lib/templates";
-import { AgentLogsService, LogType } from "../services/agent-logs";
+import { AgentLogsService } from "../services/agent-logs";
 import { InputParserService } from "../services/input-parser";
 import type { ATPActionParams } from "../types";
 
