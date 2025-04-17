@@ -1,16 +1,14 @@
 import dedent from "dedent";
-import type { Wiki } from "@everipedia/iq-utils";
 import { request } from "graphql-request";
-import { USER_WIKIS } from "../lib/queries";
-import { IQ_API_URL, IQ_BASE_URL } from "../lib/constants";
+import { USER_WIKIS_QUERY } from "../lib/queries";
+import { IQ_BASE_URL } from "../lib/constants";
+import { client } from "../lib/graphql";
 
 export class GetLatestWikisService {
 	async execute(id: string, timeFrameSeconds?: number) {
-		const query = USER_WIKIS(id);
-
 		try {
 			// biome-ignore lint/suspicious/noExplicitAny: the type UserWikiResponse is not exposing created
-			const response: any = await request(IQ_API_URL, query);
+			const response: any = await client.request(USER_WIKIS_QUERY, { id });
 
 			if (!response.userById) {
 				throw new Error("user does not exist");
@@ -19,9 +17,7 @@ export class GetLatestWikisService {
 				throw new Error("user has not created any wikis");
 			}
 
-			let wikis = response.userById.wikisCreated.activity[0].content.map(
-				(activity) => activity,
-			);
+			let wikis = response.userById.wikisCreated.activity[0].content;
 
 			// Filter by time if timeFrameSeconds is provided
 			if (timeFrameSeconds) {
@@ -55,7 +51,7 @@ export class GetLatestWikisService {
 		}
 	}
 
-	format(wikis: Wiki[]) {
+	format(wikis) {
 		return wikis
 			.map(
 				(wiki) => dedent`
@@ -63,6 +59,7 @@ export class GetLatestWikisService {
           - Here's a summary of ${wiki.title} \n
           - ${wiki.summary} \n\n
           🔗 Source: ${IQ_BASE_URL}/${wiki.id}
+					🔗 Transaction: https://polygonscan.com/tx/${wiki.transactionHash}
         `,
 			)
 			.join("\n\n");

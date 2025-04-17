@@ -4,7 +4,14 @@
 		"outDir": "dist",
 		"rootDir": "./src",
 		"declaration": true,
-		"plugins": []
+		"plugins": [
+			{
+				"name": "@0no-co/graphqlsp",
+				"schema": "https://graph.everipedia.org/graphql",
+				"tadaOutputLocation": "./src/graphql-env.d.ts"
+			}
+		],
+		"types": ["node"]
 	},
 	"include": ["src"]
 }
