@@ -571,15 +571,18 @@ importers:
       dedent:
         specifier: ^1.5.3
         version: 1.5.3
+      gql.tada:
+        specifier: ^1.4.3
+        version: 1.8.10(graphql@16.10.0)(typescript@5.7.3)
+      graphql:
+        specifier: ^16.8.1
+        version: 16.10.0
       graphql-request:
         specifier: ^6.1.0
         version: 6.1.0(graphql@16.10.0)
       tsup:
         specifier: 8.3.6
         version: 8.3.6(@swc/core@1.10.14(@swc/helpers@0.5.15))(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.7.0)
-      viem:
-        specifier: ^2.22.15
-        version: 2.22.22(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.2)
       vitest:
         specifier: ^3.0.7
         version: 3.0.7(@types/debug@4.1.12)(@types/node@22.13.1)(jiti@1.21.7)(tsx@4.19.2)(yaml@2.7.0)
@@ -587,9 +590,6 @@ importers:
       '@0no-co/graphqlsp':
         specifier: ^1.8.0
         version: 1.12.16(graphql@16.10.0)(typescript@5.7.3)
-      '@everipedia/iq-utils':
-        specifier: 2.4.0
-        version: 2.4.0
       '@iqai/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
@@ -1401,10 +1401,6 @@ packages:
   '@eslint/plugin-kit@0.2.5':
     resolution: {integrity: sha512-lB05FkqEdUg2AA0xEbUz0SnkXT1LcCTa438W4IWTUh4hdOnVbQyOJ81OrDXsJk/LSiJHubgGEFoR5EHq1NsH1A==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
-  '@everipedia/iq-utils@2.4.0':
-    resolution: {integrity: sha512-8AKNzsAxinxoBTfSXa5+P2uevrFiFKN40x4SApi51oU48PxtlOPZ+zf9g6OB++kFsWIj254wO9D0whGPtZYhZQ==}
-    engines: {node: '>=10', pnpm: '>=6'}
 
   '@expressive-code/core@0.40.1':
     resolution: {integrity: sha512-j71gxBepyzBgOtZomxzl8M90AjILf6hZarWFePDis7sTjqCwxWrtZEtTCafto8IOURG/ECZN0g7Ys4zExkNU7Q==}
@@ -6092,9 +6088,6 @@ packages:
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
 
-  oauth-1.0a@2.2.6:
-    resolution: {integrity: sha512-6bkxv3N4Gu5lty4viIcIAnq5GbxECviMBeKR3WX/q87SPQ8E8aursPZUtsXDnxCs787af09WPRBLqYrf/lwoYQ==}
-
   object-assign@4.1.1:
     resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
     engines: {node: '>=0.10.0'}
@@ -6598,10 +6591,6 @@ packages:
 
   quick-format-unescaped@4.0.4:
     resolution: {integrity: sha512-tYC1Q1hgyRuHgloV/YXs2w15unPVh8qfu/qCTfhTYamaw7fyhumKa2yGpdSo87vY32rIclj+4fWYQXUMs9EHvg==}
-
-  quick-lru@7.0.0:
-    resolution: {integrity: sha512-MX8gB7cVYTrYcFfAnfLlhRd0+Toyl8yX8uBx1MrX7K0jegiz9TumwOK27ldXrgDlHRdVi+MqU9Ssw6dr4BNreg==}
-    engines: {node: '>=18'}
 
   radix3@1.1.2:
     resolution: {integrity: sha512-b484I/7b8rDEdSDKckSSBA8knMpcdsXudlE/LNL639wFoHKwLbEkQFZHWEYwDC0wa0FKUcCY+GAF73Z7wxNVFA==}
@@ -9232,15 +9221,6 @@ snapshots:
     dependencies:
       '@eslint/core': 0.10.0
       levn: 0.4.1
-
-  '@everipedia/iq-utils@2.4.0':
-    dependencies:
-      axios: 1.7.9
-      oauth-1.0a: 2.2.6
-      quick-lru: 7.0.0
-      zod: 3.24.2
-    transitivePeerDependencies:
-      - debug
 
   '@expressive-code/core@0.40.1':
     dependencies:
@@ -15254,8 +15234,6 @@ snapshots:
     dependencies:
       boolbase: 1.0.0
 
-  oauth-1.0a@2.2.6: {}
-
   object-assign@4.1.1: {}
 
   object-hash@3.0.0: {}
@@ -15793,8 +15771,6 @@ snapshots:
   queue-microtask@1.2.3: {}
 
   quick-format-unescaped@4.0.4: {}
-
-  quick-lru@7.0.0: {}
 
   radix3@1.1.2: {}
 
