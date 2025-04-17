@@ -83,7 +83,7 @@ export class AgentLogsService {
 					agentTokenContract,
 					content,
 					txHash,
-					type: LogType.Developer,
+					type: LogType.Agent,
 				}),
 			});
 
