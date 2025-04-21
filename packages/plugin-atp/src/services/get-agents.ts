@@ -1,6 +1,6 @@
 import { elizaLogger } from "@elizaos/core";
 import dedent from "dedent";
-import { API_URLS } from "../constants";
+import { API_URLS, DEV_API_URLS } from "../constants";
 import formatNumber from "../lib/format-number";
 import type { Agent } from "../types";
 
@@ -12,7 +12,9 @@ export interface GetAgentsParams {
 export class GetAgentsService {
 	async getAgents(params: GetAgentsParams): Promise<Agent[]> {
 		try {
-			const url = new URL(API_URLS.AGENTS);
+			const url = new URL(
+				process.env.ATP_USE_DEV ? DEV_API_URLS.AGENTS : API_URLS.AGENTS,
+			);
 			if (params.sort) url.searchParams.append("sort", params.sort);
 			if (params.limit)
 				url.searchParams.append("limit", params.limit.toString());

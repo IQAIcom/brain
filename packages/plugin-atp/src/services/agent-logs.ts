@@ -1,4 +1,4 @@
-import { API_URLS } from "../constants";
+import { API_URLS, DEV_API_URLS } from "../constants";
 
 export enum LogType {
 	Developer = "Developer",
@@ -46,15 +46,16 @@ export class AgentLogsService {
 		limit = DEFAULT_LIMIT,
 	}: GetLogsParams): Promise<GetLogsResponse> {
 		try {
+			const endPoint = process.env.ATP_USE_DEV
+				? DEV_API_URLS.LOGS
+				: API_URLS.LOGS;
 			const queryParams = new URLSearchParams({
 				agentTokenContract,
 				page: page.toString(),
 				limit: limit.toString(),
 			});
 
-			const response = await fetch(
-				`${API_URLS.LOGS}?${queryParams.toString()}`,
-			);
+			const response = await fetch(`${endPoint}?${queryParams.toString()}`);
 
 			if (!response.ok) {
 				throw new Error(`API request failed with status ${response.status}`);
@@ -73,7 +74,10 @@ export class AgentLogsService {
 		txHash,
 	}: PostLogParams): Promise<LogEntry> {
 		try {
-			const response = await fetch(API_URLS.LOGS, {
+			const endPoint = process.env.ATP_USE_DEV
+				? DEV_API_URLS.LOGS
+				: API_URLS.LOGS;
+			const response = await fetch(endPoint, {
 				method: "POST",
 				headers: {
 					apiKey,
@@ -96,7 +100,6 @@ export class AgentLogsService {
 			throw new Error(`Failed to add agent log: ${error.message}`);
 		}
 	}
-
 	formatLogs(data: GetLogsResponse): string {
 		if (!data.logs.length) {
 			return "No logs found for this agent.";

@@ -1,18 +1,30 @@
 import { type Address, erc20Abi } from "viem";
 import { fraxtal } from "viem/chains";
-import { AGENT_ROUTER_ADDRESS, BASE_TOKEN_ADDRESS } from "../constants";
+import {
+	AGENT_ROUTER_ADDRESS,
+	BASE_TOKEN_ADDRESS,
+	DEV_AGENT_ROUTER_ADDRESS,
+	DEV_BASE_TOKEN_ADDRESS,
+} from "../constants";
 import { ROUTER_ABI } from "../lib/router.abi";
+import { DEV_ROUTER_ABI } from "../lib/router.abi.dev";
 import type { WalletService } from "./wallet";
 
 export class SwapService {
 	private walletService: WalletService;
 	private routerAddress: Address;
 	private baseTokenAddress: Address;
+	private routerAbi;
 
 	constructor(walletService: WalletService) {
 		this.walletService = walletService;
-		this.routerAddress = AGENT_ROUTER_ADDRESS as Address;
-		this.baseTokenAddress = BASE_TOKEN_ADDRESS as Address;
+		this.routerAddress = (
+			process.env.ATP_USE_DEV ? DEV_AGENT_ROUTER_ADDRESS : AGENT_ROUTER_ADDRESS
+		) as Address;
+		this.baseTokenAddress = (
+			process.env.ATP_USE_DEV ? DEV_BASE_TOKEN_ADDRESS : BASE_TOKEN_ADDRESS
+		) as Address;
+		this.routerAbi = process.env.ATP_USE_DEV ? DEV_ROUTER_ABI : ROUTER_ABI;
 	}
 
 	async buy({
@@ -37,9 +49,11 @@ export class SwapService {
 		// Execute buy
 		const buyTx = await walletClient.writeContract({
 			address: this.routerAddress,
-			abi: ROUTER_ABI,
+			abi: this.routerAbi,
 			functionName: "buy",
-			args: [tokenContract, amountInWei, 0n],
+			args: process.env.ATP_USE_DEV
+				? [tokenContract, amountInWei]
+				: [tokenContract, amountInWei, 0n],
 			chain: fraxtal,
 			account: walletClient.account,
 		});
@@ -69,9 +83,11 @@ export class SwapService {
 		// Execute sell
 		const sellTx = await walletClient.writeContract({
 			address: this.routerAddress,
-			abi: ROUTER_ABI,
+			abi: this.routerAbi,
 			functionName: "sell",
-			args: [tokenContract, amountInWei, 0n],
+			args: process.env.ATP_USE_DEV
+				? [tokenContract, amountInWei]
+				: [tokenContract, amountInWei, 0n],
 			chain: fraxtal,
 			account: walletClient.account,
 		});
