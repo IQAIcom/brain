@@ -1,5 +1,11 @@
 # @iqai/plugin-atp
 
+## 0.4.1
+
+### Patch Changes
+
+- 4fc4a02: Added dev env support
+
 ## 0.4.0
 
 ### Minor Changes
