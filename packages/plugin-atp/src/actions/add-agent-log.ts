@@ -29,7 +29,7 @@ const handler: (opts: ATPActionParams) => Handler =
 		try {
 			if (!opts.apiKey) {
 				callback?.({
-					text: "❌ API key is required for adding a new log",
+					text: "❌ ATP API key is required for adding a new log",
 				});
 				return false;
 			}

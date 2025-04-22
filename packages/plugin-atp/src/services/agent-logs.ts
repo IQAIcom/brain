@@ -108,7 +108,7 @@ export class AgentLogsService {
 		const logsText = data.logs
 			.map((log) => {
 				const date = new Date(log.createdAt).toLocaleString();
-				return `[${date}] [${log.type}] ${log.content}`;
+				return `[${date}] [${log.type}] ${log.content} \n Tx Hash: ${log.txHash}`;
 			})
 			.join("\n");
 
