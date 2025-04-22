@@ -1,5 +1,12 @@
 # @iqai/plugin-atp
 
+## 0.4.2
+
+### Patch Changes
+
+- 68ca579: - added early returns if wallet private key is not provided
+  - Updated logs shown to include txHash as well
+
 ## 0.4.1
 
 ### Patch Changes
