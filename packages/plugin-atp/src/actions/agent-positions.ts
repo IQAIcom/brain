@@ -3,6 +3,7 @@ import { elizaLogger } from "@elizaos/core";
 import { AgentPositionsService } from "../services/agent-positions";
 import { WalletService } from "../services/wallet";
 import type { ATPActionParams } from "../types";
+import dedent from "dedent";
 
 export const getAgentPositionsAction = (opts: ATPActionParams): Action => {
 	return {
@@ -24,6 +25,16 @@ export const getAgentPositionsAction = (opts: ATPActionParams): Action => {
 const handler: (opts: ATPActionParams) => Handler =
 	(opts) => async (_runtime, _message, _state, _options, callback) => {
 		elizaLogger.info("🚀 Fetching agent positions");
+		if (!opts.walletPrivateKey) {
+			callback?.({
+				text: dedent`
+          ❌ Error: Wallet private key not found
+
+          Please set the wallet private key in the plugin configuration.
+        `,
+			});
+			return false;
+		}
 		try {
 			const walletService = new WalletService(opts.walletPrivateKey);
 			const positionsService = new AgentPositionsService(walletService);

@@ -24,7 +24,7 @@ export const getAgentLogsAction = (opts: ATPActionParams): Action => {
 };
 
 const handler: (opts: ATPActionParams) => Handler =
-	(opts) => async (runtime, message, state, _options, callback) => {
+	(_opts) => async (runtime, message, state, _options, callback) => {
 		elizaLogger.info("🔍 Fetching agent logs");
 		try {
 			const inputParser = new InputParserService();

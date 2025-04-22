@@ -39,6 +39,16 @@ export const getBuyAction = (opts: ATPActionParams): Action => {
 const handler: (opts: ATPActionParams) => Handler =
 	(opts) => async (runtime, message, state, _options, callback) => {
 		elizaLogger.info("💰 Starting token purchase");
+		if (!opts.walletPrivateKey) {
+			callback?.({
+				text: dedent`
+          ❌ Error: Wallet private key not found
+
+          Please set the wallet private key in the plugin configuration.
+        `,
+			});
+			return false;
+		}
 		try {
 			const inputParser = new InputParserService();
 			const { tokenContract, amount, error } = await inputParser.parseInputs({
