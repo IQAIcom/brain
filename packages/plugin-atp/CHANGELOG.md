@@ -1,5 +1,11 @@
 # @iqai/plugin-atp
 
+## 0.4.3
+
+### Patch Changes
+
+- 4b13577: updated add log action to take optional chain id
+
 ## 0.4.2
 
 ### Patch Changes
