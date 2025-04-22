@@ -167,20 +167,22 @@ The response must include:
 - agentTokenContract: The token contract address
 - content: The log content
 - txHash: Optional transaction hash
+- chainId: Optional chain ID
 - error: An error message if required parameters are missing (optional)
 
 Example response:
 \`\`\`json
 {
     "agentTokenContract": "0x1234567890123456789012345678901234567890",
-    "content": "This is a log message",
+    "content": "This is a log message"
 }
 \`\`\`
 \`\`\`json
 {
     "agentTokenContract": "0x1234567890123456789012345678901234567890",
     "content": "Weekly yield distribution done. check txn",
-    "txHash": "0x1234567890123456789012345678901234567890"
+    "txHash": "0x1234567890123456789012345678901234567890",
+    "chainId": 137
 }
 \`\`\`
 \`\`\`json
