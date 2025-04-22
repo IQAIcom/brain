@@ -38,6 +38,7 @@ const handler: (opts: ATPActionParams) => Handler =
 				agentTokenContract = null,
 				content = null,
 				txHash,
+				chainId,
 				error,
 			} = await inputParser.parseInputs({
 				runtime,
@@ -51,6 +52,7 @@ const handler: (opts: ATPActionParams) => Handler =
           agentTokenContract: ${agentTokenContract}
           content length: ${content ? content.length : 0}
           txHash: ${txHash}
+					chainId: ${chainId}
           error: ${error}
         `,
 			);
@@ -82,6 +84,7 @@ const handler: (opts: ATPActionParams) => Handler =
 				content,
 				apiKey: opts.apiKey,
 				txHash,
+				chainId: chainId != null ? Number(chainId) : null,
 			});
 
 			callback?.({
@@ -92,7 +95,7 @@ const handler: (opts: ATPActionParams) => Handler =
 			});
 			return true;
 		} catch (error) {
-			elizaLogger.error("❌ Adding agent log failed", { error });
+			elizaLogger.info("❌ Adding agent log failed", { error });
 			callback?.({
 				text: `❌ Error: ${error.message}`,
 			});

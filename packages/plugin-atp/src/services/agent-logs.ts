@@ -19,6 +19,7 @@ export interface PostLogParams {
 	agentTokenContract: string;
 	content: string;
 	txHash?: string | null;
+	chainId?: number | null;
 	apiKey: string;
 }
 
@@ -72,6 +73,7 @@ export class AgentLogsService {
 		content,
 		apiKey,
 		txHash,
+		chainId,
 	}: PostLogParams): Promise<LogEntry> {
 		try {
 			const endPoint = process.env.ATP_USE_DEV
@@ -87,6 +89,7 @@ export class AgentLogsService {
 					agentTokenContract,
 					content,
 					txHash,
+					chainId,
 					type: LogType.Agent,
 				}),
 			});
@@ -108,7 +111,7 @@ export class AgentLogsService {
 		const logsText = data.logs
 			.map((log) => {
 				const date = new Date(log.createdAt).toLocaleString();
-				return `[${date}] [${log.type}] ${log.content} \n Tx Hash: ${log.txHash}`;
+				return `[${date}] [${log.type}] ${log.content} \n Tx Hash: ${log.txHash} \n Chain ID: ${log.chainId}`;
 			})
 			.join("\n");
 
