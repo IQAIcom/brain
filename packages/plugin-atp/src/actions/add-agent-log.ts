@@ -84,7 +84,7 @@ const handler: (opts: ATPActionParams) => Handler =
 				content,
 				apiKey: opts.apiKey,
 				txHash,
-				chainId,
+				chainId: chainId != null ? Number(chainId) : null,
 			});
 
 			callback?.({
@@ -95,7 +95,7 @@ const handler: (opts: ATPActionParams) => Handler =
 			});
 			return true;
 		} catch (error) {
-			elizaLogger.error("❌ Adding agent log failed", { error });
+			elizaLogger.info("❌ Adding agent log failed", { error });
 			callback?.({
 				text: `❌ Error: ${error.message}`,
 			});
