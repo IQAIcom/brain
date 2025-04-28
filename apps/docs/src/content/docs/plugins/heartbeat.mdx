@@ -48,7 +48,7 @@ async function main() {
       clients: [
         {
           type: "telegram",
-          chatId: process.env.TELEGRAM_CHAT_ID
+          chatId: process.env.TELEGRAM_CHAT_ID as string
         }
       ]
     }
