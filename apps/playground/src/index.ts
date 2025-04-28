@@ -1,33 +1,45 @@
 import SqliteAdapter from "@elizaos/adapter-sqlite";
 import DirectClientInterface from "@elizaos/client-direct";
+import { elizaLogger } from "@elizaos/core";
 import { AgentBuilder, ModelProviderName } from "@iqai/agent";
-import { createAbiPlugin } from "@iqai/Plugin-abi";
-import { erc20Abi } from "viem";
+import { createHeartbeatPlugin } from "@iqai/plugin-heartbeat";
+import { Client } from "langsmith";
+import { AISDKExporter } from "langsmith/vercel";
 
 async function main() {
-	// Initialize plugins
-	const abiPlugin = await createAbiPlugin({
-		abi: erc20Abi,
-		contractName: "ERC20",
-		contractAddress: "0xaB195B090Cc60C1EFd4d1cEE94Bf441F5931C01b",
-		description: "ERC20 token contract",
-		privateKey: process.env.WALLET_PRIVATE_KEY as string,
-	});
-
+	const heartbeat = await createHeartbeatPlugin([
+		{
+			clients: [
+				{
+					type: "callback",
+					callback: async (content, roomId) => {
+						elizaLogger.info(content, roomId);
+					},
+				},
+			],
+			input: `
+			pick a random number between 1-1000.
+			this random number should always be greater than the last generated number.
+			just return the number, no other text.
+			Example response:
+			123
+			If you are the first to respond, just pick any number randomly between 1-1000.
+			`,
+			period: "* * * * *",
+			roomName: "incrementing-numbers",
+		},
+	]);
+	const exporter = new AISDKExporter({ client: new Client() });
 	// Initialize agent
 	const agent = new AgentBuilder()
 		.withDatabase(SqliteAdapter)
 		.withClient(DirectClientInterface)
+		.withTelemetry(exporter)
 		.withModelProvider(
 			ModelProviderName.OPENAI,
 			process.env.OPENAI_API_KEY as string,
 		)
-		.withPlugins([abiPlugin])
-		.withCharacter({
-			name: "AbiBot",
-			bio: "You are BrainBot, a helpful ABI assistant.",
-			username: "AbiBot",
-		})
+		.withPlugins([heartbeat])
 		.build();
 
 	await agent.start();

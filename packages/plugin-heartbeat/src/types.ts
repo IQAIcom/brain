@@ -3,6 +3,7 @@ import type { IAgentRuntime } from "@elizaos/core";
 export interface HeartbeatTask {
 	period: string;
 	input: string;
+	roomName: string;
 	onlyFinalOutput?: boolean;
 	shouldPost?: (response: string) => boolean;
 	formatResponse?: (

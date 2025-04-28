@@ -15,11 +15,12 @@
 		"@elizaos/client-direct": "0.25.9",
 		"@elizaos/core": "0.25.9",
 		"@iqai/agent": "workspace:*",
+		"@iqai/plugin-abi": "workspace:*",
+		"@iqai/plugin-heartbeat": "workspace:*",
 		"@iqai/plugin-sequencer": "workspace:*",
 		"@iqai/plugin-wiki": "workspace:*",
-		"@iqai/plugin-abi": "workspace:*",
-		"@lmnr-ai/lmnr": "^0.4.42",
 		"dotenv": "^16.4.7",
+		"langsmith": "^0.3.21",
 		"viem": "^2.22.15"
 	},
 	"devDependencies": {

@@ -5,6 +5,7 @@ import {
 	ModelClass,
 	Service,
 	ServiceType,
+	type UUID,
 	composeContext,
 	elizaLogger,
 	generateMessageResponse,
@@ -38,6 +39,15 @@ export class Heartbeat extends Service {
 		elizaLogger.info("ℹ️ Heartbeat service initialized with scheduled tasks");
 	}
 
+	private async getPreviousMemories(roomId: UUID, runtime: IAgentRuntime) {
+		const memories = await runtime.messageManager.getMemories({
+			roomId,
+		});
+		return memories
+			.filter((memory) => memory.userId === memory.agentId)
+			.map((memory) => memory.content.text);
+	}
+
 	private async handleCron(
 		heartbeatTask: HeartbeatTask,
 		runtime: IAgentRuntime,
@@ -45,7 +55,7 @@ export class Heartbeat extends Service {
 		elizaLogger.info(`🫀 Heartbeat triggered with: ${heartbeatTask.input}`);
 
 		const userId = stringToUuid("system");
-		const roomId = stringToUuid(`heartbeat-room-${heartbeatTask.input}`);
+		const roomId = stringToUuid(heartbeatTask.roomName);
 
 		await runtime.ensureConnection(
 			userId,
@@ -54,11 +64,11 @@ export class Heartbeat extends Service {
 			"Heartbeat",
 			"heartbeat",
 		);
-
 		const messageId = stringToUuid(Date.now().toString());
-
+		const previousMemories = await this.getPreviousMemories(roomId, runtime);
+		elizaLogger.info("Previous memories:", previousMemories);
 		const content: Content = {
-			text: heartbeatContextTemplate(heartbeatTask.input),
+			text: heartbeatContextTemplate(heartbeatTask.input, previousMemories),
 			attachments: [],
 			source: "heartbeat",
 			inReplyTo: undefined,
