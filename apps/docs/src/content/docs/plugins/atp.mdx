@@ -43,11 +43,11 @@ Here's a complete example of setting up an agent with the ATP plugin:
 
 ```typescript
 import { AgentBuilder, ModelProviderName } from "@iqai/agent";
-import { createATPPlugin } from "@iqai/plugin-atp";
+import { createAtpPlugin } from "@iqai/plugin-atp";
 
 async function main() {
   // Initialize ATP plugin
- const atpPlugin = await createATPPlugin({
+ const atpPlugin = await createAtpPlugin({
     walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
   });
 
@@ -110,7 +110,7 @@ Always implement proper error handling when using the plugin:
 
 ```typescript
 try {
-  const atpPlugin = await createATPPlugin({
+  const atpPlugin = await createAtpPlugin({
     walletPrivateKey: process.env.WALLET_PRIVATE_KEY,
   });
 } catch (error) {
