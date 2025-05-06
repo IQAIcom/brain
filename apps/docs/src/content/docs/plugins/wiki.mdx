@@ -47,16 +47,20 @@ main().catch(console.error);
 ## Available Operations
 
 - **Wiki Retrieval**: Get specific wiki articles by ID
-- **Latest User Wiki**: Get latest wiki created by user
-- **Time-Filtered User Wikis**: Get wikis created by user ID within a time range
+- **User Created Wikis**: Get wikis created by a specific user
+- **User Edited Wikis**: Get wikis edited by a specific user
+- **User Wiki Activities**: Get all wiki activities (both creations and edits) by a specific user
+- **Time-Filtered Activities**: Filter any of the above operations by time range
 
 ## Usage Examples
 
 | Operation | Example Query |
 |-----------|--------------|
 | Get Wiki | Show me the wiki for bitcoin |
-| Latest User Wiki | Get latest wiki of user 0x8AF7a19a26d8FBC48dEfB35AEfb15Ec8c407f889 |
-| Latest User Wiki (added timeframe) | Get wiki of user 0x8AF7a19a26d8FBC48dEfB35AEfb15Ec8c407f889 in last 24 hours |
+| User Created Wikis | Show wikis created by user 0x8AF7a19a26d8FBC48dEfB35AEfb15Ec8c407f889 |
+| User Edited Wikis | Show edited wikis by user 0x8AF7a19a26d8FBC48dEfB35AEfb15Ec8c407f889 |
+| User Wiki Activities | Show me wiki activities for 0x8AF7a19a26d8FBC48dEfB35AEfb15Ec8c407f889 |
+| Time-Filtered Activities | Show wiki activities for 0x8AF7a19a26d8FBC48dEfB35AEfb15Ec8c407f889 in last 24 hours |
 
 ### Getting a wiki
 
@@ -75,12 +79,23 @@ The agent will process this to:
 }
 ```
 
-### Getting latest user wiki
+Response will be formatted as:
+
+```
+📜 Wiki Details
+- Title: AI Meme Hub
+- Summary: AI Meme Hub is a decentralized platform for creating and sharing AI-generated memes...
+
+🔗 Source: https://iq.wiki/ai-meme-hub
+🔗 Transaction: https://polygonscan.com/tx/0x123...
+```
+
+### Getting user created wikis
 
 Query:
 
 ```
-Get me latest wiki by 0x9130241234123434
+Get me wikis created by 0x9130241234123434
 ```
 
 
@@ -92,19 +107,108 @@ The agent will process this to:
 }
 ```
 
-### Getting time-filtered user wikis
+Response will be formatted as:
+
+```
+📜 Wiki Created
+- Title: Ethereum
+- Summary: Ethereum is a decentralized platform...
+- Created: 5/5/2023, 11:03:26 PM
+
+🔗 Source: https://iq.wiki/ethereum
+🔗 Transaction: https://polygonscan.com/tx/0x456...
+
+📜 Wiki Created
+- Title: Solana
+- Summary: Solana is a high-performance blockchain...
+- Created: 5/4/2023, 10:15:42 AM
+
+🔗 Source: https://iq.wiki/solana
+🔗 Transaction: https://polygonscan.com/tx/0x789...
+```
+
+### Getting user edited wikis
 
 Query:
 
-Get me wikis by 0x9130241234123434 in last 24 hours
+```
+Show me edited wikis by 0x9130241234123434
+```
 
+The agent will process this to:
+
+```typescript
+{
+  "id": "0x9130241234123434"
+}
+```
+
+Response will be formatted as:
+
+```
+📜 Wiki Edited
+- Title: Bitcoin
+- Summary: Bitcoin is a decentralized digital currency...
+- Edited: 5/6/2023, 1:26:58 AM
+- Changes: 52 words (21.36%)
+- Modified sections: content, tags
+
+🔗 Source: https://iq.wiki/bitcoin
+🔗 Transaction: https://polygonscan.com/tx/0xabc...
+```
+
+### Getting user wiki activities
+
+Query:
+
+```
+Show me wiki activities for 0x9130241234123434
+```
+
+The agent will process this to:
+
+```typescript
+{
+  "id": "0x9130241234123434"
+}
+```
+
+Response will include both creations and edits:
+
+```
+📜 Wiki Edited
+- Title: Bitcoin
+- Summary: Bitcoin is a decentralized digital currency...
+- Edited: 5/6/2023, 1:26:58 AM
+- Changes: 52 words (21.36%)
+- Modified sections: content, tags
+
+🔗 Source: https://iq.wiki/bitcoin
+🔗 Transaction: https://polygonscan.com/tx/0xabc...
+
+📜 Wiki Created
+- Title: Ethereum
+- Summary: Ethereum is a decentralized platform...
+- Created: 5/5/2023, 11:03:26 PM
+
+🔗 Source: https://iq.wiki/ethereum
+🔗 Transaction: https://polygonscan.com/tx/0x456...
+```
+
+### Getting time-filtered user activities
+
+Query:
+
+```
+Get me wiki activities by 0x9130241234123434 in last 24 hours
+```
 
 The agent will process this to:
 
 ```typescript
 {
   "id": "0x9130241234123434",
-  "timeFrameSeconds": "86400"
+  "timeFrameSeconds": 86400
 }
 ```
 
@@ -132,5 +236,5 @@ try {
 
 - **Wiki Not Found**: Verify the wiki ID exists on IQ.Wiki
 - **User Not Found**: Ensure the Ethereum address is correct
-- **No Recent Wikis**: The user may not have created wikis in the specified time period
+- **No Recent Activities**: The user may not have any wiki activities in the specified time period
 - **API Connection**: Check your network connection if requests fail
