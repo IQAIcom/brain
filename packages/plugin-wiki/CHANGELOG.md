@@ -1,5 +1,11 @@
 # @iqai/plugin-wiki
 
+## 0.1.0
+
+### Minor Changes
+
+- 58caf24: Added new actions (get-created,get-edited & get-activities). Updated format methods.
+
 ## 0.0.4
 
 ### Patch Changes
