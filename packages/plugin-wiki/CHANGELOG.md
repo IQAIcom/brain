@@ -1,5 +1,11 @@
 # @iqai/plugin-wiki
 
+## 0.1.1
+
+### Patch Changes
+
+- 093f54a: revision links for wiki edits
+
 ## 0.1.0
 
 ### Minor Changes
