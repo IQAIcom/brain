@@ -1,6 +1,6 @@
 import dedent from "dedent";
 import { USER_ACTIVITIES_QUERY, WIKI_QUERY } from "../lib/queries";
-import { IQ_BASE_URL } from "../lib/constants";
+import { IQ_BASE_URL, IQ_REVISION_URL } from "../lib/constants";
 import { client } from "../lib/graphql";
 
 export type ActivityType = "CREATED" | "UPDATED";
@@ -183,7 +183,7 @@ export class GetUserWikiActivitiesService {
 						- Summary: ${wiki.summary}
 						- Edited: ${formattedDate}
 						${editDetails}
-						🔗 Source: ${IQ_BASE_URL}/${wiki.id}
+						🔗 Source: ${IQ_REVISION_URL}/${activity.id}
 						🔗 Transaction: https://polygonscan.com/tx/${wiki.transactionHash}
 					`;
 			})
@@ -213,13 +213,19 @@ export class GetUserWikiActivitiesService {
 					}
 				}
 
+				// Determine source URL based on activity type
+				const sourceUrl =
+					activity.type === "UPDATED"
+						? `${IQ_REVISION_URL}/${activity.id}`
+						: `${IQ_BASE_URL}/${wiki.id}`;
+
 				return dedent`
 						📜 Wiki ${actionType}
 						- Title: ${wiki.title}
 						- Summary: ${wiki.summary}
 						- ${actionType}: ${formattedDate}
 						${editDetails}
-						🔗 Source: ${IQ_BASE_URL}/${wiki.id}
+						🔗 Source: ${sourceUrl}
 						🔗 Transaction: https://polygonscan.com/tx/${wiki.transactionHash}
 					`;
 			})
