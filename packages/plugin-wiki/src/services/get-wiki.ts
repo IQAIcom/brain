@@ -21,12 +21,13 @@ export class GetWikiService {
 
 	format(wiki) {
 		const formattedWiki = dedent`
-      📜 Wiki Details
-      - Here's a summary of ${wiki.title}
-      - ${wiki.summary} \n
-      🔗 source: ${IQ_BASE_URL}/${wiki.id}
+			📜 Wiki Details
+			- Title: ${wiki.title}
+			- Summary: ${wiki.summary}
+
+			🔗 Source: ${IQ_BASE_URL}/${wiki.id}
 			🔗 Transaction: https://polygonscan.com/tx/${wiki.transactionHash}
-    `;
+		`;
 
 		return formattedWiki;
 	}

@@ -1,13 +1,13 @@
 import type { Action, Handler } from "@elizaos/core";
-import { GetLatestWikisService } from "../services/get-latest-wikis";
+import { GetUserWikiActivitiesService } from "../services/get-user-wiki-activities";
 import { InputParserService } from "../services/input-parser";
 import { USER_WIKIS_TEMPLATE } from "../lib/templates";
 
-export const getUserWikisAction = (): Action => {
+export const getUserEditedWikisAction = (): Action => {
 	return {
-		name: "USER_WIKIS",
-		description: "Gets the latest wikis per user from the IQ.Wiki platform",
-		similes: ["GET_USER_WIKIS", "CHECK_USER_WIKIS"],
+		name: "USER_EDITED_WIKIS",
+		description: "Gets the wikis edited by a user from the IQ.Wiki platform",
+		similes: ["GET_USER_EDITED_WIKIS", "CHECK_USER_EDITED_WIKIS"],
 		validate: async () => true,
 		handler: handler(),
 		examples: [],
@@ -32,11 +32,18 @@ const handler: () => Handler =
 				return false;
 			}
 
-			const service = new GetLatestWikisService();
-			const response = await service.execute(id, timeFrameSeconds);
+			// Inform user that time filtering may not be accurate for edited wikis
+			if (timeFrameSeconds) {
+				callback?.({
+					text: `ℹ️ Note: Time filtering for edited wikis may not be accurate as the API doesn't provide reliable timestamps for edits. Showing all available edits instead.`,
+				});
+			}
+
+			const service = new GetUserWikiActivitiesService();
+			const response = await service.execute(id, "UPDATED", timeFrameSeconds);
 
 			callback?.({
-				text: service.format(response),
+				text: service.formatEdited(response),
 			});
 
 			return true;

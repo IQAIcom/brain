@@ -1,14 +1,15 @@
 import dedent from "dedent";
-import { request } from "graphql-request";
-import { USER_WIKIS_QUERY } from "../lib/queries";
+import { USER_CREATED_WIKIS_QUERY } from "../lib/queries";
 import { IQ_BASE_URL } from "../lib/constants";
 import { client } from "../lib/graphql";
 
-export class GetLatestWikisService {
+export class GetCreatedWikisService {
 	async execute(id: string, timeFrameSeconds?: number) {
 		try {
 			// biome-ignore lint/suspicious/noExplicitAny: the type UserWikiResponse is not exposing created
-			const response: any = await client.request(USER_WIKIS_QUERY, { id });
+			const response: any = await client.request(USER_CREATED_WIKIS_QUERY, {
+				id,
+			});
 
 			if (!response.userById) {
 				throw new Error("user does not exist");
@@ -41,7 +42,9 @@ export class GetLatestWikisService {
 								? `${timeFrameSeconds / 3600} hour(s)`
 								: `${timeFrameSeconds / 60} minute(s)`;
 
-					throw new Error(`No wikis found in the last ${timeFrameText}`);
+					throw new Error(
+						`No created wikis found in the last ${timeFrameText}`,
+					);
 				}
 			}
 
@@ -53,15 +56,20 @@ export class GetLatestWikisService {
 
 	format(wikis) {
 		return wikis
-			.map(
-				(wiki) => dedent`
-          📜 Wiki Details
-          - Here's a summary of ${wiki.title} \n
-          - ${wiki.summary} \n\n
-          🔗 Source: ${IQ_BASE_URL}/${wiki.id}
-					🔗 Transaction: https://polygonscan.com/tx/${wiki.transactionHash}
-        `,
-			)
+			.map((wiki) => {
+				const date = new Date(wiki.created);
+				const formattedDate = date.toLocaleString();
+
+				return dedent`
+						📜 Wiki Created
+						- Title: ${wiki.title}
+						- Summary: ${wiki.summary}
+						- Created: ${formattedDate}
+
+						🔗 Source: ${IQ_BASE_URL}/${wiki.id}
+						🔗 Transaction: https://polygonscan.com/tx/${wiki.transactionHash}
+					`;
+			})
 			.join("\n\n");
 	}
 }
