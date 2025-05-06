@@ -114,7 +114,7 @@ Actions return structured responses including:
 - Changes: 52 words (21.36%)
 - Modified sections: content, tags
 
-🔗 Source: https://iq.wiki/solana
+🔗 Source: https://iq.wiki/revision/0f9ed751-f46a-40f7-af56-a54cc8951754
 🔗 Transaction: https://polygonscan.com/tx/0x789...
 ```
 

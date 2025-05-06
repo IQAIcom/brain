@@ -1,6 +1,6 @@
 import dedent from "dedent";
 import { USER_EDITED_WIKIS_QUERY } from "../lib/queries";
-import { IQ_BASE_URL } from "../lib/constants";
+import { IQ_BASE_URL, IQ_REVISION_URL } from "../lib/constants";
 import { client } from "../lib/graphql";
 
 export class GetEditedWikisService {
@@ -85,7 +85,7 @@ export class GetEditedWikisService {
 						- Changes: ${wordsChanged} words (${percentChanged}%)
 						- Modified sections: ${blocksChanged}
 
-						🔗 Source: ${IQ_BASE_URL}/${wiki.id}
+						🔗 Source: ${IQ_REVISION_URL}/${wiki.ipfs}
 						🔗 Transaction: https://polygonscan.com/tx/${wiki.transactionHash}
 					`;
 			})
