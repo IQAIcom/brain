@@ -590,3 +590,163 @@ name: Brain Agent CI/CD
             pnpm install
             # pm2 restart your-agent-name or docker-compose down && docker-compose up -d --build
 ```
+
+## Deploying Your Agent to Google Cloud Run
+You can deploy your agent to Google Cloud Run using either the Web UI or Command Line.
+<Tabs>
+    <TabItem label="Web UI">
+      #### Google Cloud Console Deployment
+
+      <Steps>
+          <ol>
+              <li>
+                  <strong>Prerequisites</strong>
+                  <ul>
+                      <li>Google Cloud Account (with billing enabled)</li>
+                      <li>Project in GCP (or create new one)</li>
+                      <li>Agent Code (Dockerized or supported language)</li>
+                  </ul>
+                  <blockquote>
+                  Note: If not containerized, Cloud Run can build from source (Python/Node.js/Go)
+                  </blockquote>
+              </li>
+              <li>
+                  <strong>Access Cloud Run</strong>
+                  <ol type="a">
+                      <li>Go to <a href="https://console.cloud.google.com/">Google Cloud Console</a></li>
+                      <li>Select your project</li>
+                      <li>Navigation Menu ☰ > Serverless > Cloud Run</li>
+                  </ol>
+              </li>
+              <li>
+                  <strong>Create Service</strong>
+                  <ol type="a">
+                      <li>Click "+ CREATE SERVICE"</li>
+                      <li>Choose deployment method: </li>
+                          <ul>
+                              <li>Existing container image (if using Docker)</li>
+                              <li>Source code (if you want Cloud Run to build the container from your source code ie GitHub/Cloud Source)</li>
+                          </ul>
+                      
+                  </ol>
+              </li>
+              <li>
+                  <strong>Configure Service</strong>
+                  <ul>
+                      <li><strong>Name:</strong> my-agent</li>
+                      <li><strong>Region:</strong> us-central1 (or closest)</li>
+                      <li><strong>Authentication:</strong> Allow unauthenticated if public</li>
+                      <li><strong>Container:</strong> Image URL or source connection</li>
+                      <li><strong>Advanced (optional):</strong> CPU/Memory, Auto-scaling</li>
+                  </ul>
+              </li>
+              <li>
+                  <strong>Remember to set these</strong>
+                  <ul>
+                      <li>Set port to be set to 3000</li>
+                      <li>Add direct client interface to be used to allow health checks</li>
+                      <li>Memory & CPU: Adjust if needed (default: 1 CPU, 2GB)</li>
+                      <li>Environment variables: Define environment variables your agent needs before deployment</li>
+                      <li>Memory & CPU: Adjust if needed (default: 1 CPU, 2GB)</li>
+                      <li>Scaling: Set minimum and maximum instances</li>
+                  </ul>
+              </li>
+              <li>
+                  <strong>Deploy & Test</strong>
+                  <ol type="a">
+                      <li>Click "CREATE" (1-2 minutes)</li>
+                      <li>Access Service URL (https://my-agent-xyz.a.run.app)</li>
+                      <li>Test: </li>
+                          ```bash
+                          curl https://my-agent-xyz.a.run.app
+                          ```
+                  </ol>
+              </li>
+          </ol>
+      </Steps>
+    </TabItem>
+
+    <TabItem label="Command Line">
+      #### gcloud CLI Deployment
+
+      <Steps>
+          <ol>
+              <li>
+                  <strong>Prerequisites</strong>
+                  <ul>
+                      <li>Install <a href="https://cloud.google.com/sdk/docs/install">gcloud CLI</a></li>
+                      <li>Authenticate: </li>
+                          ```bash
+                          gcloud auth login
+                          gcloud config set project PROJECT_ID
+                          ```
+                  </ul>
+              </li>
+              <li>
+                  <strong>Deploy from Container</strong>
+                  ```bash
+                  gcloud run deploy my-agent \
+                    --image=gcr.io/PROJECT_ID/agent-image:latest \
+                    --platform=managed \
+                    --region=us-central1 \
+                    --allow-unauthenticated
+                  ```
+              </li>
+              <li>
+                  <strong>Deploy from Source</strong>
+                  ```bash
+                  gcloud run deploy my-agent \
+                    --source . \
+                    --platform=managed \
+                    --region=us-central1
+                  ```
+              </li>
+              <li>
+                  <strong>Test Deployment</strong>
+                  ```bash
+                  SERVICE_URL=$(gcloud run services describe my-agent \
+                    --region=us-central1 \
+                    --format="value(status.url)")
+                  
+                  curl $SERVICE_URL
+                  ```
+              </li>
+              <li>
+                  <strong>Manage Service</strong>
+                  ```bash
+                  # Update deployment
+                  gcloud run deploy my-agent --image=NEW_IMAGE
+                  
+                  # View logs
+                  gcloud logging read "resource.type=cloud_run_revision"
+                  
+                  # Delete service
+                  gcloud run services delete my-agent
+                  ```
+              </li>
+          </ol>
+      </Steps>
+    </TabItem>
+</Tabs>
+
+### Post-Deployment
+<Steps>
+    <ol start="6">
+        <li>
+            <strong>Monitoring</strong>
+            <ul>
+                <li>Logs: Cloud Console > Logging > Cloud Run</li>
+                <li>Metrics: Monitoring > Cloud Run Dashboard</li>
+            </ul>
+        </li>
+        <li>
+            <strong>Next Steps</strong>
+            <ul>
+                <li>Set up CI/CD with Cloud Build</li>
+                <li>Configure custom domains</li>
+                <li>Add event triggers (Pub/Sub, Storage)</li>
+            </ul>
+        </li>
+    </ol>
+</Steps>
+For more complex configurations, refer to the: <a href="https://cloud.google.com/run/docs" target="_blank">Google Cloud Run documentation</a>
