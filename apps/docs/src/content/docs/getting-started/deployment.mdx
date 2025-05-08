@@ -106,8 +106,8 @@ Choose the appropriate database adapter based on your deployment needs:
 
 <Tabs>
   <TabItem label="PostgreSQL">
-    ```
-    bash # Required environment variables
+    ```bash 
+    # Required environment variables
     DATABASE_URL=postgresql://user:pass@localhost:5432/db
     ```
   </TabItem>
@@ -483,7 +483,6 @@ You can use the following methods to deploy your agent: PM2, Docker, and Docker 
     ```
 
 ## Setting up Github CI/CD
-#### Setup CI/CD file and folder
 1. Create a folder .github/workflows in your project root
 2. Then a file ci.yml in the folder .github/workflows created in your project root
 3. Copy and paste the following code in the ci.yml, you can edit further to your specification
@@ -645,9 +644,9 @@ You can deploy your agent to Google Cloud Run using either the Web UI or Command
                   <ul>
                       <li>Set port to be set to 3000</li>
                       <li>Add direct client interface to be used to allow health checks</li>
-                      <li>Memory & CPU: Adjust if needed (default: 1 CPU, 2GB)</li>
+                      <li>Memory & CPU: Adjust if needed (recommended: 2 CPU, 1-2GB RAM)</li>
                       <li>Environment variables: Define environment variables your agent needs before deployment</li>
-                      <li>Scaling: Set minimum and maximum instances</li>
+                      <li>Scaling: Set minimum and maximum instances (recommended: min. 1)</li>
                   </ul>
               </li>
               <li>
