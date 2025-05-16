@@ -17,7 +17,8 @@ export default defineConfig({
 					tag: "meta",
 					attrs: {
 						property: "og:image",
-						content: "/og-image.png",
+						content:
+							"https://brain-docs-git-og-image-prediqt.vercel.app/og-image.png",
 					},
 				},
 				{
@@ -31,7 +32,8 @@ export default defineConfig({
 					tag: "meta",
 					attrs: {
 						name: "twitter:image",
-						content: "/og-image.png",
+						content:
+							"https://brain-docs-git-og-image-prediqt.vercel.app/og-image.png",
 					},
 				},
 				{
