@@ -25,7 +25,7 @@ export const onRequest = defineRouteMiddleware((context) => {
 		tag: "meta",
 		attrs: {
 			name: "twitter:image",
-			content: ogImageUrl.href,
+			// content: ogImageUrl.href,
 			url: ogImageUrl.href,
 			width: 1200,
 			height: 630,
