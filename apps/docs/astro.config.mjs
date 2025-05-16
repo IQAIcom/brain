@@ -5,14 +5,23 @@ import { defineConfig } from "astro/config";
 import starlightLinksValidator from "starlight-links-validator";
 
 export default defineConfig({
+	site: "https://brain.iqai.com",
 	adapter: vercel({
 		imageService: true,
 	}),
 	integrations: [
 		starlight({
+			routeMiddleware: "./src/routeData.ts",
 			title: "Brain Framework",
 			plugins: [starlightLinksValidator()],
 			head: [
+				{
+					tag: "meta",
+					attrs: {
+						name: "twitter:card",
+						content: "summary_large_image",
+					},
+				},
 				{
 					tag: "script",
 					content: `
@@ -30,9 +39,13 @@ export default defineConfig({
 				replacesTitle: true,
 			},
 			customCss: ["./src/styles/custom.css"],
-			social: {
-				github: "https://github.com/IQAIcom/brain",
-			},
+			social: [
+				{
+					icon: "github",
+					label: "GitHub",
+					href: "https://github.com/IQAIcom/brain",
+				},
+			],
 			editLink: {
 				baseUrl: "https://github.com/IQAIcom/brain/edit/main/apps/docs/",
 			},
