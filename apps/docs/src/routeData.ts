@@ -1,17 +1,10 @@
 import { defineRouteMiddleware } from "@astrojs/starlight/route-data";
 
 export const onRequest = defineRouteMiddleware((context) => {
-	// Get the URL of the generated image for the current page using its ID and append the `.png` file extension.
-	const ogImageUrl = new URL(
-		"/og-image.png",
-		// context.site,
-		"https://brain-docs-git-og-image-prediqt.vercel.app",
-	);
+	const ogImageUrl = new URL("/og-image.png", context.site);
 
-	// Get the array of all tags to include in the <head> of the current page.
 	const { head } = context.locals.starlightRoute;
 
-	// Add the <meta/> tags for the Open Graph images.
 	head.push({
 		tag: "meta",
 		attrs: {
@@ -25,7 +18,6 @@ export const onRequest = defineRouteMiddleware((context) => {
 		tag: "meta",
 		attrs: {
 			name: "twitter:image",
-			// content: ogImageUrl.href,
 			url: ogImageUrl.href,
 			width: 1200,
 			height: 630,
