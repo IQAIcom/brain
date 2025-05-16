@@ -3,8 +3,9 @@ import { defineRouteMiddleware } from "@astrojs/starlight/route-data";
 export const onRequest = defineRouteMiddleware((context) => {
 	// Get the URL of the generated image for the current page using its ID and append the `.png` file extension.
 	const ogImageUrl = new URL(
-		`/og/${context.locals.starlightRoute.id || "index"}.png`,
-		context.site,
+		"/og-image.png",
+		// context.site,
+		"https://brain-docs-git-og-image-prediqt.vercel.app",
 	);
 
 	// Get the array of all tags to include in the <head> of the current page.
