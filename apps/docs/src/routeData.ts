@@ -14,10 +14,21 @@ export const onRequest = defineRouteMiddleware((context) => {
 	// Add the <meta/> tags for the Open Graph images.
 	head.push({
 		tag: "meta",
-		attrs: { property: "og:image", content: ogImageUrl.href },
+		attrs: {
+			property: "og:image",
+			content: ogImageUrl.href,
+			width: 1200,
+			height: 630,
+		},
 	});
 	head.push({
 		tag: "meta",
-		attrs: { name: "twitter:image", content: ogImageUrl.href },
+		attrs: {
+			name: "twitter:image",
+			content: ogImageUrl.href,
+			url: ogImageUrl.href,
+			width: 1200,
+			height: 630,
+		},
 	});
 });
