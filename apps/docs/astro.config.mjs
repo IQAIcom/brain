@@ -13,29 +13,30 @@ export default defineConfig({
 			title: "Brain Framework",
 			plugins: [starlightLinksValidator()],
 			head: [
-				{
-					tag: "meta",
-					attrs: {
-						property: "og:image",
-						content:
-							"https://brain-docs-git-og-image-prediqt.vercel.app/og-image.png",
-					},
-				},
-				{
-					tag: "meta",
-					attrs: {
-						name: "twitter:card",
-						content: "summary_large_image",
-					},
-				},
-				{
-					tag: "meta",
-					attrs: {
-						name: "twitter:image",
-						content:
-							"https://brain-docs-git-og-image-prediqt.vercel.app/og-image.png",
-					},
-				},
+				// {
+				// 	tag: "meta",
+				// 	attrs: {
+				// 		property: "og:image",
+				// 		content:
+				// 			"https://brain-docs-git-og-image-prediqt.vercel.app/og-image.png",
+				// 	},
+				// },
+				// {
+				// 	tag: "meta",
+				// 	attrs: {
+				// 		name: "twitter:card",
+				// 		content: "summary_large_image",
+				// 		property: "og:image",
+				// 	},
+				// },
+				// {
+				// 	tag: "meta",
+				// 	attrs: {
+				// 		name: "twitter:image",
+				// 		content:
+				// 			"https://brain-docs-git-og-image-prediqt.vercel.app/og-image.png",
+				// 	},
+				// },
 				{
 					tag: "script",
 					content: `
