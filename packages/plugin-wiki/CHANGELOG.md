@@ -1,5 +1,11 @@
 # @iqai/plugin-wiki
 
+## 0.1.2
+
+### Patch Changes
+
+- ec1b708: update graphql url
+
 ## 0.1.1
 
 ### Patch Changes
