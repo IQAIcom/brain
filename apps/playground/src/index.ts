@@ -4,17 +4,16 @@ import { AgentBuilder, ModelProviderName } from "@iqai/agent";
 import { createWikiPlugin } from "@iqai/plugin-wiki";
 
 async function main() {
-	const wikiPlugin = await createWikiPlugin();
-
+	const pluginWiki = await createWikiPlugin();
 	// Initialize agent
 	const agent = new AgentBuilder()
 		.withDatabase(SqliteAdapter)
 		.withClient(DirectClientInterface)
 		.withModelProvider(
-			ModelProviderName.OPENAI,
-			process.env.OPENAI_API_KEY as string,
+			ModelProviderName.GOOGLE,
+			process.env.GOOGLE_API_KEY as string,
 		)
-		.withPlugins([wikiPlugin])
+		.withPlugins([pluginWiki])
 		.build();
 
 	await agent.start();

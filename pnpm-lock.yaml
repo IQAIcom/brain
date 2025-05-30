@@ -103,7 +103,7 @@ importers:
         version: 2.6.0
       tailwindcss-animate:
         specifier: ^1.0.7
-        version: 1.0.7(tailwindcss@3.4.17(ts-node@10.9.2(@types/node@22.15.18)(typescript@5.8.3)))
+        version: 1.0.7(tailwindcss@3.4.17(ts-node@10.9.2(@swc/core@1.11.24(@swc/helpers@0.5.17))(@types/node@22.15.18)(typescript@5.8.3)))
       vite-plugin-compression:
         specifier: ^0.5.1
         version: 0.5.1(vite@6.3.5(@types/node@22.15.18)(jiti@1.21.7)(tsx@4.19.4)(yaml@2.8.0))
@@ -167,7 +167,7 @@ importers:
         version: 5.14.0(rollup@4.40.2)
       tailwindcss:
         specifier: ^3.4.4
-        version: 3.4.17(ts-node@10.9.2(@types/node@22.15.18)(typescript@5.8.3))
+        version: 3.4.17(ts-node@10.9.2(@swc/core@1.11.24(@swc/helpers@0.5.17))(@types/node@22.15.18)(typescript@5.8.3))
       typescript:
         specifier: ^5.4.2
         version: 5.8.3
@@ -222,12 +222,9 @@ importers:
       '@iqai/agent':
         specifier: workspace:*
         version: link:../../packages/agent
-      '@iqai/plugin-abi':
+      '@iqai/plugin-mcp':
         specifier: workspace:*
-        version: link:../../packages/plugin-abi
-      '@iqai/plugin-sequencer':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sequencer
+        version: link:../../packages/plugin-mcp
       '@iqai/plugin-wiki':
         specifier: workspace:*
         version: link:../../packages/plugin-wiki
@@ -243,10 +240,10 @@ importers:
     devDependencies:
       ts-node:
         specifier: 10.9.2
-        version: 10.9.2(@swc/core@1.11.24)(@types/node@22.15.18)(typescript@5.8.3)
+        version: 10.9.2(@swc/core@1.11.24(@swc/helpers@0.5.17))(@types/node@22.15.18)(typescript@5.8.3)
       tsup:
         specifier: 8.3.6
-        version: 8.3.6(@swc/core@1.11.24)(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.3.6(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0)
       tsx:
         specifier: ^4.7.1
         version: 4.19.4
@@ -258,7 +255,7 @@ importers:
     dependencies:
       '@elizaos/core':
         specifier: 0.25.9
-        version: 0.25.9(@types/debug@4.1.12)(@types/node@22.15.18)(jiti@1.21.7)(react@19.1.0)(tsx@4.19.4)(typescript@5.8.3)(ws@8.18.2)(yaml@2.8.0)
+        version: 0.25.9(@types/debug@4.1.12)(@types/node@22.15.18)(jiti@1.21.7)(react@19.1.0)(tsx@4.19.4)(typescript@5.8.3)(ws@8.18.0)(yaml@2.8.0)
       '@opentelemetry/auto-instrumentations-node':
         specifier: ^0.57.0
         version: 0.57.1(@opentelemetry/api@1.9.0)(@opentelemetry/core@2.0.1(@opentelemetry/api@1.9.0))
@@ -283,19 +280,19 @@ importers:
         version: link:../tsconfig
       tsup:
         specifier: 8.3.6
-        version: 8.3.6(@swc/core@1.11.24)(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.3.6(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0)
 
   packages/plugin-abi:
     dependencies:
       '@elizaos/core':
         specifier: 0.25.9
-        version: 0.25.9(@types/debug@4.1.12)(@types/node@22.15.18)(jiti@1.21.7)(react@19.1.0)(tsx@4.19.4)(typescript@5.8.3)(ws@8.18.2)(yaml@2.8.0)
+        version: 0.25.9(@types/debug@4.1.12)(@types/node@22.15.18)(jiti@1.21.7)(react@19.1.0)(tsx@4.19.4)(typescript@5.8.3)(ws@8.18.1)(yaml@2.8.0)
       dedent:
         specifier: ^1.5.3
         version: 1.6.0
       tsup:
         specifier: 8.3.6
-        version: 8.3.6(@swc/core@1.11.24)(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.3.6(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0)
       viem:
         specifier: ^2.22.15
         version: 2.29.3(typescript@5.8.3)(zod@3.24.4)
@@ -314,19 +311,19 @@ importers:
         version: 0.0.10(typescript@5.8.3)
       '@coinbase/cdp-langchain':
         specifier: ^0.0.11
-        version: 0.0.11(@coinbase/coinbase-sdk@0.13.0(typescript@5.8.3)(zod@3.24.4))(openai@4.82.0(ws@8.18.2)(zod@3.24.4))(typescript@5.8.3)
+        version: 0.0.11(@coinbase/coinbase-sdk@0.13.0(typescript@5.8.3)(zod@3.24.4))(openai@4.82.0(ws@8.18.0)(zod@3.24.4))(typescript@5.8.3)
       '@elizaos/core':
         specifier: 0.25.9
-        version: 0.25.9(@types/debug@4.1.12)(@types/node@22.15.18)(jiti@1.21.7)(react@19.1.0)(tsx@4.19.4)(typescript@5.8.3)(ws@8.18.2)(yaml@2.8.0)
+        version: 0.25.9(@types/debug@4.1.12)(@types/node@22.15.18)(jiti@1.21.7)(react@19.1.0)(tsx@4.19.4)(typescript@5.8.3)(ws@8.18.0)(yaml@2.8.0)
       '@langchain/core':
         specifier: ^0.3.27
-        version: 0.3.56(openai@4.82.0(ws@8.18.2)(zod@3.24.4))
+        version: 0.3.56(openai@4.82.0(ws@8.18.0)(zod@3.24.4))
       dedent:
         specifier: ^1.5.3
         version: 1.6.0
       tsup:
         specifier: 8.3.5
-        version: 8.3.5(@swc/core@1.11.24)(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.3.5(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0)
     devDependencies:
       '@iqai/tsconfig':
         specifier: workspace:*
@@ -336,13 +333,13 @@ importers:
     dependencies:
       '@elizaos/core':
         specifier: 0.25.9
-        version: 0.25.9(@types/debug@4.1.12)(@types/node@22.15.18)(jiti@1.21.7)(react@19.1.0)(tsx@4.19.4)(typescript@5.8.3)(ws@8.18.2)(yaml@2.8.0)
+        version: 0.25.9(@types/debug@4.1.12)(@types/node@22.15.18)(jiti@1.21.7)(react@19.1.0)(tsx@4.19.4)(typescript@5.8.3)(ws@8.18.1)(yaml@2.8.0)
       dedent:
         specifier: ^1.5.3
         version: 1.6.0
       tsup:
         specifier: 8.3.6
-        version: 8.3.6(@swc/core@1.11.24)(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.3.6(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0)
       viem:
         specifier: ^2.22.15
         version: 2.29.3(typescript@5.8.3)(zod@3.24.4)
@@ -358,13 +355,13 @@ importers:
     dependencies:
       '@elizaos/core':
         specifier: 0.25.9
-        version: 0.25.9(@types/debug@4.1.12)(@types/node@22.15.18)(jiti@1.21.7)(react@19.1.0)(tsx@4.19.4)(typescript@5.8.3)(ws@8.18.2)(yaml@2.8.0)
+        version: 0.25.9(@types/debug@4.1.12)(@types/node@22.15.18)(jiti@1.21.7)(react@19.1.0)(tsx@4.19.4)(typescript@5.8.3)(ws@8.18.1)(yaml@2.8.0)
       dedent:
         specifier: ^1.5.3
         version: 1.6.0
       tsup:
         specifier: 8.3.6
-        version: 8.3.6(@swc/core@1.11.24)(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.3.6(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0)
       viem:
         specifier: ^2.22.15
         version: 2.29.3(typescript@5.8.3)(zod@3.24.4)
@@ -377,7 +374,7 @@ importers:
     dependencies:
       '@elizaos/core':
         specifier: 0.25.9
-        version: 0.25.9(@types/debug@4.1.12)(@types/node@22.15.18)(jiti@1.21.7)(react@19.1.0)(tsx@4.19.4)(typescript@5.8.3)(ws@8.18.2)(yaml@2.8.0)
+        version: 0.25.9(@types/debug@4.1.12)(@types/node@22.15.18)(jiti@1.21.7)(react@19.1.0)(tsx@4.19.4)(typescript@5.8.3)(ws@8.18.1)(yaml@2.8.0)
       dedent:
         specifier: ^1.5.3
         version: 1.6.0
@@ -392,7 +389,7 @@ importers:
         version: 6.1.0(graphql@16.11.0)
       tsup:
         specifier: 8.3.6
-        version: 8.3.6(@swc/core@1.11.24)(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.3.6(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0)
       viem:
         specifier: ^2.22.15
         version: 2.29.3(typescript@5.8.3)(zod@3.24.4)
@@ -411,7 +408,7 @@ importers:
     dependencies:
       '@elizaos/core':
         specifier: 0.25.9
-        version: 0.25.9(@types/debug@4.1.12)(@types/node@22.15.18)(jiti@1.21.7)(react@19.1.0)(tsx@4.19.4)(typescript@5.8.3)(ws@8.18.2)(yaml@2.8.0)
+        version: 0.25.9(@types/debug@4.1.12)(@types/node@22.15.18)(jiti@1.21.7)(react@19.1.0)(tsx@4.19.4)(typescript@5.8.3)(ws@8.18.0)(yaml@2.8.0)
       dedent:
         specifier: ^1.5.3
         version: 1.6.0
@@ -420,7 +417,7 @@ importers:
         version: 3.0.3
       tsup:
         specifier: 8.3.6
-        version: 8.3.6(@swc/core@1.11.24)(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.3.6(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0)
     devDependencies:
       '@0no-co/graphqlsp':
         specifier: ^1.8.0
@@ -436,7 +433,7 @@ importers:
     dependencies:
       '@elizaos/core':
         specifier: 0.25.9
-        version: 0.25.9(@types/debug@4.1.12)(@types/node@22.15.18)(jiti@1.21.7)(react@19.1.0)(tsx@4.19.4)(typescript@5.8.3)(ws@8.18.2)(yaml@2.8.0)
+        version: 0.25.9(@types/debug@4.1.12)(@types/node@22.15.18)(jiti@1.21.7)(react@19.1.0)(tsx@4.19.4)(typescript@5.8.3)(ws@8.18.0)(yaml@2.8.0)
       '@modelcontextprotocol/sdk':
         specifier: 1.5.0
         version: 1.5.0
@@ -445,7 +442,7 @@ importers:
         version: 1.6.0
       tsup:
         specifier: 8.3.6
-        version: 8.3.6(@swc/core@1.11.24)(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.3.6(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0)
       zod:
         specifier: ^3.24.2
         version: 3.24.4
@@ -458,7 +455,7 @@ importers:
     dependencies:
       '@elizaos/core':
         specifier: 0.25.9
-        version: 0.25.9(@types/debug@4.1.12)(@types/node@22.15.18)(jiti@1.21.7)(react@19.1.0)(tsx@4.19.4)(typescript@5.8.3)(ws@8.18.2)(yaml@2.8.0)
+        version: 0.25.9(@types/debug@4.1.12)(@types/node@22.15.18)(jiti@1.21.7)(react@19.1.0)(tsx@4.19.4)(typescript@5.8.3)(ws@8.18.1)(yaml@2.8.0)
       '@near-js/client':
         specifier: 0.0.2
         version: 0.0.2
@@ -479,7 +476,7 @@ importers:
         version: 3.0.3
       tsup:
         specifier: 8.3.6
-        version: 8.3.6(@swc/core@1.11.24)(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.3.6(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0)
       viem:
         specifier: ^2.22.15
         version: 2.29.3(typescript@5.8.3)(zod@3.24.4)
@@ -492,13 +489,13 @@ importers:
     dependencies:
       '@elizaos/core':
         specifier: 0.25.9
-        version: 0.25.9(@types/debug@4.1.12)(@types/node@22.15.18)(jiti@1.21.7)(react@19.1.0)(tsx@4.19.4)(typescript@5.8.3)(ws@8.18.2)(yaml@2.8.0)
+        version: 0.25.9(@types/debug@4.1.12)(@types/node@22.15.18)(jiti@1.21.7)(react@19.1.0)(tsx@4.19.4)(typescript@5.8.3)(ws@8.18.1)(yaml@2.8.0)
       dedent:
         specifier: ^1.5.3
         version: 1.6.0
       tsup:
         specifier: 8.3.6
-        version: 8.3.6(@swc/core@1.11.24)(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.3.6(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0)
       viem:
         specifier: ^2.22.15
         version: 2.29.3(typescript@5.8.3)(zod@3.24.4)
@@ -517,13 +514,13 @@ importers:
     dependencies:
       '@elizaos/core':
         specifier: 0.25.9
-        version: 0.25.9(@types/debug@4.1.12)(@types/node@22.15.18)(jiti@1.21.7)(react@19.1.0)(tsx@4.19.4)(typescript@5.8.3)(ws@8.18.2)(yaml@2.8.0)
+        version: 0.25.9(@types/debug@4.1.12)(@types/node@22.15.18)(jiti@1.21.7)(react@19.1.0)(tsx@4.19.4)(typescript@5.8.3)(ws@8.18.0)(yaml@2.8.0)
       dedent:
         specifier: ^1.5.3
         version: 1.6.0
       tsup:
         specifier: 8.3.6
-        version: 8.3.6(@swc/core@1.11.24)(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.3.6(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0)
       vitest:
         specifier: ^3.0.7
         version: 3.1.3(@types/debug@4.1.12)(@types/node@22.15.18)(jiti@1.21.7)(tsx@4.19.4)(yaml@2.8.0)
@@ -548,13 +545,13 @@ importers:
         version: 2.2.6
       '@elizaos/core':
         specifier: 0.25.9
-        version: 0.25.9(@types/debug@4.1.12)(@types/node@22.15.18)(jiti@1.21.7)(react@19.1.0)(tsx@4.19.4)(typescript@5.8.3)(ws@8.18.2)(yaml@2.8.0)
+        version: 0.25.9(@types/debug@4.1.12)(@types/node@22.15.18)(jiti@1.21.7)(react@19.1.0)(tsx@4.19.4)(typescript@5.8.3)(ws@8.18.1)(yaml@2.8.0)
       dedent:
         specifier: ^1.5.3
         version: 1.6.0
       tsup:
         specifier: 8.3.6
-        version: 8.3.6(@swc/core@1.11.24)(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.3.6(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0)
       viem:
         specifier: ^2.22.15
         version: 2.29.3(typescript@5.8.3)(zod@3.24.4)
@@ -573,7 +570,7 @@ importers:
     dependencies:
       '@elizaos/core':
         specifier: 0.25.9
-        version: 0.25.9(@types/debug@4.1.12)(@types/node@22.15.18)(jiti@1.21.7)(react@19.1.0)(tsx@4.19.4)(typescript@5.8.3)(ws@8.18.2)(yaml@2.8.0)
+        version: 0.25.9(@types/debug@4.1.12)(@types/node@22.15.18)(jiti@1.21.7)(react@19.1.0)(tsx@4.19.4)(typescript@5.8.3)(ws@8.18.0)(yaml@2.8.0)
       dedent:
         specifier: ^1.5.3
         version: 1.6.0
@@ -588,7 +585,7 @@ importers:
         version: 6.1.0(graphql@16.11.0)
       tsup:
         specifier: 8.3.6
-        version: 8.3.6(@swc/core@1.11.24)(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0)
+        version: 8.3.6(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0)
       vitest:
         specifier: ^3.0.7
         version: 3.1.3(@types/debug@4.1.12)(@types/node@22.15.18)(jiti@1.21.7)(tsx@4.19.4)(yaml@2.8.0)
@@ -9138,11 +9135,11 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@coinbase/cdp-langchain@0.0.11(@coinbase/coinbase-sdk@0.13.0(typescript@5.8.3)(zod@3.24.4))(openai@4.82.0(ws@8.18.2)(zod@3.24.4))(typescript@5.8.3)':
+  '@coinbase/cdp-langchain@0.0.11(@coinbase/coinbase-sdk@0.13.0(typescript@5.8.3)(zod@3.24.4))(openai@4.82.0(ws@8.18.0)(zod@3.24.4))(typescript@5.8.3)':
     dependencies:
       '@coinbase/cdp-agentkit-core': 0.0.10(typescript@5.8.3)
       '@coinbase/coinbase-sdk': 0.13.0(typescript@5.8.3)(zod@3.24.4)
-      '@langchain/core': 0.3.56(openai@4.82.0(ws@8.18.2)(zod@3.24.4))
+      '@langchain/core': 0.3.56(openai@4.82.0(ws@8.18.0)(zod@3.24.4))
       zod: 3.24.4
     transitivePeerDependencies:
       - bufferutil
@@ -9316,66 +9313,6 @@ snapshots:
       js-tiktoken: 1.0.15
       ollama-ai-provider: 0.16.1(zod@3.24.4)
       openai: 4.82.0(ws@8.18.1)(zod@3.24.4)
-      pino: 9.6.0
-      pino-pretty: 13.0.0
-      sql.js: 1.13.0
-      together-ai: 0.7.0
-      unique-names-generator: 4.7.1
-      uuid: 11.0.3
-      viem: 2.21.58(typescript@5.8.3)(zod@3.24.4)
-      vitest: 3.1.3(@types/debug@4.1.12)(@types/node@22.15.18)(jiti@1.21.7)(tsx@4.19.4)(yaml@2.8.0)
-      zod: 3.24.4
-    transitivePeerDependencies:
-      - '@edge-runtime/vm'
-      - '@types/debug'
-      - '@types/node'
-      - '@vitest/browser'
-      - '@vitest/ui'
-      - aws-crt
-      - bufferutil
-      - encoding
-      - happy-dom
-      - jiti
-      - jsdom
-      - less
-      - lightningcss
-      - msw
-      - react
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-      - tsx
-      - typescript
-      - utf-8-validate
-      - ws
-      - yaml
-
-  '@elizaos/core@0.25.9(@types/debug@4.1.12)(@types/node@22.15.18)(jiti@1.21.7)(react@19.1.0)(tsx@4.19.4)(typescript@5.8.3)(ws@8.18.2)(yaml@2.8.0)':
-    dependencies:
-      '@ai-sdk/amazon-bedrock': 1.1.6(zod@3.24.4)
-      '@ai-sdk/anthropic': 1.1.6(zod@3.24.4)
-      '@ai-sdk/google': 1.1.0(zod@3.24.4)
-      '@ai-sdk/groq': 1.1.7(zod@3.24.4)
-      '@ai-sdk/mistral': 1.1.6(zod@3.24.4)
-      '@ai-sdk/openai': 1.1.9(zod@3.24.4)
-      '@electric-sql/pglite': 0.2.17
-      '@fal-ai/client': 1.2.0
-      '@supabase/supabase-js': 2.49.4
-      '@types/uuid': 10.0.0
-      ai: 4.1.16(react@19.1.0)(zod@3.24.4)
-      better-sqlite3: 11.8.1
-      bignumber.js: 9.1.2
-      dotenv: 16.4.5
-      fastembed: 1.14.1
-      glob: 11.0.0
-      handlebars: 4.7.8
-      js-sha1: 0.7.0
-      js-tiktoken: 1.0.15
-      ollama-ai-provider: 0.16.1(zod@3.24.4)
-      openai: 4.82.0(ws@8.18.2)(zod@3.24.4)
       pino: 9.6.0
       pino-pretty: 13.0.0
       sql.js: 1.13.0
@@ -9825,14 +9762,14 @@ snapshots:
 
   '@js-sdsl/ordered-map@4.4.2': {}
 
-  '@langchain/core@0.3.56(openai@4.82.0(ws@8.18.2)(zod@3.24.4))':
+  '@langchain/core@0.3.56(openai@4.82.0(ws@8.18.0)(zod@3.24.4))':
     dependencies:
       '@cfworker/json-schema': 4.1.1
       ansi-styles: 5.2.0
       camelcase: 6.3.0
       decamelize: 1.2.0
       js-tiktoken: 1.0.20
-      langsmith: 0.3.29(openai@4.82.0(ws@8.18.2)(zod@3.24.4))
+      langsmith: 0.3.29(openai@4.82.0(ws@8.18.0)(zod@3.24.4))
       mustache: 4.2.0
       p-queue: 6.6.2
       p-retry: 4.6.2
@@ -15047,7 +14984,7 @@ snapshots:
 
   klona@2.0.6: {}
 
-  langsmith@0.3.29(openai@4.82.0(ws@8.18.2)(zod@3.24.4)):
+  langsmith@0.3.29(openai@4.82.0(ws@8.18.0)(zod@3.24.4)):
     dependencies:
       '@types/uuid': 10.0.0
       chalk: 4.1.2
@@ -15057,7 +14994,7 @@ snapshots:
       semver: 7.7.2
       uuid: 10.0.0
     optionalDependencies:
-      openai: 4.82.0(ws@8.18.2)(zod@3.24.4)
+      openai: 4.82.0(ws@8.18.0)(zod@3.24.4)
 
   language-subtag-registry@0.3.23: {}
 
@@ -15991,21 +15928,6 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  openai@4.82.0(ws@8.18.2)(zod@3.24.4):
-    dependencies:
-      '@types/node': 18.19.100
-      '@types/node-fetch': 2.6.12
-      abort-controller: 3.0.0
-      agentkeepalive: 4.6.0
-      form-data-encoder: 1.7.2
-      formdata-node: 4.4.1
-      node-fetch: 2.7.0
-    optionalDependencies:
-      ws: 8.18.2
-      zod: 3.24.4
-    transitivePeerDependencies:
-      - encoding
-
   optionator@0.9.4:
     dependencies:
       deep-is: 0.1.4
@@ -16269,13 +16191,13 @@ snapshots:
       camelcase-css: 2.0.1
       postcss: 8.5.3
 
-  postcss-load-config@4.0.2(postcss@8.5.3)(ts-node@10.9.2(@types/node@22.15.18)(typescript@5.8.3)):
+  postcss-load-config@4.0.2(postcss@8.5.3)(ts-node@10.9.2(@swc/core@1.11.24(@swc/helpers@0.5.17))(@types/node@22.15.18)(typescript@5.8.3)):
     dependencies:
       lilconfig: 3.1.3
       yaml: 2.8.0
     optionalDependencies:
       postcss: 8.5.3
-      ts-node: 10.9.2(@swc/core@1.11.24)(@types/node@22.15.18)(typescript@5.8.3)
+      ts-node: 10.9.2(@swc/core@1.11.24(@swc/helpers@0.5.17))(@types/node@22.15.18)(typescript@5.8.3)
 
   postcss-load-config@6.0.1(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(yaml@2.8.0):
     dependencies:
@@ -17298,11 +17220,11 @@ snapshots:
 
   tailwind-merge@2.6.0: {}
 
-  tailwindcss-animate@1.0.7(tailwindcss@3.4.17(ts-node@10.9.2(@types/node@22.15.18)(typescript@5.8.3))):
+  tailwindcss-animate@1.0.7(tailwindcss@3.4.17(ts-node@10.9.2(@swc/core@1.11.24(@swc/helpers@0.5.17))(@types/node@22.15.18)(typescript@5.8.3))):
     dependencies:
-      tailwindcss: 3.4.17(ts-node@10.9.2(@types/node@22.15.18)(typescript@5.8.3))
+      tailwindcss: 3.4.17(ts-node@10.9.2(@swc/core@1.11.24(@swc/helpers@0.5.17))(@types/node@22.15.18)(typescript@5.8.3))
 
-  tailwindcss@3.4.17(ts-node@10.9.2(@types/node@22.15.18)(typescript@5.8.3)):
+  tailwindcss@3.4.17(ts-node@10.9.2(@swc/core@1.11.24(@swc/helpers@0.5.17))(@types/node@22.15.18)(typescript@5.8.3)):
     dependencies:
       '@alloc/quick-lru': 5.2.0
       arg: 5.0.2
@@ -17321,7 +17243,7 @@ snapshots:
       postcss: 8.5.3
       postcss-import: 15.1.0(postcss@8.5.3)
       postcss-js: 4.0.1(postcss@8.5.3)
-      postcss-load-config: 4.0.2(postcss@8.5.3)(ts-node@10.9.2(@types/node@22.15.18)(typescript@5.8.3))
+      postcss-load-config: 4.0.2(postcss@8.5.3)(ts-node@10.9.2(@swc/core@1.11.24(@swc/helpers@0.5.17))(@types/node@22.15.18)(typescript@5.8.3))
       postcss-nested: 6.2.0(postcss@8.5.3)
       postcss-selector-parser: 6.1.2
       resolve: 1.22.10
@@ -17457,7 +17379,7 @@ snapshots:
 
   ts-interface-checker@0.1.13: {}
 
-  ts-node@10.9.2(@swc/core@1.11.24)(@types/node@22.15.18)(typescript@5.8.3):
+  ts-node@10.9.2(@swc/core@1.11.24(@swc/helpers@0.5.17))(@types/node@22.15.18)(typescript@5.8.3):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.11
@@ -17492,7 +17414,7 @@ snapshots:
 
   tslib@2.8.1: {}
 
-  tsup@8.3.5(@swc/core@1.11.24)(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0):
+  tsup@8.3.5(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0):
     dependencies:
       bundle-require: 5.1.0(esbuild@0.24.2)
       cac: 6.7.14
@@ -17520,7 +17442,7 @@ snapshots:
       - tsx
       - yaml
 
-  tsup@8.3.6(@swc/core@1.11.24)(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0):
+  tsup@8.3.6(@swc/core@1.11.24(@swc/helpers@0.5.17))(jiti@1.21.7)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.8.0):
     dependencies:
       bundle-require: 5.1.0(esbuild@0.24.2)
       cac: 6.7.14
