@@ -7,7 +7,7 @@
 		"plugins": [
 			{
 				"name": "@0no-co/graphqlsp",
-				"schema": "https://graph.everipedia.org/graphql",
+				"schema": "https://api.iq.wiki/graphql",
 				"tadaOutputLocation": "./src/graphql-env.d.ts"
 			}
 		],
